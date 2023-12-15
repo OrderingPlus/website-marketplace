@@ -1,0 +1,5 @@
+node_modules/
+dist/
+cypress/integration/examples
+.DS_Store
+debug.log

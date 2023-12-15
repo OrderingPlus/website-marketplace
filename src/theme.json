@@ -1,0 +1,796 @@
+{
+  "fonts": {
+    "primary": {
+      "name": "Poppins",
+      "weights": [300, 400, 500, 600]
+    },
+    "special": {
+      "name": "Lobster",
+      "weights": [400]
+    }
+  },
+  "colors": {
+    "primary": "#2C7BE5",
+    "primaryContrast": "#E9F2FE",
+    "secundary": "#EFEFEF",
+    "secundaryContrast": "#000",
+    "disabled": "#CBCBCB",
+    "disabledContrast": "#000",
+    "backgroundPage": "#FFFFFF",
+    "colorPage": "#344050",
+    "colorTextSignForm": "#FFFFFF",
+    "headingColor": "#344050",
+    "darkGray": "#909BA9",
+    "darkTextColor": "#344050",
+    "lightGray": "#B1BCCC",
+    "darkPrimaryColor": "#03459E",
+    "grayDividerColor": "#F8F9FA",
+    "titleHomeColor": "#FFFFFF",
+    "subtitleHomeColor": "#FFFFFF",
+    "warning100": "#FFF4CC",
+    "warning500": "#FFC700",
+    "gray200": "#E9ECEF",
+    "danger500": "#E63757",
+    "links": "#2C7BE5",
+    "success500": "#00D27A",
+    "secondaryDark": "#414954",
+    "black": "#000000",
+    "white": "#FFFFFF",
+    "backgroundInfo": "#F5F9FF"
+  },
+  "defaultLanguages": {
+    "QUESTION_CLEAR_CUSTOMER": "Are you sure that you want to clear the customer?",
+    "SIGN_IN": "Sign in",
+    "SIGN_UP": "Sign up",
+    "ACCEPT": "Accept",
+
+    "TITLE_HOME": "All We need is Food",
+    "SUBTITLE_HOME": "Let's start to order food now",
+    "TYPE_AN_ADDRESS": "Type an addres",
+    "FIND_BUSINESSES": "Find businesse",
+    "ADDRESS": "Address",
+    "ADDRESSES": "Addresses",
+    "WHERE_DO_WE_DELIVERY": "Where do we delivery?",
+
+    "SORT_BY": "Sort By",
+    "RANK": "Rank",
+    "A_to_Z": "A-Z",
+    "SEARCH_PRODUCTS": "Search Products",
+    "ALL": "All",
+    "FEATURED": "Featured",
+    "MAXIMUM_SUBTOTAL_ORDER": "Maximum subtotal order",
+    "VIEW_ORDER": "View Order",
+    "LOADING": "Loading",
+    "ERROR_GET_PRODUCT": "Sorry, we couldn't find the requested product.",
+    "NOT_FOUND_BUSINESS_PRODUCTS": "No products to show at this business, please try with other business",
+    "SEARCH_REDIRECT": "Go to Businesses",
+    "ERROR_NOT_FOUND_STORE": "Sorry, an error has occurred with business selected",
+
+    "SKU": "Sku",
+    "INGREDIENTS": "Ingredients",
+    "SPECIAL_COMMENT": "Special comment",
+    "UPDATE": "Update",
+    "SOLD_OUT": "Sold out",
+    "CREATE_ACCOUNT": "Create account",
+    "RESET_PASSWORD": "Reset password",
+    "LOGIN": "Login",
+    "LOGIN_SIGNUP": "Login / Sign Up",
+
+    "PENDING": "Pending",
+    "COMPLETED": "Completed",
+    "REJECTED": "Rejected",
+    "DRIVER_IN_BUSINESS": "Driver in business",
+    "PREPARATION_COMPLETED": "Preparation Completed",
+    "REJECTED_BY_BUSINESS": "Rejected by business",
+    "REJECTED_BY_DRIVER": "Rejected by Driver",
+    "ACCEPTED_BY_BUSINESS": "Accepted by business",
+    "ACCEPTED_BY_DRIVER": "Accepted by driver",
+    "PICK_UP_COMPLETED_BY_DRIVER": "Pick up completed by driver",
+    "PICK_UP_FAILED_BY_DRIVER": "Pick up Failed by driver",
+    "DELIVERY_COMPLETED_BY_DRIVER": "Delivery completed by driver",
+    "DELIVERY_FAILED_BY_DRIVER": "Delivery Failed by driver",
+    "PREORDER": "PreOrder",
+    "ORDER_NOT_READY": "Order not ready",
+    "ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER": "Order picked up completed by customer",
+    "ORDER_STATUS_CANCELLED_BY_CUSTOMER": "Order cancelled by customer",
+    "ORDER_NOT_PICKEDUP_BY_CUSTOMER": "Order not picked up by customer",
+    "ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS": "Driver almost arrived to business",
+    "ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER": "Driver almost arrived to customer",
+    "ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS": "Customer almost arrived to business",
+    "ORDER_CUSTOMER_ARRIVED_BUSINESS": "Customer arrived to business",
+    "ORDER_MESSAGE_RECEIVED": "Your order has been received",
+    "ORDER_MESSAGE_HEADER_TEXT": "Once business accepts your order, we will send you an email, thank you",
+    "ORDER": "Order",
+    "DATE_TIME_FOR_ORDER": "Date and time for your order",
+    "CUSTOMER": "Customer",
+    "SHARE_THIS_DELIVERY": "Share this delivery",
+    "LET_SOMEONE_FOLLOW_ALONG": "Let someone follow along",
+    "SHARE": "Share",
+    "YOUR_DRIVER": "Your Driver",
+    "DRIVER": "Driver",
+    "YOUR_ORDER": "Your Order",
+    "SUBTOTAL": "Subtotal",
+    "DISCOUNT": "Discount",
+    "TAX": "Tax",
+    "DELIVERY_FEE": "Delivery Fee",
+    "DRIVER_TIP": "Driver tip",
+    "SERVICE_FEE": "Service Fee",
+    "TOTAL": "Total",
+    "REVIEW_ORDER": "Review your Order",
+    "MY_ORDERS": "My Orders",
+    "YOUR_ORDERS": "Your Orders",
+    "NOT_FOUND_ORDER": "Sorry, we couldn't find the requested order.",
+    "ORDERS_REDIRECT": "Go to Orders",
+    "WRITE_A_REVIEW": "Write a Review",
+    "ADD": "Add",
+    "MOBILE_APPNAME": "Ordering app",
+    "MOBILE_APPNAME_AUTHOR": "Ordering, Inc."
+  },
+  "layouts": {
+    "general": {
+      "components": {
+        "layout": {
+          "type": "original"
+        },
+        "fonts": {
+          "primary": {
+            "name": "",
+            "weights": [],
+            "href": ""
+          }
+        },
+        "buttons": {
+          "borderRadius": ""
+        },
+        "inputs": {
+          "borderRadius": "",
+          "color": "",
+          "borderColor": ""
+        },
+        "search_bar": {
+          "color": ""
+        },
+        "modal": {
+          "components": {
+            "style": {
+              "borderRadius": ""
+            }
+          }
+        },
+        "social_share": {
+          "components": {
+            "title": "",
+            "description": ""
+          }
+        }
+      }
+    },
+    "business_view": {
+      "components": {
+        "layout": {
+          "type": "original"
+        },
+        "cart": {
+          "hidden": false,
+          "components": {
+            "comments": {
+              "hidden": false
+            },
+            "discount_coupon": {
+              "hidden": false
+            }
+          }
+        },
+        "reviews": {
+          "components": {
+            "ranking": {
+              "hidden": false
+            },
+            "customer_comments": {
+              "hidden": false
+            },
+            "review_date": {
+              "hidden": false
+            },
+            "search": {
+              "hidden": false
+            }
+          }
+        },
+        "header": {
+          "hidden": false,
+          "components": {
+            "layout": {
+              "type": "original",
+              "position": "normal"
+            },
+            "business": {
+              "components": {
+                "logo": {
+                  "hidden": false
+                },
+                "time": {
+                  "hidden": false
+                }
+              }
+            },
+            "logo": {
+              "hidden": false
+            },
+            "delivery_fee": {
+              "hidden": false
+            },
+            "time": {
+              "hidden": false
+            },
+            "distance": {
+              "hidden": false
+            },
+            "reviews": {
+              "hidden": false
+            },
+            "business_info": {
+              "hidden": false
+            },
+            "offer": {
+              "hidden": false
+            },
+            "sort": {
+              "hidden": false
+            },
+            "favorite": {
+              "hidden": false
+            }
+          }
+        },
+        "product_search": {
+          "hidden": false,
+          "components": {
+            "layout": {
+              "type": "original"
+            }
+          }
+        },
+        "information": {
+          "components": {
+            "location": {
+              "hidden": false
+            },
+            "schedule": {
+              "hidden": false
+            },
+            "about": {
+              "hidden": false
+            },
+            "address": {
+              "hidden": false
+            },
+            "delivery_time": {
+              "hidden": false
+            },
+            "description": {
+              "hidden": false
+            },
+            "images": {
+              "hidden": false
+            },
+            "pickup_time": {
+              "hidden": false
+            },
+            "videos": {
+              "hidden": false
+            }
+          }
+        },
+        "products": {
+          "components": {
+            "photo": {
+              "hidden": false
+            },
+            "product": {
+              "components": {
+                "description": {
+                  "hidden": false
+                },
+                "image": {
+                  "hidden": false,
+                  "position": "left"
+                }
+              }
+            }
+          }
+        },
+        "order_view_button": {
+          "hidden": true
+        },
+        "products_ordered": {
+          "hidden": true
+        },
+        "favorite_products": {
+          "hidden": false
+        },
+        "near_business": {
+          "hidden": false
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF"
+        }
+      }
+    },
+    "business_listing_view": {
+      "components": {
+        "layout": {
+          "rows": 3,
+          "type": "original"
+        },
+        "business_hero": {
+          "hidden": true,
+          "components": {
+            "style": {
+              "height": "650px"
+            },
+            "image": ""
+          }
+        },
+        "cities": {
+          "hidden": false
+        },
+        "search": { 
+          "hidden": false
+        },
+        "filter": {
+          "hidden": false
+        },
+        "business": {
+          "components": {
+            "logo": {
+              "hidden": false
+            },
+            "fee": {
+              "hidden": false
+            },
+            "time": {
+              "hidden": false
+            },
+            "distance": {
+              "hidden": false
+            },
+            "reviews": {
+              "hidden": false
+            },
+            "favorite": {
+              "hidden": false
+            },
+            "offer": {
+              "hidden": false
+            },
+            "featured_badge": {
+              "hidden": false
+            },
+            "header": {
+              "hidden": false
+            }
+          }
+        },
+        "previous_orders_block": {
+          "hidden": false
+        },
+        "highest_rated_business_block": {
+          "hidden": false
+        },
+        "categories": {
+          "hidden": false
+        }
+      }
+    },
+    "header": {
+      "layout": {
+        "type": "original"
+      },
+      "components": {
+        "cart": {
+          "hidden": false,
+          "components": {
+            "open_strategy": {
+              "type": "popover",
+              "position": "right"
+            },
+            "discount_coupon": {
+              "hidden": false
+            },
+            "business": {
+              "logo": {
+                "hidden": false
+              },
+              "time": {
+                "hidden": false
+              }
+            },
+            "products": {
+              "image": {
+                "hidden": false
+              },
+              "description": {
+                "hidden": false
+              }
+            },
+            "comments": {
+              "hidden": false
+            }
+          }
+        },
+        "address_form": {
+          "components": {
+            "map": {
+              "hidden": false
+            },
+            "icons": {
+              "hidden": false
+            },
+            "zipcode": {
+              "hidden": false
+            },
+            "address_notes": {
+              "hidden": false
+            },
+            "internal_number": {
+              "hidden": false
+            }
+          }
+        },
+        "logo": {
+          "components": {
+            "layout": {
+              "position": "left"
+            }
+          }
+        },
+        "language_selector": {
+          "hidden": false
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF"
+        }
+      }
+    },
+    "orders": {
+      "hidden": false,
+      "components": {
+        "business_logo": {
+          "hidden": false
+        },
+        "business_name": {
+          "hidden": false
+        },
+        "order_number": {
+          "hidden": false
+        },
+        "review_order_button": {
+          "hidden": false
+        },
+        "reorder_button": {
+          "hidden": false
+        },
+        "favorite": {
+          "hidden": false
+        },
+        "order_status": {
+          "hidden": false
+        },
+        "date": {
+          "hidden": false
+        },
+        "map": {
+          "hidden": false
+        },
+        "business_tab": {
+          "hidden": false
+        },
+        "products_tab": {
+          "hidden": false
+        }
+      }
+    },
+    "profile": {
+      "hidden": false,
+      "components": {
+        "layout": {
+          "type": "original",
+          "position": "column"
+        },
+        "address_list": {
+          "hidden": false,
+          "components": {
+            "layout": {
+              "type": "original",
+              "position": "normal"
+            },
+            "address": {
+              "hidden": false
+            },
+            "icons": {
+              "hidden": false
+            },
+            "zipcode": {
+              "hidden": false
+            },
+            "internal_number": {
+              "hidden": false
+            },
+            "address_notes": {
+              "hidden": false
+            }
+          }
+        },
+        "picture": {
+          "hidden": false
+        },
+        "name": {
+          "hidden": false
+        },
+        "last_name": {
+          "hidden": false
+        },
+        "second_name": {
+          "hidden": false
+        },
+        "second_last_name": {
+          "hidden": false
+        },
+        "email": {
+          "hidden": false
+        },
+        "cellphone": {
+          "hidden": false
+        },
+        "password": {
+          "hidden": false
+        },
+        "birthday": {
+          "hidden": false
+        },
+        "promotions": {
+          "hidden": false
+        },
+        "notification_settings": {
+          "hidden": false
+        },
+        "languages": {
+          "hidden": false
+        }
+      }
+    },
+    "confirmation": {
+      "hidden": false,
+      "components": {
+        "layout": {
+          "type": "old"
+        },
+        "delivery_type": {
+          "hidden": false
+        },
+        "delivery_date": {
+          "hidden": false
+        },
+        "delivery_progress": {
+          "hidden": false
+        },
+        "business_information": {
+          "hidden": false,
+          "components": {
+            "phone": {
+              "hidden": false
+            },
+            "messages": {
+              "hidden": false
+            },
+            "email": {
+              "hidden": false
+            },
+            "address": {
+              "hidden": false
+            },
+            "map": {
+              "hidden": false
+            },
+            "logo": {
+              "hidden": false
+            }
+          }
+        },
+        "driver_information": {
+          "components": {
+            "name": {
+              "hidden": false
+            },
+            "phone": {
+              "hidden": false
+            },
+            "messages": {
+              "hidden": false
+            },
+            "email": {
+              "hidden": false
+            },
+            "photo": {
+              "hidden": false
+            }
+          }
+        },
+        "customer_information": {
+          "components": {
+            "phone": {
+              "hidden": false
+            },
+            "address": {
+              "hidden": false
+            },
+            "email": {
+              "hidden": false
+            },
+            "photo": {
+              "hidden": false
+            }
+          }
+        },
+        "cart": {
+          "components": {
+            "products": {
+              "components": {
+                "photo": {
+                  "hidden": false
+                }
+              }
+            }
+          }
+        },
+        "delivery_types": {
+          "components": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "checkout": {
+      "components": {
+        "business": {
+          "hidden": false,
+          "components": {
+            "address": {
+              "hidden": false
+            },
+            "email": {
+              "hidden": false
+            },
+            "cellphone": {
+              "hidden": false
+            },
+            "logo": {
+              "hidden": false
+            }
+          }
+        },
+        "customer": {
+          "components": {
+            "address": {
+              "hidden": false
+            },
+            "email": {
+              "hidden": false
+            },
+            "cellphone": {
+              "hidden": false
+            },
+            "photo": {
+              "hidden": false
+            }
+          }
+        },
+        "cart": {
+          "components": {
+            "product": {
+              "components": {
+                "image": {
+                  "hidden": false
+                },
+                "comments": {
+                  "hidden": false
+                }
+              }
+            }
+          }
+        },
+        "map": {
+          "hidden": false
+        }
+      }
+    },
+    "order_types": {
+      "components": {
+        "title_menu": "",
+        "delivery": {
+          "components": {
+            "title": "",
+            "description": "",
+            "call_to_action": ""
+          }
+        },
+        "pickup": {
+          "components": {
+            "title": "",
+            "description": "",
+            "call_to_action": ""
+          }
+        },
+        "eat_in": {
+          "components": {
+            "title": "",
+            "description": "",
+            "call_to_action": ""
+          }
+        },
+        "curbside": {
+          "components": {
+            "title": "",
+            "description": "",
+            "call_to_action": ""
+          }
+        },
+        "drive_thru": {
+          "components": {
+            "title": "",
+            "description": "",
+            "call_to_action": ""
+          }
+        }
+      }
+    },
+    "bar_menu": {
+      "components": {
+        "browse": {
+          "hidden": false
+        },
+        "orders": {
+          "hidden": false
+        },
+        "profile": {
+          "hidden": false
+        },
+        "wallet": {
+          "hidden": false
+        },
+        "messages": {
+          "hidden": false
+        },
+        "help": {
+          "hidden": false
+        },
+        "favorites": {
+          "hidden": false
+        },
+        "sessions": {
+          "hidden": false
+        },
+        "promotions": {
+          "hidden": false
+        } 
+      }
+    },
+    "third_party_code": {
+      "head": "",
+      "body": ""
+    },
+    "my_products": {
+      "components": {
+        "website_settings": {
+          "components": {
+            "values": {
+              "name": "",
+              "description": ""
+            }
+          }
+        }
+      }
+    }
+  }
+}
