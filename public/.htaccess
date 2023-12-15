@@ -1,0 +1,30 @@
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Disable directory browsing
+Options -Indexes
+ErrorDocument 403 /index.html
+
+# If an existing asset or directory is requested go to it as it is
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [NC,L,END]
+
+RewriteRule ^sitemap.xml /seohelper.php [NC,L,E=rewritten:1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:sitemap]
+RewriteRule ^robots.txt /seohelper.php [NC,L,E=rewritten:1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:robots]
+
+# If the requested pattern is file and file doesn't exist, send 404
+# RewriteCond %{REQUEST_URI} ^(\/[a-z_\-\s0-9\.]+)+\.[a-zA-Z]{2,4}$
+# RewriteRule ^ - [L,R=404]
+
+# Seo for bots
+RewriteCond %{HTTP_USER_AGENT} !(PostmanRuntime|Googlebot|APIs-Google|Google\s\(\+|Google-Structured-Data-Testing-Tool|bingbot|curl|LinkedInBot|msnbot|grub.org|msrbot|buzzbot|mlbot|YandexBot|page2rss|facebookexternalhit|Yeti|DuckDuckBot|Twitterbot|Applebot|AddThis|Embedly|Slackbot|redditbot|WhatsApp|pinterest|BingPreview\/|PhantomJS|Discordbot|TelegramBot|DuckDuckGo-Favicons-Bot|Disqus|FlipboardProxy|SkypeUriPreview) [NC]
+RewriteRule  .? - [S=4]
+RewriteRule ^store/([0-9a-zA-Z_-]+)$ /seohelper.php?%{QUERY_STRING} [NC,L,E=rewritten:1,E=business:$1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:tags,E=page:business]
+RewriteRule ^store$ /seohelper.php?%{QUERY_STRING} [NC,L,E=rewritten:1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:tags,E=page:business]
+RewriteRule ^([0-9a-zA-Z_-]+)$ /seohelper.php?%{QUERY_STRING} [NC,L,E=rewritten:1,E=business:$1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:tags,E=page:business]
+RewriteRule ^ /seohelper.php?%{QUERY_STRING} [L,E=rewritten:1,E=api:_API_URL_,E=project:_PROJECT_,E=version:_VERSION_,E=language:_LANGUAGE_CODE_,E=site_code:_SITE_CODE_,E=action:tags,E=page:home]
+
+# otherwise use history router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.html [QSA,L]

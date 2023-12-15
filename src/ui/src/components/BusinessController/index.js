@@ -1,0 +1,412 @@
+import React, { useState, useRef } from 'react'
+import { useTheme } from 'styled-components'
+import Skeleton from 'react-loading-skeleton'
+import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
+import BiCar from '@meronex/icons/bi/BiCar'
+import BiBasket from '@meronex/icons/bi/BiBasket'
+import GoPrimitiveDot from '@meronex/icons/go/GoPrimitiveDot'
+import BisStar from '@meronex/icons/bi/BisStar'
+import FaCrown from '@meronex/icons/fa/FaCrown'
+
+import {
+  ContainerCard,
+  WrapperBusinessCard,
+  BusinessHero,
+  BusinessHeader,
+  WrapperBusinessLogo,
+  BusinessTags,
+  BusinessContent,
+  BusinessLogo,
+  BusinessInfo,
+  BusinessInfoItem,
+  BusinessName,
+  Medadata,
+  CallCenterInformation,
+  CallCenterInformationBullet,
+  BusinessLogoWrapper,
+  BusinessStarInfo,
+  RibbonBox,
+  FavoriteWrapper,
+  BusinessHeaderClosedContainer
+} from './styles'
+
+import { useLanguage, useUtils, useOrder, useConfig, useSession, BusinessController as BusinessSingleCard } from '~components'
+import {
+  Alert,
+  Modal,
+  LoginForm,
+  SignUpForm,
+  ForgotPasswordForm,
+  convertHoursToMinutes,
+  lightenDarkenColor,
+  shape
+} from '~ui'
+
+const BusinessControllerUI = (props) => {
+  const {
+    isSkeleton,
+    business,
+    getBusinessOffer,
+    handleClick,
+    orderType,
+    isCustomLayout,
+    isCustomerMode,
+    isBusinessOpen,
+    businessWillCloseSoonMinutes,
+    onPreorderBusiness,
+    firstCard,
+    minWidthEnabled,
+    typeButton,
+    children,
+    businessHeader,
+    businessFeatured,
+    businessOffers,
+    businessLogo,
+    businessReviews,
+    businessDeliveryPrice,
+    businessDeliveryTime,
+    businessPickupTime,
+    businessDistance,
+    handleFavoriteBusiness,
+    businessState
+  } = props
+  const [configState] = useConfig()
+  const theme = useTheme()
+  const [, t] = useLanguage()
+  const [{ auth }, { login }] = useSession()
+  const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
+  const [orderState] = useOrder()
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalPageToShow, setModalPageToShow] = useState(null)
+
+  const favoriteRef = useRef(null)
+  const businessRows = theme?.business_listing_view?.components?.layout?.rows
+  const hideBusinessLogo = theme?.business_listing_view?.components?.business?.components?.logo?.hidden
+  const hideBusinessFee = theme?.business_listing_view?.components?.business?.components?.fee?.hidden
+  const hideBusinessTime = theme?.business_listing_view?.components?.business?.components?.time?.hidden
+  const hideBusinessDistance = theme?.business_listing_view?.components?.business?.components?.distance?.hidden
+  const hideBusinessReviews = theme?.business_listing_view?.components?.business?.components?.reviews?.hidden
+  const hideBusinessFavorite = theme?.business_listing_view?.components?.business?.components?.favorite?.hidden
+  const hideBusinessOffer = theme?.business_listing_view?.components?.business?.components?.offer?.hidden
+  const hideBusinessHeader = theme?.business_listing_view?.components?.business?.components?.header?.hidden
+  const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
+
+  // const handleShowAlert = () => {
+  //   setAlertState({ open: true, content: [t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The Business is closed at the moment')] })
+  // }
+
+  const handleBusinessClick = (e) => {
+    if (favoriteRef?.current?.contains(e.target)) return
+    if (onPreorderBusiness && !isBusinessOpen) onPreorderBusiness(business)
+    else handleClick(business)
+  }
+
+  const handleChangeFavorite = () => {
+    if (auth) {
+      handleFavoriteBusiness && handleFavoriteBusiness(!businessState?.business?.favorite)
+    } else {
+      setModalPageToShow('login')
+      setIsModalOpen(true)
+    }
+  }
+
+  const closeAuthModal = () => {
+    setIsModalOpen(false)
+    setModalPageToShow(null)
+  }
+
+  const handleSuccessLogin = (user) => {
+    if (user) {
+      closeAuthModal()
+    }
+  }
+
+  const handleCustomModalClick = (e, { page }) => {
+    e.preventDefault()
+    setModalPageToShow(page)
+  }
+
+  const handleSuccessSignup = (user) => {
+    login({
+      user,
+      token: user?.session?.access_token
+    })
+  }
+
+  const hasInformationLength = !!business?.idle_drivers_count || !!business?.busy_drivers_count || !!business?.activated_orders
+
+  if (typeButton) {
+    return (
+      <ContainerCard typeButton={typeButton}>
+        {children}
+      </ContainerCard>
+    )
+  }
+
+  return (
+    <>
+      <ContainerCard
+        isSkeleton={isSkeleton}
+        isCustomerMode={isCustomerMode && hasInformationLength}
+        firstCard={firstCard}
+        minWidthEnabled={minWidthEnabled}
+        businessRows={businessRows}
+        disabled={business?.enabled === false}
+      >
+        <WrapperBusinessCard disabled={business?.enabled === false} isSkeleton={isSkeleton} onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}>
+          {business?.ribbon?.enabled && (
+            <RibbonBox
+              bgColor={business?.ribbon?.color}
+              colorText={lightenDarkenColor(business?.ribbon?.color)}
+              borderRibbon={lightenDarkenColor(business?.ribbon?.color)}
+              isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
+              isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
+            >
+              {business?.ribbon?.text}
+            </RibbonBox>
+          )}
+          <BusinessHero>
+            {isSkeleton
+              ? (
+              <Skeleton height={isCustomerMode ? 100 : 140} />
+                )
+              : (
+              <BusinessHeader bgimage={!hideBusinessHeader ? optimizeImage((businessHeader || business?.header || theme.images?.dummies?.businessHeader), 'h_400,c_limit') : ''} isClosed={!isBusinessOpen}>
+                <BusinessTags>
+                  {(businessFeatured ?? business?.featured) && !hideBusinessFavoriteBadge &&
+                    <span className='crown'>
+                      <FaCrown />
+                    </span>}
+                  {!hideBusinessOffer && !isCustomLayout && (configState?.configs?.preorder_status_enabled?.value === '1') && (
+                    <div>
+                      {!!getBusinessOffer((businessOffers ?? business?.offers)) && <span>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((businessOffers ?? business?.offers))}</span>}
+                      {!isBusinessOpen && <span>{t('PREORDER', 'PreOrder')}</span>}
+                    </div>
+                  )}
+                </BusinessTags>
+                <BusinessHeaderClosedContainer>
+                  <div>
+                    {!!businessWillCloseSoonMinutes && orderState?.options?.moment === null && isBusinessOpen && business?.enabled !== false && (
+                      <h1>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</h1>
+                    )}
+                    {!isBusinessOpen && <h1 className='closed'>{t('CLOSED', 'Closed')}{business?.enabled === false && `(${t('DISABLED', 'Disabled')})`}</h1>}
+                  </div>
+                  {business?.disabled_reason && business?.enabled === false && (
+                    <h2 className='disabled'>{business?.disabled_reason}</h2>
+                  )}
+                </BusinessHeaderClosedContainer>
+              </BusinessHeader>
+                )}
+          </BusinessHero>
+          <BusinessContent isCustomerMode={isCustomerMode}>
+            <BusinessLogoWrapper>
+              {!hideBusinessLogo && (
+                <WrapperBusinessLogo isSkeleton={isSkeleton} isCustomerMode={isCustomerMode}>
+                  {!isSkeleton && (businessLogo || business?.logo || theme.images?.dummies?.businessLogo)
+                    ? (
+                    <BusinessLogo bgimage={optimizeImage((businessLogo || business?.logo || theme.images?.dummies?.businessLogo), 'h_200,c_limit')} />
+                      )
+                    : (
+                    <Skeleton height={70} width={70} />
+                      )}
+                </WrapperBusinessLogo>
+              )}
+              <BusinessStarInfo>
+                {!hideBusinessReviews && (
+                  <>
+                    {!isSkeleton
+                      ? (
+                          (businessReviews ?? business?.reviews?.total) > 0 && (
+                        <div className='reviews'>
+                          <BisStar />
+                          <span>{(businessReviews ?? business?.reviews?.total)}</span>
+                        </div>
+                          )
+                        )
+                      : (
+                      <Skeleton width={50} />
+                        )}
+                  </>
+                )}
+                {!hideBusinessFavorite && !isCustomerMode && (
+                  <FavoriteWrapper ref={favoriteRef} onClick={handleChangeFavorite}>
+                    {!isSkeleton
+                      ? (
+                      <>
+                        {(businessState?.business?.favorite) ? <Like /> : <DisLike />}
+                      </>
+                        )
+                      : (
+                      <Skeleton width={16} height={16} />
+                        )}
+                  </FavoriteWrapper>
+                )}
+              </BusinessStarInfo>
+            </BusinessLogoWrapper>
+            <BusinessInfo className='info' isCustomerMode={isCustomerMode}>
+              <BusinessInfoItem>
+                <div>
+                  {business?.name
+                    ? (
+                    <BusinessName>{business?.name}</BusinessName>
+                      )
+                    : (
+                    <Skeleton width={100} />
+                      )}
+                </div>
+                <Medadata isCustomerMode={isCustomerMode} isSkeleton={isSkeleton}>
+                  {!hideBusinessFee && orderType === 1 && (
+                    <>
+                      {(businessDeliveryPrice ?? business?.delivery_price) >= 0
+                        ? (
+                        <p>
+                          <span>{t('DELIVERY_FEE', 'Delivery fee')}</span>
+                          {business && parsePrice((businessDeliveryPrice ?? business?.delivery_price))}
+                        </p>
+                          )
+                        : (
+                        <Skeleton width={isCustomerMode ? 70 : 65} />
+                          )}
+                    </>
+                  )}
+                  {!hideBusinessTime && (
+                    <>
+                      {Object.keys(business).length > 0
+                        ? (
+                        <p className='bullet'>
+                          <GoPrimitiveDot />
+                          {convertHoursToMinutes(orderState?.options?.type === 1 ? (businessDeliveryTime ?? business?.delivery_time) : (businessPickupTime ?? business?.pickup_time)) || <Skeleton width={100} />}
+                        </p>
+                          )
+                        : (
+                        <Skeleton width={65} />
+                          )}
+                    </>
+                  )}
+                  {!hideBusinessDistance && (
+                    <>
+                      {(businessDistance ?? business?.distance) >= 0
+                        ? (
+                        <p className='bullet'>
+                          <GoPrimitiveDot />
+                          {parseDistance((businessDistance ?? business?.distance))}
+                        </p>
+                          )
+                        : (
+                        <Skeleton width={65} />
+                          )}
+                    </>
+                  )}
+                  {isCustomerMode && hasInformationLength && (
+                    <CallCenterInformation>
+                      {business?.idle_drivers_count > 0 && (
+                        <CallCenterInformationBullet bgcolor='#4CAF50'>
+                          <BiCar />
+                          {business?.idle_drivers_count}
+                        </CallCenterInformationBullet>
+                      )}
+                      {business?.busy_drivers_count > 0 && (
+                        <CallCenterInformationBullet bgcolor='#E91E63'>
+                          <BiCar />
+                          {business?.busy_drivers_count}
+                        </CallCenterInformationBullet>
+                      )}
+                      {business?.activated_orders > 0 && (
+                        <CallCenterInformationBullet bgcolor='#FF9800'>
+                          <BiBasket />
+                          {business?.activated_orders}
+                        </CallCenterInformationBullet>
+                      )}
+                    </CallCenterInformation>
+                  )}
+                </Medadata>
+              </BusinessInfoItem>
+            </BusinessInfo>
+          </BusinessContent>
+        </WrapperBusinessCard>
+      </ContainerCard>
+      <Alert
+        title={t('BUSINESS_CLOSED', 'Business Closed')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => setAlertState({ open: false, content: [] })}
+        onAccept={() => setAlertState({ open: false, content: [] })}
+        closeOnBackdrop={false}
+      />
+      <Modal
+        open={isModalOpen}
+        onRemove={() => closeAuthModal()}
+        onClose={() => closeAuthModal()}
+        width='50%'
+        authModal
+      >
+        {modalPageToShow === 'login' && (
+          <LoginForm
+            handleSuccessLogin={handleSuccessLogin}
+            elementLinkToSignup={
+              <a
+                onClick={
+                  (e) => handleCustomModalClick(e, { page: 'signup' })
+                } href='#'
+              >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
+              </a>
+            }
+            elementLinkToForgotPassword={
+              <a
+                onClick={
+                  (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
+                } href='#'
+              >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
+              </a>
+            }
+            useLoginByCellphone
+            isPopup
+          />
+        )}
+        {modalPageToShow === 'signup' && (
+          <SignUpForm
+            elementLinkToLogin={
+              <a
+                onClick={
+                  (e) => handleCustomModalClick(e, { page: 'login' })
+                } href='#'
+              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+              </a>
+            }
+            useLoginByCellphone
+            useChekoutFileds
+            handleSuccessSignup={handleSuccessSignup}
+            isPopup
+            closeModal={() => closeAuthModal()}
+          />
+        )}
+        {modalPageToShow === 'forgotpassword' && (
+          <ForgotPasswordForm
+            elementLinkToLogin={
+              <a
+                onClick={
+                  (e) => handleCustomModalClick(e, { page: 'login' })
+                } href='#'
+              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+              </a>
+            }
+            isPopup
+          />
+        )}
+      </Modal>
+    </>
+  )
+}
+
+export const BusinessController = (props) => {
+  const businessControllerProps = {
+    ...props,
+    UIComponent: BusinessControllerUI
+  }
+
+  return (
+    <BusinessSingleCard {...businessControllerProps} />
+  )
+}

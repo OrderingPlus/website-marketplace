@@ -1,0 +1,12 @@
+{
+  "editor.tabSize": 2,
+  "editor.indentSize": "tabSize",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "prettier.trailingComma": "none",
+  "editor.insertSpaces": true,
+  "editor.renderWhitespace": "all",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+}
