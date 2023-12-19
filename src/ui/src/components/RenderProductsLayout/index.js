@@ -26,13 +26,13 @@ import { useLanguage, useConfig, useUtils } from '~components'
 import { SpinnerCart } from '../Cart/styles'
 import { SearchIconWrapper } from '../BusinessBasicInformation/styles'
 
-import { BusinessBasicInformation as BusinessBasicInformationOld } from '../BusinessBasicInformation/layouts/old'
+import { BusinessBasicInformation as BusinessBasicInformationOld } from '../BusinessBasicInformation/layouts/Old'
 import { BusinessInformation as BusinessBasicInformationStarbucks } from '../BusinessBasicInformation/layouts/six'
 import { BusinessBasicInformation as BusinessBasicInformationRed } from '../BusinessBasicInformation/layouts/seven'
 
 import { BusinessProductsCategories as CategoriesLayoutGroceries } from '../BusinessProductsCategories/layouts/groceries'
 import { BusinessProductsList as ProductListLayoutGroceries } from '../BusinessProductsList/layouts/groceries'
-import { SearchProducts as SearchProductsOld } from '../SearchProducts/layouts/old'
+import { SearchProducts as SearchProductsOld } from '../SearchProducts/layouts/Old'
 import { SearchProducts as SearchProductsStarbucks } from '../SearchProducts/layouts/six'
 
 import {

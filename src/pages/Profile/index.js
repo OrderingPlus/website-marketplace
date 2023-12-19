@@ -5,7 +5,7 @@ import { IntercomWrapper } from '../../components/IntercomWrapper'
 
 import { useConfig } from '~components'
 import { UserProfileForm as UserProfileFormOriginal, useWindowSize } from '~ui'
-import { UserProfileForm as UserProfileFormOld } from '../../ui/src/components/UserProfileForm/layouts/old'
+import { UserProfileForm as UserProfileFormOld } from '../../ui/src/components/UserProfileForm/layouts/Old'
 
 export const Profile = (props) => {
   const windowSize = useWindowSize()

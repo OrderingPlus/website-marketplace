@@ -43,7 +43,7 @@ import {
   getTimes as getTimesUtils
 } from '~ui'
 
-import { CustomLayout } from './layouts/customLayout'
+import { CustomLayout } from './layouts/CustomLayout'
 
 SwiperCore.use([Navigation])
 

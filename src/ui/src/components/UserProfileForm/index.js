@@ -32,7 +32,7 @@ import {
   ExamineClick
 } from '~components'
 
-import { UserFormDetailsUI as UserFormDetailsOldUI } from '../UserFormDetails/layouts/old'
+import { UserFormDetailsUI as UserFormDetailsOldUI } from '../UserFormDetails/layouts/Old'
 import {
   bytesConverter,
   capitalize,

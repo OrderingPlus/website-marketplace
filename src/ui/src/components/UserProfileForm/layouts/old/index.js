@@ -26,8 +26,8 @@ import {
   ExamineClick
 } from '~components'
 
-import { UserFormDetailsUI } from '../../../UserFormDetails/layouts/old'
-import { AddressList } from '../../../AddressList/layouts/old'
+import { UserFormDetailsUI } from '../../../UserFormDetails/layouts/Old'
+import { AddressList } from '../../../AddressList/layouts/Old'
 import { ProfileOptions } from './ProfileOptions'
 
 import {

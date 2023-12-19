@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  website:
+    build: ./
+    container_name: website_marketplace_c
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - /app/node_modules
