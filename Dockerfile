@@ -8,7 +8,7 @@ RUN apt-get update && \
     autoconf \
     automake \
     libtool
-RUN npm install --ignore-scripts
+RUN npm install --ignore-scripts --force
 COPY . .
 EXPOSE 3000
 CMD ["npm", "run", "serve"]

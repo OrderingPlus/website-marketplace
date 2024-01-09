@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import { Router } from './router'
 import theme from './theme.json'
 import smoothscroll from 'smoothscroll-polyfill'
@@ -206,8 +206,8 @@ theme.images = {
 
 smoothscroll.polyfill()
 
-const wrapper = document.getElementById('app')
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('app'))
+root.render(
   <ThemeProvider theme={theme}>
     <SubdomainComponent>
       <OrderingProvider Alert={Alert}>
@@ -216,7 +216,7 @@ ReactDOM.render(
       </OrderingProvider>
     </SubdomainComponent>
   </ThemeProvider>
-  , wrapper)
+)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
