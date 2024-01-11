@@ -7,8 +7,9 @@ This repository is a template marketplace using functional components. It includ
 ## Installation
 
 1. Clone repository: `git clone --recursive https://github.com/OrderingX/website-marketplace.git`
-2. Run `yarn install` to install dependencies
-3. Run `yarn serve` to start the development server
+2. Enter the downloaded repository folder `cd website-marketplace`
+3. Run `yarn install` to install dependencies
+4. Run `yarn serve` to start the development server
 
 ## Installation with Docker
 > "You need to have Docker previously installed. You can install it from [here](https://docs.docker.com/engine/install/)"
