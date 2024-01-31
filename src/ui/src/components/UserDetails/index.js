@@ -15,7 +15,8 @@ import {
   TitleContainer,
   CountryFlag,
   PhoneContainer,
-  SkeletonsContainer
+  SkeletonsContainer,
+  ChangeCustomerText
 } from './styles'
 
 import {
@@ -182,15 +183,7 @@ const UserDetailsUI = (props) => {
               {!isModal && (
                 <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>
               )}
-              {cartStatus !== 2 && (
-                !isEdit
-                  ? (
-                  <span onClick={() => toggleIsEdit()}>{t('CHANGE_USER_DETAILS', 'Change customer details')}</span>
-                    )
-                  : (
-                  <FcCancel className='cancel' onClick={() => toggleEditState()} />
-                    )
-              )}
+              {cartStatus !== 2 && isEdit && <FcCancel className='cancel' onClick={() => toggleEditState()} />}
             </Header>
           )}
 
@@ -202,23 +195,28 @@ const UserDetailsUI = (props) => {
                   {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
                 </UserName>
               )}
-              {userData?.email && (
-                <p>{userData?.email}</p>
+              {(userData?.email ?? userData?.guest_email) && (
+                <p>{userData?.guest_id ? userData?.guest_email : userData?.email}</p>
               )}
-              {(userData?.cellphone || user?.cellphone) && (
+              {((userData?.cellphone ?? userData?.guest_cellphone) || (user?.cellphone ?? user?.guest_cellphone)) && (
                 <PhoneContainer>
                   <CountryFlag>
                     {
-                      userData?.country_phone_code && userData?.cellphone && (
-                        <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.cellphone?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
+                      userData?.country_phone_code && (userData?.cellphone ?? userData?.guest_cellphone) && (
+                        <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.[userData?.guest_id ? 'guest_cellphone' : 'cellphone']?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
                       )
                     }
                   </CountryFlag>
                   <p>
-                    {userData?.cellphone}
+                    {userData?.guest_id ? userData?.guest_cellphone : userData?.cellphone}
                   </p>
                 </PhoneContainer>
               )}
+              <ChangeCustomerText>
+                {cartStatus !== 2 && (
+                  <span onClick={() => toggleIsEdit()}>{t('CHANGE_USER_DETAILS', 'Change customer details')}</span>
+                )}
+              </ChangeCustomerText>
             </UserData>
               )
             : (

@@ -7,7 +7,7 @@ export const OptionTitle = styled.div`
   h1{
     text-transform: capitalize;
     font-size: 18px;
-    margin: 18px 0;
+    margin: 0;
   }
 
   @media (min-width: 768px){
@@ -82,7 +82,7 @@ export const OrdersContainer = styled.div`
     p{
       margin-block-end: 0;
       margin-block-start: 0;
-      color: #9A9A9A;
+      color: #9A9A9A
     }
 
     @media(min-width: 480px){

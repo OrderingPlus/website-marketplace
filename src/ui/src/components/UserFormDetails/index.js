@@ -112,7 +112,8 @@ export const UserFormDetailsUI = (props) => {
       setUserPhoneNumber(userPhoneNumber)
       return
     }
-    if (user?.cellphone) {
+    const cellphone = user?.guest_id ? user?.guest_cellphone : user?.cellphone
+    if (cellphone) {
       let phone = null
       if (formState.result.error && formState.changes?.cellphone && formState.changes?.country_phone_code) {
         phone = `+${formState.changes?.country_phone_code} ${formState.changes?.cellphone}`
@@ -120,25 +121,25 @@ export const UserFormDetailsUI = (props) => {
         return
       }
       if (user?.country_phone_code) {
-        phone = `+${user?.country_phone_code} ${user?.cellphone}`
+        phone = `+${user?.country_phone_code} ${cellphone}`
       } else {
-        phone = user?.cellphone
+        phone = cellphone
       }
       setUserPhoneNumber(phone)
       return
     }
-    setUserPhoneNumber(user?.cellphone || '')
+    setUserPhoneNumber(cellphone || '')
   }
 
   const onSubmit = () => {
     const isPhoneNumberValid = userPhoneNumber && showInputPhoneNumber ? isValidPhoneNumber : true
-    const requiredPhone = (user?.guest_id && requiredFields?.includes?.('cellphone')) || (validationFields?.fields?.checkout?.cellphone?.enabled && validationFields?.fields?.checkout?.cellphone?.required)
+    const requiredPhone = (user?.guest_id && requiredFields?.includes?.('cellphone')) || (validationFields?.fields?.checkout?.cellphone?.enabled && validationFields?.fields?.checkout?.cellphone?.required && !user?.guest_id)
     const content = []
     if (requiredFields?.includes?.('birthdate') && !birthdate) {
       content.push(t('VALIDATION_ERROR_BIRTHDATE_REQUIRED', 'Birthdate is required'))
     }
     if (!userPhoneNumber &&
-      (requiredPhone || configs?.verification_phone_required?.value === '1')
+      (requiredPhone || (configs?.verification_phone_required?.value === '1'))
     ) {
       content.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.'))
       setAlertState({
@@ -333,7 +334,7 @@ export const UserFormDetailsUI = (props) => {
                           borderBottom
                           disabled={!isEdit}
                           placeholder={isCustomerMode ? t(field.code.toUpperCase() + '_OPTIONAL', field.name + ' (Optional)') : t(field.code.toUpperCase(), field?.name)}
-                          defaultValue={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
+                          defaultValue={formState?.changes[field.code] ?? (user && user?.guest_id ? user?.guest_email : user[field.code]) ?? ''}
                           onChange={handleChangeInputEmail}
                           ref={
                             formMethods.register({

@@ -227,6 +227,11 @@ export const TimeItem = styled.div`
   span {
     font-size: 14px;
     white-space: nowrap;
+
+    p#time {
+      margin: auto;
+      padding: 10px;
+    }
   }
   ${({ active }) => active && css`
     background: #F5F9FF;

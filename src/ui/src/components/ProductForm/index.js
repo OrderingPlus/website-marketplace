@@ -101,7 +101,8 @@ const ProductOptionsUI = (props) => {
     handleCreateGuestUser,
     actionStatus,
     isCustomerMode,
-    isAlsea
+    isAlsea,
+    quesoYSalsaOptions
   } = props
 
   const { product, loading, error } = productObject
@@ -140,7 +141,7 @@ const ProductOptionsUI = (props) => {
   const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
   const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
   const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
-  const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.components?.hidden
+  const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.hidden
 
   const closeModal = () => {
     setModalIsOpen(false)
@@ -390,7 +391,7 @@ const ProductOptionsUI = (props) => {
   useEffect(() => {
     if (!isAlsea) return
     const keywords = ['1 ingrediente', 'ingredientes']
-    if (keywords?.some(word => product.name?.toLowerCase()?.includes(word))) {
+    if (keywords?.some(word => product?.name?.toLowerCase()?.includes(word))) {
       const arrayWord = product?.name?.toLowerCase()?.split(' ')
       const index = arrayWord.findIndex(word => word === 'ingredientes' || word === 'ingrediente')
       const maxValidation = parseInt(arrayWord[index - 1].split('-').pop())
@@ -675,6 +676,7 @@ const ProductOptionsUI = (props) => {
                                       pizzaState={pizzaState}
                                       productCart={productCart}
                                       isAlsea={isAlsea}
+                                      quesoYSalsaOptions={quesoYSalsaOptions}
                                     />
                                   )
                                 })

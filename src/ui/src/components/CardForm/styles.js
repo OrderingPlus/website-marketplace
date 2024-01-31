@@ -84,7 +84,7 @@ export const ErrorMessage = styled.div`
   color: #D81212;
   margin: 10px 0px 0px 10px;
   ${props => props.theme?.rtl && css`
-    margin: 10px 10px 0px 0px;
+    margin: 10px 10px 0px 0px
   `}
 `
 

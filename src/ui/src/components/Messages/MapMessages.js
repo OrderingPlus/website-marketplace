@@ -21,7 +21,6 @@ export const MapMessages = (props) => {
     order,
     filterSpecialStatus,
     handleModalImage,
-    hideLogBookMessages,
     getLevel,
     business,
     driver,
@@ -36,7 +35,7 @@ export const MapMessages = (props) => {
   const [messagesToShow, setMessagesToShow] = useState(props.messagesToShow)
 
   useEffect(() => {
-    if ((!props.messages?.messages?.length && !props.messagesToShow?.messages?.length) || !hideLogBookMessages) return
+    if (!props.messages?.messages?.length && !props.messagesToShow?.messages?.length) return
     const messages_ = {
       ...props.messages,
       messages: props.messages?.messages?.filter(msg => msg.type !== 1 && msg.type !== 0)
@@ -52,7 +51,7 @@ export const MapMessages = (props) => {
 
   return (
     <>
-      {messages?.messages.map((message) => (
+      {props?.messages?.messages.map((message) => (
         <React.Fragment key={message.id}>
           {message.type === 1 && message?.change?.attribute !== 'driver_group_id' && (
             <MessageContentWrapper key={message.id}>

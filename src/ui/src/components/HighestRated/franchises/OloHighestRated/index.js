@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useLanguage, useOrder, BusinessList as BusinessListController } from '~components'
-import { BusinessController } from '../../../BusinessController/layouts/franchises'
+import { BusinessController } from '../../../BusinessController/franchises/OloBusinessController'
 
 import {
   HighestRatedContainer,

@@ -104,7 +104,8 @@ const CheckoutUI = (props) => {
     setPlaceSpotNumber,
     placeSpotNumber,
     checkoutFieldsState,
-    alseaCheckPriceError
+    alseaCheckPriceError,
+    isLoadingCheckprice
   } = props
 
   const theme = useTheme()
@@ -136,7 +137,7 @@ const CheckoutUI = (props) => {
 
   const shouldActivateOrderDetailModal = ordering?.project?.includes('alsea')
   const cardsMethods = ['stripe', 'credomatic']
-  const stripePaymethods = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+  const stripePaymethods = ['stripe', 'stripe_connect', 'stripe_redirect']
   const businessConfigs = businessDetails?.business?.configs ?? []
   const isTableNumberEnabled = configs?.table_numer_enabled?.value
   const isWalletCashEnabled = businessConfigs.find(config => config.key === 'wallet_cash_enabled')?.value === '1'
@@ -176,7 +177,8 @@ const CheckoutUI = (props) => {
     validateDriverTipField ||
     validateCouponField ||
     validateZipcodeCard ||
-    !!alseaCheckPriceError
+    !!alseaCheckPriceError ||
+    isLoadingCheckprice
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -245,17 +247,27 @@ const CheckoutUI = (props) => {
     const _requiredFields = checkoutFieldsState?.fields
       .filter((field) => (field?.order_type_id === options?.type) && field?.enabled && field?.required_with_guest &&
         !notFields.includes(field?.validation_field?.code) &&
+        field?.validation_field?.code !== 'email' &&
         userSelected && !userSelected[field?.validation_field?.code])
     const requiredFieldsCode = _requiredFields.map((item) => item?.validation_field?.code)
     const guestCheckoutCellPhone = checkoutFieldsState?.fields?.find((field) => field.order_type_id === options?.type && field?.validation_field?.code === 'mobile_phone')
+    const guestCheckoutEmail = checkoutFieldsState?.fields?.find((field) => field.order_type_id === options?.type && field?.validation_field?.code === 'email')
     if (
       userSelected &&
-      !userSelected?.cellphone &&
+      !userSelected?.guest_cellphone &&
       ((guestCheckoutCellPhone?.enabled &&
         guestCheckoutCellPhone?.required_with_guest) ||
         configs?.verification_phone_required?.value === '1')
     ) {
       requiredFieldsCode.push('cellphone')
+    }
+    if (
+      userSelected &&
+      !userSelected?.guest_email &&
+      guestCheckoutEmail?.enabled &&
+      guestCheckoutEmail?.required_with_guest
+    ) {
+      requiredFieldsCode.push('email')
     }
     setRequiredFields(requiredFieldsCode)
   }
@@ -648,6 +660,11 @@ const CheckoutUI = (props) => {
               productLoading={productLoading}
               setProductLoading={setProductLoading}
             />
+            {isLoadingCheckprice && (
+              <SpinnerContainer>
+                <SpinnerLoader />
+              </SpinnerContainer>
+            )}
           </CartContainer>
         )}
         {
@@ -688,7 +705,7 @@ const CheckoutUI = (props) => {
                     ? (
                 `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                       )
-                    : placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')}
+                    : placing ? t('PLACING_ORDER', 'Placing order') : t('PLACE_ORDER', 'Place Order')}
             </Button>
           </WrapperPlaceOrderButton>
         )}
@@ -744,6 +761,12 @@ const CheckoutUI = (props) => {
         {!!alseaCheckPriceError && (
           <WarningText>
             {alseaCheckPriceError}
+          </WarningText>
+        )}
+
+        {isLoadingCheckprice && (
+          <WarningText>
+            {t('RECALCULATING_TOTAL_PRICE', 'Recalculating total price')}
           </WarningText>
         )}
         {cart?.valid_preorder !== undefined && !cart?.valid_preorder && (

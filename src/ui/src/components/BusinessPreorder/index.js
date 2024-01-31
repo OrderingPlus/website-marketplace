@@ -135,16 +135,25 @@ const BusinessPreorderUI = (props) => {
 
   useEffect(() => {
     if (cateringPreorder) {
+      let _timeLists = []
       const schedule = business && getActualSchedule()
-      if (!schedule && cateringPreorder && Object.keys(business)?.length > 0) {
-        setIsEnabled(false)
+      if (!schedule && business) {
+        setTimeList([])
         return
       }
-      const _timeLists = hoursList
-        .filter(hour => (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some(lapse =>
-          moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${lapse.open.hour}:${lapse.open.minute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${lapse.close.hour}:${lapse.close.minute}`))) &&
-          moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`) &&
-          (moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder))
+
+      _timeLists = hoursList
+        .filter(hour => {
+          return (Object.keys(business || {})?.length === 0 || schedule?.lapses?.some((lapse) => {
+            const openHour = lapse.open.hour < 10 ? `0${lapse.open.hour}` : lapse.open.hour
+            const openMinute = lapse.open.minute < 10 ? `0${lapse.open.minute}` : lapse.open.minute
+            const closeHour = lapse.close.hour < 10 ? `0${lapse.close.hour}` : lapse.close.hour
+            const closeMinute = lapse.close.minute < 10 ? `0${lapse.close.minute}` : lapse.close.minute
+            return moment(dateSelected + ` ${hour.startTime}`) >= moment(dateSelected + ` ${openHour}:${openMinute}`).add(preorderLeadTime, 'minutes') && moment(dateSelected + ` ${hour.endTime}`) <= moment(dateSelected + ` ${closeHour}:${closeMinute}`)
+          })) &&
+            (moment(dateSelected + ` ${hour.startTime}`) < moment(dateSelected + ` ${hour.endTime}`)) &&
+            (moment().add(preorderLeadTime, 'minutes') < moment(dateSelected + ` ${hour.startTime}`) || !cateringPreorder)
+        })
         .map(hour => {
           return {
             value: hour.startTime,
@@ -168,14 +177,15 @@ const BusinessPreorderUI = (props) => {
                 )
           }
         })
-      setIsEnabled(true)
-      setTimeList(_timeLists)
+      if (_timeLists?.length > 0) {
+        setTimeList(_timeLists)
+      }
     } else {
       const selectedMenu = menu ? (menu?.use_business_schedule ? business : menu) : business
       const _times = getTimeList(dateSelected, selectedMenu)
       setTimeList(_times)
     }
-  }, [dateSelected, menu, business, cateringPreorder, hoursList])
+  }, [dateSelected, menu, JSON.stringify(business), cateringPreorder, JSON.stringify(hoursList), dateSelected])
 
   useEffect(() => {
     if (type === 'business_hours') setMenu(null)
@@ -270,7 +280,7 @@ const BusinessPreorderUI = (props) => {
           </DateWrapper>
 
           <TimeListWrapper>
-            {(isEnabled && timeList?.length > 0)
+            {((isEnabled || cateringPreorder) && timeList?.length > 0)
               ? (
               <>
                 {timeList.map((time, i) => (
@@ -289,7 +299,7 @@ const BusinessPreorderUI = (props) => {
                           {timeSelected === time.value ? <CheckedIcon cateringPreorder={cateringPreorder} /> : <CgRadioCheck />}
                         </CheckIcon>
                       )}
-                      <p>
+                      <p id='time'>
                         {time.text} {cateringPreorder && `- ${time.endText}`}
                       </p>
                     </span>

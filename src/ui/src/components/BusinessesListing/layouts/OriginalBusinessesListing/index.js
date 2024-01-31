@@ -224,6 +224,7 @@ const BusinessesListingUI = (props) => {
     if (!citiesState?.cities?.length || !orderState?.options?.city_id) return
     const selectedCity = citiesState?.cities?.find(city => city?.id === orderState?.options?.city_id)
     if (!selectedCity || !selectedCity?.enabled) changeCityFilter(null)
+    setHasHighRatedBusiness(true)
   }, [citiesState, orderState?.options?.city_id])
 
   useEffect(() => {
@@ -421,7 +422,7 @@ const BusinessesListingUI = (props) => {
         </HightestRatedWrapper>
       )}
 
-      {(((configs && configs?.business_listing_categories !== false) || !isCustomLayout) && !isAllCategoriesHidden) && (
+      {(((configs && configs?.business_listing_categories !== false) || !isCustomLayout) && !isAllCategoriesHidden && !isCustomerMode) && (
         <BusinessTypeFilter
           images={props.images}
           businessTypes={props.businessTypes}
@@ -433,7 +434,7 @@ const BusinessesListingUI = (props) => {
         <SearchContainer>
           {isCustomLayout && (
             <BusinessesTitle isCustomerMode={isCustomerMode}>
-              {t('BUSINESSES', 'Businesses')}
+              {isCustomerMode ? t('SELECT_THE_BUSINESS', 'Select the business') : t('BUSINESSES', 'businesses')}
             </BusinessesTitle>
           )}
           <WrapperSearch isCustomLayout={isCustomLayout} isCustomerMode={isCustomerMode}>
@@ -543,10 +544,11 @@ const BusinessesListingUI = (props) => {
         />
       </Modal>
       <Modal
-        title={t('SELECT_A_STORE', 'Select a store')}
         open={modals.citiesOpen}
         width='70%'
         onClose={() => setModals({ ...modals, citiesOpen: false })}
+        padding='0px'
+        hideCloseDefault
       >
         <CitiesControl
           cities={citiesState?.cities}

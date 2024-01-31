@@ -106,7 +106,8 @@ const OrderDetailsUI = (props) => {
     reorderState,
     handleReorder,
     orderTypes,
-    handleRemoveCart
+    handleRemoveCart,
+    hideStaticMap
   } = props
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
@@ -189,8 +190,8 @@ const OrderDetailsUI = (props) => {
       }
       try {
         const image = new Image()
+        image.onload = resolve
         image.src = src
-        image.complete ? resolve(true) : resolve(false)
       } catch (err) {
         resolve(false)
       }
@@ -439,6 +440,9 @@ const OrderDetailsUI = (props) => {
                     {!!order?.integration_id && (
                       <h1>{t('TICKET', 'Ticket')}: {order?.integration_id}</h1>
                     )}
+                    {!!order?.integration_id_date && (
+                      <h1>{t('N_ORDER', 'N. Orden')}: {order?.integration_id_date}</h1>
+                    )}
                     {!hideDeliveryType && (
                       <p className='types'>
                         {isService
@@ -531,7 +535,7 @@ const OrderDetailsUI = (props) => {
                     </>
                   )}
                 </OrderInfo>
-                {!isGiftCardOrder && (
+                {!isGiftCardOrder && !hideStaticMap && (
                   <OrderBusiness>
                     <BusinessExternalWrapper>
                       <BusinessWrapper
@@ -650,6 +654,40 @@ const OrderDetailsUI = (props) => {
                 }
               />
             )}
+            {hideStaticMap && (
+              <OrderCustomer>
+                <WrapperDriver>
+                  {isShowBusinessLogo && order?.business?.logo && (
+                    <PhotoBlock src={order?.business?.logo} />
+                  )}
+                  <div>
+                    <p>{order?.business?.name}</p>
+                    <ActionsSection
+                      {...ActionsSectionProps}
+                      actionType='business'
+                      showPhone={!hideBusinessPhone}
+                      showMessages={!hideBusinessMessages}
+                    />
+                    {!hideBusinessEmail && (
+                      <p>{order?.business?.email}</p>
+                    )}
+                    {!hideBusinessPhone && (
+                      <p>{order?.business?.cellphone}</p>
+                    )}
+                    {!hideBusinessAddress && (
+                      <p>{order?.business?.address}</p>
+                    )}
+                    {order?.place?.name && (
+                      <PlaceSpotSection>
+                        <p>
+                          {yourSpotString}: {order?.place?.name}
+                        </p>
+                      </PlaceSpotSection>
+                    )}
+                  </div>
+                </WrapperDriver>
+              </OrderCustomer>
+            )}
             <OrderCustomer>
               <WrapperDriver>
                 {!hideCustomerPhoto && order?.customer?.photo && (
@@ -658,10 +696,10 @@ const OrderDetailsUI = (props) => {
                 <div>
                   <p>{order?.customer?.name} {order?.customer?.lastname}</p>
                   {!hideCustomerEmail && (
-                    <p>{order?.customer?.email}</p>
+                    <p>{order?.customer?.guest_id ? order?.customer?.guest_email : order?.customer?.email}</p>
                   )}
                   {!hideCustomerPhone && (
-                    <p>{order?.customer?.cellphone || order?.customer?.phone}</p>
+                    <p>{order?.customer?.guest_id ? order?.customer?.guest_cellphone : (order?.customer?.cellphone || order?.customer?.phone)}</p>
                   )}
                   {!hideCustomerAddress && (
                     <p>{order?.customer?.address}</p>

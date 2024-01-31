@@ -266,7 +266,7 @@ const MomentControlUI = (props) => {
               isLoading={orderState?.loading}
             >
               {isASP ? <CheckedIcon /> : <CgRadioCheck />}
-              <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format('LLLL')} + {t('DELIVERY_TIME', 'delivery time')})</span>
+              <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format(`dddd, MMMM DD, YYYY ${configs?.general_hour_format?.value}`)} + {t('DELIVERY_TIME', 'delivery time')})</span>
             </CheckBoxWrapper>
           )}
           <CheckBoxWrapper
@@ -358,7 +358,7 @@ const MomentControlUI = (props) => {
                               {timeSelected === time.value ? <CheckedIcon ref={scheduleItemRef} cateringPreorder={cateringPreorder} /> : <CgRadioCheck />}
                             </CheckIcon>
                           )}
-                          <p>
+                          <p id='time'>
                             {time.text} {cateringPreorder && `- ${time.endText}`}
                           </p>
                         </span>
