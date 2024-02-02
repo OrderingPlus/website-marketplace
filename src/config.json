@@ -1,6 +1,6 @@
 {
   "app_id": "ordering-react",
-	"notification_app": "orderingweb",
+  "notification_app": "orderingweb",
   "app_name": "Ordering",
   "project": "demosv5",
   "api": {
@@ -25,7 +25,7 @@
   "use_kiosk": false,
   "businessSlug": "",
   "franchiseSlug": null,
-  "isCancellation" : false,
+  "isCancellation": false,
   "useOptimizeLoad": false,
   "openGraphTags": {
     "title": "Ordering Website 2.0",

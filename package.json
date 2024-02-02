@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "shx rm -rf dist _modules",
     "build": "yarn run clean && babel ./src --out-dir ./_modules && webpack --config webpack.prod.js",
-    "serve": "npx webpack serve --config webpack.dev.js",
+    "serve": "yarn install-packages && yarn update-config && npx webpack serve --config webpack.dev.js",
+    "update-config": "./updateConfig.sh",
+    "install-packages": "rm -rf node_modules yarn.lock && yarn",
     "lint": "eslint . --fix"
   },
   "repository": {
