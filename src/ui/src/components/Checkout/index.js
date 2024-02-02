@@ -315,12 +315,14 @@ const CheckoutUI = (props) => {
     setUserErrors(errors)
   }
 
-  const handleSuccessSignup = (user) => {
-    login({
+  const handleSuccessSignup = async (user) => {
+    await login({
       user,
       token: user?.session?.access_token
     })
-    openModal?.isGuest && handlePlaceOrderAsGuest()
+    if (openModal?.isGuest && requiredFields?.length === 0) {
+      handlePlaceOrderAsGuest()
+    }
     setOpenModal({ ...openModal, signup: false, isGuest: false })
   }
 
@@ -361,7 +363,7 @@ const CheckoutUI = (props) => {
   }, [isResetPaymethod])
 
   useEffect(() => {
-    if (cart?.products?.length) return
+    if (cart?.products?.length || !userLoading) return
     if (cart?.business_id !== null) {
       handleStoreRedirect(cart?.business?.slug)
     } else {
