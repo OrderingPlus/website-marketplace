@@ -6,28 +6,6 @@ This repository is a template marketplace using functional components. It includ
 
 Please select the option that you like better.
 
-## Quick Start
-
-To quickly get started with the development environment, follow these steps:
-
-1. Open the project folder in your preferred code editor.
-
-2. Ensure you have [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) installed on your machine.
-
-3. Open a terminal in the project folder and run the following command:
-
-    ```bash
-    yarn serve
-    ```
-
-4. The setup process will prompt you to enter the project name. Simply type the name and press Enter to continue.
-
-5. Sit back and relax! The script will handle the installation of dependencies and start the development server.
-
-6. Once the setup is complete, your project should be live, and the browser will open the website automatically.
-
-## OR
-
 ## Option 1: Clone repository and run with yarn
 
 1. Clone repository: `git clone --recursive https://github.com/OrderingX/website-marketplace.git`
@@ -42,6 +20,13 @@ To quickly get started with the development environment, follow these steps:
 2. Enter the downloaded repository folder `cd website-marketplace`
 3. Run `docker-compose up`
 4. Open `0.0.0.0:3000` in your browser
+
+## Notes
+
+To change the project name to use, you can go to following path `src/config.json` and change the property `project` to the value you need.
+Also in `src/config.json` file you can change the value of the properties you can see there.
+
+> By default we use `demosv5` as a project, this project has a reset every 2 hours
 
 ## Format code
 
