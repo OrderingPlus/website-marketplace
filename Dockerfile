@@ -1,13 +1,6 @@
-FROM node:16
-ENV OPTIPNG_BINARIES=none
-WORKDIR /app
-COPY package*.json ./
-RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    autoconf \
-    automake \
-    libtool
+FROM node:18.19-slim AS development
+WORKDIR /website-marketplace
+COPY package.json .
 RUN npm install --ignore-scripts --force
 COPY . .
 EXPOSE 3000

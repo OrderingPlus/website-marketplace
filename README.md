@@ -19,7 +19,11 @@ Please select the option that you like better.
 1. Clone repository: `git clone --recursive https://github.com/OrderingX/website-marketplace.git`
 2. Enter the downloaded repository folder `cd website-marketplace`
 3. Run `docker-compose up`
-4. Open `0.0.0.0:3000` in your browser
+4. Open `localhost:3000` in your browser
+
+# Troubleshooting
+
+If you can't get the server with `0.0.0.0:3000` you can use `localhost:3000` instead.
 
 ## Notes
 

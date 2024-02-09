@@ -1,12 +1,13 @@
-version: '3.8'
 services:
-  website:
-    build: ./
+  website-marketplace-dev:
     container_name: website_marketplace_c
+    image: website_marketplace_image
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    stdin_open: true
-    tty: true
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/website-marketplace
+      - /website-marketplace/node_modules
+    command: npm run serve-docker

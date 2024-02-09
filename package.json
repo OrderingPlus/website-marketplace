@@ -7,7 +7,7 @@
     "clean": "shx rm -rf dist _modules",
     "build": "yarn run clean && babel ./src --out-dir ./_modules && webpack --config webpack.prod.js",
     "serve": "yarn && npx webpack serve --config webpack.dev.js",
-    "serve-docker": "npx webpack serve --config webpack.dev.js",
+    "serve-docker": "WATCHPACK_POLLING=true npx webpack serve --config webpack.dev.js",
     "install-packages": "rm -rf node_modules yarn.lock && yarn",
     "lint": "eslint . --fix"
   },
