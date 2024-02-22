@@ -3,10 +3,12 @@ import Skeleton from 'react-loading-skeleton'
 import IosRadioButtonOff from '@meronex/icons/ios/IosRadioButtonOff'
 import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
 import BsArrowRight from '@meronex/icons/bs/BsArrowRight'
+import MdClose from '@meronex/icons/md/MdClose'
 
-import { ButtonWrapper, CityItem, Container } from './styles'
+import { ButtonWrapper, CityItem, Container, SearchBarContainer } from './styles'
 import { useLanguage, useOrder } from '~components'
-import { Button } from '~ui'
+import { Button, SearchBar } from '~ui'
+import { ModalHeader, ModalIcon, ModalIconWrapper, ModalTitle } from '../Modal/styles'
 
 export const CitiesControl = (props) => {
   const {

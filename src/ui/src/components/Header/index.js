@@ -28,7 +28,7 @@ import {
 
 import { useSession, useLanguage, useOrder, useEvent, useConfig, useCustomer, useUtils, useBusiness } from '~components'
 import {
-  LanguageSelectorOld as LanguageSelector,
+  LanguageSelector,
   useWindowSize,
   useOnlineStatus,
   getDistance,

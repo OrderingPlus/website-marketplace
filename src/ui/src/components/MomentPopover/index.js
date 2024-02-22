@@ -5,7 +5,7 @@ import FaRegClock from '@meronex/icons/fa/FaRegClock'
 import { HeaderItem, PopoverBody, PopoverArrow } from './styles'
 
 import { useOrder, useLanguage, useUtils, useConfig } from '~components'
-import { MomentContentOld as MomentContent } from '~ui'
+import { MomentContent } from '~ui'
 
 export const MomentPopover = (props) => {
   const { open } = props
@@ -64,12 +64,6 @@ export const MomentPopover = (props) => {
 
   return (
     <div className='moment-popover' style={{ overflow: 'hidden' }}>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <HeaderItem
         ref={referenceElement}
         onClick={configs?.max_days_preorder?.value === -1 || configs?.max_days_preorder?.value === 0 ? null : props.onClick}
@@ -84,12 +78,6 @@ export const MomentPopover = (props) => {
         <MomentContent />
         <PopoverArrow key='arrow' ref={arrowElement} style={styles.arrow} />
       </PopoverBody>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

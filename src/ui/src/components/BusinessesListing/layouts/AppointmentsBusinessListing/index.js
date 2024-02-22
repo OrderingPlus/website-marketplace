@@ -324,7 +324,7 @@ const BusinessListingUI = (props) => {
   )
 }
 
-export const BusinessListing = (props) => {
+export const AppointmentsBusinessListing = (props) => {
   const businessListingProps = {
     ...props,
     UIComponent: BusinessListingUI

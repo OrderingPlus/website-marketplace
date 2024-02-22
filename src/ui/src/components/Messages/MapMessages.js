@@ -31,7 +31,7 @@ export const MapMessages = (props) => {
   const [{ parseDate, parseTime }] = useUtils()
   const [{ user }] = useSession()
 
-  const [messages, setMessages] = useState(props.messages)
+  const [, setMessages] = useState(props.messages)
   const [messagesToShow, setMessagesToShow] = useState(props.messagesToShow)
 
   useEffect(() => {

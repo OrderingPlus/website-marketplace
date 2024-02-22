@@ -1,5 +1,5 @@
 import React from 'react'
-import { GoogleGpsButton as GpsButton } from '~components'
+import { GpsButton } from '~components'
 
 import { GpsButtonStyle } from './styles'
 

@@ -35,73 +35,59 @@ const AddressDetailsUI = (props) => {
   }, [])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <AddressContainer>
-        <Header>
-          <Text>
-            <h1>{addressToShow || orderState?.options?.address?.address}</h1>
-            {orderState?.options?.type === 1 && !isCartPending &&
-              <span onClick={() => setOpenModal(true)}>{t('CHANGE_ADDRESS', 'Change address')}</span>}
-          </Text>
-        </Header>
-        {apiKey && (
-          <>
-            {!isShowMap && (
-              <ToggleMap>
-                <Text>
-                  <span onClick={() => setIsShowMap(!isShowMap)}>{t('SHOW_MAP', 'Show map')}</span>
-                </Text>
-              </ToggleMap>
-            )}
-            {isShowMap && (
-              <WrappMap>
-                <Map>
-                  <img src={googleMapsUrl} id='google-maps-image' alt='google-maps-location' width='288px' height='162px' loading='lazy' />
-                </Map>
-              </WrappMap>
-            )}
-          </>
-        )}
+    <AddressContainer>
+      <Header>
+        <Text>
+          <h1>{addressToShow || orderState?.options?.address?.address}</h1>
+          {orderState?.options?.type === 1 && !isCartPending &&
+            <span onClick={() => setOpenModal(true)}>{t('CHANGE_ADDRESS', 'Change address')}</span>}
+        </Text>
+      </Header>
+      {apiKey && (
+        <>
+          {!isShowMap && (
+            <ToggleMap>
+              <Text>
+                <span onClick={() => setIsShowMap(!isShowMap)}>{t('SHOW_MAP', 'Show map')}</span>
+              </Text>
+            </ToggleMap>
+          )}
+          {isShowMap && (
+            <WrappMap>
+              <Map>
+                <img src={googleMapsUrl} id='google-maps-image' alt='google-maps-location' width='288px' height='162px' loading='lazy' />
+              </Map>
+            </WrappMap>
+          )}
+        </>
+      )}
 
-        <Modal
-          open={openModal}
-          width='70%'
-          onClose={() => setOpenModal(false)}
-        >
-          <AddressList
-            isModal
-            changeOrderAddressWithDefault
-            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-            onCancel={() => setOpenModal(false)}
-            userCustomerSetup={isCustomerMode && user}
-            isFromCheckout={isFromCheckout}
-            isCustomerMode={isCustomerMode}
-          />
-        </Modal>
-
-        <Alert
-          title={t('SEARCH', 'Search')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => setAlertState({ open: false, content: [] })}
-          onAccept={() => setAlertState({ open: false, content: [] })}
-          closeOnBackdrop={false}
+      <Modal
+        open={openModal}
+        width='70%'
+        onClose={() => setOpenModal(false)}
+      >
+        <AddressList
+          isModal
+          changeOrderAddressWithDefault
+          userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+          onCancel={() => setOpenModal(false)}
+          userCustomerSetup={isCustomerMode && user}
+          isFromCheckout={isFromCheckout}
+          isCustomerMode={isCustomerMode}
         />
-      </AddressContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+      </Modal>
+
+      <Alert
+        title={t('SEARCH', 'Search')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => setAlertState({ open: false, content: [] })}
+        onAccept={() => setAlertState({ open: false, content: [] })}
+        closeOnBackdrop={false}
+      />
+    </AddressContainer>
   )
 }
 

@@ -169,47 +169,33 @@ const BusinessProductsCategoriesUI = (props) => {
   }, [business?.professionals, useKioskApp])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <CategoriesContainer id='category-lists' className='category-lists' featured={featured} w={props.wContainerStyle} isProfessional={isProfessional}>
-        {!isSkeleton
-          ? (
-          <Tabs variant='primary'>
-            {openBusinessInformation
-              ? (
-              <>
-                <ProductCategories />
-              </>
-                )
-              : (
-              <AutoScroll>
-                <ProductCategories />
-              </AutoScroll>
-                )}
-          </Tabs>
-            )
-          : (
-          <Tabs variant='primary'>
-            {[...Array(4).keys()].map(i => (
-              <Tab key={i}>
-                <Skeleton width={100} />
-              </Tab>
-            ))}
-          </Tabs>
-            )}
-      </CategoriesContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+    <CategoriesContainer id='category-lists' className='category-lists' featured={featured} w={props.wContainerStyle} isProfessional={isProfessional}>
+      {!isSkeleton
+        ? (
+        <Tabs variant='primary'>
+          {openBusinessInformation
+            ? (
+            <>
+              <ProductCategories />
+            </>
+              )
+            : (
+            <AutoScroll>
+              <ProductCategories />
+            </AutoScroll>
+              )}
+        </Tabs>
+          )
+        : (
+        <Tabs variant='primary'>
+          {[...Array(4).keys()].map(i => (
+            <Tab key={i}>
+              <Skeleton width={100} />
+            </Tab>
+          ))}
+        </Tabs>
+          )}
+    </CategoriesContainer>
   )
 }
 

@@ -220,241 +220,227 @@ const PaymentOptionsUI = (props) => {
   }, [paymethodClicked?.confirmed])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <PaymentMethodsContainer>
-        <PaymentMethodsList className='payments-list'>
-          {!(paymethodsList.loading || isLoading) &&
-            supportedMethods.length > 0 && (
-            supportedMethods.sort((a, b) => a.id - b.id).map(paymethod => (
-              <React.Fragment key={paymethod.id}>
-                {
-                  (((!isCustomerMode || (isAlsea && isCustomerMode)) && paymethod.gateway) || (isCustomerMode && (paymethod.gateway === 'card_delivery' || paymethod.gateway === 'cash'))) && (
-                    <PayCard
-                      isDisabled={isDisabled}
-                      className={`${(paymethodSelected?.id || isOpenMethod?.paymethod?.id) === paymethod.id ? 'active' : ''}`}
-                      onClick={() => handlePaymentMethodClick(paymethod)}
-                    >
-                      <div>
-                        {getPayIcon(paymethod.id)}
-                      </div>
-                      <p>
-                        {getNamePaymethod(paymethod)}
-                      </p>
-                    </PayCard>
-                  )
-                }
-              </React.Fragment>
-            )
-            )
-          )}
-
-          {(paymethodsList.loading || isLoading) && (
-            [...Array(5).keys()].map(i => (
-              <PayCard key={i} isSkeleton>
-                <Skeleton key={i} width={100} height={60} style={{ marginLeft: '10px' }} />
-              </PayCard>
-            ))
-          )}
-
-          {paymethodsList.error && paymethodsList.error.length > 0 && (
-            <NotFoundSource
-              content={paymethodsList?.error[0]?.message || paymethodsList?.error[0]}
-            />
-          )}
-
-          {!(paymethodsList.loading || isLoading) &&
-            !paymethodsList.error &&
-            (!paymethodsList?.paymethods || supportedMethods.length === 0) &&
-            (
-              <p>{t('NO_PAYMENT_METHODS', 'No payment methods!')}</p>
-            )}
-        </PaymentMethodsList>
-
-        {paymethodSelected?.gateway === 'cash' && (
-          <PaymentOptionCash
-            data={paymethodSelected?.data}
-            orderTotal={cart?.balance ?? cart?.total}
-            defaultValue={paymethodSelected?.data?.cash}
-            onChangeData={handlePaymethodDataChange}
-            setErrorCash={props.setErrorCash}
-          />
-        )}
-        {(isOpenMethod?.paymethod?.gateway === 'stripe' || paymethodSelected?.gateway === 'stripe') && (
-          <PaymentOptionStripe
-            setCardList={setCardList}
-            paymethod={isOpenMethod?.paymethod}
-            businessId={props.businessId}
-            publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
-            onPaymentChange={onPaymentChange}
-            payType={isOpenMethod?.paymethod?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-            paymethodSelected={paymethodSelected?.data?.id}
-            handlePaymentMethodClick={handlePaymentMethodClick}
-          />
-        )}
-
-        {(cardsPaymethods.includes(isOpenMethod?.paymethod?.gateway) || cardsPaymethods.includes(paymethodSelected?.gateway)) && (
-          <PaymentOptionCard
-            setCardList={setCardList}
-            paymethod={isOpenMethod?.paymethod}
-            businessId={props.businessId}
-            publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
-            gateway={isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway}
-            onPaymentChange={onPaymentChange}
-            payType={isOpenMethod?.paymethod?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-            paymethodSelected={paymethodSelected?.data?.id}
-            handlePaymentMethodClick={handlePaymentMethodClick}
-          />
-        )}
-
-        {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && !isCustomerMode && paymethodSelected?.gateway !== 'stripe' && (
-          <PayCardSelected>
-            <CardItemContent>
-              <span className='checks'>
-                <IosRadioButtonOn />
-              </span>
-              <span className='brand'>
-                <img src={getIconCard(paymethodData?.card?.brand)} alt={paymethodData?.card?.brand} />
-              </span>
-              <span>
-                XXXX-XXXX-XXXX-{paymethodData?.card?.last4}
-              </span>
-            </CardItemContent>
-          </PayCardSelected>
-        )}
-
-        {/* Paypal */}
-        <Modal
-          className='modal-info'
-          open={isOpenMethod?.paymethod?.gateway === 'paypal' && !paymethodData.id}
-          onClose={() => handlePaymethodClick(null)}
-          title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
-        >
-          {isOpenMethod?.paymethod?.gateway === 'paypal' && (
-            <PaymentOptionPaypal
-              clientId={isOpenMethod?.paymethod?.credentials?.client_id}
-              body={{
-                paymethod_id: isOpenMethod?.paymethod?.id,
-                amount: cart?.balance ?? cart.total,
-                delivery_zone_id: cart.delivery_zone_id,
-                cartUuid: cart.uuid
-              }}
-              btnStyle={paypalBtnStyle}
-              noAuthMessage={
-                !token
-                  ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
-                  : null
+    <PaymentMethodsContainer>
+      <PaymentMethodsList className='payments-list'>
+        {!(paymethodsList.loading || isLoading) &&
+          supportedMethods.length > 0 && (
+          supportedMethods.sort((a, b) => a.id - b.id).map(paymethod => (
+            <React.Fragment key={paymethod.id}>
+              {
+                (((!isCustomerMode || (isAlsea && isCustomerMode)) && paymethod.gateway) || (isCustomerMode && (paymethod.gateway === 'card_delivery' || paymethod.gateway === 'cash'))) && (
+                  <PayCard
+                    isDisabled={isDisabled}
+                    className={`${(paymethodSelected?.id || isOpenMethod?.paymethod?.id) === paymethod.id ? 'active' : ''}`}
+                    onClick={() => handlePaymentMethodClick(paymethod)}
+                  >
+                    <div>
+                      {getPayIcon(paymethod.id)}
+                    </div>
+                    <p>
+                      {getNamePaymethod(paymethod)}
+                    </p>
+                  </PayCard>
+                )
               }
-              handlerChangePaypal={(uuid) => handleOrderRedirect && handleOrderRedirect(uuid)}
-            />
-          )}
-        </Modal>
+            </React.Fragment>
+          )
+          )
+        )}
 
-        {/* Stripe Connect */}
-        <Modal
-          title={t('SELECT_A_CARD', 'Select a card')}
-          open={isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id}
-          className='modal-info'
-          onClose={() => handlePaymethodClick(null)}
-        >
-          {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && (
-            <PaymentOptionStripe
-              paymethod={isOpenMethod?.paymethod}
-              businessId={props.businessId}
-              publicKey={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
-              clientSecret={isOpenMethod?.paymethod?.credentials?.publishable}
-              payType={paymethodsList?.name}
-              onSelectCard={handlePaymethodDataChange}
-              onCancel={() => handlePaymethodClick(null)}
-              paymethodSelected={paymethodSelected}
-            />
-          )}
-        </Modal>
+        {(paymethodsList.loading || isLoading) && (
+          [...Array(5).keys()].map(i => (
+            <PayCard key={i} isSkeleton>
+              <Skeleton key={i} width={100} height={60} style={{ marginLeft: '10px' }} />
+            </PayCard>
+          ))
+        )}
 
-        {/* Stripe direct, Google pay, Apple pay */}
-        <Modal
-          title={t('ADD_CARD', 'Add card')}
-          open={stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id}
-          className='modal-info'
-          onClose={() => handlePaymethodClick(null)}
-        >
-          {!isOpenMethod?.paymethod?.credentials?.publishable &&
-            <Container>
-              <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
-            </Container>}
-          {isOpenMethod?.paymethod?.credentials?.publishable && stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && (
-            <StripeElementsForm
-              methodsPay={methodsPay}
-              paymethod={isOpenMethod?.paymethod?.gateway}
-              businessId={props.businessId}
-              cart={cart}
-              publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
-              handleSource={handlePaymethodDataChange}
-              onCancel={() => handlePaymethodClick(null)}
-              handlePlaceOrder={handlePlaceOrder}
-            />
-          )}
-        </Modal>
-
-        {/* Stripe Redirect */}
-        <Modal
-          title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-          open={isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type}
-          className='modal-info'
-          onClose={() => handlePaymethodClick(null)}
-        >
-          <StripeRedirectForm
-            businessId={props.businessId}
-            currency={props.currency}
-            paymethods={stripeRedirectOptions}
-            handleStripeRedirect={handlePaymethodDataChange}
+        {paymethodsList.error && paymethodsList.error.length > 0 && (
+          <NotFoundSource
+            content={paymethodsList?.error[0]?.message || paymethodsList?.error[0]}
           />
-        </Modal>
-        <Modal
-          title={t('SQUARE', 'Square')}
-          open={isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token}
-          onClose={() => handlePaymethodClick(null)}
-        >
-          <PaymentOptionSquare
-            businessId={props.businessId}
-            cartTotal={cart?.total}
-            data={isOpenMethod?.paymethod?.credentials}
+        )}
+
+        {!(paymethodsList.loading || isLoading) &&
+          !paymethodsList.error &&
+          (!paymethodsList?.paymethods || supportedMethods.length === 0) &&
+          (
+            <p>{t('NO_PAYMENT_METHODS', 'No payment methods!')}</p>
+          )}
+      </PaymentMethodsList>
+
+      {paymethodSelected?.gateway === 'cash' && (
+        <PaymentOptionCash
+          data={paymethodSelected?.data}
+          orderTotal={cart?.balance ?? cart?.total}
+          defaultValue={paymethodSelected?.data?.cash}
+          onChangeData={handlePaymethodDataChange}
+          setErrorCash={props.setErrorCash}
+        />
+      )}
+      {(isOpenMethod?.paymethod?.gateway === 'stripe' || paymethodSelected?.gateway === 'stripe') && (
+        <PaymentOptionStripe
+          setCardList={setCardList}
+          paymethod={isOpenMethod?.paymethod}
+          businessId={props.businessId}
+          publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
+          onPaymentChange={onPaymentChange}
+          payType={isOpenMethod?.paymethod?.name}
+          onSelectCard={handlePaymethodDataChange}
+          onCancel={() => handlePaymethodClick(null)}
+          paymethodSelected={paymethodSelected?.data?.id}
+          handlePaymentMethodClick={handlePaymentMethodClick}
+        />
+      )}
+
+      {(cardsPaymethods.includes(isOpenMethod?.paymethod?.gateway) || cardsPaymethods.includes(paymethodSelected?.gateway)) && (
+        <PaymentOptionCard
+          setCardList={setCardList}
+          paymethod={isOpenMethod?.paymethod}
+          businessId={props.businessId}
+          publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
+          gateway={isOpenMethod?.paymethod?.gateway || paymethodSelected?.gateway}
+          onPaymentChange={onPaymentChange}
+          payType={isOpenMethod?.paymethod?.name}
+          onSelectCard={handlePaymethodDataChange}
+          onCancel={() => handlePaymethodClick(null)}
+          paymethodSelected={paymethodSelected?.data?.id}
+          handlePaymentMethodClick={handlePaymentMethodClick}
+        />
+      )}
+
+      {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && !isCustomerMode && paymethodSelected?.gateway !== 'stripe' && (
+        <PayCardSelected>
+          <CardItemContent>
+            <span className='checks'>
+              <IosRadioButtonOn />
+            </span>
+            <span className='brand'>
+              <img src={getIconCard(paymethodData?.card?.brand)} alt={paymethodData?.card?.brand} />
+            </span>
+            <span>
+              XXXX-XXXX-XXXX-{paymethodData?.card?.last4}
+            </span>
+          </CardItemContent>
+        </PayCardSelected>
+      )}
+
+      {/* Paypal */}
+      <Modal
+        className='modal-info'
+        open={isOpenMethod?.paymethod?.gateway === 'paypal' && !paymethodData.id}
+        onClose={() => handlePaymethodClick(null)}
+        title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
+      >
+        {isOpenMethod?.paymethod?.gateway === 'paypal' && (
+          <PaymentOptionPaypal
+            clientId={isOpenMethod?.paymethod?.credentials?.client_id}
             body={{
               paymethod_id: isOpenMethod?.paymethod?.id,
-              amount: cart.total,
+              amount: cart?.balance ?? cart.total,
               delivery_zone_id: cart.delivery_zone_id,
               cartUuid: cart.uuid
             }}
-            onPlaceOrderClick={onPlaceOrderClick}
-            setCreateOrder={setCreateOrder}
+            btnStyle={paypalBtnStyle}
+            noAuthMessage={
+              !token
+                ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
+                : null
+            }
+            handlerChangePaypal={(uuid) => handleOrderRedirect && handleOrderRedirect(uuid)}
           />
-        </Modal>
-        <Alert
-          title={t('PAYMENT_METHODS', 'Payment methods')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
+        )}
+      </Modal>
+
+      {/* Stripe Connect */}
+      <Modal
+        title={t('SELECT_A_CARD', 'Select a card')}
+        open={isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id}
+        className='modal-info'
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && (
+          <PaymentOptionStripe
+            paymethod={isOpenMethod?.paymethod}
+            businessId={props.businessId}
+            publicKey={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+            clientSecret={isOpenMethod?.paymethod?.credentials?.publishable}
+            payType={paymethodsList?.name}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(null)}
+            paymethodSelected={paymethodSelected}
+          />
+        )}
+      </Modal>
+
+      {/* Stripe direct, Google pay, Apple pay */}
+      <Modal
+        title={t('ADD_CARD', 'Add card')}
+        open={stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id}
+        className='modal-info'
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {!isOpenMethod?.paymethod?.credentials?.publishable &&
+          <Container>
+            <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
+          </Container>}
+        {isOpenMethod?.paymethod?.credentials?.publishable && stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && (
+          <StripeElementsForm
+            methodsPay={methodsPay}
+            paymethod={isOpenMethod?.paymethod?.gateway}
+            businessId={props.businessId}
+            cart={cart}
+            publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
+            handleSource={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(null)}
+            handlePlaceOrder={handlePlaceOrder}
+          />
+        )}
+      </Modal>
+
+      {/* Stripe Redirect */}
+      <Modal
+        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
+        open={isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type}
+        className='modal-info'
+        onClose={() => handlePaymethodClick(null)}
+      >
+        <StripeRedirectForm
+          businessId={props.businessId}
+          currency={props.currency}
+          paymethods={stripeRedirectOptions}
+          handleStripeRedirect={handlePaymethodDataChange}
         />
-      </PaymentMethodsContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+      </Modal>
+      <Modal
+        title={t('SQUARE', 'Square')}
+        open={isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        <PaymentOptionSquare
+          businessId={props.businessId}
+          cartTotal={cart?.total}
+          data={isOpenMethod?.paymethod?.credentials}
+          body={{
+            paymethod_id: isOpenMethod?.paymethod?.id,
+            amount: cart.total,
+            delivery_zone_id: cart.delivery_zone_id,
+            cartUuid: cart.uuid
+          }}
+          onPlaceOrderClick={onPlaceOrderClick}
+          setCreateOrder={setCreateOrder}
+        />
+      </Modal>
+      <Alert
+        title={t('PAYMENT_METHODS', 'Payment methods')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </PaymentMethodsContainer>
   )
 }
 

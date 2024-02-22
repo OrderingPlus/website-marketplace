@@ -33,7 +33,8 @@ import {
   HeaderContent,
   AuthButtonList,
   Flag,
-  SectionTitleContainer
+  SectionTitleContainer,
+  SpinnerContainer
 } from './styles'
 
 import {
@@ -69,7 +70,8 @@ import {
   Cart,
   CartContent,
   PlaceSpot,
-  OrderContextUI
+  OrderContextUI,
+  SpinnerLoader
 } from '~ui'
 
 const mapConfigs = {

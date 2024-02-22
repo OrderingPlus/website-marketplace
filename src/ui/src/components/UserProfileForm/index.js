@@ -32,7 +32,6 @@ import {
   ExamineClick
 } from '~components'
 
-import { UserFormDetailsUI as UserFormDetailsOldUI } from '../UserFormDetails/layouts/Old'
 import {
   bytesConverter,
   capitalize,
@@ -108,7 +107,6 @@ const UserProfileFormUI = (props) => {
 
   const showCustomerPicture = !theme?.profile?.components?.picture?.hidden
   const showAddressList = !theme?.profile?.components?.address_list?.hidden
-  const userFormLayoutRow = theme?.profile?.components?.layout?.position === 'row'
 
   const isPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
   const isAddressListNewPage = theme?.profile?.components?.address_list?.components?.layout?.position === 'new_page'
@@ -236,12 +234,6 @@ const UserProfileFormUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <Container>
         <UserProfileContainer mbottom={isHiddenAddress && 25}>
           {showCustomerPicture && (
@@ -291,24 +283,12 @@ const UserProfileFormUI = (props) => {
           )}
           <SideForm className='user-form'>
             <WrapperForm>
-              {userFormLayoutRow
-                ? (
-                <UserFormDetailsOldUI
-                  {...props}
-                  onCancel={toggleEditState}
-                  isOriginalLayout
-                  isHiddenAddress={isHiddenAddress}
-                  isOldLayout
-                />
-                  )
-                : (
-                <UserFormDetailsUI
-                  {...props}
-                  onCancel={toggleEditState}
-                  isHiddenAddress={isHiddenAddress}
-                  setWillVerifyOtpState={setWillVerifyOtpState}
-                />
-                  )}
+              <UserFormDetailsUI
+                {...props}
+                onCancel={toggleEditState}
+                isHiddenAddress={isHiddenAddress}
+                setWillVerifyOtpState={setWillVerifyOtpState}
+              />
             </WrapperForm>
           </SideForm>
         </UserProfileContainer>
@@ -344,12 +324,6 @@ const UserProfileFormUI = (props) => {
           isPhone
         />
       </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

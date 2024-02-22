@@ -13,9 +13,9 @@ import {
 } from '~components'
 
 import {
-  NotFoundSourceOld as NotFoundSource,
-  BusinessControllerFranchise as BusinessController,
-  SearchBarFranchise as SearchBar
+  NotFoundSource,
+  BusinessController,
+  SearchBar
 } from '~ui'
 
 const CartStoresListingUI = (props) => {

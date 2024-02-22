@@ -52,9 +52,12 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     margin-right: 0.35em;
-    border: 1px solid #DBDCDB;
-    border-radius: 7.6px;
-    padding: 0 15px;
+
+    ${props => props.showPhoneIcon && css`
+      border: 1px solid #DBDCDB;
+      border-radius: 7.6px;
+      padding: 0 15px;
+    `}
   }
 
   .PhoneInputCountrySelect {
@@ -76,9 +79,9 @@ export const Container = styled.div`
   .PhoneInputCountrySelectArrow {
     display: block;
     content: '';
-    width: 0.4em;
-    height: 0.4em;
-    margin-left: 15px;
+    width: ${props => props.showPhoneIcon ? '0.4em' : '0.3em'};
+    height: ${props => props.showPhoneIcon ? '0.4em' : '0.3em'};
+    margin-left: ${props => props.showPhoneIcon ? '15px' : '0.35em'};
     border-style: solid;
     border-color: inherit;
     border-top-width: 0;
@@ -86,8 +89,21 @@ export const Container = styled.div`
     border-left-width: 0;
     border-right-width: 1px;
     transform: rotate(45deg);
-    margin-left: 10px;
+    ${props => props.showPhoneIcon
+? css`
+      margin-left: 10px;
+    `
+: css`
+      opacity: 0.45;
+    `}
   }
+
+  ${props => !props.showPhoneIcon && css`
+    .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon + .PhoneInputCountrySelectArrow {
+      opacity: 1;
+      color: #03b2cb;
+    }
+  `}
 
   .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon--border {
     box-shadow: none;
@@ -120,12 +136,11 @@ export const Container = styled.div`
   `}
 
   input.PhoneInputInput {
-    border-radius: 30px;
+    border-radius: 7.6px;
     border: 1px solid #DBDCDB;
     font-size: 16px;
     outline: none;
-    padding: 8px 15px 8px 40px;
-    border-radius: 7.6px;
+    padding: ${props => props.showPhoneIcon ? '8px 15px 8px 40px' : '8px 20px'};
 
     ${props => props.theme.rtl && css`
       padding: 8px 40px 8px 15px;

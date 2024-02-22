@@ -75,94 +75,80 @@ export const PaymentOptionStripeUI = (props) => {
   }, [cardsList?.loading])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <OptionStripeContainer>
-        {!token && <WarningMessage>{t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')}</WarningMessage>}
+    <OptionStripeContainer>
+      {!token && <WarningMessage>{t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')}</WarningMessage>}
 
-        {token && !cardsList.loading && cardsList.cards && cardsList.cards.length === 0 && (
-          <CardItem>
-            <span>{t('NO_CARDS', 'No cards')}</span>
-          </CardItem>
-        )}
+      {token && !cardsList.loading && cardsList.cards && cardsList.cards.length === 0 && (
+        <CardItem>
+          <span>{t('NO_CARDS', 'No cards')}</span>
+        </CardItem>
+      )}
 
-        {token && cardsList.error && cardsList.error.length > 0 && (
-          <NotFoundSource
-            content={cardsList?.error[0]?.message || cardsList?.error[0]}
-          />
-        )}
-        {token && cardsList.cards && cardsList.cards.length > 0 && (
-          <>
-            {cardsList?.cards?.map((card, i) =>
-              <PaymentCard
-                {...props}
-                key={i}
-                handleCardClick={() => handleCardClick(card)}
-                handleDeleteCard={() => handleDeleteCard(card)}
-                card={card}
-                defaultSelected={i === 0}
-                active={(paymethodSelected || cardSelected?.id) === card.id}
-                cardSelected={cardSelected}
-                paymethodSelected={paymethodSelected}
-                validateZipcodeCard={validateZipcodeCard}
-              />
-            )}
-          </>
-        )}
-        {token && !cardsList.loading && !paymethodsWithoutSaveCards.includes(gateway) && (
-          <AddNewCard>
-            <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
-          </AddNewCard>
-        )}
-
-        <Modal
-          title={t('ADD_NEW_CARD', 'Add new card')}
-          className='modal-info'
-          open={addCartOpen}
-          onClose={() => setAddCardOpen(false)}
-        >
-          <StripeElementsForm
-            businessIds={props.businessIds}
-            businessId={props.businessId}
-            publicKey={props.publicKey}
-            toSave
-            requirements={props.clientSecret}
-            onCancel={() => setAddCardOpen(false)}
-            onNewCard={_handleNewCard}
-          />
-        </Modal>
-
-        <Confirm
-          title={t('CARD', 'Card')}
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
+      {token && cardsList.error && cardsList.error.length > 0 && (
+        <NotFoundSource
+          content={cardsList?.error[0]?.message || cardsList?.error[0]}
         />
+      )}
+      {token && cardsList.cards && cardsList.cards.length > 0 && (
+        <>
+          {cardsList?.cards?.map((card, i) =>
+            <PaymentCard
+              {...props}
+              key={i}
+              handleCardClick={() => handleCardClick(card)}
+              handleDeleteCard={() => handleDeleteCard(card)}
+              card={card}
+              defaultSelected={i === 0}
+              active={(paymethodSelected || cardSelected?.id) === card.id}
+              cardSelected={cardSelected}
+              paymethodSelected={paymethodSelected}
+              validateZipcodeCard={validateZipcodeCard}
+            />
+          )}
+        </>
+      )}
+      {token && !cardsList.loading && !paymethodsWithoutSaveCards.includes(gateway) && (
+        <AddNewCard>
+          <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
+        </AddNewCard>
+      )}
 
-        {token && cardsList.loading && (
-          [...Array(5).keys()].map(i => (
-            <BlockLoading key={i}>
-              <Skeleton height={50} />
-            </BlockLoading>
-          ))
-        )}
-      </OptionStripeContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+      <Modal
+        title={t('ADD_NEW_CARD', 'Add new card')}
+        className='modal-info'
+        open={addCartOpen}
+        onClose={() => setAddCardOpen(false)}
+      >
+        <StripeElementsForm
+          businessIds={props.businessIds}
+          businessId={props.businessId}
+          publicKey={props.publicKey}
+          toSave
+          requirements={props.clientSecret}
+          onCancel={() => setAddCardOpen(false)}
+          onNewCard={_handleNewCard}
+        />
+      </Modal>
+
+      <Confirm
+        title={t('CARD', 'Card')}
+        content={confirm.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={confirm.open}
+        onClose={() => setConfirm({ ...confirm, open: false })}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+        onAccept={confirm.handleOnAccept}
+        closeOnBackdrop={false}
+      />
+
+      {token && cardsList.loading && (
+        [...Array(5).keys()].map(i => (
+          <BlockLoading key={i}>
+            <Skeleton height={50} />
+          </BlockLoading>
+        ))
+      )}
+    </OptionStripeContainer>
   )
 }
 

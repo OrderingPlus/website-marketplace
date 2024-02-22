@@ -31,34 +31,25 @@ export const Select = (props) => {
   const [selectedOption, setSelectedOption] = useState(defaultOption)
   const [value, setValue] = useState(defaultValue)
   const dropdownReference = useRef()
+  const selectedOptionRef = useRef()
   const [orderState] = useOrder()
   const isOneOption = options?.length === 1
-  const handleSelectClick = (e) => {
-    !open && setOpen(true)
-  }
+
+  const handleSelectClick = () => setOpen(!open)
 
   const closeSelect = (e) => {
     if (open) {
-      const outsideDropdown = !dropdownReference.current?.contains(e.target)
+      const outsideDropdown = !dropdownReference.current?.contains(e.target) && !selectedOptionRef.current?.contains(e.target)
       if (outsideDropdown) {
         setOpen(false)
       }
     }
   }
 
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 27) {
-      setOpen(false)
-    }
-  }
-
   useEffect(() => {
-    document.addEventListener('mouseup', closeSelect)
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mouseup', closeSelect)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
+    if (!open) return
+    document.addEventListener('click', closeSelect)
+    return () => document.removeEventListener('click', closeSelect)
   }, [open])
 
   useEffect(() => {
@@ -70,9 +61,11 @@ export const Select = (props) => {
   }, [defaultValue, options])
 
   const handleChangeOption = (option) => {
-    setSelectedOption(option)
-    setValue(option.value)
-    onChange && onChange(option.value)
+    if (value !== option.value) {
+      setSelectedOption(option)
+      setValue(option.value)
+      onChange && onChange(option.value)
+    }
     setOpen(false)
   }
 
@@ -80,7 +73,7 @@ export const Select = (props) => {
     isOneOption && !disableOneOption
       ? (
       <SelectInput id='select-input' isHome={isHome}>
-        <Selected>
+        <Selected ref={selectedOptionRef} onClick={() => handleSelectClick()}>
           <Header>
             {options[0].content}
           </Header>
@@ -92,11 +85,10 @@ export const Select = (props) => {
         id='select-input'
         isHome={isHome}
         disabled={(orderState.loading && !notReload) || props.isDisabled}
-        onMouseUp={handleSelectClick}
       >
         {!selectedOption && <Selected><Header>{placeholder || ''}</Header><Chevron>{CustomArrow ? <CustomArrow id='arrow' /> : <BsChevronDown />}</Chevron></Selected>}
         {selectedOption && (
-          <Selected>
+          <Selected ref={selectedOptionRef} onClick={() => handleSelectClick()}>
             <Header>
               {selectedOption.showOnSelected ?? selectedOption.content}
             </Header>

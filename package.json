@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "shx rm -rf dist _modules",
     "build": "yarn run clean && babel ./src --out-dir ./_modules && webpack --config webpack.prod.js",
-    "serve": "yarn && npx webpack serve --config webpack.dev.js",
+    "serve": "yarn && WATCHPACK_POLLING=true npx webpack serve --config webpack.dev.js",
     "serve-docker": "WATCHPACK_POLLING=true npx webpack serve --config webpack.dev.js",
     "install-packages": "rm -rf node_modules yarn.lock && yarn",
     "lint": "eslint . --fix"
@@ -91,7 +91,7 @@
     "react-ios-pwa-prompt": "^1.8.4",
     "react-linkify": "^1.0.0-alpha",
     "react-loading-skeleton": "^2.1.1",
-    "react-otp-input": "^3.1.1",
+    "react-otp-input": "^2.3.0",
     "react-phone-number-input": "^3.1.6",
     "react-popper": "^2.2.3",
     "react-router-dom": "^5.2.0",

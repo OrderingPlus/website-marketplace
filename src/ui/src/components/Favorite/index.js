@@ -27,77 +27,63 @@ export const Favorite = (props) => {
   ]
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <FavoritesContainer>
-        <Title>{t('FAVORITES', 'Favorites')}</Title>
-        <TabsContainer>
-          <Tabs variant='primary'>
-            {tabList.map((item, i) => (
-              <Tab
-                key={i}
-                borderBottom
-                active={item.key === tabSelected}
-                onClick={() => setTabSelected(item.key)}
-              >
-                {item?.name}
-              </Tab>
-            ))}
-            {layout === 'appointments' && (
-              <Tab
-                borderBottom
-                active={tabSelected === 'professionals'}
-                onClick={() => setTabSelected('professionals')}
-              >
-                {t('PROFESSIONALS', 'Professionals')}
-              </Tab>
-            )}
-          </Tabs>
-        </TabsContainer>
-        <ContentWrapper>
-          {tabSelected === 'businesses' && (
-            <FavoriteList
-              isBusiness
-              favoriteURL='favorite_businesses'
-              originalURL='business'
-              location={`${orderState.options?.address?.location?.lat},${orderState.options?.address?.location?.lng}`}
-              propsToFetch={['id', 'name', 'header', 'logo', 'location', 'address', 'ribbon', 'timezone', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']}
-            />
+    <FavoritesContainer>
+      <Title>{t('FAVORITES', 'Favorites')}</Title>
+      <TabsContainer>
+        <Tabs variant='primary'>
+          {tabList.map((item, i) => (
+            <Tab
+              key={i}
+              borderBottom
+              active={item.key === tabSelected}
+              onClick={() => setTabSelected(item.key)}
+            >
+              {item?.name}
+            </Tab>
+          ))}
+          {layout === 'appointments' && (
+            <Tab
+              borderBottom
+              active={tabSelected === 'professionals'}
+              onClick={() => setTabSelected('professionals')}
+            >
+              {t('PROFESSIONALS', 'Professionals')}
+            </Tab>
           )}
-          {tabSelected === 'products' && (
-            <FavoriteList
-              favoriteURL='favorite_products'
-              originalURL='products'
-              isProduct
-            />
-          )}
-          {tabSelected === 'orders' && (
-            <FavoriteList
-              favoriteURL='favorite_orders'
-              originalURL='orders'
-              isOrder
-            />
-          )}
-          {tabSelected === 'professionals' && (
-            <FavoriteList
-              favoriteURL='favorite_users'
-              originalURL='users'
-              isProfessional
-            />
-          )}
-        </ContentWrapper>
-      </FavoritesContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+        </Tabs>
+      </TabsContainer>
+      <ContentWrapper>
+        {tabSelected === 'businesses' && (
+          <FavoriteList
+            isBusiness
+            favoriteURL='favorite_businesses'
+            originalURL='business'
+            location={`${orderState.options?.address?.location?.lat},${orderState.options?.address?.location?.lng}`}
+            propsToFetch={['id', 'name', 'header', 'logo', 'location', 'address', 'ribbon', 'timezone', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']}
+          />
+        )}
+        {tabSelected === 'products' && (
+          <FavoriteList
+            favoriteURL='favorite_products'
+            originalURL='products'
+            isProduct
+          />
+        )}
+        {tabSelected === 'orders' && (
+          <FavoriteList
+            favoriteURL='favorite_orders'
+            originalURL='orders'
+            isOrder
+          />
+        )}
+        {tabSelected === 'professionals' && (
+          <FavoriteList
+            favoriteURL='favorite_users'
+            originalURL='users'
+            isProfessional
+          />
+        )}
+      </ContentWrapper>
+    </FavoritesContainer>
   )
 }

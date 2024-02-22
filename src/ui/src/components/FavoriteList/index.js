@@ -190,12 +190,6 @@ const FavoriteListUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <Container>
         {
           !favoriteList?.loading && favoriteList?.favorites.length === 0 && (
@@ -399,12 +393,6 @@ const FavoriteListUI = (props) => {
           </div>
         </FavPopupView>
       </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

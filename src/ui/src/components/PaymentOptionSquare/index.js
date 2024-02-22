@@ -34,12 +34,6 @@ const PaymentOptionSquareUI = (props) => {
 
   return (
     <PaymentSquareContainer>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {isLoading && (
         [...Array(3).keys()].map(i => (
           <div key={i}>
@@ -98,12 +92,6 @@ const PaymentOptionSquareUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </PaymentSquareContainer>
   )
 }

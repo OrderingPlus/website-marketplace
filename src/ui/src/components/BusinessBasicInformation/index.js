@@ -14,12 +14,10 @@ import {
   BusinessMoreDetail,
   SearchComponentContainer,
   BusinessInfoWrapper,
-  WrapperFloatingSearch,
   BackButton
 } from './styles'
 import { SearchComponent } from './SearchComponent'
 import { BusinessInfoComponent } from './BusinessInfoComponent'
-import { SearchProducts as SearchProductsStarbucks } from '../SearchProducts/layouts/six'
 
 import { useUtils, useLanguage } from '~components'
 import {
@@ -70,7 +68,6 @@ export const BusinessBasicInformation = (props) => {
   const hideHeader = theme?.business_view?.components?.header?.hidden
 
   const isInfoShrunken = theme?.business_view?.components?.header?.components?.business?.components?.layout?.position === 'shrunken'
-  const searchLayout = theme?.business_view?.components?.product_search?.components?.layout?.type
   const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const businessInfoComponentProps = {
@@ -177,12 +174,6 @@ export const BusinessBasicInformation = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {openSearchProducts && (
         <SearchProducts
           {...props}
@@ -232,19 +223,6 @@ export const BusinessBasicInformation = (props) => {
                       sortByOptions={sortByOptions}
                     />
                   </SearchComponentContainer>
-                )}
-                {searchLayout === 'floating' && (
-                  <WrapperFloatingSearch>
-                    <SearchProductsStarbucks
-                      handleChangeSearch={handleChangeSearch}
-                      searchValue={searchValue}
-                      sortByOptions={sortByOptions}
-                      sortByValue={sortByValue}
-                      onChange={(val) => handleChangeSortBy && handleChangeSortBy(val)}
-                      businessState={businessState}
-                      disablePadding
-                    />
-                  </WrapperFloatingSearch>
                 )}
                 {!hideInfoIcon && (
                   <BusinessMoreDetail>
@@ -318,12 +296,6 @@ export const BusinessBasicInformation = (props) => {
           />
             )}
       </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

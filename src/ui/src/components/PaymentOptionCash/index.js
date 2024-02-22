@@ -54,41 +54,27 @@ export const PaymentOptionCash = (props) => {
   }, [value, orderTotal])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <PaymentCashContainer>
-        <FormCash>
-          <WrapperInput>
-            <label>{t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}</label>
-            <Input
-              ref={el}
-              name='cash'
-              type='text'
-              placeholder='$0.00'
-              onKeyPress={(e) => {
-                if (!/^[0-9 .]$/.test(e.key)) {
-                  e.preventDefault()
-                }
-              }}
-            />
-          </WrapperInput>
-          {value && parseFloat(value) < orderTotal && (
-            <ErrorText>{t('VALUE_GREATER_THAN_TOTAL', 'This value must be greater than order total')}: {parsePrice(orderTotal)}</ErrorText>
-          )}
-        </FormCash>
-      </PaymentCashContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+    <PaymentCashContainer>
+      <FormCash>
+        <WrapperInput>
+          <label>{t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}</label>
+          <Input
+            ref={el}
+            name='cash'
+            type='text'
+            placeholder='$0.00'
+            onKeyPress={(e) => {
+              if (!/^[0-9 .]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </WrapperInput>
+        {value && parseFloat(value) < orderTotal && (
+          <ErrorText>{t('VALUE_GREATER_THAN_TOTAL', 'This value must be greater than order total')}: {parsePrice(orderTotal)}</ErrorText>
+        )}
+      </FormCash>
+    </PaymentCashContainer>
   )
 }
 

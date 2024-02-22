@@ -31,19 +31,14 @@ import {
   Alert,
   useWindowSize,
   useOnlineStatus,
-  orderTypeList,
   ThemeProvider,
   CancellationComponent,
   SmartAppBanner,
   SpinnerLoader,
-  HeaderOld,
-  HeaderStarbucks,
-  HeaderRed,
   Header,
   Modal,
   Button,
   Input,
-  HeaderKiosk,
   Footer,
   NotNetworkConnectivity,
   NavigationBar,
@@ -199,17 +194,6 @@ export const App = () => {
     ? 'old'
     : 'new'
 
-  const HeaderComponent =
-    isKioskApp
-      ? HeaderKiosk
-      : themeUpdated?.header?.components?.layout?.type === 'old'
-        ? HeaderOld
-        : themeUpdated?.header?.components?.layout?.type === 'red'
-          ? HeaderRed
-          : themeUpdated?.header?.components?.layout?.type === 'starbucks'
-            ? HeaderStarbucks
-            : Header
-
   const orderTypeSearchParam = parseInt(new URLSearchParams(useLocation()?.search)?.get('order_type') ?? 0, 10)
   const configTypes = configs?.order_types_allowed?.value.split('|').map(value => Number(value)) || []
 
@@ -219,9 +203,9 @@ export const App = () => {
   const isUserVerifyRequired = (isEmailVerifyRequired || isPhoneVerifyRequired) && !isKioskApp
   const isHideFooter = themeUpdated?.footer?.hidden
 
-  const guestCheckoutEnabled =
-  configs?.guest_checkout_enabled?.value === '1' &&
-  (!orderTypeList[orderStatus?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderStatus?.options?.type - 1]))
+  const guestCheckoutEnabled = false
+  // configs?.guest_checkout_enabled?.value === '1' &&
+  // (!orderTypeList[orderStatus?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderStatus?.options?.type - 1]))
 
   const isHome = location.pathname === '/' || location.pathname === '/home'
   const isFooterPage = location.pathname === '/pages/footer' || isKioskApp || isHideFooter
@@ -551,7 +535,7 @@ export const App = () => {
             >
               <ListenPageChanges />
               {!(isKioskApp && isHome) && (
-                <HeaderComponent
+                <Header
                   isHome={isHome}
                   location={location}
                   isCustomLayout={singleBusinessConfig.isActive}

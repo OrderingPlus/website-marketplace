@@ -9,8 +9,6 @@ import {
   ItemInline
 } from './styles'
 
-import { MomentPopover } from '../MomentPopover/layouts/pwa'
-
 import { useLanguage, useOrder, useConfig, useSession, useBusiness } from '~components'
 import {
   useWindowSize,
@@ -20,6 +18,7 @@ import {
   AddressList,
   Alert,
   MomentContent,
+  MomentPopover,
   OrderTypeSelectorContent,
   OrderTypeSelectorHeader
 } from '~ui'

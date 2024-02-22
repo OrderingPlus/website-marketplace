@@ -119,12 +119,6 @@ const ProductOptionSubOptionUI = React.memo((props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <Container onClick={(e) => quesoYSalsa && isAlsea ? handleChangeQuantity(e, state.quantity === 0 ? 1 : 0) : handleSuboptionClick()}>
         <LeftOptionContainer>
           <IconControl>
@@ -238,12 +232,6 @@ const ProductOptionSubOptionUI = React.memo((props) => {
         onAccept={() => setShowAlert(false)}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }, ProductOptionSubOptionPropsAreEqual)

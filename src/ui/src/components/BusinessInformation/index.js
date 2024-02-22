@@ -81,138 +81,124 @@ export const BusinessInformationUI = (props) => {
   }
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <BusinessInformationContainer>
-        <ModalIcon>
-          <MdClose onClick={() => onClose(false)} />
-        </ModalIcon>
-        <BusinessContent>
-          <BusinessTitle>{business?.name}</BusinessTitle>
-          {!hideAbout && business.about && (
+    <BusinessInformationContainer>
+      <ModalIcon>
+        <MdClose onClick={() => onClose(false)} />
+      </ModalIcon>
+      <BusinessContent>
+        <BusinessTitle>{business?.name}</BusinessTitle>
+        {!hideAbout && business.about && (
+          <>
+            <SectionTitle>{t('BUSINESS_ABOUT', 'Business short description')}</SectionTitle>
+            <Description>{business.about}</Description>
+          </>
+        )}
+        {!hideDescription && business.description && (
+          <>
+            <SectionTitle>{t('BUSINESS_DESCRIPTION', 'Business description')}</SectionTitle>
+            <Description>{business.description}</Description>
+          </>
+        )}
+        {
+          !hideLocation && (
             <>
-              <SectionTitle>{t('BUSINESS_ABOUT', 'Business short description')}</SectionTitle>
-              <Description>{business.about}</Description>
-            </>
-          )}
-          {!hideDescription && business.description && (
-            <>
-              <SectionTitle>{t('BUSINESS_DESCRIPTION', 'Business description')}</SectionTitle>
-              <Description>{business.description}</Description>
-            </>
-          )}
-          {
-            !hideLocation && (
-              <>
-                {businessLocation.location && (
-                  <>
-                    <SectionTitle>{t('BUSINESS_LOCATION', 'Business location')}</SectionTitle>
-                    {businessLocation.location && (
-                      <Map>
-                        <GoogleMapsMap
-                          apiKey={configs?.google_maps_api_key?.value}
-                          location={businessLocation.location}
-                          mapControls={businessLocation.googleMapsControls || business.googleMapsControls}
-                          businessZones={business?.zones}
-                          fillStyle={fillStyle}
-                        />
-                      </Map>
-                    )}
-                  </>
-                )}
-                {
-                  !hideAddress && business?.address && <BusinessAddress>{business?.address}</BusinessAddress>
-                }
-                {business?.address_notes && <BusinessAddressNotes>{business?.address_notes}</BusinessAddressNotes>}
-                <Divider />
-              </>
-            )
-          }
-          {businessSchedule?.length > 0 && (
-            <>
-              {!hideSchedule && (
+              {businessLocation.location && (
                 <>
-                  <SectionTitle>{t('OPENING_TIME', 'Opening time')}</SectionTitle>
-                  <ScheduleSection>
-                    <ScheduleContainer>
-                      {businessSchedule.map((schedule, i) => (
-                        <ScheduleAccordion
-                          key={i}
-                          weekIndex={i}
-                          timeFormated={timeFormated}
-                          schedule={schedule}
-                        />
-                      ))}
-                    </ScheduleContainer>
-                  </ScheduleSection>
-                  <Divider />
+                  <SectionTitle>{t('BUSINESS_LOCATION', 'Business location')}</SectionTitle>
+                  {businessLocation.location && (
+                    <Map>
+                      <GoogleMapsMap
+                        apiKey={configs?.google_maps_api_key?.value}
+                        location={businessLocation.location}
+                        mapControls={businessLocation.googleMapsControls || business.googleMapsControls}
+                        businessZones={business?.zones}
+                        fillStyle={fillStyle}
+                      />
+                    </Map>
+                  )}
                 </>
               )}
-              <DeliveryInfo>
-                <div>
-                  {!hideDeliveryTime && (
-                    <h5>{t('DELIVERY_TIME', 'Delivery Time')}: {convertHoursToMinutes(business?.delivery_time)}</h5>
-                  )}
-                  {!hidePickupTime && (
-                    <h5>{t('PICKUP_TIME', 'Pickup Time')}: {convertHoursToMinutes(business?.pickup_time)}</h5>
-                  )}
-                </div>
-              </DeliveryInfo>
+              {
+                !hideAddress && business?.address && <BusinessAddress>{business?.address}</BusinessAddress>
+              }
+              {business?.address_notes && <BusinessAddressNotes>{business?.address_notes}</BusinessAddressNotes>}
               <Divider />
             </>
-          )}
-          {!hideVideos && businessVideos?.length > 0 && (
-            <BusinessMediaContent>
-              <SectionTitle>{t('VIDEOS', 'Videos')}</SectionTitle>
+          )
+        }
+        {businessSchedule?.length > 0 && (
+          <>
+            {!hideSchedule && (
+              <>
+                <SectionTitle>{t('OPENING_TIME', 'Opening time')}</SectionTitle>
+                <ScheduleSection>
+                  <ScheduleContainer>
+                    {businessSchedule.map((schedule, i) => (
+                      <ScheduleAccordion
+                        key={i}
+                        weekIndex={i}
+                        timeFormated={timeFormated}
+                        schedule={schedule}
+                      />
+                    ))}
+                  </ScheduleContainer>
+                </ScheduleSection>
+                <Divider />
+              </>
+            )}
+            <DeliveryInfo>
               <div>
-                {businessVideos.map((video, i) => (
-                  <iframe key={i} src={formatUrlVideo(video.video)} width='191' height='128' frameBorder='0' allow='autoplay; encrypted-media' allowFullScreen />
-                ))}
+                {!hideDeliveryTime && (
+                  <h5>{t('DELIVERY_TIME', 'Delivery Time')}: {convertHoursToMinutes(business?.delivery_time)}</h5>
+                )}
+                {!hidePickupTime && (
+                  <h5>{t('PICKUP_TIME', 'Pickup Time')}: {convertHoursToMinutes(business?.pickup_time)}</h5>
+                )}
               </div>
-            </BusinessMediaContent>
-          )}
-          <Divider />
-          {!hideImages && businessPhotos?.length > 0 && (
-            <BusinessMediaContent>
-              <SectionTitle>{t('IMAGES', 'Images')}</SectionTitle>
-              <div>
-                {
-                  businessPhotos.map((photo, i) => (
-                    <img key={i} src={photo.file} alt={`photo-${i}`} width='191' height='128' onClick={() => handleModalImage(photo.file)} loading='lazy' />
-                  ))
-                }
-              </div>
-            </BusinessMediaContent>
-          )}
-        </BusinessContent>
-        <Modal
-          onClose={() => setModalImage(false)}
-          open={modalImage}
-          padding='0'
-          hideCloseDefault
-          isTransparent
-          height='auto'
-        >
-          <ImageContainer>
-            <ModalIcon>
-              <MdClose onClick={() => setModalImage(false)} />
-            </ModalIcon>
-            <img src={image} width='320px' height='180px' loading='lazy' />
-          </ImageContainer>
-        </Modal>
-      </BusinessInformationContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+            </DeliveryInfo>
+            <Divider />
+          </>
+        )}
+        {!hideVideos && businessVideos?.length > 0 && (
+          <BusinessMediaContent>
+            <SectionTitle>{t('VIDEOS', 'Videos')}</SectionTitle>
+            <div>
+              {businessVideos.map((video, i) => (
+                <iframe key={i} src={formatUrlVideo(video.video)} width='191' height='128' frameBorder='0' allow='autoplay; encrypted-media' allowFullScreen />
+              ))}
+            </div>
+          </BusinessMediaContent>
+        )}
+        <Divider />
+        {!hideImages && businessPhotos?.length > 0 && (
+          <BusinessMediaContent>
+            <SectionTitle>{t('IMAGES', 'Images')}</SectionTitle>
+            <div>
+              {
+                businessPhotos.map((photo, i) => (
+                  <img key={i} src={photo.file} alt={`photo-${i}`} width='191' height='128' onClick={() => handleModalImage(photo.file)} loading='lazy' />
+                ))
+              }
+            </div>
+          </BusinessMediaContent>
+        )}
+      </BusinessContent>
+      <Modal
+        onClose={() => setModalImage(false)}
+        open={modalImage}
+        padding='0'
+        hideCloseDefault
+        isTransparent
+        height='auto'
+      >
+        <ImageContainer>
+          <ModalIcon>
+            <MdClose onClick={() => setModalImage(false)} />
+          </ModalIcon>
+          <img src={image} width='320px' height='180px' loading='lazy' />
+        </ImageContainer>
+      </Modal>
+    </BusinessInformationContainer>
   )
 }
 

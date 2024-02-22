@@ -297,26 +297,10 @@ export const UserFormDetailsUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <FormInput onSubmit={formMethods.handleSubmit(onSubmit)} isCheckout={isCheckout}>
         {!validationFields?.loading
           ? (
           <>
-            {
-              props.beforeMidElements?.map((BeforeMidElements, i) => (
-                <React.Fragment key={i}>
-                  {BeforeMidElements}
-                </React.Fragment>))
-            }
-            {
-              props.beforeMidComponents?.map((BeforeMidComponents, i) => (
-                <BeforeMidComponents key={i} {...props} />))
-            }
             {sortInputFields({ values: isOrderTypeValidationField ? checkoutFields : validationFields?.fields?.checkout }).map(item => {
               const field = item?.validation_field || item
               return (
@@ -471,16 +455,6 @@ export const UserFormDetailsUI = (props) => {
                 </LanguageSelectorWrapper>
               </>
             )}
-            {
-              props.afterMidElements?.map((MidElement, i) => (
-                <React.Fragment key={i}>
-                  {MidElement}
-                </React.Fragment>))
-            }
-            {
-              props.afterMidComponents?.map((MidComponent, i) => (
-                <MidComponent key={i} {...props} />))
-            }
             <ActionsForm>
               {onCancel && isOldLayout && (
                 <Button
@@ -545,12 +519,6 @@ export const UserFormDetailsUI = (props) => {
           isGuest
         />
       </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

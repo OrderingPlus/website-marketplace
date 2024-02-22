@@ -133,12 +133,6 @@ export const UserPopover = (props) => {
   }
   return (
     <div style={{ overflow: 'hidden' }}>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <HeaderItem
         isPhoto={sessionState?.user?.photo}
         isHome={isHome}
@@ -193,12 +187,6 @@ export const UserPopover = (props) => {
           </ExtraOptions>
         </PopoverList>
       </PopoverBody>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

@@ -14,7 +14,6 @@ import {
   BusinessCartContent,
   EmptyCart,
   EmptyBtnWrapper,
-  WrapperSearch,
   ProfessionalFilterWrapper,
   WrapperSearchAbsolute,
   NearBusiness,
@@ -25,15 +24,6 @@ import {
 import { useLanguage, useConfig, useUtils } from '~components'
 import { SpinnerCart } from '../Cart/styles'
 import { SearchIconWrapper } from '../BusinessBasicInformation/styles'
-
-import { BusinessBasicInformation as BusinessBasicInformationOld } from '../BusinessBasicInformation/layouts/Old'
-import { BusinessInformation as BusinessBasicInformationStarbucks } from '../BusinessBasicInformation/layouts/six'
-import { BusinessBasicInformation as BusinessBasicInformationRed } from '../BusinessBasicInformation/layouts/seven'
-
-import { BusinessProductsCategories as CategoriesLayoutGroceries } from '../BusinessProductsCategories/layouts/groceries'
-import { BusinessProductsList as ProductListLayoutGroceries } from '../BusinessProductsList/layouts/groceries'
-import { SearchProducts as SearchProductsOld } from '../SearchProducts/layouts/Old'
-import { SearchProducts as SearchProductsStarbucks } from '../SearchProducts/layouts/six'
 
 import {
   useWindowSize,
@@ -109,21 +99,6 @@ export const RenderProductsLayout = (props) => {
   const [openSearchProducts, setOpenSearchProducts] = useState(false)
   const [categoryClicked, setCategoryClicked] = useState(false)
   const isUseParentCategory = (configs?.use_parent_category?.value === 'true' || configs?.use_parent_category?.value === '1') && !useKioskApp
-  const BusinessBasicInformationComponent =
-    theme?.business_view?.components?.header?.components?.layout?.type === 'red'
-      ? BusinessBasicInformationRed
-      : theme?.business_view?.components?.header?.components?.layout?.type === 'starbucks'
-        ? BusinessBasicInformationStarbucks
-        : theme?.business_view?.components?.header?.components?.layout?.type === 'old'
-          ? BusinessBasicInformationOld
-          : BusinessBasicInformation
-
-  const SearchProductsComponent =
-    theme?.business_view?.components?.product_search?.components?.layout?.type === 'old'
-      ? SearchProductsOld
-      : theme?.business_view?.components?.product_search?.components?.layout?.type === 'starbucks'
-        ? SearchProductsStarbucks
-        : null
 
   const frontLayout = business?.front_layout
   const businessLayout = {
@@ -132,14 +107,6 @@ export const RenderProductsLayout = (props) => {
   const showCartOnProductList = !theme?.business_view?.components?.cart?.components?.hidden
   const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
   const hidePreviousOrdered = theme?.business_view?.components?.products_ordered?.hidden
-
-  const BusinessLayoutCategories = businessLayout.layoutOne
-    ? CategoriesLayoutGroceries
-    : BusinessProductsCategories
-
-  const BusinessLayoutProductsList = businessLayout.layoutOne
-    ? ProductListLayoutGroceries
-    : BusinessProductsList
 
   const handleSaveProduct = () => {
     if (windowSize.width < 993) {
@@ -183,7 +150,7 @@ export const RenderProductsLayout = (props) => {
           )}
           <div className='bp-list'>
             {!useKioskApp && (
-              <BusinessBasicInformationComponent
+              <BusinessBasicInformation
                 {...props}
                 businessState={businessState}
                 setOpenBusinessInformation={setOpenBusinessInformation}
@@ -213,20 +180,6 @@ export const RenderProductsLayout = (props) => {
               </PageBannerWrapper>
             )}
 
-            {!errorQuantityProducts && SearchProductsComponent && !useKioskApp && (
-              <>
-                <WrapperSearch>
-                  <SearchProductsComponent
-                    handleChangeSearch={handleChangeSearch}
-                    searchValue={searchValue}
-                    sortByOptions={sortByOptions}
-                    sortByValue={sortByValue}
-                    onChange={(val) => handleChangeSortBy && handleChangeSortBy(val)}
-                    businessState={businessState}
-                  />
-                </WrapperSearch>
-              </>
-            )}
             {!business?.loading && business?.previously_products?.length > 0 && !hidePreviousOrdered && windowSize.width < 993 && !categoryClicked && (
               <OrderItAgain
                 onProductClick={onProductClick}
@@ -260,7 +213,7 @@ export const RenderProductsLayout = (props) => {
                   )}
                   <div style={{ position: 'relative' }}>
                     {!(business?.categories?.length === 0 && !categoryId) && !categorySelected?.id && (
-                      <BusinessLayoutCategories
+                      <BusinessProductsCategories
                         categories={[
                           { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                           { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },
@@ -321,7 +274,7 @@ export const RenderProductsLayout = (props) => {
                     )}
                   </div>
                   <WrapContent id='businessProductList'>
-                    <BusinessLayoutProductsList
+                    <BusinessProductsList
                       categories={[
                         { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                         { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },
@@ -417,7 +370,7 @@ export const RenderProductsLayout = (props) => {
                     {!(business?.categories?.length === 0 && !categoryId) && (
                       <>
                         {(!categoryClicked || windowSize.width >= 993) && (
-                          <BusinessLayoutCategories
+                          <BusinessProductsCategories
                             component='categories'
                             categories={[
                               { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
@@ -449,7 +402,7 @@ export const RenderProductsLayout = (props) => {
                             isGroceries
                           />
                         )}
-                        <BusinessLayoutProductsList
+                        <BusinessProductsList
                           categories={[
                             { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                             { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },
@@ -488,7 +441,7 @@ export const RenderProductsLayout = (props) => {
       {isLoading && !isError && (
         <>
           {!isCustomLayout && !useKioskApp && (
-            <BusinessBasicInformationComponent
+            <BusinessBasicInformation
               isSkeleton
               handler={handler}
               businessState={{ business: {}, loading: true }}

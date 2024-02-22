@@ -14,37 +14,22 @@ import {
   SkeletonInformation,
   SkeletonSide
 } from './styles'
-import { KioskHomeHero } from '../../ui/src/components/HomeHero/layouts/KioskHomeHero'
 
-import { useApi, useEvent, useSite } from '~components'
-import { checkSiteUrl, HomeHero, PageBanner } from '~ui'
+import { useApi } from '~components'
+import { HomeHero, PageBanner } from '~ui'
 
 export const HomePage = (props) => {
   const history = useHistory()
   const [homeState, setHomeState] = useState({ body: null, loading: false, error: null })
   const [ordering] = useApi()
-  const [events] = useEvent()
-  const [{ site }] = useSite()
   const theme = useTheme()
-  const websiteThemeType = theme?.my_products?.components?.website_theme?.components?.type
-  const websiteThemeBusinessSlug = theme?.my_products?.components?.website_theme?.components?.business_slug
-  const updatedBusinessSlug = (websiteThemeType === 'single_store' && websiteThemeBusinessSlug) || settings?.businessSlug
 
   const requestsState = {}
   const isKioskApp = settings?.use_kiosk
-  const businessUrlTemplate = checkSiteUrl(site?.business_url_template, '/store/:business_slug')
   const homeContent = theme?.my_products?.components?.theme_settings?.components?.values?.homepage_content
 
   const handlerFindBusiness = () => {
     history.push('/search')
-  }
-
-  const handleGoToBusiness = () => {
-    if (businessUrlTemplate === '/store/:business_slug' || businessUrlTemplate === '/:business_slug') {
-      events.emit('go_to_page', { page: 'business', params: { business_slug: updatedBusinessSlug } })
-    } else {
-      events.emit('go_to_page', { page: 'business', search: `?${businessUrlTemplate.split('?')[1].replace(':business_slug', '')}${updatedBusinessSlug}` })
-    }
   }
 
   const getPage = async () => {
@@ -85,46 +70,40 @@ export const HomePage = (props) => {
   return (
     <>
       <HelmetTags page='home' />
-      {isKioskApp
-        ? (
-        <KioskHomeHero handleGoToBusiness={handleGoToBusiness} />
-          )
-        : (
-        <HomeContainer>
-          <HomeHero
-            {...homeHeroProps}
-          />
-          {
-            homeState.loading && (
-              <SkeletonContainer>
-                <SkeletonHeader>
+      <HomeContainer>
+        <HomeHero
+          {...homeHeroProps}
+        />
+        {
+          homeState.loading && (
+            <SkeletonContainer>
+              <SkeletonHeader>
+                <Skeleton width='100%' height='100%' />
+              </SkeletonHeader>
+              <SkeletonContent>
+                <SkeletonInformation>
+                  <Skeleton width='100%' height='100px' />
+                  <Skeleton width='100%' height='100px' />
+                  <Skeleton width='100%' height='100px' />
+                  <Skeleton width='100%' height='100px' />
+                </SkeletonInformation>
+                <SkeletonSide>
                   <Skeleton width='100%' height='100%' />
-                </SkeletonHeader>
-                <SkeletonContent>
-                  <SkeletonInformation>
-                    <Skeleton width='100%' height='100px' />
-                    <Skeleton width='100%' height='100px' />
-                    <Skeleton width='100%' height='100px' />
-                    <Skeleton width='100%' height='100px' />
-                  </SkeletonInformation>
-                  <SkeletonSide>
-                    <Skeleton width='100%' height='100%' />
-                  </SkeletonSide>
-                </SkeletonContent>
-              </SkeletonContainer>
-            )
-          }
-          {
-            (homeContent || homeState.body) && (
-              <div dangerouslySetInnerHTML={{
-                __html: (homeContent || homeState.body)
-              }}
-              />
-            )
-          }
-          <PageBanner position='web_home_page' />
-        </HomeContainer>
-          )}
+                </SkeletonSide>
+              </SkeletonContent>
+            </SkeletonContainer>
+          )
+        }
+        {
+          (homeContent || homeState.body) && (
+            <div dangerouslySetInnerHTML={{
+              __html: (homeContent || homeState.body)
+            }}
+            />
+          )
+        }
+        <PageBanner position='web_home_page' />
+      </HomeContainer>
     </>
   )
 }

@@ -191,16 +191,6 @@ const ReviewProfessionalUI = (props) => {
             autoComplete='off'
           />
         </Comments>
-        {
-          props.afterMidElements?.map((MidElement, i) => (
-            <React.Fragment key={i}>
-              {MidElement}
-            </React.Fragment>))
-        }
-        {
-          props.afterMidComponents?.map((MidComponent, i) => (
-            <MidComponent key={i} {...props} />))
-        }
         <ActionBtnWrapper>
           <Button
             color={!formState.loading ? 'primary' : 'secondary'}

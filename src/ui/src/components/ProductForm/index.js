@@ -700,16 +700,6 @@ const ProductOptionsUI = (props) => {
                   />
                 </ProductComment>
               )}
-              {
-                props.afterMidElements?.map((MidElement, i) => (
-                  <React.Fragment key={i}>
-                    {MidElement}
-                  </React.Fragment>))
-              }
-              {
-                props.afterMidComponents?.map((MidComponent, i) => (
-                  <MidComponent key={i} {...props} />))
-              }
             </ProductEdition>
             <ProductActions isColumn={(auth && !(orderState.options?.address_id || unaddressedTypes.includes(orderState?.options?.type)))}>
               {(actionStatus?.loading || orderState.loading)

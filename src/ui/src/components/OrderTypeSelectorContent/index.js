@@ -36,12 +36,6 @@ export const OrderTypeSelectorContentUI = (props) => {
   const orderTypeCallAction = (type) => theme?.order_types?.components?.[type]?.components?.call_to_action
   return (
     <div className='order-type' style={{ overflow: 'hidden' }}>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <OrderTypeSelectorContainer>
         <OrderTypeListTitle>{titleOrdertype || t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will you delivery type?')}</OrderTypeListTitle>
         {
@@ -63,12 +57,6 @@ export const OrderTypeSelectorContentUI = (props) => {
           ))
         }
       </OrderTypeSelectorContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

@@ -88,8 +88,6 @@ import {
   SendGiftCard
 } from '~ui'
 
-import { HeaderContent as HeaderContentTwo } from './layouts/Starbucks'
-
 const OrderDetailsUI = (props) => {
   const {
     userCustomerId,
@@ -632,27 +630,6 @@ const OrderDetailsUI = (props) => {
                   </OrderBusiness>
                 )}
               </>
-            )}
-            {showStarbucksHeader && (
-              <HeaderContentTwo
-                order={order}
-                hashKey={props.hashKey}
-                googleMapsUrl={
-                  googleMapsApiKey &&
-                  !validTrackingStatus.includes(parseInt(order?.status)) &&
-                  getGoogleMapImage(order?.business?.location, googleMapsApiKey, mapConfigs)
-                }
-                changeIdToExternalId={changeIdToExternalId}
-                enabledPoweredByOrdering={enabledPoweredByOrdering}
-                orderStatus={progressBarObjt(order?.status)?.value}
-                percentage={progressBarObjt(order?.status)?.percentage}
-                orderId={{ id: order?.id, external: order?.external_id }}
-                showReview={
-                  [...acceptedStatus, 16].includes(parseInt(order?.status, 10)) &&
-                  (!order?.review || (order.driver && !order?.user_review)) &&
-                  (!isOrderReviewed || !isDriverReviewed)
-                }
-              />
             )}
             {hideStaticMap && (
               <OrderCustomer>

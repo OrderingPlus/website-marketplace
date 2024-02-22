@@ -362,60 +362,46 @@ const AddressListUI = (props) => {
   }
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <AddressListContainer id='address_control' isLoading={actionStatus?.loading || orderState?.loading} isCompletedLayout={isCompletedLayout}>
-        {!isCompletedLayout
-          ? (
-          <AddressListCallcenterLayout>
-            <AddressListContent />
-          </AddressListCallcenterLayout>
-            )
-          : (
+    <AddressListContainer id='address_control' isLoading={actionStatus?.loading || orderState?.loading} isCompletedLayout={isCompletedLayout}>
+      {!isCompletedLayout
+        ? (
+        <AddressListCallcenterLayout>
           <AddressListContent />
-            )}
-        {
-          !isPopover && addressOpen && (
-            <Modal
-              title={t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
-              open={!isPopover && addressOpen && isCompletedLayout}
-              onClose={() => handleCloseAddressForm()}
-            >
-              <AddressForm
-                userId={userId}
-                addressesList={addressList?.addresses}
-                useValidationFileds
-                address={curAddress}
-                onSaveAddress={handleSaveAddress}
-                userCustomerSetup={userCustomerSetup}
-                onCancel={() => handleCloseAddressForm()}
-              />
-            </Modal>
+        </AddressListCallcenterLayout>
           )
-        }
-        <Confirm
-          title={t('SEARCH', 'Search')}
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
-        />
-      </AddressListContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+        : (
+        <AddressListContent />
+          )}
+      {
+        !isPopover && addressOpen && (
+          <Modal
+            title={t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
+            open={!isPopover && addressOpen && isCompletedLayout}
+            onClose={() => handleCloseAddressForm()}
+          >
+            <AddressForm
+              userId={userId}
+              addressesList={addressList?.addresses}
+              useValidationFileds
+              address={curAddress}
+              onSaveAddress={handleSaveAddress}
+              userCustomerSetup={userCustomerSetup}
+              onCancel={() => handleCloseAddressForm()}
+            />
+          </Modal>
+        )
+      }
+      <Confirm
+        title={t('SEARCH', 'Search')}
+        content={confirm.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={confirm.open}
+        onClose={() => setConfirm({ ...confirm, open: false })}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+        onAccept={confirm.handleOnAccept}
+        closeOnBackdrop={false}
+      />
+    </AddressListContainer>
   )
 }
 
