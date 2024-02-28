@@ -123,7 +123,6 @@ const BusinessProductsListingUI = (props) => {
   const headerThemeType = theme?.business_view?.components?.header?.components?.layout?.type
   const searchThemeType = theme?.business_view?.components?.product_search?.components?.layout?.type
   const fullWidthArrowThemes = ['starbucks', 'old', 'red']
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const cateringTypes = [7, 8]
   const cateringPreorder = cateringTypes.includes(options?.type)
   const sortByOptions = [
@@ -228,21 +227,6 @@ const BusinessProductsListingUI = (props) => {
   }
 
   const handleScroll = useCallback(() => {
-    const backArrowElement = document.getElementById('back-arrow')
-    const searchElement = document.getElementById('search-component')
-    if (backArrowElement) {
-      const limit = window.scrollY >= backArrowElement?.offsetTop - 10 && window.scrollY > 0
-      const limitWidth = window.scrollY >= searchElement?.offsetTop + 45 && window.scrollY > 0
-      if (isChew) {
-        if (limit && !limitWidth) {
-          const classWidthAdded = backArrowElement.classList.contains('fixed-arrow-width')
-          !classWidthAdded && backArrowElement.classList.add('fixed-arrow-width')
-        } else {
-          backArrowElement && backArrowElement.classList.remove('fixed-arrow-width')
-        }
-      }
-    }
-
     const innerHeightScrolltop = window.innerHeight + document.documentElement?.scrollTop + PIXELS_TO_SCROLL
     const badScrollPosition = innerHeightScrolltop < document.documentElement?.offsetHeight
     const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)

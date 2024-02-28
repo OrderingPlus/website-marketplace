@@ -100,9 +100,7 @@ const ProductOptionsUI = (props) => {
     handleFavoriteProduct,
     handleCreateGuestUser,
     actionStatus,
-    isCustomerMode,
-    isAlsea,
-    quesoYSalsaOptions
+    isCustomerMode
   } = props
 
   const { product, loading, error } = productObject
@@ -130,7 +128,6 @@ const ProductOptionsUI = (props) => {
     pieces: true
   })
   const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
-  const [alseaIngredientsValidation, setAlseaIngredientsValidation] = useState(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
   const galleryLength = gallery?.length + videoGallery?.length
@@ -388,17 +385,6 @@ const ProductOptionsUI = (props) => {
     setUrlToShare(_urlToShare)
   }, [])
 
-  useEffect(() => {
-    if (!isAlsea) return
-    const keywords = ['1 ingrediente', 'ingredientes']
-    if (keywords?.some(word => product?.name?.toLowerCase()?.includes(word))) {
-      const arrayWord = product?.name?.toLowerCase()?.split(' ')
-      const index = arrayWord.findIndex(word => word === 'ingredientes' || word === 'ingrediente')
-      const maxValidation = parseInt(arrayWord[index - 1].split('-').pop())
-      setAlseaIngredientsValidation(maxValidation)
-    }
-  }, [product?.name])
-
   return (
     <ProductContainer
       className='product-container'
@@ -654,8 +640,6 @@ const ProductOptionsUI = (props) => {
                             option={option}
                             currentState={currentState}
                             error={errors[`id:${option?.id}`]}
-                            alseaIngredientsValidation={alseaIngredientsValidation}
-                            isAlsea={isAlsea}
                           >
                             <WrapperSubOption className={isError(option?.id)}>
                               {
@@ -675,8 +659,6 @@ const ProductOptionsUI = (props) => {
                                       setIsScrollAvailable={setIsScrollAvailable}
                                       pizzaState={pizzaState}
                                       productCart={productCart}
-                                      isAlsea={isAlsea}
-                                      quesoYSalsaOptions={quesoYSalsaOptions}
                                     />
                                   )
                                 })

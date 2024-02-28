@@ -45,7 +45,6 @@ export const HomeHero = (props) => {
   const bgImg = theme?.my_products?.components?.images?.components?.homepage_background?.components?.image
   const mobileBgImg = theme?.my_products?.components?.images?.components?.homepage_mobile_background?.components?.image
   const isFullScreen = theme?.my_products?.components?.images?.components?.homepage_image_fullscreen
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const handleFindBusinesses = () => {
     if (!orderState?.options?.address?.location) {
@@ -113,7 +112,7 @@ export const HomeHero = (props) => {
       isFullScreen={isFullScreen}
     >
       <ContentWrapper>
-        {windowSize.width < 576 && !isChew && (
+        {windowSize.width < 576 && (
           <LogoWrapper>
             <img alt='Logotype' src={theme?.images?.logos?.logotypeInvert} loading='lazy' />
           </LogoWrapper>

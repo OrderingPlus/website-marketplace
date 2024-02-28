@@ -109,7 +109,6 @@ const BusinessesListingUI = (props) => {
   const isAllCategoriesHidden = theme?.business_listing_view?.components?.categories?.hidden || props?.franchiseId
   const businessesIds = businessesList.businesses &&
     businessesList.businesses?.map(business => business.id)
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const cateringTypeString = orderState?.options?.type === 7
     ? 'catering_delivery'
     : orderState?.options?.type === 8
@@ -287,12 +286,12 @@ const BusinessesListingUI = (props) => {
         isCustomerMode={isCustomerMode}
       />
 
-      {(windowSize.width < 576 || (configs?.business_listing_hide_image?.value !== '1' && !isChew)) && (
+      {(windowSize.width < 576 || (configs?.business_listing_hide_image?.value !== '1')) && (
         <BusinessBanner>
           {windowSize.width < 576 && (
-            <OrderContextUI isBusinessList hideHero={(configs?.business_listing_hide_image?.value !== '1' && !isChew) && !hideHero} />
+            <OrderContextUI isBusinessList hideHero={(configs?.business_listing_hide_image?.value !== '1') && !hideHero} />
           )}
-          {(configs?.business_listing_hide_image?.value !== '1' && !isChew) && !hideHero && !isCustomerMode && (
+          {(configs?.business_listing_hide_image?.value !== '1') && !hideHero && !isCustomerMode && (
             <BusinessHeroImg
               bgimage={theme.images?.general?.businessHero}
               height={theme?.business_listing_view?.components?.business_hero?.style?.height}
@@ -347,17 +346,10 @@ const BusinessesListingUI = (props) => {
       )}
       {!isCustomerMode && (
         <OrderProgress
-          isChew={isChew}
           franchiseId={props.franchiseId}
           userCustomerId={userCustomer?.id}
           asDashboard={isCustomerMode}
           isCustomerMode={isCustomerMode}
-        />
-      )}
-      {(configs?.business_listing_hide_image?.value !== '1' && isChew) && (
-        <BusinessHeroImg
-          bgimage={theme.images?.general?.businessHero}
-          height={theme?.business_listing_view?.components?.business_hero?.style?.height}
         />
       )}
       {isCustomerMode && !hidePreviousOrders && !businessesList.loading && (
@@ -405,7 +397,7 @@ const BusinessesListingUI = (props) => {
           )}
         </>
       )}
-      {!isChew && hasHighRatedBusiness && !props.franchiseId && !hideHighestBusiness && (
+      {hasHighRatedBusiness && !props.franchiseId && !hideHighestBusiness && (
         <HightestRatedWrapper>
           <Divider />
           <HighestRated
@@ -467,7 +459,7 @@ const BusinessesListingUI = (props) => {
         />
       )}
       <>
-        {((!isCustomLayout && isCustomerMode && businessesList?.businesses?.length > 0) || isChew) && (
+        {(!isCustomLayout && isCustomerMode && businessesList?.businesses?.length > 0) && (
           <BusinessesTitle>
             {t('BUSINESSES', 'Businesses')}
           </BusinessesTitle>

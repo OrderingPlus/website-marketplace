@@ -33,8 +33,7 @@ import {
   HeaderContent,
   AuthButtonList,
   Flag,
-  SectionTitleContainer,
-  SpinnerContainer
+  SectionTitleContainer
 } from './styles'
 
 import {
@@ -70,8 +69,7 @@ import {
   Cart,
   CartContent,
   PlaceSpot,
-  OrderContextUI,
-  SpinnerLoader
+  OrderContextUI
 } from '~ui'
 
 const mapConfigs = {
@@ -105,13 +103,10 @@ const CheckoutUI = (props) => {
     onPlaceOrderClick,
     setPlaceSpotNumber,
     placeSpotNumber,
-    checkoutFieldsState,
-    alseaCheckPriceError,
-    isLoadingCheckprice
+    checkoutFieldsState
   } = props
 
   const theme = useTheme()
-  const [ordering] = useApi()
   const [{ options, loading }] = useOrder()
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
@@ -137,7 +132,6 @@ const CheckoutUI = (props) => {
   const [paymethodClicked, setPaymethodClicked] = useState(null)
   const [productLoading, setProductLoading] = useState(false)
 
-  const shouldActivateOrderDetailModal = ordering?.project?.includes('alsea')
   const cardsMethods = ['stripe', 'credomatic']
   const stripePaymethods = ['stripe', 'stripe_connect', 'stripe_redirect']
   const businessConfigs = businessDetails?.business?.configs ?? []
@@ -146,7 +140,6 @@ const CheckoutUI = (props) => {
   const isWalletCreditPointsEnabled = businessConfigs.find(config => config.key === 'wallet_credit_point_enabled')?.value === '1'
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' &&
     (isWalletCashEnabled || isWalletCreditPointsEnabled) && !useKioskApp && !isCustomerMode
-  const isMultiDriverTips = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const hexTest = /[0-9A-Fa-f]{6}/g
   const primaryColor = theme?.colors?.primary?.split?.('#')?.[1]
@@ -178,9 +171,7 @@ const CheckoutUI = (props) => {
     validateCommentsCartField ||
     validateDriverTipField ||
     validateCouponField ||
-    validateZipcodeCard ||
-    !!alseaCheckPriceError ||
-    isLoadingCheckprice
+    validateZipcodeCard
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -606,7 +597,7 @@ const CheckoutUI = (props) => {
       <WrapperRightContainer>
 
         {
-          !!(!isMultiDriverTips && driverTipsField) &&
+          !!driverTipsField &&
           <>
             <DriverTipContainer>
               <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
@@ -664,42 +655,15 @@ const CheckoutUI = (props) => {
               productLoading={productLoading}
               setProductLoading={setProductLoading}
             />
-            {isLoadingCheckprice && (
-              <SpinnerContainer>
-                <SpinnerLoader />
-              </SpinnerContainer>
-            )}
           </CartContainer>
         )}
-        {
-          !!(isMultiDriverTips && driverTipsField) &&
-          (
-            <DriverTipContainer>
-              <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
-              <p>{t('100%_OF_THE_TIP_YOUR_DRIVER', '100% of the tip goes to your driver')}</p>
-              <DriverTips
-                businessId={cart?.business_id}
-                driverTipsOptions={driverTipsOptions}
-                isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
-                isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-                driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
-                  ? cart?.driver_tip
-                  : cart?.driver_tip_rate}
-                cart={cart}
-                useOrderContext
-              />
-            </DriverTipContainer>
-          )
-        }
 
         {windowSize.width >= 576 && !cartState.loading && cart && cart?.status !== 2 && (
           <WrapperPlaceOrderButton>
             <Button
               color={(!cart?.valid_maximum || (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))) ? 'secundary' : 'primary'}
               disabled={isDisablePlaceOrderButton}
-              onClick={() => shouldActivateOrderDetailModal
-                ? setOpenModal({ ...openModal, orderDetail: true })
-                : handlePlaceOrder()}
+              onClick={() => handlePlaceOrder()}
             >
               {!cart?.valid_maximum
                 ? (
@@ -762,17 +726,6 @@ const CheckoutUI = (props) => {
           </WarningText>
         )}
 
-        {!!alseaCheckPriceError && (
-          <WarningText>
-            {alseaCheckPriceError}
-          </WarningText>
-        )}
-
-        {isLoadingCheckprice && (
-          <WarningText>
-            {t('RECALCULATING_TOTAL_PRICE', 'Recalculating total price')}
-          </WarningText>
-        )}
         {cart?.valid_preorder !== undefined && !cart?.valid_preorder && (
           <WarningText>
             {t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
@@ -787,9 +740,7 @@ const CheckoutUI = (props) => {
             disabled={isDisablePlaceOrderButton}
             onClick={() => isDisablePlaceOrderButton
               ? handleScrollTo('.paymentsContainer')
-              : shouldActivateOrderDetailModal
-                ? setOpenModal({ ...openModal, orderDetail: true })
-                : handlePlaceOrder()}
+              : handlePlaceOrder()}
           >
             {!cart?.valid_maximum
               ? (
