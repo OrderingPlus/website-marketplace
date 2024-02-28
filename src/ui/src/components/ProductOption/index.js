@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import {
   Container,
@@ -13,17 +13,10 @@ import { ProductOption as ProductOptionController, useLanguage } from '~componen
 import { Alert } from '~ui'
 
 const ProductOptionUI = (props) => {
-  const {
-    children,
-    option,
-    currentState,
-    isAlsea,
-    alseaIngredientsValidation
-  } = props
+  const { children, option } = props
 
   const [, t] = useLanguage()
   const [incrementPriceAlert, setIncrementPriceAlert] = useState(false)
-  const [disableIncrementAlert, setDisableIncrementAlert] = useState(false)
 
   let maxMin = `${t('MIN', 'Min')}. ${option.min} - ${t('MAX', 'Max')}. ${option.max}`
   if (option.min === 1 && option.max === 1) {
@@ -33,17 +26,6 @@ const ProductOptionUI = (props) => {
   } else if (option.min > 0 && option.max === 0) {
     maxMin = `${t('MIN', 'Min')}. ${option.min})`
   }
-
-  useEffect(() => {
-    if (!(isAlsea && option?.name?.toLowerCase() === 'elige tus ingredientes' && alseaIngredientsValidation !== 9)) return
-    if (alseaIngredientsValidation < currentState?.balance && !disableIncrementAlert) {
-      setIncrementPriceAlert(true)
-      setDisableIncrementAlert(true)
-    }
-    if (alseaIngredientsValidation >= currentState?.balance) {
-      setDisableIncrementAlert(false)
-    }
-  }, [currentState])
 
   return (
     <>

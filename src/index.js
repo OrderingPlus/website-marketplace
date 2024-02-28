@@ -10,8 +10,6 @@ import { Alert, ThemeProvider, Toast } from '~ui'
 /**
  * Theme images
  */
-import chewLogo from './assets/images/chew_logo.svg'
-import chewLogoReverse from './assets/images/chew_logo_reverse.svg'
 import logotype from './assets/images/logotype.svg'
 import logotypeInvert from './assets/images/logotype-invert.svg'
 import isotype from './assets/images/isotype.svg'
@@ -105,9 +103,7 @@ const logos = {
   logotype,
   logotypeInvert,
   isotype,
-  isotypeInvert,
-  chewLogo,
-  chewLogoReverse
+  isotypeInvert
 }
 
 theme.images = {

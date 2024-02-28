@@ -107,7 +107,6 @@ export const Header = (props) => {
   const orderTypeList = [t('DELIVERY', 'Delivery'), t('PICKUP', 'Pickup'), t('EAT_IN', 'Eat in'), t('CURBSIDE', 'Curbside'), t('DRIVE_THRU', 'Drive thru'), '', t('CATERING_DELIVERY', 'Catering Delivery'), t('CATERING_PICKUP', 'Catering pickup')]
   const configTypes = configState?.configs?.order_types_allowed?.value.split('|').map(value => Number(value)) || []
   const isPreOrderSetting = configState?.configs?.preorder_status_enabled?.value === '1'
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const isHideLanguages = theme?.header?.components?.language_selector?.hidden
   const cateringTypeString = orderState?.options?.type === 7
     ? 'catering_delivery'
@@ -229,7 +228,7 @@ export const Header = (props) => {
   }, [orderState?.options?.address?.location, pathname])
 
   return (
-    <HeaderContainer isChew={isChew}>
+    <HeaderContainer>
       <InnerHeader>
         <LeftSide>
           <LeftHeader id='left-side'>
@@ -242,14 +241,13 @@ export const Header = (props) => {
             />
             <LogoHeader
               onClick={() => handleGoToPage({ page: orderState?.options?.address?.location && !isCustomerMode ? 'search' : 'home' })}
-              isChew={isChew}
             >
-              <img alt='Logotype' width='170px' height={isChew ? '35px' : '45px'} src={isChew ? theme?.images?.logos?.chewLogo : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.logotype} loading='lazy' />
-              <img alt='Isotype' width={isChew ? '70px' : '35px'} height={isChew ? '20px' : '45px'} src={isChew ? theme?.images?.logos?.chewLogo : (windowSize.width <= 768 ? theme?.images?.logos?.isotypeInvert : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.isotype)} loading='lazy' />
+              <img alt='Logotype' width='170px' height={'45px'} src={theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.logotype} loading='lazy' />
+              <img alt='Isotype' width={'35px'} height={'45px'} src={(windowSize.width <= 768 ? theme?.images?.logos?.isotypeInvert : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.isotype)} loading='lazy' />
             </LogoHeader>
           </LeftHeader>
           {isShowOrderOptions && windowSize.width >= 576 && (
-            <Menu id='center-side' className='left-header' isCustomerMode={isCustomerMode} isChew={isChew}>
+            <Menu id='center-side' className='left-header' isCustomerMode={isCustomerMode}>
               {windowSize.width > 850 && isFarAway && (
                 <FarAwayMessage>
                   <TiWarningOutline />
@@ -358,7 +356,6 @@ export const Header = (props) => {
                   <>
                     <MenuLink
                       name='signin'
-                      highlight={isChew && 1}
                       style={{ whiteSpace: 'nowrap' }}
                       onClick={() => handleOpenLoginSignUp('login')}
                     >
@@ -440,10 +437,7 @@ export const Header = (props) => {
                 <span>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</span>
               </FarAwayMessage>
             )}
-            <AddressMenu
-              isChew={isChew}
-              onClick={() => openModal('address')}
-            >
+            <AddressMenu onClick={() => openModal('address')}>
               <GeoAlt /> {orderState.options?.address?.address || t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
             </AddressMenu>
             {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (

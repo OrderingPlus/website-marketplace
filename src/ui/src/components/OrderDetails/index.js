@@ -950,7 +950,6 @@ const OrderDetailsUI = (props) => {
         content={confirm.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={confirm.open}
-        hideViaText={props.hideViaText}
         onClose={() => handleOriginalReorder()}
         onCancel={() => handleOriginalReorder()}
         onAccept={confirm.handleOnAccept}

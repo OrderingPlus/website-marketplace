@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTheme } from 'styled-components'
 
 import { BusinessList, BusinessListWrapper } from './styles'
 
@@ -16,9 +15,7 @@ export const PreviousBusinessOrdered = (props) => {
   } = props
 
   const [orderState] = useOrder()
-  const theme = useTheme()
   const { width } = useWindowSize()
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const onBusinessClick = (business) => {
     onRedirectPage({ page: 'business', params: { store: business.slug } })
@@ -26,7 +23,7 @@ export const PreviousBusinessOrdered = (props) => {
 
   return (
     <BusinessListWrapper isLoading={businesses?.loading}>
-      <BusinessList marginCard={isChew && '0 20px 0 0'}>
+      <BusinessList>
         <AutoScroll scrollId='searchlistorder'>
           {
             businesses?.result?.map((business, i) => (
