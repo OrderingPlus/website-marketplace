@@ -112,23 +112,24 @@ export const PaymentOptionStripeUI = (props) => {
           <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
         </AddNewCard>
       )}
-
-      <Modal
-        title={t('ADD_NEW_CARD', 'Add new card')}
-        className='modal-info'
-        open={addCartOpen}
-        onClose={() => setAddCardOpen(false)}
-      >
-        <StripeElementsForm
-          businessIds={props.businessIds}
-          businessId={props.businessId}
-          publicKey={props.publicKey}
-          toSave
-          requirements={props.clientSecret}
-          onCancel={() => setAddCardOpen(false)}
-          onNewCard={_handleNewCard}
-        />
-      </Modal>
+      {addCartOpen && (
+        <Modal
+          title={t('ADD_NEW_CARD', 'Add new card')}
+          className='modal-info'
+          open={addCartOpen}
+          onClose={() => setAddCardOpen(false)}
+        >
+          <StripeElementsForm
+            businessIds={props.businessIds}
+            businessId={props.businessId}
+            publicKey={props.publicKey}
+            toSave
+            requirements={props.clientSecret}
+            onCancel={() => setAddCardOpen(false)}
+            onNewCard={_handleNewCard}
+          />
+        </Modal>
+      )}
 
       <Confirm
         title={t('CARD', 'Card')}

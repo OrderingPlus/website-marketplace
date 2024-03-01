@@ -233,29 +233,31 @@ const MultiCartsPaymethodsAndWalletsUI = (props) => {
         </WalletPaymentOptionContainer>
       )}
       {/* Stripe direct, Google pay, Apple pay */}
-      <Modal
-        title={t('ADD_CARD', 'Add card')}
-        open={stripeDirectMethods?.includes(openPaymethod?.gateway) && !paymethodSelected?.paymethod_data?.id}
-        className='modal-info'
-        onClose={() => setOpenPaymethod(null)}
-      >
-        {!paymethodSelected?.data?.publishable &&
-          <Container>
-            <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
-          </Container>}
-        {paymethodSelected?.data?.publishable && stripeDirectMethods?.includes(paymethodSelected?.paymethod?.gateway) && (
-          <StripeElementsForm
-            methodsPay={methodsPay}
-            paymethod={paymethodSelected?.paymethod?.gateway}
-            businessId={props.businessId}
-            cartGroup={cartGroup?.result}
-            publicKey={paymethodSelected?.data?.publishable || paymethodSelected?.data?.publishable_key}
-            handleSource={handlePaymethodDataChange}
-            onCancel={() => setOpenPaymethod(null)}
-            handlePlaceOrder={handlePlaceOrder}
-          />
-        )}
-      </Modal>
+      {stripeDirectMethods?.includes(openPaymethod?.gateway) && !paymethodSelected?.paymethod_data?.id && (
+        <Modal
+          title={t('ADD_CARD', 'Add card')}
+          open={stripeDirectMethods?.includes(openPaymethod?.gateway) && !paymethodSelected?.paymethod_data?.id}
+          className='modal-info'
+          onClose={() => setOpenPaymethod(null)}
+        >
+          {!paymethodSelected?.data?.publishable &&
+            <Container>
+              <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
+            </Container>}
+          {paymethodSelected?.data?.publishable && stripeDirectMethods?.includes(paymethodSelected?.paymethod?.gateway) && (
+            <StripeElementsForm
+              methodsPay={methodsPay}
+              paymethod={paymethodSelected?.paymethod?.gateway}
+              businessId={props.businessId}
+              cartGroup={cartGroup?.result}
+              publicKey={paymethodSelected?.data?.publishable || paymethodSelected?.data?.publishable_key}
+              handleSource={handlePaymethodDataChange}
+              onCancel={() => setOpenPaymethod(null)}
+              handlePlaceOrder={handlePlaceOrder}
+            />
+          )}
+        </Modal>
+      )}
     </Container>
   )
 }

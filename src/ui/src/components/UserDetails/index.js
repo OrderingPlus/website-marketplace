@@ -234,22 +234,24 @@ const UserDetailsUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
-        open={willVerifyOtpState}
-        width='700px'
-        height='420px'
-        onClose={() => setWillVerifyOtpState(false)}
-      >
-        <VerifyCodeForm
-          otpLeftTime={otpLeftTime}
-          credentials={formState?.changes}
-          handleSendOtp={handleSendOtp}
-          handleCheckPhoneCode={handleSendPhoneCode}
-          email={(userData?.email || user?.email)}
-          isPhone
-        />
-      </Modal>
+      {willVerifyOtpState && (
+        <Modal
+          title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+          open={willVerifyOtpState}
+          width='700px'
+          height='420px'
+          onClose={() => setWillVerifyOtpState(false)}
+        >
+          <VerifyCodeForm
+            otpLeftTime={otpLeftTime}
+            credentials={formState?.changes}
+            handleSendOtp={handleSendOtp}
+            handleCheckPhoneCode={handleSendPhoneCode}
+            email={(userData?.email || user?.email)}
+            isPhone
+          />
+        </Modal>
+      )}
     </>
   )
 }

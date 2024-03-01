@@ -987,18 +987,20 @@ export const App = () => {
                   </div>
                 </Modal>
               )}
-              <Modal
-                open={businessSignUpSuccessed?.open}
-                onClose={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
-                title={t('CONGRATULATIONS', 'Congratulations')}
-                width='990px'
-              >
-                <SignUpApproval
-                  content={businessSignUpSuccessed?.content}
-                  onAccept={() => acceptAlert()}
-                  onCancel={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
-                />
-              </Modal>
+              {businessSignUpSuccessed?.open && (
+                <Modal
+                  open={businessSignUpSuccessed?.open}
+                  onClose={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
+                  title={t('CONGRATULATIONS', 'Congratulations')}
+                  width='990px'
+                >
+                  <SignUpApproval
+                    content={businessSignUpSuccessed?.content}
+                    onAccept={() => acceptAlert()}
+                    onCancel={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
+                  />
+                </Modal>
+              )}
             </ThemeProvider>
           )
         }

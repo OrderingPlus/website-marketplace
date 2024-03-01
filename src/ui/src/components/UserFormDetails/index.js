@@ -510,19 +510,21 @@ export const UserFormDetailsUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        width='760px'
-      >
-        <SignUpForm
-          useLoginByCellphone
-          useChekoutFileds
-          handleSuccessSignup={handleSuccessSignup}
-          isPopup
-          isGuest
-        />
-      </Modal>
+      {modalIsOpen && (
+        <Modal
+          open={modalIsOpen}
+          onClose={() => setModalIsOpen(false)}
+          width='760px'
+        >
+          <SignUpForm
+            useLoginByCellphone
+            useChekoutFileds
+            handleSuccessSignup={handleSuccessSignup}
+            isPopup
+            isGuest
+          />
+        </Modal>
+      )}
     </>
   )
 }

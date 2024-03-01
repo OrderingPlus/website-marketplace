@@ -47,14 +47,15 @@ const PaymentOptionCardUI = (props) => {
           <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
         </AddNewCard>
       )}
-
-      <Modal
-        open={addCardOpen}
-        onClose={() => setAddCardOpen(false)}
-        title={t('ADD_NEW_CARD', 'Add new card')}
-      >
-        <CardFormCustom handleNewCard={handleNewCard} setAddCardOpen={setAddCardOpen} />
-      </Modal>
+      {addCardOpen && (
+        <Modal
+          open={addCardOpen}
+          onClose={() => setAddCardOpen(false)}
+          title={t('ADD_NEW_CARD', 'Add new card')}
+        >
+          <CardFormCustom handleNewCard={handleNewCard} setAddCardOpen={setAddCardOpen} />
+        </Modal>
+      )}
     </>
   )
 }

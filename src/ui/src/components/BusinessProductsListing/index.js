@@ -473,110 +473,113 @@ const BusinessProductsListingUI = (props) => {
           <Button color='primary' onClick={() => setisCartModal(true)}>{t('VIEW_CART', 'View cart')}</Button>
         </MobileCartViewWrapper>
       )}
-      <Modal
-        width='45%'
-        open={isCartModal}
-        onClose={() => setisCartModal(false)}
-        padding='0'
-      >
-        <BusinessCartContent isModal>
-          <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
-          {currentCart?.products?.length > 0
-            ? (
-            <>
-              <Cart
-                isStore
-                isCustomMode
-                isForceOpenCart
-                cart={currentCart}
-                isCartPending={currentCart?.status === 2}
-                isProducts={currentCart.products.length}
-                isCartOnProductsList={isCartOnProductsList}
-                handleCartOpen={(val) => setIsCartOpen(val)}
-                businessConfigs={business?.configs}
-                productLoading={productLoading}
-              />
-            </>
-              )
-            : (
-            <EmptyCart>
-              <div className='empty-content'>
-                <Cart3 />
-                <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
-              </div>
-              <EmptyBtnWrapper>
-                <span>{parsePrice(0)}</span>
-                <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
-              </EmptyBtnWrapper>
-            </EmptyCart>
-              )}
-        </BusinessCartContent>
-      </Modal>
-
-      <Modal
-        width={props.useKioskApp ? '80%' : '760px'}
-        open={openProduct}
-        closeOnBackdrop
-        onClose={() => closeModalProductForm()}
-        padding='0'
-        isProductForm
-        disableOverflowX
-      >
-
-        {productModal.loading && !productModal.error && !productModal.product && (
-          <ProductLoading>
-            <SkeletonItem>
-              <Skeleton height={45} count={props.useKioskApp ? 12 : 8} />
-            </SkeletonItem>
-          </ProductLoading>
-        )}
-
-        {productModal.error && productModal.error.length > 0 && (
-          <NotFoundSource
-            content={productModal.error[0]?.message || productModal.error[0]}
-          />
-        )}
-        {isInitialRender && !productModal.loading && !productModal.error && !productModal.product && notFound && (
-          <NotFoundSource
-            content={t('ERROR_GET_PRODUCT', theme?.defaultLanguages?.ERROR_GET_PRODUCT || 'Sorry, we couldn\'t find the requested product.')}
-          />
-        )}
-        {(productModal.product || curProduct) && (
-          <>
-            {(((productModal?.product?.type === 'service') || (curProduct?.type === 'service')) && business?.professionals?.length > 0)
+      {isCartModal && (
+        <Modal
+          width='45%'
+          open={isCartModal}
+          onClose={() => setisCartModal(false)}
+          padding='0'
+        >
+          <BusinessCartContent isModal>
+            <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
+            {currentCart?.products?.length > 0
               ? (
-              <ServiceForm
-                businessSlug={business?.slug}
-                useKioskApp={props.useKioskApp}
-                product={productModal.product || curProduct}
-                businessId={business?.id}
-                onSave={handlerProductAction}
-                professionalList={business?.professionals}
-                professionalSelected={professionalSelected}
-                handleChangeProfessional={handleChangeProfessionalSelected}
-                handleUpdateProfessionals={handleUpdateProfessionals}
-                productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-                setProductLoading={setProductLoading}
-              />
+              <>
+                <Cart
+                  isStore
+                  isCustomMode
+                  isForceOpenCart
+                  cart={currentCart}
+                  isCartPending={currentCart?.status === 2}
+                  isProducts={currentCart.products.length}
+                  isCartOnProductsList={isCartOnProductsList}
+                  handleCartOpen={(val) => setIsCartOpen(val)}
+                  businessConfigs={business?.configs}
+                  productLoading={productLoading}
+                />
+              </>
                 )
               : (
-              <ProductForm
-                businessSlug={business?.slug}
-                useKioskApp={props.useKioskApp}
-                product={productModal.product || curProduct}
-                businessId={business?.id}
-                categoryId={curProduct?.category_id}
-                productId={curProduct?.id}
-                handleUpdateProducts={handleUpdateProducts}
-                onSave={handlerProductAction}
-                isCustomerMode={isCustomerMode}
-                productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-                setProductLoading={setProductLoading}
-              />
+              <EmptyCart>
+                <div className='empty-content'>
+                  <Cart3 />
+                  <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                </div>
+                <EmptyBtnWrapper>
+                  <span>{parsePrice(0)}</span>
+                  <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
+                </EmptyBtnWrapper>
+              </EmptyCart>
                 )}
-          </>
-        )}
-      </Modal>
+          </BusinessCartContent>
+        </Modal>
+      )}
+      {openProduct && (
+        <Modal
+          width={props.useKioskApp ? '80%' : '760px'}
+          open={openProduct}
+          closeOnBackdrop
+          onClose={() => closeModalProductForm()}
+          padding='0'
+          isProductForm
+          disableOverflowX
+        >
+
+          {productModal.loading && !productModal.error && !productModal.product && (
+            <ProductLoading>
+              <SkeletonItem>
+                <Skeleton height={45} count={props.useKioskApp ? 12 : 8} />
+              </SkeletonItem>
+            </ProductLoading>
+          )}
+
+          {productModal.error && productModal.error.length > 0 && (
+            <NotFoundSource
+              content={productModal.error[0]?.message || productModal.error[0]}
+            />
+          )}
+          {isInitialRender && !productModal.loading && !productModal.error && !productModal.product && notFound && (
+            <NotFoundSource
+              content={t('ERROR_GET_PRODUCT', theme?.defaultLanguages?.ERROR_GET_PRODUCT || 'Sorry, we couldn\'t find the requested product.')}
+            />
+          )}
+          {(productModal.product || curProduct) && (
+            <>
+              {(((productModal?.product?.type === 'service') || (curProduct?.type === 'service')) && business?.professionals?.length > 0)
+                ? (
+                <ServiceForm
+                  businessSlug={business?.slug}
+                  useKioskApp={props.useKioskApp}
+                  product={productModal.product || curProduct}
+                  businessId={business?.id}
+                  onSave={handlerProductAction}
+                  professionalList={business?.professionals}
+                  professionalSelected={professionalSelected}
+                  handleChangeProfessional={handleChangeProfessionalSelected}
+                  handleUpdateProfessionals={handleUpdateProfessionals}
+                  productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+                  setProductLoading={setProductLoading}
+                />
+                  )
+                : (
+                <ProductForm
+                  businessSlug={business?.slug}
+                  useKioskApp={props.useKioskApp}
+                  product={productModal.product || curProduct}
+                  businessId={business?.id}
+                  categoryId={curProduct?.category_id}
+                  productId={curProduct?.id}
+                  handleUpdateProducts={handleUpdateProducts}
+                  onSave={handlerProductAction}
+                  isCustomerMode={isCustomerMode}
+                  productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+                  setProductLoading={setProductLoading}
+                />
+                  )}
+            </>
+          )}
+        </Modal>
+      )}
       <Alert
         title={t('ERROR', 'Error')}
         open={alertState?.open}

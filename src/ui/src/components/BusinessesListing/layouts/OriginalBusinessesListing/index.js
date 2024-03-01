@@ -522,61 +522,66 @@ const BusinessesListingUI = (props) => {
           )}
         </BusinessList>
       </>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-          cateringPreorder={!!cateringTypeString}
-          {...cateringValues}
-        />
-      </Modal>
-      <Modal
-        open={modals.citiesOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, citiesOpen: false })}
-        padding='0px'
-        hideCloseDefault
-      >
-        <CitiesControl
-          cities={citiesState?.cities}
-          handleChangeCity={handleChangeCity}
-          onClose={() => setModals({ ...modals, citiesOpen: false })}
-        />
-      </Modal>
-
-      <Modal
-        {...(!auth && { title: t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?') })}
-        open={modals.formOpen || modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, formOpen: false, listOpen: false })}
-      >
-        {modals.listOpen
-          ? (
-          <AddressList
-            isModal
-            changeOrderAddressWithDefault
-            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-            onCancel={() => setModals({ ...modals, listOpen: false })}
-            isCustomerMode={isCustomerMode}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+            cateringPreorder={!!cateringTypeString}
+            {...cateringValues}
           />
-            )
-          : (
-          <AddressFormWrapper>
-            <AddressForm
-              useValidationFileds
-              address={orderState?.options?.address || {}}
-              onCancel={() => setModals({ ...modals, formOpen: false })}
-              onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+        </Modal>
+      )}
+      {modals.citiesOpen && (
+        <Modal
+          open={modals.citiesOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, citiesOpen: false })}
+          padding='0px'
+          hideCloseDefault
+        >
+          <CitiesControl
+            cities={citiesState?.cities}
+            handleChangeCity={handleChangeCity}
+            onClose={() => setModals({ ...modals, citiesOpen: false })}
+          />
+        </Modal>
+      )}
+      {(modals.formOpen || modals.listOpen) && (
+        <Modal
+          {...(!auth && { title: t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?') })}
+          open={modals.formOpen || modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, formOpen: false, listOpen: false })}
+        >
+          {modals.listOpen
+            ? (
+            <AddressList
+              isModal
+              changeOrderAddressWithDefault
+              userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+              onCancel={() => setModals({ ...modals, listOpen: false })}
               isCustomerMode={isCustomerMode}
             />
-          </AddressFormWrapper>
-            )}
-      </Modal>
+              )
+            : (
+            <AddressFormWrapper>
+              <AddressForm
+                useValidationFileds
+                address={orderState?.options?.address || {}}
+                onCancel={() => setModals({ ...modals, formOpen: false })}
+                onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+                isCustomerMode={isCustomerMode}
+              />
+            </AddressFormWrapper>
+              )}
+        </Modal>
+      )}
 
       <Alert
         title={!mapErrors ? t('SEARCH', 'Search') : t('BUSINESSES_MAP', 'Businesses Map')}

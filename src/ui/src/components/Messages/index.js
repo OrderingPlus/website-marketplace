@@ -611,21 +611,23 @@ const MessagesUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        onClose={() => setModalImage({ ...modalImage, open: false })}
-        open={modalImage.open}
-        padding='0'
-        hideCloseDefault
-        isTransparent
-        height='auto'
-      >
-        <ImageContainer>
-          <ModalIcon>
-            <MdClose onClick={() => setModalImage({ ...modalImage, open: false })} />
-          </ModalIcon>
-          <img src={modalImage.src} width='320px' height='180px' loading='lazy' />
-        </ImageContainer>
-      </Modal>
+      {modalImage.open && (
+        <Modal
+          onClose={() => setModalImage({ ...modalImage, open: false })}
+          open={modalImage.open}
+          padding='0'
+          hideCloseDefault
+          isTransparent
+          height='auto'
+        >
+          <ImageContainer>
+            <ModalIcon>
+              <MdClose onClick={() => setModalImage({ ...modalImage, open: false })} />
+            </ModalIcon>
+            <img src={modalImage.src} width='320px' height='180px' loading='lazy' />
+          </ImageContainer>
+        </Modal>
+      )}
     </MessagesContainer>
   )
 }

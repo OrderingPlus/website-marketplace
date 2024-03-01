@@ -322,111 +322,121 @@ const PaymentOptionsUI = (props) => {
       )}
 
       {/* Paypal */}
-      <Modal
-        className='modal-info'
-        open={isOpenMethod?.paymethod?.gateway === 'paypal' && !paymethodData.id}
-        onClose={() => handlePaymethodClick(null)}
-        title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
-      >
-        {isOpenMethod?.paymethod?.gateway === 'paypal' && (
-          <PaymentOptionPaypal
-            clientId={isOpenMethod?.paymethod?.credentials?.client_id}
+      {isOpenMethod?.paymethod?.gateway === 'paypal' && !paymethodData.id && (
+        <Modal
+          className='modal-info'
+          open={isOpenMethod?.paymethod?.gateway === 'paypal' && !paymethodData.id}
+          onClose={() => handlePaymethodClick(null)}
+          title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
+        >
+          {isOpenMethod?.paymethod?.gateway === 'paypal' && (
+            <PaymentOptionPaypal
+              clientId={isOpenMethod?.paymethod?.credentials?.client_id}
+              body={{
+                paymethod_id: isOpenMethod?.paymethod?.id,
+                amount: cart?.balance ?? cart.total,
+                delivery_zone_id: cart.delivery_zone_id,
+                cartUuid: cart.uuid
+              }}
+              btnStyle={paypalBtnStyle}
+              noAuthMessage={
+                !token
+                  ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
+                  : null
+              }
+              handlerChangePaypal={(uuid) => handleOrderRedirect && handleOrderRedirect(uuid)}
+            />
+          )}
+        </Modal>
+      )}
+
+      {/* Stripe Connect */}
+      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
+        <Modal
+          title={t('SELECT_A_CARD', 'Select a card')}
+          open={isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id}
+          className='modal-info'
+          onClose={() => handlePaymethodClick(null)}
+        >
+          {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && (
+            <PaymentOptionStripe
+              paymethod={isOpenMethod?.paymethod}
+              businessId={props.businessId}
+              publicKey={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+              clientSecret={isOpenMethod?.paymethod?.credentials?.publishable}
+              payType={paymethodsList?.name}
+              onSelectCard={handlePaymethodDataChange}
+              onCancel={() => handlePaymethodClick(null)}
+              paymethodSelected={paymethodSelected}
+            />
+          )}
+        </Modal>
+      )}
+
+      {/* Stripe direct, Google pay, Apple pay */}
+      {stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id && (
+        <Modal
+          title={t('ADD_CARD', 'Add card')}
+          open={stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id}
+          className='modal-info'
+          onClose={() => handlePaymethodClick(null)}
+        >
+          {!isOpenMethod?.paymethod?.credentials?.publishable &&
+            <Container>
+              <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
+            </Container>}
+          {isOpenMethod?.paymethod?.credentials?.publishable && stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && (
+            <StripeElementsForm
+              methodsPay={methodsPay}
+              paymethod={isOpenMethod?.paymethod?.gateway}
+              businessId={props.businessId}
+              cart={cart}
+              publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
+              handleSource={handlePaymethodDataChange}
+              onCancel={() => handlePaymethodClick(null)}
+              handlePlaceOrder={handlePlaceOrder}
+            />
+          )}
+        </Modal>
+      )}
+
+      {/* Stripe Redirect */}
+      {isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type && (
+        <Modal
+          title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
+          open={isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type}
+          className='modal-info'
+          onClose={() => handlePaymethodClick(null)}
+        >
+          <StripeRedirectForm
+            businessId={props.businessId}
+            currency={props.currency}
+            paymethods={stripeRedirectOptions}
+            handleStripeRedirect={handlePaymethodDataChange}
+          />
+        </Modal>
+      )}
+      {isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token && (
+        <Modal
+          title={t('SQUARE', 'Square')}
+          open={isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token}
+          onClose={() => handlePaymethodClick(null)}
+        >
+          <PaymentOptionSquare
+            businessId={props.businessId}
+            cartTotal={cart?.total}
+            data={isOpenMethod?.paymethod?.credentials}
             body={{
               paymethod_id: isOpenMethod?.paymethod?.id,
-              amount: cart?.balance ?? cart.total,
+              amount: cart.total,
               delivery_zone_id: cart.delivery_zone_id,
               cartUuid: cart.uuid
             }}
-            btnStyle={paypalBtnStyle}
-            noAuthMessage={
-              !token
-                ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
-                : null
-            }
-            handlerChangePaypal={(uuid) => handleOrderRedirect && handleOrderRedirect(uuid)}
+            onPlaceOrderClick={onPlaceOrderClick}
+            setCreateOrder={setCreateOrder}
           />
-        )}
-      </Modal>
-
-      {/* Stripe Connect */}
-      <Modal
-        title={t('SELECT_A_CARD', 'Select a card')}
-        open={isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && (
-          <PaymentOptionStripe
-            paymethod={isOpenMethod?.paymethod}
-            businessId={props.businessId}
-            publicKey={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
-            clientSecret={isOpenMethod?.paymethod?.credentials?.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-            paymethodSelected={paymethodSelected}
-          />
-        )}
-      </Modal>
-
-      {/* Stripe direct, Google pay, Apple pay */}
-      <Modal
-        title={t('ADD_CARD', 'Add card')}
-        open={stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {!isOpenMethod?.paymethod?.credentials?.publishable &&
-          <Container>
-            <p>{t('ADD_PUBLISHABLE_KEY', 'Please add a publishable key')}</p>
-          </Container>}
-        {isOpenMethod?.paymethod?.credentials?.publishable && stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && (
-          <StripeElementsForm
-            methodsPay={methodsPay}
-            paymethod={isOpenMethod?.paymethod?.gateway}
-            businessId={props.businessId}
-            cart={cart}
-            publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
-            handleSource={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-            handlePlaceOrder={handlePlaceOrder}
-          />
-        )}
-      </Modal>
-
-      {/* Stripe Redirect */}
-      <Modal
-        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-        open={isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        <StripeRedirectForm
-          businessId={props.businessId}
-          currency={props.currency}
-          paymethods={stripeRedirectOptions}
-          handleStripeRedirect={handlePaymethodDataChange}
-        />
-      </Modal>
-      <Modal
-        title={t('SQUARE', 'Square')}
-        open={isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        <PaymentOptionSquare
-          businessId={props.businessId}
-          cartTotal={cart?.total}
-          data={isOpenMethod?.paymethod?.credentials}
-          body={{
-            paymethod_id: isOpenMethod?.paymethod?.id,
-            amount: cart.total,
-            delivery_zone_id: cart.delivery_zone_id,
-            cartUuid: cart.uuid
-          }}
-          onPlaceOrderClick={onPlaceOrderClick}
-          setCreateOrder={setCreateOrder}
-        />
-      </Modal>
+        </Modal>
+      )}
       <Alert
         title={t('PAYMENT_METHODS', 'Payment methods')}
         content={alertState.content}

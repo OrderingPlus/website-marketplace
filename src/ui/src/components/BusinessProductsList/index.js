@@ -388,24 +388,26 @@ const BusinessProductsListUI = (props) => {
             <ErrorMessage key={i}>ERROR: [{e}]</ErrorMessage>
           ))
         )}
-        <Modal
-          open={openDescription}
-          title={openDescription?.name}
-          onClose={() => setOpenDescription(null)}
-        >
-          <DescriptionModalContainer>
-            {
-              openDescription?.image && (
-                <img src={openDescription.image} />
-              )
-            }
-            <DescriptionContainer>
-              <div>
-                <p>{openDescription?.description}</p>
-              </div>
-            </DescriptionContainer>
-          </DescriptionModalContainer>
-        </Modal>
+        {openDescription && (
+          <Modal
+            open={openDescription}
+            title={openDescription?.name}
+            onClose={() => setOpenDescription(null)}
+          >
+            <DescriptionModalContainer>
+              {
+                openDescription?.image && (
+                  <img src={openDescription.image} />
+                )
+              }
+              <DescriptionContainer>
+                <div>
+                  <p>{openDescription?.description}</p>
+                </div>
+              </DescriptionContainer>
+            </DescriptionModalContainer>
+          </Modal>
+        )}
       </ProductsContainer>
     </>
   )

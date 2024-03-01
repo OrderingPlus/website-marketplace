@@ -240,51 +240,57 @@ export const BusinessBasicInformation = (props) => {
           </Button>
         </BackButton>
       )}
-      <Modal
-        width='70%'
-        open={openBusinessInformation}
-        onClose={setOpenBusinessInformation}
-        padding='0'
-        hideCloseDefault
-        isTransparent
-      >
-        <BusinessInformation
-          business={business}
-          getBusinessType={getBusinessType}
-          optimizeImage={optimizeImage}
+      {openBusinessInformation && (
+        <Modal
+          width='70%'
+          open={openBusinessInformation}
           onClose={setOpenBusinessInformation}
-        />
-      </Modal>
-      <Modal
-        width='70%'
-        open={isBusinessReviews}
-        onClose={() => setIsBusinessReviews(false)}
-        padding='20px'
-      >
-        <BusinessReviews
-          businessId={business.id}
-          reviews={business.reviews?.reviews}
-          businessName={business.name}
-          stars={business.reviews?.total}
-        />
-      </Modal>
-      <Modal
-        open={isPreOrder}
-        width={isCustomerMode ? '700px' : '760px'}
-        onClose={() => setIsPreOrder(false)}
-        padding={isCustomerMode && '20px'}
-      >
-        {isCustomerMode
-          ? (
-          <MomentContent onClose={() => setIsPreOrder(false)} />
-            )
-          : (
-          <BusinessPreorder
+          padding='0'
+          hideCloseDefault
+          isTransparent
+        >
+          <BusinessInformation
             business={business}
-            handleClick={() => setIsPreOrder(false)}
+            getBusinessType={getBusinessType}
+            optimizeImage={optimizeImage}
+            onClose={setOpenBusinessInformation}
           />
-            )}
-      </Modal>
+        </Modal>
+      )}
+      {isBusinessReviews && (
+        <Modal
+          width='70%'
+          open={isBusinessReviews}
+          onClose={() => setIsBusinessReviews(false)}
+          padding='20px'
+        >
+          <BusinessReviews
+            businessId={business.id}
+            reviews={business.reviews?.reviews}
+            businessName={business.name}
+            stars={business.reviews?.total}
+          />
+        </Modal>
+      )}
+      {isPreOrder && (
+        <Modal
+          open={isPreOrder}
+          width={isCustomerMode ? '700px' : '760px'}
+          onClose={() => setIsPreOrder(false)}
+          padding={isCustomerMode && '20px'}
+        >
+          {isCustomerMode
+            ? (
+            <MomentContent onClose={() => setIsPreOrder(false)} />
+              )
+            : (
+            <BusinessPreorder
+              business={business}
+              handleClick={() => setIsPreOrder(false)}
+            />
+              )}
+        </Modal>
+      )}
     </>
   )
 }

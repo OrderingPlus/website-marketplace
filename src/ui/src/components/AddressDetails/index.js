@@ -61,22 +61,23 @@ const AddressDetailsUI = (props) => {
           )}
         </>
       )}
-
-      <Modal
-        open={openModal}
-        width='70%'
-        onClose={() => setOpenModal(false)}
-      >
-        <AddressList
-          isModal
-          changeOrderAddressWithDefault
-          userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-          onCancel={() => setOpenModal(false)}
-          userCustomerSetup={isCustomerMode && user}
-          isFromCheckout={isFromCheckout}
-          isCustomerMode={isCustomerMode}
-        />
-      </Modal>
+      {openModal && (
+        <Modal
+          open={openModal}
+          width='70%'
+          onClose={() => setOpenModal(false)}
+        >
+          <AddressList
+            isModal
+            changeOrderAddressWithDefault
+            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+            onCancel={() => setOpenModal(false)}
+            userCustomerSetup={isCustomerMode && user}
+            isFromCheckout={isFromCheckout}
+            isCustomerMode={isCustomerMode}
+          />
+        </Modal>
+      )}
 
       <Alert
         title={t('SEARCH', 'Search')}

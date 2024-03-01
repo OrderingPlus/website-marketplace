@@ -648,17 +648,19 @@ export const Header = (props) => {
         onAccept={confirm.handleOnAccept}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={!!preorderBusiness}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-        />
-      </Modal>
+      {!!preorderBusiness && (
+        <Modal
+          open={!!preorderBusiness}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+          />
+        </Modal>
+      )}
     </HeaderContainer>
   )
 }

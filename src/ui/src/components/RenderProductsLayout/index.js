@@ -475,47 +475,49 @@ export const RenderProductsLayout = (props) => {
           )}
         </>
       )}
-      <Modal
-        width='40%'
-        open={isCartModal}
-        onClose={() => setisCartModal(false)}
-        padding='0'
-      >
-        <BusinessCartContent isModal>
-          <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
-          {currentCart?.products?.length > 0
-            ? (
-            <>
-              <Cart
-                isStore
-                isCustomMode
-                isForceOpenCart
-                cart={currentCart}
-                useKioskApp={useKioskApp}
-                isCartPending={currentCart?.status === 2}
-                isProducts={currentCart.products.length}
-                isCartOnProductsList={isCartOnProductsList}
-                handleCartOpen={handleCartOpen}
-                businessConfigs={business?.configs}
-                productLoading={productLoading}
-                setProductLoading={setProductLoading}
-              />
-            </>
-              )
-            : (
-            <EmptyCart>
-              <div className='empty-content'>
-                <Cart3 />
-                <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
-              </div>
-              <EmptyBtnWrapper>
-                <span>{parsePrice(0)}</span>
-                <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
-              </EmptyBtnWrapper>
-            </EmptyCart>
-              )}
-        </BusinessCartContent>
-      </Modal>
+      {isCartModal && (
+        <Modal
+          width='40%'
+          open={isCartModal}
+          onClose={() => setisCartModal(false)}
+          padding='0'
+        >
+          <BusinessCartContent isModal>
+            <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
+            {currentCart?.products?.length > 0
+              ? (
+              <>
+                <Cart
+                  isStore
+                  isCustomMode
+                  isForceOpenCart
+                  cart={currentCart}
+                  useKioskApp={useKioskApp}
+                  isCartPending={currentCart?.status === 2}
+                  isProducts={currentCart.products.length}
+                  isCartOnProductsList={isCartOnProductsList}
+                  handleCartOpen={handleCartOpen}
+                  businessConfigs={business?.configs}
+                  productLoading={productLoading}
+                  setProductLoading={setProductLoading}
+                />
+              </>
+                )
+              : (
+              <EmptyCart>
+                <div className='empty-content'>
+                  <Cart3 />
+                  <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                </div>
+                <EmptyBtnWrapper>
+                  <span>{parsePrice(0)}</span>
+                  <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
+                </EmptyBtnWrapper>
+              </EmptyCart>
+                )}
+          </BusinessCartContent>
+        </Modal>
+      )}
     </>
   )
 }

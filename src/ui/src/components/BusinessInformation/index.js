@@ -183,21 +183,23 @@ export const BusinessInformationUI = (props) => {
           </BusinessMediaContent>
         )}
       </BusinessContent>
-      <Modal
-        onClose={() => setModalImage(false)}
-        open={modalImage}
-        padding='0'
-        hideCloseDefault
-        isTransparent
-        height='auto'
-      >
-        <ImageContainer>
-          <ModalIcon>
-            <MdClose onClick={() => setModalImage(false)} />
-          </ModalIcon>
-          <img src={image} width='320px' height='180px' loading='lazy' />
-        </ImageContainer>
-      </Modal>
+      {modalImage && (
+        <Modal
+          onClose={() => setModalImage(false)}
+          open={modalImage}
+          padding='0'
+          hideCloseDefault
+          isTransparent
+          height='auto'
+        >
+          <ImageContainer>
+            <ModalIcon>
+              <MdClose onClick={() => setModalImage(false)} />
+            </ModalIcon>
+            <img src={image} width='320px' height='180px' loading='lazy' />
+          </ImageContainer>
+        </Modal>
+      )}
     </BusinessInformationContainer>
   )
 }

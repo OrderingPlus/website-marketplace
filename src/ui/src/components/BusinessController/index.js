@@ -335,67 +335,69 @@ const BusinessControllerUI = (props) => {
         onAccept={() => setAlertState({ open: false, content: [] })}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={isModalOpen}
-        onRemove={() => closeAuthModal()}
-        onClose={() => closeAuthModal()}
-        width='50%'
-        authModal
-      >
-        {modalPageToShow === 'login' && (
-          <LoginForm
-            handleSuccessLogin={handleSuccessLogin}
-            elementLinkToSignup={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'signup' })
-                } href='#'
-              >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
-              </a>
-            }
-            elementLinkToForgotPassword={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
-                } href='#'
-              >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
-              </a>
-            }
-            useLoginByCellphone
-            isPopup
-          />
-        )}
-        {modalPageToShow === 'signup' && (
-          <SignUpForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            useLoginByCellphone
-            useChekoutFileds
-            handleSuccessSignup={handleSuccessSignup}
-            isPopup
-            closeModal={() => closeAuthModal()}
-          />
-        )}
-        {modalPageToShow === 'forgotpassword' && (
-          <ForgotPasswordForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            isPopup
-          />
-        )}
-      </Modal>
+      {isModalOpen && (
+        <Modal
+          open={isModalOpen}
+          onRemove={() => closeAuthModal()}
+          onClose={() => closeAuthModal()}
+          width='50%'
+          authModal
+        >
+          {modalPageToShow === 'login' && (
+            <LoginForm
+              handleSuccessLogin={handleSuccessLogin}
+              elementLinkToSignup={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'signup' })
+                  } href='#'
+                >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
+                </a>
+              }
+              elementLinkToForgotPassword={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
+                  } href='#'
+                >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
+                </a>
+              }
+              useLoginByCellphone
+              isPopup
+            />
+          )}
+          {modalPageToShow === 'signup' && (
+            <SignUpForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              useLoginByCellphone
+              useChekoutFileds
+              handleSuccessSignup={handleSuccessSignup}
+              isPopup
+              closeModal={() => closeAuthModal()}
+            />
+          )}
+          {modalPageToShow === 'forgotpassword' && (
+            <ForgotPasswordForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              isPopup
+            />
+          )}
+        </Modal>
+      )}
     </>
   )
 }

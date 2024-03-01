@@ -373,7 +373,7 @@ const AddressListUI = (props) => {
         <AddressListContent />
           )}
       {
-        !isPopover && addressOpen && (
+        !isPopover && addressOpen && isCompletedLayout && (
           <Modal
             title={t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
             open={!isPopover && addressOpen && isCompletedLayout}

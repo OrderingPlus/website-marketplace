@@ -284,42 +284,46 @@ const BusinessListingUI = (props) => {
 
         </PreorderAndBusinessWrapper>
       </BusinessListContainer>
-      <Modal
-        width='768px'
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-      >
-        {
-          auth
-            ? (
-              <AddressList
-                isModal
-                changeOrderAddressWithDefault
-                // userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-                onCancel={() => setModalIsOpen(false)}
-              />
-              )
-            : (
-                <AddressForm
-                  useValidationFileds
-                  address={orderState?.options?.address || {}}
+      {modalIsOpen && (
+        <Modal
+          width='768px'
+          open={modalIsOpen}
+          onClose={() => setModalIsOpen(false)}
+        >
+          {
+            auth
+              ? (
+                <AddressList
+                  isModal
+                  changeOrderAddressWithDefault
+                  // userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
                   onCancel={() => setModalIsOpen(false)}
-                  onSaveAddress={() => setModalIsOpen(false)}
                 />
-              )
-        }
-      </Modal>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-        />
-      </Modal>
+                )
+              : (
+                  <AddressForm
+                    useValidationFileds
+                    address={orderState?.options?.address || {}}
+                    onCancel={() => setModalIsOpen(false)}
+                    onSaveAddress={() => setModalIsOpen(false)}
+                  />
+                )
+          }
+        </Modal>
+      )}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+          />
+        </Modal>
+      )}
     </>
   )
 }

@@ -156,34 +156,37 @@ export const HomeHero = (props) => {
           </UseAccount>
         </>
       )}
-
-      <Modal
-        title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-        open={modals.formOpen}
-        onClose={() => setModals({ ...modals, formOpen: false })}
-      >
-        <AddressForm
-          useValidationFileds
-          address={orderState?.options?.address || {}}
+      {modals.formOpen && (
+        <Modal
+          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
+          open={modals.formOpen}
           onClose={() => setModals({ ...modals, formOpen: false })}
-          onSaveAddress={() => setModals({ ...modals, formOpen: false })}
-          onCancel={() => setModals({ ...modals, formOpen: false })}
-        />
-      </Modal>
-      <Modal
-        title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-        open={modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, listOpen: false })}
-      >
-        <AddressList
-          isModal
-          changeOrderAddressWithDefault
-          userId={isNaN(userCustomer) ? null : userCustomer}
-          onCancel={() => setModals({ ...modals, listOpen: false })}
-          onAccept={() => handleFindBusinesses()}
-        />
-      </Modal>
+        >
+          <AddressForm
+            useValidationFileds
+            address={orderState?.options?.address || {}}
+            onClose={() => setModals({ ...modals, formOpen: false })}
+            onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+            onCancel={() => setModals({ ...modals, formOpen: false })}
+          />
+        </Modal>
+      )}
+      {modals.listOpen && (
+        <Modal
+          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
+          open={modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, listOpen: false })}
+        >
+          <AddressList
+            isModal
+            changeOrderAddressWithDefault
+            userId={isNaN(userCustomer) ? null : userCustomer}
+            onCancel={() => setModals({ ...modals, listOpen: false })}
+            onAccept={() => handleFindBusinesses()}
+          />
+        </Modal>
+      )}
       {authModalOpen && !auth && (
         <Modal
           open={authModalOpen}

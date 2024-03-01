@@ -421,48 +421,41 @@ const CheckoutUI = (props) => {
                 <UserDetailsContainer>
                   <WrapperUserDetails>
                     {cartState.loading || (isCustomerMode && !customerState?.user?.id)
-                      ? (
-                      <div>
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                      </div>
-                        )
-                      : (
-                          (user?.guest_id && !allowedGuest)
-                            ? (
-                        <AuthButtonList>
-                          <h2>{t('CUSTOMER_DETAILS', 'Customer details')}</h2>
-                          <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
-                            {t('SIGN_UP', 'Sign up')}
-                          </Button>
-                          <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
-                            {t('LOGIN', 'Login')}
-                          </Button>
-                          <Button color='black' outline onClick={() => setAllowedGuest(true)}>
-                            {t('CONTINUE_AS_GUEST', 'Continue as guest')}
-                          </Button>
-                        </AuthButtonList>
-                              )
-                            : (
-                        <UserDetails
-                          isUserDetailsEdit={isUserDetailsEdit}
-                          cartStatus={cart?.status}
-                          businessId={cart?.business_id}
-                          useDefualtSessionManager
-                          useSessionUser={!isCustomerMode}
-                          isCustomerMode={isCustomerMode}
-                          userData={isCustomerMode && customerState.user}
-                          userId={isCustomerMode && customerState?.user?.id}
-                          isOrderTypeValidationField
-                          requiredFields={requiredFields}
-                          checkoutFields={checkoutFields}
-                          isSuccess={isSuccess}
-                          isCheckout
-                        />
-                              )
+                      ? (<div>
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                        </div>)
+                      : ((user?.guest_id && !allowedGuest)
+                          ? (<AuthButtonList>
+                              <h2>{t('CUSTOMER_DETAILS', 'Customer details')}</h2>
+                              <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
+                                {t('SIGN_UP', 'Sign up')}
+                              </Button>
+                              <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
+                                {t('LOGIN', 'Login')}
+                              </Button>
+                              <Button color='black' outline onClick={() => setAllowedGuest(true)}>
+                                {t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                              </Button>
+                            </AuthButtonList>)
+                          : (<UserDetails
+                              isUserDetailsEdit={isUserDetailsEdit}
+                              cartStatus={cart?.status}
+                              businessId={cart?.business_id}
+                              useDefualtSessionManager
+                              useSessionUser={!isCustomerMode}
+                              isCustomerMode={isCustomerMode}
+                              userData={isCustomerMode && customerState.user}
+                              userId={isCustomerMode && customerState?.user?.id}
+                              isOrderTypeValidationField
+                              requiredFields={requiredFields}
+                              checkoutFields={checkoutFields}
+                              isSuccess={isSuccess}
+                              isCheckout
+                            />)
                         )}
                   </WrapperUserDetails>
                 </UserDetailsContainer>
@@ -763,84 +756,92 @@ const CheckoutUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={isOpen}
-        width='760px'
-        padding='30px'
-        onClose={() => setIsOpen(false)}
-      >
-        <UserDetails
-          isUserDetailsEdit={isUserDetailsEdit}
-          cartStatus={cart?.status}
-          businessId={cart?.business_id}
-          useDefualtSessionManager
-          useSessionUser={!isCustomerMode}
-          isCustomerMode={isCustomerMode}
-          userData={isCustomerMode && customerState.user}
-          userId={isCustomerMode && customerState?.user?.id}
-          requiredFields={requiredFields}
-          setIsSuccess={setIsSuccess}
-          isCheckout
-          isCheckoutPlace
-          isEdit
-          isModal
-          handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
-          isOrderTypeValidationField
-          checkoutFields={checkoutFields}
-          isAllowGuest={paymethodSelected?.gateway === 'cash' || paymethodSelected?.gateway === 'card_delivery'}
-          onClose={() => {
-            setIsOpen(false)
-            if (paymethodClicked) {
-              setPaymethodClicked({
-                ...paymethodClicked,
-                confirmed: true
-              })
-            } else {
-              handlePlaceOrder()
-            }
-          }}
-        />
-      </Modal>
-      <Modal
-        open={openModal.signup}
-        width='760px'
-        padding='30px'
-        onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
-      >
-        <SignUpForm
-          useLoginByCellphone
-          useChekoutFileds
-          handleSuccessSignup={handleSuccessSignup}
-          isPopup
-          isGuest
-        />
-      </Modal>
-      <Modal
-        open={openModal.login}
-        width='760px'
-        padding='30px'
-        onClose={() => setOpenModal({ ...openModal, login: false })}
-      >
-        <LoginForm
-          handleSuccessLogin={handleSuccessLogin}
-          isPopup
-          isGuest
-        />
-      </Modal>
-      <Modal
-        open={openModal.orderDetail}
-        width='760px'
-        padding='30px'
-        onClose={() => setOpenModal({ ...openModal, orderDetail: false })}
-      >
-        <OrderDetail
-          item={cart}
-          placingOrder={placing}
-          orderType={options?.type}
-          customerAddress={options?.address?.address}
-          onClick={handlePlaceOrder}
-        />
-      </Modal>
+      {isOpen && (
+        <Modal
+          open={isOpen}
+          width='760px'
+          padding='30px'
+          onClose={() => setIsOpen(false)}
+        >
+          <UserDetails
+            isUserDetailsEdit={isUserDetailsEdit}
+            cartStatus={cart?.status}
+            businessId={cart?.business_id}
+            useDefualtSessionManager
+            useSessionUser={!isCustomerMode}
+            isCustomerMode={isCustomerMode}
+            userData={isCustomerMode && customerState.user}
+            userId={isCustomerMode && customerState?.user?.id}
+            requiredFields={requiredFields}
+            setIsSuccess={setIsSuccess}
+            isCheckout
+            isCheckoutPlace
+            isEdit
+            isModal
+            handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+            isOrderTypeValidationField
+            checkoutFields={checkoutFields}
+            isAllowGuest={paymethodSelected?.gateway === 'cash' || paymethodSelected?.gateway === 'card_delivery'}
+            onClose={() => {
+              setIsOpen(false)
+              if (paymethodClicked) {
+                setPaymethodClicked({
+                  ...paymethodClicked,
+                  confirmed: true
+                })
+              } else {
+                handlePlaceOrder()
+              }
+            }}
+          />
+        </Modal>
+      )}
+      {openModal.signup && (
+        <Modal
+          open={openModal.signup}
+          width='760px'
+          padding='30px'
+          onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
+        >
+          <SignUpForm
+            useLoginByCellphone
+            useChekoutFileds
+            handleSuccessSignup={handleSuccessSignup}
+            isPopup
+            isGuest
+          />
+        </Modal>
+      )}
+      {openModal.login && (
+        <Modal
+          open={openModal.login}
+          width='760px'
+          padding='30px'
+          onClose={() => setOpenModal({ ...openModal, login: false })}
+        >
+          <LoginForm
+            handleSuccessLogin={handleSuccessLogin}
+            isPopup
+            isGuest
+          />
+        </Modal>
+      )}
+      {openModal.orderDetail && (
+        <Modal
+          open={openModal.orderDetail}
+          width='760px'
+          padding='30px'
+          onClose={() => setOpenModal({ ...openModal, orderDetail: false })}
+        >
+          <OrderDetail
+            item={cart}
+            placingOrder={placing}
+            orderType={options?.type}
+            customerAddress={options?.address?.address}
+            onClick={handlePlaceOrder}
+          />
+        </Modal>
+      )}
     </Container>
   )
 }

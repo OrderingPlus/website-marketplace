@@ -438,30 +438,32 @@ export const BusinessListingSearchUI = (props) => {
           </ProductsList>
         </FiltersResultContainer>
       </FiltersContainer>
-      <Modal
-        width={props?.useKioskApp ? '80%' : '760px'}
-        open={!!curProduct?.product}
-        closeOnBackdrop
-        onClose={() => closeModalProductForm()}
-        padding='0'
-        isProductForm
-        disableOverflowX
-      >
-        {(!!curProduct?.product) && (
-          <ProductForm
-            businessSlug={curProduct?.business?.slug}
-            useKioskApp={props?.useKioskApp}
-            product={curProduct?.product}
-            businessId={curProduct?.business?.id}
-            categoryId={curProduct?.product?.category_id}
-            productId={curProduct?.product?.id}
-            onSave={handleRedirectToCart}
-            handleUpdateProducts={(productId, changes) => handleUpdateProducts(productId, curProduct?.product?.category_id, curProduct?.business?.id, changes)}
-            productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === curProduct?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-          />
-        )}
-      </Modal>
-      {width <= 768 && (
+      {!!curProduct?.product && (
+        <Modal
+          width={props?.useKioskApp ? '80%' : '760px'}
+          open={!!curProduct?.product}
+          closeOnBackdrop
+          onClose={() => closeModalProductForm()}
+          padding='0'
+          isProductForm
+          disableOverflowX
+        >
+          {(!!curProduct?.product) && (
+            <ProductForm
+              businessSlug={curProduct?.business?.slug}
+              useKioskApp={props?.useKioskApp}
+              product={curProduct?.product}
+              businessId={curProduct?.business?.id}
+              categoryId={curProduct?.product?.category_id}
+              productId={curProduct?.product?.id}
+              onSave={handleRedirectToCart}
+              handleUpdateProducts={(productId, changes) => handleUpdateProducts(productId, curProduct?.product?.category_id, curProduct?.business?.id, changes)}
+              productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === curProduct?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+            />
+          )}
+        </Modal>
+      )}
+      {width <= 768 && openFilter && (
         <Modal
           open={openFilter}
           onClose={() => setOpenFilter(false)}

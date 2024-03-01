@@ -50,26 +50,28 @@ export const PreviousProductsOrdered = (props) => {
           ))}
         </AutoScroll>
       </ProductsList>
-      <Modal
-        width={props?.useKioskApp ? '80%' : '760px'}
-        open={!!curProduct}
-        closeOnBackdrop
-        onClose={() => closeModalProductForm()}
-        padding='0'
-        isProductForm
-        disableOverflowX
-      >
-        {(!!curProduct) && (
-          <ProductForm
-            businessSlug={curProduct?.business?.slug}
-            useKioskApp={props?.useKioskApp}
-            businessId={curProduct?.businessId}
-            categoryId={curProduct?.category_id}
-            productId={curProduct?.product_id}
-            onSave={handleRedirectToCart}
-          />
-        )}
-      </Modal>
+      {!!curProduct && (
+        <Modal
+          width={props?.useKioskApp ? '80%' : '760px'}
+          open={!!curProduct}
+          closeOnBackdrop
+          onClose={() => closeModalProductForm()}
+          padding='0'
+          isProductForm
+          disableOverflowX
+        >
+          {(!!curProduct) && (
+            <ProductForm
+              businessSlug={curProduct?.business?.slug}
+              useKioskApp={props?.useKioskApp}
+              businessId={curProduct?.businessId}
+              categoryId={curProduct?.category_id}
+              productId={curProduct?.product_id}
+              onSave={handleRedirectToCart}
+            />
+          )}
+        </Modal>
+      )}
     </ProductsListContainer>
   )
 }

@@ -178,46 +178,50 @@ const UpsellingPageUI = (props) => {
         : (
         <>
           {!(!canOpenUpselling || upsellingProducts?.products?.length === 0)
-            ? (
-            <Modal
-              title={t('UPSELLING_QUESTION', 'Do you want something else?')}
-              open={openUpselling}
-              onClose={() => handleUpsellingPage()}
-              width='70%'
-            >
-              <UpsellingLayout />
-              <CloseUpselling>
-                <Button
-                  color='secondary'
-                  outline
-                  onClick={() => handleUpsellingPage(false)}
-                >
-                  {t('NO_THANKS', 'No, Thanks')}
-                </Button>
-              </CloseUpselling>
-            </Modal>
-              )
+            ? openUpselling
+              ? (
+              <Modal
+                title={t('UPSELLING_QUESTION', 'Do you want something else?')}
+                open={openUpselling}
+                onClose={() => handleUpsellingPage()}
+                width='70%'
+              >
+                <UpsellingLayout />
+                <CloseUpselling>
+                  <Button
+                    color='secondary'
+                    outline
+                    onClick={() => handleUpsellingPage(false)}
+                  >
+                    {t('NO_THANKS', 'No, Thanks')}
+                  </Button>
+                </CloseUpselling>
+              </Modal>
+                )
+              : null
             : null}
         </>
           )}
-      <Modal
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        width='700px'
-        padding='0'
-        closeOnBackdrop
-        disableOverflowX
-      >
-        {actualProduct && (
-          <ProductForm
-            useKioskApp={props.useKioskApp}
-            product={actualProduct}
-            businessId={actualProduct.api.businessId}
-            businessSlug={business.slug}
-            onSave={() => handleSaveProduct()}
-          />
-        )}
-      </Modal>
+      {modalIsOpen && (
+        <Modal
+          open={modalIsOpen}
+          onClose={() => setModalIsOpen(false)}
+          width='700px'
+          padding='0'
+          closeOnBackdrop
+          disableOverflowX
+        >
+          {actualProduct && (
+            <ProductForm
+              useKioskApp={props.useKioskApp}
+              product={actualProduct}
+              businessId={actualProduct.api.businessId}
+              businessSlug={business.slug}
+              onSave={() => handleSaveProduct()}
+            />
+          )}
+        </Modal>
+      )}
     </>
   )
 }

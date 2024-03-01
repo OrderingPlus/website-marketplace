@@ -148,7 +148,6 @@ const SingleOrderCardUI = (props) => {
           open={openMessages.business}
           onClose={() => setOpenMessages({ driver: false, business: false })}
           width='70%'
-        // padding='0'
         >
           <Messages
             orderId={order?.id}
