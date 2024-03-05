@@ -66,10 +66,25 @@ export const ProductItemAccordion = (props) => {
   const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 
   const productInfo = () => {
+    let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
+    const extraGroups = {}
+    options.forEach(option => {
+      const extraRank = option.extra.rank
+      if (!extraGroups[extraRank]) {
+        extraGroups[extraRank] = []
+      }
+      extraGroups[extraRank].push(option)
+    })
+    const sortedExtraGroups = Object.entries(extraGroups).sort(([rankA], [rankB]) => rankA - rankB)
+
+    sortedExtraGroups.forEach(([_, group]) => {
+      group.sort((a, b) => a.rank - b.rank)
+    })
+
+    options = sortedExtraGroups.flatMap(([, group]) => group)
+
     if (isCartProduct) {
       const ingredients = JSON.parse(JSON.stringify(Object.values(product.ingredients ?? {})))
-      let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
-
       options = options.map(option => {
         option.suboptions = Object.values(option.suboptions ?? {})
         return option
@@ -80,7 +95,7 @@ export const ProductItemAccordion = (props) => {
         options
       }
     }
-    return product
+    return { ...product, options }
   }
 
   const showArrowIcon = props.showArrowIcon && (productInfo()?.ingredients?.length > 0 || productInfo()?.options?.length > 0 || product?.comment)
@@ -315,11 +330,11 @@ export const ProductItemAccordion = (props) => {
           )}
           {productInfo().options.length > 0 && (
             <ProductOptionsList>
-              {productInfo().options.sort((a, b) => a.rank - b.rank).map(option => (
+              {productInfo().options.map(option => (
                 <li key={option.id}>
                   <p>{option.name}</p>
                   <ProductOptionsList className='suboption'>
-                    {option.suboptions.map(suboption => (
+                    {option?.suboptions?.sort((a, b) => a.rank - b.rank).map(suboption => (
                       <li key={suboption.id}>
                         <span>
                           {getFormattedSubOptionName({
