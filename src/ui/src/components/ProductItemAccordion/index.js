@@ -67,14 +67,13 @@ export const ProductItemAccordion = (props) => {
 
   const productInfo = () => {
     let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
-    const extraGroups = {}
-    options.forEach(option => {
+    const extraGroups = options.reduce((acc, option) => {
       const extraRank = option.extra.rank
-      if (!extraGroups[extraRank]) {
-        extraGroups[extraRank] = []
-      }
-      extraGroups[extraRank].push(option)
-    })
+      acc[extraRank] = acc[extraRank] || []
+      acc[extraRank].push(option)
+      return acc
+    }, {})
+
     const sortedExtraGroups = Object.entries(extraGroups).sort(([rankA], [rankB]) => rankA - rankB)
 
     sortedExtraGroups.forEach(([_, group]) => {
