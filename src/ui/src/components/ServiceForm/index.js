@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 import { useTheme } from 'styled-components'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, { Navigation } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+
 import { nanoid } from 'nanoid'
 import Skeleton from 'react-loading-skeleton'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
@@ -56,8 +58,6 @@ import {
   orderTypeList,
   ForgotPasswordForm
 } from '~ui'
-
-SwiperCore.use([Navigation])
 
 const maxDate = 40
 
@@ -299,6 +299,7 @@ const ServiceFormUI = (props) => {
                   slidesPerView={1}
                   watchSlidesProgress
                   className='mySwiper2'
+                  modules={[Navigation]}
                   preventClicksPropagation={false}
                   navigation={{
                     nextEl: '.button-next',
@@ -434,6 +435,7 @@ const ServiceFormUI = (props) => {
                       <Swiper
                         spaceBetween={0}
                         navigation
+                        modules={[Navigation]}
                         breakpoints={{
                           0: {
                             slidesPerView: 4,

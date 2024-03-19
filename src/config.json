@@ -26,11 +26,5 @@
   "businessSlug": "",
   "franchiseSlug": null,
   "isCancellation": false,
-  "useOptimizeLoad": false,
-  "openGraphTags": {
-    "title": "Ordering Website 2.0",
-    "description": "Default description client app.",
-    "site_name": "Ordering",
-    "image": "https://slack-imgs.com/?c=1&o1=ro&url=https%3A%2F%2Fbranch-tests.ordering.co%2Ftemplates%2Fweb%2Fimg%2Fshare.png"
-  }
+  "useOptimizeLoad": false
 }

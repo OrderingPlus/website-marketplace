@@ -11,7 +11,7 @@ Please select the option that you like better.
 1. Clone repository: `git clone --recursive https://github.com/OrderingX/website-marketplace.git`
 2. Enter the downloaded repository folder `cd website-marketplace`
 3. Run `yarn install` to install dependencies
-4. Run `yarn serve` to start the development server
+4. Run `yarn start` to start the development server
 
 ## Option 2: Clone repository and run with Docker
 > "You need to have Docker previously installed. You can install it from [here](https://docs.docker.com/engine/install/)"

@@ -134,7 +134,7 @@ export const UserPopover = (props) => {
     <div style={{ overflow: 'hidden' }}>
       <HeaderItem
         isPhoto={sessionState?.user?.photo}
-        isHome={isHome}
+        $isHome={isHome}
         ref={referenceElement}
         isOpen={open}
         onClick={props.onClick}

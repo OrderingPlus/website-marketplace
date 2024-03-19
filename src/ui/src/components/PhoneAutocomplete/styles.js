@@ -179,7 +179,7 @@ export const WrapInput = styled.div`
   position: relative;
   cursor: pointer;
 
-  ${({ withIcon }) => withIcon && css`
+  ${({ $withIcon }) => $withIcon && css`
     width: calc(100% - 20px);
     box-sizing: border-box;
 

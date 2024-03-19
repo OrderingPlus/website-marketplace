@@ -13,7 +13,7 @@ export const HeaderItem = styled.div`
   `}
 
   svg {
-    color: ${({ isHome }) => isHome ? '#FFF' : '#000'};
+    color: ${({ $isHome }) => $isHome ? '#FFF' : '#000'};
     height: 40px;
     width: 40px;
   }

@@ -41,7 +41,7 @@ export const NotNetworkConnectivity = (props) => {
 
   return (
     <>
-      <Container id='container' isOnline={props.isOnline ?? onlineStatus}>
+      <Container id='container' $isOnline={props.isOnline ?? onlineStatus}>
         <h1>{t('MOBILE_NO_INTERNET', 'No internet connection')}</h1>
         <p>{t('NETWORK_OFFLINE_MESSAGE', 'Your connection appears to be off-line. Try to refresh the page')}</p>
         <Image>

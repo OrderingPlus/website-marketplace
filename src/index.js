@@ -1,8 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import smoothscroll from 'smoothscroll-polyfill'
+
+import './index.css'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+import reportWebVitals from './reportWebVitals'
 import { Router } from './router'
 import theme from './theme.json'
-import smoothscroll from 'smoothscroll-polyfill'
+import MetaTags from './components/MetaTags'
 
 import { OrderingProvider } from '~components'
 import { Alert, ThemeProvider, Toast } from '~ui'
@@ -200,27 +205,33 @@ theme.images = {
   }
 }
 
-smoothscroll.polyfill()
-
-const root = ReactDOM.createRoot(document.getElementById('app'))
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <ThemeProvider theme={theme}>
-    <SubdomainComponent>
-      <OrderingProvider Alert={Alert}>
-        <Router />
-        <Toast />
-      </OrderingProvider>
-    </SubdomainComponent>
-  </ThemeProvider>
+  <React.StrictMode>
+    <MetaTags />
+    <ThemeProvider theme={theme}>
+      <SubdomainComponent>
+        <OrderingProvider Alert={Alert}>
+          <Router />
+          <Toast />
+        </OrderingProvider>
+      </SubdomainComponent>
+    </ThemeProvider>
+  </React.StrictMode>
 )
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(registration => {
-        console.log('SW registered: ', registration)
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError)
-      })
-  })
-}
+/* `smoothscroll.polyfill()` is a method that adds smooth scrolling behavior to the webpage. This
+polyfill is used to provide smooth scrolling functionality in browsers that do not support it
+natively. It ensures that scrolling behavior is consistent across different browsers by adding the
+necessary functionality to enable smooth scrolling. */
+smoothscroll.polyfill()
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://cra.link/PWA
+serviceWorkerRegistration.unregister()
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals()

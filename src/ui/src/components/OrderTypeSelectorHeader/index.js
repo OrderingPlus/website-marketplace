@@ -27,7 +27,6 @@ export const OrderTypeSelectorHeader = (props) => {
         onClick={configs?.max_days_preorder?.value === -1 || configs?.max_days_preorder?.value === 0 || isFullClick
           ? null
           : props.onClick}
-        isHome={props.isHome}
       >
         {(orderTypeList && orderTypeList[orderStatus?.options.type - 1]) || t('DELIVERY', 'Delivery')}
       </HeaderItem>
