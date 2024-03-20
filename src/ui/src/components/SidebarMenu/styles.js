@@ -5,13 +5,13 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  ${({ auth }) => auth && css`
+  ${({ $auth }) => $auth && css`
     @media (min-width: 769px) {
       display: none;
     }
   `}
 
-  ${({ auth }) => !auth && css`
+  ${({ $auth }) => !$auth && css`
     @media (min-width: 921px) {
       display: none;
     }
@@ -46,7 +46,7 @@ export const IconContent = styled.button`
   svg {
     flex-shrink: 0;
     font-size: 30px;
-    color: ${({ isHome }) => isHome ? 'rgb(255, 255, 255)' : '#333'};
+    color: #333;
   }
 `
 
@@ -98,14 +98,14 @@ export const MenuClose = styled.button`
   justify-content: center;
 
   &:hover {
-    background-color: ${({ isHome }) => isHome ? 'rgba(255,255,255,0.1)' : 'rgb(255, 255, 255)'};
+    background-color: rgb(255, 255, 255);
     box-shadow: transparent 0px 0px 0px 1px inset;
   }
 
   svg {
     flex-shrink: 0;
     font-size: 30px;
-    color: ${({ isHome }) => isHome ? 'rgb(255, 255, 255)' : '#333'};
+    color: #333;
   }
 `
 

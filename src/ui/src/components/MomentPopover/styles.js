@@ -6,7 +6,7 @@ export const HeaderItem = styled.div`
   display: flex;
   align-items: center;
 
-  ${props => props.isHome && css`
+  ${props => props.$isHome && css`
     color: #FFF;
   `}
 

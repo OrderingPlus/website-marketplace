@@ -299,7 +299,7 @@ export const Header = (props) => {
                   )}
                   {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
                     <MomentMenu
-                      isFranchiseSlugOne={franchiseLayout === 'franchise_1'}
+                      $isFranchiseSlugOne={franchiseLayout === 'franchise_1'}
                       onClick={configState?.configs?.max_days_preorder?.value === -1 || configState?.configs?.max_days_preorder?.value === 0
                         ? null
                         : () => openModal('moment')}

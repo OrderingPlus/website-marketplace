@@ -120,7 +120,7 @@ export const HomeHero = (props) => {
         <HeroContent>
           <Title>{t('TITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'All We need is Food.')}</Title>
           <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start to order food now')}</Slogan>
-          <WrapInput onClick={handleAddressInput} withIcon>
+          <WrapInput onClick={handleAddressInput} $withIcon>
             <HiOutlineLocationMarker />
             <p>
               {orderState?.options?.address?.address || t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}

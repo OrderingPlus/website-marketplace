@@ -5,12 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css'
 import BsCaretLeftFill from '@meronex/icons/bs/BsCaretLeftFill'
 import { ArrowRight } from 'react-bootstrap-icons'
 import CgRadioCheck from '@meronex/icons/cg/CgRadioCheck'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, {
-  Navigation
-} from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import {
   Title,
@@ -44,8 +44,6 @@ import {
 } from '~ui'
 
 import { CustomLayout } from './layouts/CustomLayout'
-
-SwiperCore.use([Navigation])
 
 const MomentControlUI = (props) => {
   const {
@@ -298,6 +296,7 @@ const MomentControlUI = (props) => {
                   <Swiper
                     spaceBetween={0}
                     navigation
+                    modules={[Navigation]}
                     breakpoints={{
                       0: {
                         slidesPerView: 4,

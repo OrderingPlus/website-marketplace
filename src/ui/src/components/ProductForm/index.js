@@ -7,9 +7,9 @@ import FiPlusCircle from '@meronex/icons/fi/FiPlusCircle'
 import MdcPlayCircleOutline from '@meronex/icons/mdc/MdcPlayCircleOutline'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, { Navigation, Thumbs } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation, Thumbs } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import {
   ProductContainer,
@@ -75,8 +75,6 @@ import {
   AddressList,
   NotFoundSource
 } from '~ui'
-
-SwiperCore.use([Navigation, Thumbs])
 
 const ProductOptionsUI = (props) => {
   const {
@@ -416,6 +414,7 @@ const ProductOptionsUI = (props) => {
               <Swiper
                 spaceBetween={10}
                 navigation
+                modules={[Navigation, Thumbs]}
                 watchOverflow
                 observer
                 observeParents
@@ -444,6 +443,7 @@ const ProductOptionsUI = (props) => {
               <Swiper
                 onSwiper={setThumbsSwiper}
                 spaceBetween={20}
+                modules={[Navigation, Thumbs]}
                 slidesPerView={5}
                 breakpoints={{
                   0: {

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  display: ${({ isOnline }) => isOnline ? 'none' : 'flex'};
+  display: ${({ $isOnline }) => $isOnline ? 'none' : 'flex'};
   flex-direction: column;
   justify-content: center;
   width: 90%;

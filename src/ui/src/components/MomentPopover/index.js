@@ -67,7 +67,7 @@ export const MomentPopover = (props) => {
       <HeaderItem
         ref={referenceElement}
         onClick={configs?.max_days_preorder?.value === -1 || configs?.max_days_preorder?.value === 0 ? null : props.onClick}
-        isHome={props.isHome}
+        $isHome={props.isHome}
       >
         <FaRegClock />
         {orderStatus.options?.moment

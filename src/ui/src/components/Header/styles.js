@@ -350,7 +350,7 @@ export const AddressMenu = styled.div`
 
 export const MomentMenu = styled.div`
   border-left: 1px solid #DEE2E6;
-  ${({ isFranchiseSlugOne }) => !isFranchiseSlugOne && css`
+  ${({ $isFranchiseSlugOne }) => !$isFranchiseSlugOne && css`
       border-right: 1px solid #DEE2E6;
   `}
   height: 100%;

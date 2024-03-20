@@ -65,7 +65,7 @@ export const SidebarContent = styled.div`
   background: ${props => props.theme.colors?.backgroundPage};
   overflow-x: hidden;
   transition: 0.5s;
-  box-shadow: ${({ isHome }) => isHome ? 'rgba(0, 0, 0, 0.7) 0px 8px 24px;' : 'rgba(0, 0, 0, 0.2) 0px 8px 24px;'};
+  box-shadow: ${({ $isHome }) => $isHome ? 'rgba(0, 0, 0, 0.7) 0px 8px 24px;' : 'rgba(0, 0, 0, 0.2) 0px 8px 24px;'};
 
   ${props => props.theme?.rtl
 ? css`

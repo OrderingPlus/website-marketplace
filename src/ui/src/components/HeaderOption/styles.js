@@ -60,7 +60,7 @@ export const Container = styled.div`
     }
   `}
 
-  ${({ isHome }) => isHome && css`
+  ${({ $isHome }) => $isHome && css`
     color: #FFF;
   `}
 `

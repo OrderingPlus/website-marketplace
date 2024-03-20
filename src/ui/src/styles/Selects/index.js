@@ -19,7 +19,7 @@ export const Option = styled.div`
   svg {
     vertical-align: text-top;
   }
-  ${({ withIcons }) => withIcons && css`
+  ${({ $withIcons }) => $withIcons && css`
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -98,8 +98,8 @@ export const Select = styled.div`
   border-width: 1px;
   border-style: solid;
   border-color: #CCC;
-  background-color: ${(props) => props.isHome ? '#FFF' : '#CCC'} !important;
-  color: ${(props) => props.isHome ? '#FFF' : '#333'} !important;
+  background-color: ${(props) => props.$isHome ? '#FFF' : '#CCC'} !important;
+  color: ${(props) => props.$isHome ? '#FFF' : '#333'} !important;
   position: relative;
   ${props => props.disabled && css`
     pointer-events: none;
@@ -107,7 +107,7 @@ export const Select = styled.div`
   ${props => props.open && css`
     background-color: ${darken(0.07, '#CCC')};
   `}
-  ${(props) => props.isHome && css`
+  ${(props) => props.$isHome && css`
       #item {
         background-color: #FFF !important;
       }
