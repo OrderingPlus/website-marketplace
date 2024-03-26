@@ -7,7 +7,6 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals'
 import { Router } from './router'
 import theme from './theme.json'
-import MetaTags from './components/MetaTags'
 
 import { OrderingProvider } from '~components'
 import { Alert, ThemeProvider, Toast } from '~ui'
@@ -207,17 +206,14 @@ theme.images = {
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <React.StrictMode>
-    <MetaTags />
-    <ThemeProvider theme={theme}>
-      <SubdomainComponent>
-        <OrderingProvider Alert={Alert}>
-          <Router />
-          <Toast />
-        </OrderingProvider>
-      </SubdomainComponent>
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <SubdomainComponent>
+      <OrderingProvider Alert={Alert}>
+        <Router />
+        <Toast />
+      </OrderingProvider>
+    </SubdomainComponent>
+  </ThemeProvider>
 )
 
 /* `smoothscroll.polyfill()` is a method that adds smooth scrolling behavior to the webpage. This
