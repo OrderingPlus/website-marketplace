@@ -113,12 +113,13 @@ const UserProfileFormUI = (props) => {
   const isWalletEnabled = configs?.cash_wallet?.value &&
     configs?.wallet_enabled?.value === '1' &&
     (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+  const isProjectEnterpricePlan = configs?.plan_enterprise && configs?.plan_enterprise?.value
 
   const hideWallet = theme?.bar_menu?.components?.wallet?.hidden
   const hideMessages = theme?.bar_menu?.components?.messages?.hidden
   const hideHelp = theme?.bar_menu?.components?.help?.hidden
   const hideFavorites = theme?.bar_menu?.components?.favortes?.hidden
-  const hideSession = theme?.bar_menu?.components?.sessions?.hidden
+  const hideSession = theme?.bar_menu?.components?.sessions?.hidden || !isProjectEnterpricePlan
   const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 
   const profileOptions = [
