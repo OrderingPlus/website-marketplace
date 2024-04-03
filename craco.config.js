@@ -1,4 +1,5 @@
 module.exports = {
+  devServer: { port: 3002 },
   webpack: {
     configure: (webpackConfig, { paths }) => {
       webpackConfig.resolve.alias = {
