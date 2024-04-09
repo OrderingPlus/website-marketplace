@@ -105,12 +105,12 @@ import cateringIco from './assets/images/catering.svg'
 import { SubdomainComponent } from './components/SubdomainComponent'
 
 Sentry.init({
-  environment: process.env.NODE_ENV,
+  environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
   dsn: 'https://fbefa227f674598dcc13b50162cfe69a@o460529.ingest.us.sentry.io/4507052293292032',
   release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
   // We recommend adjusting this value in production, or using tracesSampler
   // for finer control
-  tracesSampleRate: 0.2,
+  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.2,
   // Release health
   autoSessionTracking: true,
   integrations: [
