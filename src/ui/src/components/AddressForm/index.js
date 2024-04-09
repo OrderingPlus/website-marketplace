@@ -75,7 +75,6 @@ const AddressFormUI = (props) => {
   const googleInputRef = useRef()
   const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: null })
   const isEditing = !!addressState.address?.id
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const [locationChange, setLocationChange] = useState(
     isEditing
@@ -433,7 +432,6 @@ const AddressFormUI = (props) => {
                       handleChangeAddressMap={handleChangeAddress}
                       setErrors={setMapErrors}
                       maxLimitLocation={parseInt(maxLimitLocation, 10)}
-                      isSetInputs={isChew}
                     />
                   </WrapperMap>
                 )}

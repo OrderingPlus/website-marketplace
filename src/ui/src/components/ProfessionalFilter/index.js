@@ -72,28 +72,32 @@ export const ProfessionalFilter = (props) => {
           </ProfessionalListing>
         </ContentWrapper>
       </Container>
-      <Modal
-        open={open}
-        width='760px'
-        padding='0'
-        onClose={() => handleCloseProfile()}
-      >
-        <ProfessionalProfile
-          currentProfessional={currentProfessional}
-          onClose={handleCloseProfile}
-          handleChangeProfessionalSelected={handleChangeProfessionalSelected}
-        />
-      </Modal>
-      <Modal
-        open={reviewOpen}
-        width='760px'
-        padding='0'
-        onClose={() => handleCloseProfile()}
-      >
-        <ProfessionalInfo
-          userId={currentProfessional?.id}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          width='760px'
+          padding='0'
+          onClose={() => handleCloseProfile()}
+        >
+          <ProfessionalProfile
+            currentProfessional={currentProfessional}
+            onClose={handleCloseProfile}
+            handleChangeProfessionalSelected={handleChangeProfessionalSelected}
+          />
+        </Modal>
+      )}
+      {reviewOpen && (
+        <Modal
+          open={reviewOpen}
+          width='760px'
+          padding='0'
+          onClose={() => handleCloseProfile()}
+        >
+          <ProfessionalInfo
+            userId={currentProfessional?.id}
+          />
+        </Modal>
+      )}
     </>
   )
 }

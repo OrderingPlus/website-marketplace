@@ -501,61 +501,67 @@ const MultiCheckoutUI = (props) => {
             onAccept={() => closeAlert()}
             closeOnBackdrop={false}
           />
-          <Modal
-            open={isOpen}
-            width='760px'
-            padding='30px'
-            onClose={() => setIsOpen(false)}
-          >
-            <UserDetails
-              isUserDetailsEdit={isUserDetailsEdit}
-              useDefualtSessionManager
-              useSessionUser={!isCustomerMode}
-              isCustomerMode={isCustomerMode}
-              userData={isCustomerMode && customerState.user}
-              userId={isCustomerMode && customerState?.user?.id}
-              requiredFields={requiredFields}
-              isOrderTypeValidationField
-              checkoutFields={checkoutFields}
-              isCheckoutPlace
-              setIsSuccess={setIsSuccess}
-              isCheckout
-              isEdit
-              isModal
-              handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
-              isAllowGuest={paymethodSelected?.gateway === 'cash' || paymethodSelected?.gateway === 'card_delivery'}
-              onClose={() => {
-                setIsOpen(false)
-                handlePlaceOrder()
-              }}
-            />
-          </Modal>
-          <Modal
-            open={openModal.signup}
-            width='760px'
-            padding='30px'
-            onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
-          >
-            <SignUpForm
-              useLoginByCellphone
-              useChekoutFileds
-              handleSuccessSignup={handleSuccessSignup}
-              isPopup
-              isGuest
-            />
-          </Modal>
-          <Modal
-            open={openModal.login}
-            width='760px'
-            padding='30px'
-            onClose={() => setOpenModal({ ...openModal, login: false })}
-          >
-            <LoginForm
-              handleSuccessLogin={handleSuccessLogin}
-              isPopup
-              isGuest
-            />
-          </Modal>
+          {isOpen && (
+            <Modal
+              open={isOpen}
+              width='760px'
+              padding='30px'
+              onClose={() => setIsOpen(false)}
+            >
+              <UserDetails
+                isUserDetailsEdit={isUserDetailsEdit}
+                useDefualtSessionManager
+                useSessionUser={!isCustomerMode}
+                isCustomerMode={isCustomerMode}
+                userData={isCustomerMode && customerState.user}
+                userId={isCustomerMode && customerState?.user?.id}
+                requiredFields={requiredFields}
+                isOrderTypeValidationField
+                checkoutFields={checkoutFields}
+                isCheckoutPlace
+                setIsSuccess={setIsSuccess}
+                isCheckout
+                isEdit
+                isModal
+                handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
+                isAllowGuest={paymethodSelected?.gateway === 'cash' || paymethodSelected?.gateway === 'card_delivery'}
+                onClose={() => {
+                  setIsOpen(false)
+                  handlePlaceOrder()
+                }}
+              />
+            </Modal>
+          )}
+          {openModal.signup && (
+            <Modal
+              open={openModal.signup}
+              width='760px'
+              padding='30px'
+              onClose={() => setOpenModal({ ...openModal, signup: false, isGuest: false })}
+            >
+              <SignUpForm
+                useLoginByCellphone
+                useChekoutFileds
+                handleSuccessSignup={handleSuccessSignup}
+                isPopup
+                isGuest
+              />
+            </Modal>
+          )}
+          {openModal.login && (
+            <Modal
+              open={openModal.login}
+              width='760px'
+              padding='30px'
+              onClose={() => setOpenModal({ ...openModal, login: false })}
+            >
+              <LoginForm
+                handleSuccessLogin={handleSuccessLogin}
+                isPopup
+                isGuest
+              />
+            </Modal>
+          )}
         </Container>
           )}
     </>

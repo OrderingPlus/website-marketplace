@@ -139,7 +139,7 @@ export const WrapInput = styled.div`
   align-items: center;
   margin-bottom: 22px;
 
-  ${({ withIcon }) => withIcon && css`
+  ${({ $withIcon }) => $withIcon && css`
     width: calc(100% - 20px);
     box-sizing: border-box;
 

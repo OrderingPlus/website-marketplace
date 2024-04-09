@@ -29,8 +29,6 @@ const BusinessProductsCategoriesUI = (props) => {
   const [selectedCategory, setSelectedCateogry] = useState({ id: null })
   const scrollTopSpan = 60
 
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-
   const handleChangeCategory = (category) => {
     const isBlockScroll = window.location.search.includes('category') &&
       window.location.search.includes('product')
@@ -133,7 +131,7 @@ const BusinessProductsCategoriesUI = (props) => {
     if (Object.values(styleSheet.cssRules)?.length) {
       styleSheet?.deleteRule(0)
     }
-    const disabledCustomWidth = isChew || !useKioskApp
+    const disabledCustomWidth = !useKioskApp
 
     let style0 = '.sticky-prod-cat {'
     style0 += 'position: fixed !important;'
@@ -159,7 +157,7 @@ const BusinessProductsCategoriesUI = (props) => {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [useKioskApp, isChew, windowSize.width])
+  }, [useKioskApp, windowSize.width])
 
   useEffect(() => {
     if (business?.professionals?.length > 0 && !useKioskApp) {

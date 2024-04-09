@@ -126,58 +126,60 @@ const PromotionsUI = (props) => {
           </Button>
         </SingleOfferContainer>
       ))}
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      >
-        <OfferView>
-          <h2>
-            {`${offerSelected?.name} / ${t('VALUE_OF_OFFER', 'Value of offer')}: ${offerSelected?.rate_type === 1 ? `${offerSelected?.rate}%` : `${parsePrice(offerSelected?.rate)}`}`}
-          </h2>
-          <OfferData>
-            {offerSelected?.type === 2 && (
-              <Code>
-                <p>{t('YOUR_CODE', 'Your code')}</p>
-                <span>{offerSelected.coupon}</span>
-              </Code>
-            )}
-            <p>{t('APPLIES_TO', 'Applies to')}: {targetString}</p>
-            {offerSelected?.auto && (
-              <p>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</p>
-            )}
-            {offerSelected?.minimum && (
-              <p>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purshase for use this offer')}: {parsePrice(offerSelected?.minimum)}</p>
-            )}
-            {offerSelected?.max_discount && (
-              <p>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</p>
-            )}
-            {offerSelected?.description && (
-              <p>{offerSelected?.description}</p>
-            )}
-          </OfferData>
-          <h2>
-            {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}
-          </h2>
-          <div>
-            {offerSelected?.businesses?.map(business => {
-              return (
-                <SingleBusinessOffer key={business.id}>
-                  <BusinessLogo bgimage={business?.logo} />
-                  <BusinessInfo>
-                    <p>{business.name}</p>
-                    <Button
-                      onClick={() => handleBusinessClick(business)}
-                      color='primary'
-                    >
-                      {t('GO_TO_BUSINESSS', 'Go to business')}
-                    </Button>
-                  </BusinessInfo>
-                </SingleBusinessOffer>
-              )
-            })}
-          </div>
-        </OfferView>
-      </Modal>
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+        >
+          <OfferView>
+            <h2>
+              {`${offerSelected?.name} / ${t('VALUE_OF_OFFER', 'Value of offer')}: ${offerSelected?.rate_type === 1 ? `${offerSelected?.rate}%` : `${parsePrice(offerSelected?.rate)}`}`}
+            </h2>
+            <OfferData>
+              {offerSelected?.type === 2 && (
+                <Code>
+                  <p>{t('YOUR_CODE', 'Your code')}</p>
+                  <span>{offerSelected.coupon}</span>
+                </Code>
+              )}
+              <p>{t('APPLIES_TO', 'Applies to')}: {targetString}</p>
+              {offerSelected?.auto && (
+                <p>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</p>
+              )}
+              {offerSelected?.minimum && (
+                <p>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purshase for use this offer')}: {parsePrice(offerSelected?.minimum)}</p>
+              )}
+              {offerSelected?.max_discount && (
+                <p>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</p>
+              )}
+              {offerSelected?.description && (
+                <p>{offerSelected?.description}</p>
+              )}
+            </OfferData>
+            <h2>
+              {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}
+            </h2>
+            <div>
+              {offerSelected?.businesses?.map(business => {
+                return (
+                  <SingleBusinessOffer key={business.id}>
+                    <BusinessLogo bgimage={business?.logo} />
+                    <BusinessInfo>
+                      <p>{business.name}</p>
+                      <Button
+                        onClick={() => handleBusinessClick(business)}
+                        color='primary'
+                      >
+                        {t('GO_TO_BUSINESSS', 'Go to business')}
+                      </Button>
+                    </BusinessInfo>
+                  </SingleBusinessOffer>
+                )
+              })}
+            </div>
+          </OfferView>
+        </Modal>
+      )}
     </PromotionsContainer>
   )
 }

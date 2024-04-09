@@ -1,12 +1,7 @@
 {
-  "theme_color": "#4a90e2",
-  "background_color": "#ffffff",
-  "display": "fullscreen",
-  "scope": "/",
-  "start_url": "/",
-  "name": "Ordering template with PWA",
   "short_name": "Ordering PWA",
-  "description": "food ordering app by ordering.inc",
+  "name": "Ordering template with PWA",
+  "description": "Food ordering app by ordering.inc",
   "icons": [
     {
       "src": "/favicon.ico",
@@ -32,6 +27,12 @@
       "src": "icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "icon-192x192.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [
@@ -105,5 +106,10 @@
       "type": "image/png",
       "sizes": "1487x2266"
     }
-  ]
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#4a90e2",
+  "background_color": "#ffffff",
+  "scope": "/"
 }

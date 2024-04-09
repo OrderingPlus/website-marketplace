@@ -1,10 +1,9 @@
 import React from 'react'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, {
-  Navigation
-} from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import {
   BannerContainer,
@@ -18,8 +17,6 @@ import {
 } from '~components'
 
 import { checkSiteUrl } from '~ui'
-
-SwiperCore.use([Navigation])
 
 const PageBannerUI = (props) => {
   const {
@@ -138,6 +135,7 @@ const PageBannerUI = (props) => {
           <Swiper
             navigation={pageBannerState.banner?.items?.length > 1}
             spaceBetween={0}
+            modules={[Navigation]}
             shortSwipes={false}
             loop={pageBannerState.banner?.items.length > 1}
             touchStartPreventDefault={false}

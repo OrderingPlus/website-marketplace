@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import moment from 'moment'
 import { useTheme } from 'styled-components'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, { Navigation } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+
 import CgRadioCheck from '@meronex/icons/cg/CgRadioCheck'
 import BsArrowRight from '@meronex/icons/bs/BsArrowRight'
 import BsCaretLeftFill from '@meronex/icons/bs/BsCaretLeftFill'
@@ -50,8 +53,6 @@ import {
   getTimes,
   BusinessMenuList
 } from '~ui'
-
-SwiperCore.use([Navigation])
 
 const BusinessPreorderUI = (props) => {
   const {
@@ -235,6 +236,7 @@ const BusinessPreorderUI = (props) => {
               <Swiper
                 spaceBetween={0}
                 navigation
+                modules={[Navigation]}
                 breakpoints={{
                   0: {
                     slidesPerView: 4,

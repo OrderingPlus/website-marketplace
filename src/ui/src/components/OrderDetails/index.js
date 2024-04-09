@@ -907,50 +907,53 @@ const OrderDetailsUI = (props) => {
           </Modal>
         )
       }
-      <Modal
-        width='70%'
-        open={openTaxModal.open}
-        padding='20px'
-        closeOnBackdrop
-        title={`${openTaxModal.data?.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2
-          ? `(${typeof openTaxModal.data?.rate === 'number'
-            ? `${openTaxModal.data?.rate}%`
-            : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})`
-          : ''}
-          `}
-        onClose={() => setOpenTaxModal({ open: false, tax: null, type: '' })}
-        modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
-      >
-        <TaxInformation
-          type={openTaxModal.type}
-          data={openTaxModal.data}
-          products={order?.products}
-        />
-      </Modal>
-      <Modal
-        open={isOrderHistory}
-        width='760px'
-        onClose={() => setIsOrderHistory(false)}
-        title={t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', (changeIdToExternalId && order?.external_id) || `# ${order?.id}`)}
-      >
-        <OrderHistory
-          messages={messages}
-          order={order}
-          handleOpenReview={handleOpenReview}
+      {openTaxModal.open && (
+        <Modal
+          width='70%'
+          open={openTaxModal.open}
+          padding='20px'
+          closeOnBackdrop
+          title={`${openTaxModal.data?.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2
+            ? `(${typeof openTaxModal.data?.rate === 'number'
+              ? `${openTaxModal.data?.rate}%`
+              : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})`
+            : ''}
+            `}
+          onClose={() => setOpenTaxModal({ open: false, tax: null, type: '' })}
+          modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <TaxInformation
+            type={openTaxModal.type}
+            data={openTaxModal.data}
+            products={order?.products}
+          />
+        </Modal>
+      )}
+      {isOrderHistory && (
+        <Modal
+          open={isOrderHistory}
+          width='760px'
           onClose={() => setIsOrderHistory(false)}
-          enableReview={
-            acceptedStatus.includes(parseInt(order?.status, 10)) &&
-            (!order?.review || (order.driver && !order?.user_review)) &&
-            (!isOrderReviewed || !isProductReviewed || !isDriverReviewed)
-          }
-        />
-      </Modal>
+          title={t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', (changeIdToExternalId && order?.external_id) || `# ${order?.id}`)}
+        >
+          <OrderHistory
+            messages={messages}
+            order={order}
+            handleOpenReview={handleOpenReview}
+            onClose={() => setIsOrderHistory(false)}
+            enableReview={
+              acceptedStatus.includes(parseInt(order?.status, 10)) &&
+              (!order?.review || (order.driver && !order?.user_review)) &&
+              (!isOrderReviewed || !isProductReviewed || !isDriverReviewed)
+            }
+          />
+        </Modal>
+      )}
       <Confirm
         title={t('ORDER', 'Order')}
         content={confirm.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={confirm.open}
-        hideViaText={props.hideViaText}
         onClose={() => handleOriginalReorder()}
         onCancel={() => handleOriginalReorder()}
         onAccept={confirm.handleOnAccept}

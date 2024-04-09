@@ -45,8 +45,6 @@ const OrderProgressUI = (props) => {
   const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
   const deliveryTypes = [1, 7]
 
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
-
   const handleGoToPage = (index) => {
     events.emit('go_to_page', { page: index, params: { orderId: lastOrder?.uuid } })
   }
@@ -71,18 +69,18 @@ const OrderProgressUI = (props) => {
   return (
     <>
       {orderList?.loading && (
-        <OrderProgressWrapper isChew={props.isChew}>
+        <OrderProgressWrapper>
           <Skeleton height={150} />
         </OrderProgressWrapper>
       )}
       {!orderList?.loading && orderList?.orders?.length > 0 && lastOrder && (
-        <OrderProgressWrapper isChew={props.isChew}>
+        <OrderProgressWrapper>
           <OrderProgressContainer>
             <OrderInfoWrapper>
               <ProgressLogo
                 bgimage={orderList?.orders.length === 1
                   ? optimizeImage(lastOrder?.business?.logo || theme.images?.dummies?.businessLogo, 'h_91,c_limit')
-                  : isChew ? theme.images.logos.chewLogoReverse : theme.images.logos.logotype}
+                  : theme.images.logos.logotype}
               />
               <ProgressDescriptionWrapper>
                 <h2>{statusToShow.includes(lastOrder?.status) ? t('ORDER_IN_PROGRESS', 'Order in progress') : t('ORDER', 'Order')}</h2>

@@ -45,7 +45,6 @@ export const HomeHero = (props) => {
   const bgImg = theme?.my_products?.components?.images?.components?.homepage_background?.components?.image
   const mobileBgImg = theme?.my_products?.components?.images?.components?.homepage_mobile_background?.components?.image
   const isFullScreen = theme?.my_products?.components?.images?.components?.homepage_image_fullscreen
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const handleFindBusinesses = () => {
     if (!orderState?.options?.address?.location) {
@@ -113,7 +112,7 @@ export const HomeHero = (props) => {
       isFullScreen={isFullScreen}
     >
       <ContentWrapper>
-        {windowSize.width < 576 && !isChew && (
+        {windowSize.width < 576 && (
           <LogoWrapper>
             <img alt='Logotype' src={theme?.images?.logos?.logotypeInvert} loading='lazy' />
           </LogoWrapper>
@@ -121,7 +120,7 @@ export const HomeHero = (props) => {
         <HeroContent>
           <Title>{t('TITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'All We need is Food.')}</Title>
           <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start to order food now')}</Slogan>
-          <WrapInput onClick={handleAddressInput} withIcon>
+          <WrapInput onClick={handleAddressInput} $withIcon>
             <HiOutlineLocationMarker />
             <p>
               {orderState?.options?.address?.address || t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
@@ -157,34 +156,37 @@ export const HomeHero = (props) => {
           </UseAccount>
         </>
       )}
-
-      <Modal
-        title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-        open={modals.formOpen}
-        onClose={() => setModals({ ...modals, formOpen: false })}
-      >
-        <AddressForm
-          useValidationFileds
-          address={orderState?.options?.address || {}}
+      {modals.formOpen && (
+        <Modal
+          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
+          open={modals.formOpen}
           onClose={() => setModals({ ...modals, formOpen: false })}
-          onSaveAddress={() => setModals({ ...modals, formOpen: false })}
-          onCancel={() => setModals({ ...modals, formOpen: false })}
-        />
-      </Modal>
-      <Modal
-        title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-        open={modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, listOpen: false })}
-      >
-        <AddressList
-          isModal
-          changeOrderAddressWithDefault
-          userId={isNaN(userCustomer) ? null : userCustomer}
-          onCancel={() => setModals({ ...modals, listOpen: false })}
-          onAccept={() => handleFindBusinesses()}
-        />
-      </Modal>
+        >
+          <AddressForm
+            useValidationFileds
+            address={orderState?.options?.address || {}}
+            onClose={() => setModals({ ...modals, formOpen: false })}
+            onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+            onCancel={() => setModals({ ...modals, formOpen: false })}
+          />
+        </Modal>
+      )}
+      {modals.listOpen && (
+        <Modal
+          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
+          open={modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, listOpen: false })}
+        >
+          <AddressList
+            isModal
+            changeOrderAddressWithDefault
+            userId={isNaN(userCustomer) ? null : userCustomer}
+            onCancel={() => setModals({ ...modals, listOpen: false })}
+            onAccept={() => handleFindBusinesses()}
+          />
+        </Modal>
+      )}
       {authModalOpen && !auth && (
         <Modal
           open={authModalOpen}

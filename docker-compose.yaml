@@ -10,4 +10,4 @@ services:
     volumes:
       - .:/website-marketplace
       - /website-marketplace/node_modules
-    command: npm run serve-docker
+    command: npm run start

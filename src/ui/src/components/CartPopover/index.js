@@ -28,7 +28,6 @@ export const CartPopover = (props) => {
   const referenceElement = useRef()
   const popperElement = useRef()
   const arrowElement = useRef()
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const popper = usePopper(referenceElement.current, popperElement.current, {
     placement: theme?.rtl ? 'bottom' : 'bottom-end',
     modifiers: [
@@ -98,40 +97,40 @@ export const CartPopover = (props) => {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      <HeaderItem ref={referenceElement} onClick={props.onClick} name='cart-popover' isChew={isChew}>
+      <HeaderItem ref={referenceElement} onClick={props.onClick} name='cart-popover'>
         <span>
           <Cart3 />
           {props.carts?.length > 0 && <span>{props.carts?.length}</span>}
         </span>
       </HeaderItem>
       {isSlideBar
-        ? (
-        <Modal
-          open={open}
-          onClose={props.onClose}
-          hideCloseDefault
-          isSlideBar
-          slideBarPosition={theme?.header?.components?.cart?.components?.open_strategy?.position}
-        >
-          <TitleContainer>
-            <Title>{t('MY_CART', 'My cart')}</Title>
-            <Button outline color='primary' onClick={props.onClose}>
-              <AiOutlineClose /> {t('CLOSE', 'Close')}
-            </Button>
-          </TitleContainer>
-          <CartContent
-            isCartPopover
-            carts={props.carts}
-            isOrderStateCarts={!!orderState.carts}
-            onClose={props.onClose}
-            setPreorderBusiness={setPreorderBusiness}
-            isOpenCart={open}
-            onClick={props.onClick}
-            isSlideBar={isSlideBar}
-            isCustomerMode={isCustomerMode}
-          />
-        </Modal>
-          )
+        ? (open
+            ? <Modal
+                open={open}
+                onClose={props.onClose}
+                hideCloseDefault
+                isSlideBar
+                slideBarPosition={theme?.header?.components?.cart?.components?.open_strategy?.position}
+              >
+                <TitleContainer>
+                  <Title>{t('MY_CART', 'My cart')}</Title>
+                  <Button outline color='primary' onClick={props.onClose}>
+                    <AiOutlineClose /> {t('CLOSE', 'Close')}
+                  </Button>
+                </TitleContainer>
+                <CartContent
+                  isCartPopover
+                  carts={props.carts}
+                  isOrderStateCarts={!!orderState.carts}
+                  onClose={props.onClose}
+                  setPreorderBusiness={setPreorderBusiness}
+                  isOpenCart={open}
+                  onClick={props.onClick}
+                  isSlideBar={isSlideBar}
+                  isCustomerMode={isCustomerMode}
+                />
+              </Modal>
+            : null)
         : (
         <PopoverBody className='cart-popover' ref={popperElement} style={popStyle} {...attributes.popper}>
           <CartContent

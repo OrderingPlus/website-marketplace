@@ -78,18 +78,19 @@ const ProductShareUI = (props) => {
           <a className='a2a_dd' href='https://www.addtoany.com/share' />
         </ShareButtons>
       </IconShare>
-
-      <Modal
-        width='650px'
-        open={openCopyUrlModal}
-        onClose={() => setOpenCopyUrlModal(false)}
-      >
-        <ProductCopyURL
-          urlToShare={urlToShare}
-          product={product}
+      {openCopyUrlModal && (
+        <Modal
+          width='650px'
+          open={openCopyUrlModal}
           onClose={() => setOpenCopyUrlModal(false)}
-        />
-      </Modal>
+        >
+          <ProductCopyURL
+            urlToShare={urlToShare}
+            product={product}
+            onClose={() => setOpenCopyUrlModal(false)}
+          />
+        </Modal>
+      )}
     </>
   )
 }

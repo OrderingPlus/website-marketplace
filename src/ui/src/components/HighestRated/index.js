@@ -133,19 +133,21 @@ const HighestRatedUI = (props) => {
           </BusinessList>
         </BusinessListWrapper>
       </HighestRatedContainer>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-          cateringPreorder={!!cateringTypeString}
-          {...cateringValues}
-        />
-      </Modal>
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+            cateringPreorder={!!cateringTypeString}
+            {...cateringValues}
+          />
+        </Modal>
+      )}
     </>
   )
 }

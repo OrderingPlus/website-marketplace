@@ -1,11 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import smoothscroll from 'smoothscroll-polyfill'
 import * as Sentry from '@sentry/react'
-import { Integrations } from '@sentry/tracing'
 
+import './index.css'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+import reportWebVitals from './reportWebVitals'
 import { Router } from './router'
 import theme from './theme.json'
-import smoothscroll from 'smoothscroll-polyfill'
 
 import { OrderingProvider } from '~components'
 import { Alert, ThemeProvider, Toast } from '~ui'
@@ -13,8 +15,6 @@ import { Alert, ThemeProvider, Toast } from '~ui'
 /**
  * Theme images
  */
-import chewLogo from './assets/images/chew_logo.svg'
-import chewLogoReverse from './assets/images/chew_logo_reverse.svg'
 import logotype from './assets/images/logotype.svg'
 import logotypeInvert from './assets/images/logotype-invert.svg'
 import isotype from './assets/images/isotype.svg'
@@ -106,68 +106,15 @@ import { SubdomainComponent } from './components/SubdomainComponent'
 
 Sentry.init({
   environment: process.env.NODE_ENV,
-  dsn: 'https://a63b9a3c8fdd5f9728117c2c87eef919@o460529.ingest.sentry.io/4507052207636480',
-  release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.0',
+  dsn: 'https://fbefa227f674598dcc13b50162cfe69a@o460529.ingest.us.sentry.io/4507052293292032',
+  release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
   // We recommend adjusting this value in production, or using tracesSampler
   // for finer control
   tracesSampleRate: 0.2,
   // Release health
   autoSessionTracking: true,
-  integrations: [new Integrations.BrowserTracing()],
-  ignoreErrors: [
-    'TypeError: Failed to fetch',
-    'TypeError: NetworkError when attempting to fetch resource.',
-    'TypeError: Cancelled',
-    'TypeError: cancelado',
-    'is not defined',
-    "Can't find variable",
-    'NotAllowedError',
-    'SecurityError',
-    'Element type is invalid',
-    'undefined is not an object',
-    // Random plugins/extensions
-    'top.GLOBALS',
-    // See: http://blog.errorception.com/2012/03/tale-of-unfindable-js-error.html
-    'originalCreateNotification',
-    'canvas.contentDocument',
-    'MyApp_RemoveAllHighlights',
-    'http://tt.epicplay.com',
-    'Can\'t find variable: ZiteReader',
-    'jigsaw is not defined',
-    'ComboSearch is not defined',
-    'http://loading.retry.widdit.com/',
-    'atomicFindClose',
-    // Facebook borked
-    'fb_xd_fragment',
-    // ISP "optimizing" proxy - `Cache-Control: no-transform` seems to reduce this. (thanks @acdha)
-    // See http://stackoverflow.com/questions/4113268/how-to-stop-javascript-injection-from-vodafone-proxy
-    'bmi_SafeAddOnload',
-    'EBCallBackMessageReceived',
-    // See http://toolbar.conduit.com/Developer/HtmlAndGadget/Methods/JSInjection.aspx
-    'conduitPage',
-    // Generic error code from errors outside the security sandbox
-    // You can delete this if using raven.js > 1.0, which ignores these automatically.
-    'Script error.',
-    // Avast extension error
-    '_avast_submit'
-  ],
-  denyUrls: [
-    // Google Adsense
-    /pagead\/js/i,
-    // Facebook flakiness
-    /graph\.facebook\.com/i,
-    // Facebook blocked
-    /connect\.facebook\.net\/en_US\/all\.js/i,
-    // Woopra flakiness
-    /eatdifferent\.com\.woopra-ns\.com/i,
-    /static\.woopra\.com\/js\/woopra\.js/i,
-    // Chrome extensions
-    /extensions\//i,
-    /^chrome:\/\//i,
-    // Other plugins
-    /127\.0\.0\.1:4001\/isrunning/i, // Cacaoweb
-    /webappstoolbarba\.texthelp\.com\//i,
-    /metrics\.itunes\.apple\.com\.edgesuite\.net\//i
+  integrations: [
+    Sentry.browserTracingIntegration()
   ]
 })
 
@@ -175,9 +122,7 @@ const logos = {
   logotype,
   logotypeInvert,
   isotype,
-  isotypeInvert,
-  chewLogo,
-  chewLogoReverse
+  isotypeInvert
 }
 
 theme.images = {
@@ -274,9 +219,7 @@ theme.images = {
   }
 }
 
-smoothscroll.polyfill()
-
-const root = ReactDOM.createRoot(document.getElementById('app'))
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <ThemeProvider theme={theme}>
     <SubdomainComponent>
@@ -288,13 +231,18 @@ root.render(
   </ThemeProvider>
 )
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(registration => {
-        console.log('SW registered: ', registration)
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError)
-      })
-  })
-}
+/* `smoothscroll.polyfill()` is a method that adds smooth scrolling behavior to the webpage. This
+polyfill is used to provide smooth scrolling functionality in browsers that do not support it
+natively. It ensures that scrolling behavior is consistent across different browsers by adding the
+necessary functionality to enable smooth scrolling. */
+smoothscroll.polyfill()
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://cra.link/PWA
+serviceWorkerRegistration.unregister()
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals()

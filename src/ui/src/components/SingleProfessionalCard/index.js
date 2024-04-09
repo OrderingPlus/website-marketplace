@@ -75,16 +75,18 @@ const SingleProfessionalCardUI = (props) => {
           </ActionWrapper>
         </InfoWrapper>
       </Container>
-      <Modal
-        open={open}
-        width='760px'
-        padding='0'
-        onClose={() => setOpen(false)}
-      >
-        <ProfessionalInfo
-          userId={professional?.id}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          width='760px'
+          padding='0'
+          onClose={() => setOpen(false)}
+        >
+          <ProfessionalInfo
+            userId={professional?.id}
+          />
+        </Modal>
+      )}
     </>
   )
 }

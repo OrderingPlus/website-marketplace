@@ -34,23 +34,23 @@ const ModalUI = (props) => {
   const [, t] = useLanguage()
 
   const handleKeyDown = (e) => {
-    if (e.keyCode === 27) {
+    if (e.keyCode === 27 && props.open) {
       onClose && onClose()
     }
   }
 
   useEffect(() => {
-    if (window.innerWidth > document.body.clientWidth) {
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth
-      const bodyPaddingRight = window.document.body.style.paddingRight
-      document.body.style.paddingRight = props.open ? `${bodyPaddingRight + scrollbarWidth}px` : `${bodyPaddingRight}px`
-      document.body.style.overflow = props.open ? 'hidden' : 'auto'
+    const scrollbarWidth = window.innerWidth - document.body.clientWidth
+    const bodyPaddingRight = window.document.body.style.paddingRight
+    document.body.style.paddingRight = props.open ? `${bodyPaddingRight + scrollbarWidth}px` : `${bodyPaddingRight}px`
+    document.body.style.overflow = props.open ? 'hidden' : 'auto'
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.removeAttribute('style')
+      window.removeEventListener('keydown', handleKeyDown)
     }
-    if (props.open) {
-      window.addEventListener('keydown', handleKeyDown)
-      return () => window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [props.open])
+  }, [])
 
   return (
     <ModalDialog

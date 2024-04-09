@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Switch,
   Route,
@@ -125,7 +125,7 @@ export const App = () => {
     queryIntegrationToken = query.get('integration_token')
   }
 
-  const themeUpdated = {
+  const themeUpdated = useMemo(() => ({
     ...theme,
     ...orderingTheme?.theme,
     colors: {
@@ -166,7 +166,7 @@ export const App = () => {
         logotype: orderingTheme?.theme?.header?.components?.logo?.components?.image || theme.images.logos.logotype
       }
     }
-  }
+  }), [theme, orderingTheme])
 
   const websiteThemeType = themeUpdated?.my_products?.components?.website_theme?.components?.type
   const websiteThemeBusinessSlug = themeUpdated?.my_products?.components?.website_theme?.components?.business_slug
@@ -987,18 +987,20 @@ export const App = () => {
                   </div>
                 </Modal>
               )}
-              <Modal
-                open={businessSignUpSuccessed?.open}
-                onClose={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
-                title={t('CONGRATULATIONS', 'Congratulations')}
-                width='990px'
-              >
-                <SignUpApproval
-                  content={businessSignUpSuccessed?.content}
-                  onAccept={() => acceptAlert()}
-                  onCancel={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
-                />
-              </Modal>
+              {businessSignUpSuccessed?.open && (
+                <Modal
+                  open={businessSignUpSuccessed?.open}
+                  onClose={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
+                  title={t('CONGRATULATIONS', 'Congratulations')}
+                  width='990px'
+                >
+                  <SignUpApproval
+                    content={businessSignUpSuccessed?.content}
+                    onAccept={() => acceptAlert()}
+                    onCancel={() => setBusinessSignUpSuccessed({ open: false, content: {} })}
+                  />
+                </Modal>
+              )}
             </ThemeProvider>
           )
         }

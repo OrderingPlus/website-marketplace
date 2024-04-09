@@ -132,89 +132,95 @@ export const NavigationBar = () => {
           </NavigationLink>
         ))}
       </NavigationBarContainer>
-      <Modal
-        open={isCart}
-        onClose={() => setIsCart(false)}
-        width='50%'
-      >
-        <CartContent
-          carts={cartsWithProducts}
-          isOrderStateCarts={!!orderState.carts}
+      {isCart && (
+        <Modal
+          open={isCart}
           onClose={() => setIsCart(false)}
-        />
-      </Modal>
-      <Modal
-        open={isAddress}
-        title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
-        onClose={() => setIsAddress(false)}
-        width='50%'
-      >
-        <AddressForm
-          useValidationFileds
-          address={orderState?.options?.address || {}}
-          onCancel={() => setIsAddress(false)}
-          onSaveAddress={() => setIsAddress(false)}
-        />
-      </Modal>
-      <Modal
-        open={modalPageToShow && !auth}
-        onRemove={() => closeAuthModal()}
-        width='50%'
-        authModal
-      >
-        {modalPageToShow === 'login' && (
-          <LoginForm
-            handleSuccessLogin={handleSuccessLogin}
-            elementLinkToSignup={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'signup' })
-                } href='#'
-              >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
-              </a>
-            }
-            elementLinkToForgotPassword={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
-                } href='#'
-              >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
-              </a>
-            }
-            useLoginByCellphone
-            isPopup
+          width='50%'
+        >
+          <CartContent
+            carts={cartsWithProducts}
+            isOrderStateCarts={!!orderState.carts}
+            onClose={() => setIsCart(false)}
           />
-        )}
-        {modalPageToShow === 'signup' && (
-          <SignUpForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            useLoginByCellphone
-            useChekoutFileds
-            handleSuccessSignup={handleSuccessSignup}
-            isPopup
+        </Modal>
+      )}
+      {isAddress && (
+        <Modal
+          open={isAddress}
+          title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
+          onClose={() => setIsAddress(false)}
+          width='50%'
+        >
+          <AddressForm
+            useValidationFileds
+            address={orderState?.options?.address || {}}
+            onCancel={() => setIsAddress(false)}
+            onSaveAddress={() => setIsAddress(false)}
           />
-        )}
-        {modalPageToShow === 'forgotpassword' && (
-          <ForgotPasswordForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            isPopup
-          />
-        )}
-      </Modal>
+        </Modal>
+      )}
+      {modalPageToShow && !auth && (
+        <Modal
+          open={modalPageToShow && !auth}
+          onRemove={() => closeAuthModal()}
+          width='50%'
+          authModal
+        >
+          {modalPageToShow === 'login' && (
+            <LoginForm
+              handleSuccessLogin={handleSuccessLogin}
+              elementLinkToSignup={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'signup' })
+                  } href='#'
+                >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
+                </a>
+              }
+              elementLinkToForgotPassword={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
+                  } href='#'
+                >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
+                </a>
+              }
+              useLoginByCellphone
+              isPopup
+            />
+          )}
+          {modalPageToShow === 'signup' && (
+            <SignUpForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              useLoginByCellphone
+              useChekoutFileds
+              handleSuccessSignup={handleSuccessSignup}
+              isPopup
+            />
+          )}
+          {modalPageToShow === 'forgotpassword' && (
+            <ForgotPasswordForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              isPopup
+            />
+          )}
+        </Modal>
+      )}
     </>
   )
 }

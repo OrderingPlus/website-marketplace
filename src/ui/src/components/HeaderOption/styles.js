@@ -32,7 +32,7 @@ export const Container = styled.div`
   `}
 
   ${({ variant }) => variant === 'address' && css`
-    color: ${props => props.isChew ? props.theme.colors?.backgroundPage : props.theme.colors?.headingColor};
+    color: ${props => props.theme.colors?.headingColor};
     display: flex;
     align-items: center;
 
@@ -47,7 +47,7 @@ export const Container = styled.div`
   `}
 
   ${({ variant }) => variant === 'moment' && css`
-    color: ${props => props.isChew ? props.theme.colors?.backgroundPage : props.theme.colors?.headingColor};
+    color: ${props => props.theme.colors?.headingColor};
     display: flex;
     align-items: center;
 
@@ -60,7 +60,7 @@ export const Container = styled.div`
     }
   `}
 
-  ${({ isHome }) => isHome && css`
+  ${({ $isHome }) => $isHome && css`
     color: #FFF;
   `}
 `

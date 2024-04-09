@@ -68,10 +68,8 @@ export const BusinessBasicInformation = (props) => {
   const hideHeader = theme?.business_view?.components?.header?.hidden
 
   const isInfoShrunken = theme?.business_view?.components?.header?.components?.business?.components?.layout?.position === 'shrunken'
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const businessInfoComponentProps = {
-    isChew,
     loading,
     business,
     isInfoShrunken,
@@ -128,7 +126,7 @@ export const BusinessBasicInformation = (props) => {
   const handleScroll = () => {
     const searchElement = document.getElementById('search-component')
     if (searchElement) {
-      const limit = window.scrollY >= (isChew ? searchElement?.offsetTop + 40 : searchElement?.offsetTop) && window.scrollY > 0
+      const limit = window.scrollY >= searchElement?.offsetTop && window.scrollY > 0
       if (limit) {
         const classAdded = searchElement.classList.contains('fixed-search')
         !classAdded && searchElement.classList.add('fixed-search')
@@ -141,20 +139,16 @@ export const BusinessBasicInformation = (props) => {
     const businessNameElement = document.getElementById('business_name')
     const businessNameFeedbackElement = document.getElementById('business_name_feedback')
     if (businessNameElement) {
-      const limit = window.scrollY >= (isChew && searchElement ? searchElement?.offsetTop + 40 : (businessNameElement?.offsetTop - 55)) && window.scrollY > 0
+      const limit = window.scrollY >= (businessNameElement?.offsetTop - 55) && window.scrollY > 0
       if (limit) {
         const classAdded = businessNameElement.classList.contains('fixed-name')
         !classAdded && businessNameElement.classList.add('fixed-name')
-        if (!isChew) {
-          const classAdded2 = backArrowElement?.classList?.contains?.('fixed-arrow')
-          !classAdded2 && backArrowElement.classList.add('fixed-arrow')
-        }
+        const classAdded2 = backArrowElement?.classList?.contains?.('fixed-arrow')
+        !classAdded2 && backArrowElement.classList.add('fixed-arrow')
         if (businessNameFeedbackElement) businessNameFeedbackElement.style.display = 'block'
       } else {
         businessNameElement && businessNameElement.classList.remove('fixed-name')
-        if (!isChew) {
-          backArrowElement && backArrowElement.classList.remove('fixed-arrow')
-        }
+        backArrowElement && backArrowElement.classList.remove('fixed-arrow')
         if (businessNameFeedbackElement) businessNameFeedbackElement.style.display = 'none'
       }
     }
@@ -189,16 +183,13 @@ export const BusinessBasicInformation = (props) => {
         />
       )}
       <BusinessInfoWrapper>
-        {(!isInfoShrunken && !isChew) && (
-          <BusinessInfoComponent
-            {...businessInfoComponentProps}
-
-          />
+        {(!isInfoShrunken) && (
+          <BusinessInfoComponent {...businessInfoComponentProps} />
         )}
         {((business?.header || business?.logo || loading || isInfoShrunken) && !hideHeader) && (
-          <BusinessContainer bgimage={business?.header} isSkeleton={isSkeleton} id='container' isClosed={!business?.open} isChew={isChew}>
+          <BusinessContainer bgimage={business?.header} isSkeleton={isSkeleton} id='container' isClosed={!business?.open}>
             {(!loading && !business?.open) && <h1>{t('CLOSED', 'Closed')}</h1>}
-            {(!hideLogo && business?.logo && !isChew) && (
+            {(!hideLogo && business?.logo) && (
               <BusinessContent>
                 <WrapperBusinessLogo>
                   {!loading && (
@@ -207,10 +198,8 @@ export const BusinessBasicInformation = (props) => {
                 </WrapperBusinessLogo>
               </BusinessContent>
             )}
-            {(isInfoShrunken || isChew) && (
-              <BusinessInfoComponent
-                {...businessInfoComponentProps}
-              />
+            {(isInfoShrunken) && (
+              <BusinessInfoComponent {...businessInfoComponentProps} />
             )}
             {!loading && (
               <>
@@ -251,51 +240,57 @@ export const BusinessBasicInformation = (props) => {
           </Button>
         </BackButton>
       )}
-      <Modal
-        width='70%'
-        open={openBusinessInformation}
-        onClose={setOpenBusinessInformation}
-        padding='0'
-        hideCloseDefault
-        isTransparent
-      >
-        <BusinessInformation
-          business={business}
-          getBusinessType={getBusinessType}
-          optimizeImage={optimizeImage}
+      {openBusinessInformation && (
+        <Modal
+          width='70%'
+          open={openBusinessInformation}
           onClose={setOpenBusinessInformation}
-        />
-      </Modal>
-      <Modal
-        width='70%'
-        open={isBusinessReviews}
-        onClose={() => setIsBusinessReviews(false)}
-        padding='20px'
-      >
-        <BusinessReviews
-          businessId={business.id}
-          reviews={business.reviews?.reviews}
-          businessName={business.name}
-          stars={business.reviews?.total}
-        />
-      </Modal>
-      <Modal
-        open={isPreOrder}
-        width={isCustomerMode ? '700px' : '760px'}
-        onClose={() => setIsPreOrder(false)}
-        padding={isCustomerMode && '20px'}
-      >
-        {isCustomerMode
-          ? (
-          <MomentContent onClose={() => setIsPreOrder(false)} />
-            )
-          : (
-          <BusinessPreorder
+          padding='0'
+          hideCloseDefault
+          isTransparent
+        >
+          <BusinessInformation
             business={business}
-            handleClick={() => setIsPreOrder(false)}
+            getBusinessType={getBusinessType}
+            optimizeImage={optimizeImage}
+            onClose={setOpenBusinessInformation}
           />
-            )}
-      </Modal>
+        </Modal>
+      )}
+      {isBusinessReviews && (
+        <Modal
+          width='70%'
+          open={isBusinessReviews}
+          onClose={() => setIsBusinessReviews(false)}
+          padding='20px'
+        >
+          <BusinessReviews
+            businessId={business.id}
+            reviews={business.reviews?.reviews}
+            businessName={business.name}
+            stars={business.reviews?.total}
+          />
+        </Modal>
+      )}
+      {isPreOrder && (
+        <Modal
+          open={isPreOrder}
+          width={isCustomerMode ? '700px' : '760px'}
+          onClose={() => setIsPreOrder(false)}
+          padding={isCustomerMode && '20px'}
+        >
+          {isCustomerMode
+            ? (
+            <MomentContent onClose={() => setIsPreOrder(false)} />
+              )
+            : (
+            <BusinessPreorder
+              business={business}
+              handleClick={() => setIsPreOrder(false)}
+            />
+              )}
+        </Modal>
+      )}
     </>
   )
 }

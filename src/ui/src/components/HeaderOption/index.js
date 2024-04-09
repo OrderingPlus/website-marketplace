@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTheme } from 'styled-components'
 import AiOutlineShoppingCart from '@meronex/icons/ai/AiOutlineShoppingCart'
 import FaMapMarkerAlt from '@meronex/icons/fa/FaMapMarkerAlt'
 
@@ -20,15 +19,12 @@ export const HeaderOption = (props) => {
   const [{ parseDate }] = useUtils()
   const [, t] = useLanguage()
   const [orderStatus] = useOrder()
-  const theme = useTheme()
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   return (
     <Container
       variant={variant}
-      isChew={isChew}
       onClick={() => props.onClick(variant)}
-      isHome={props.isHome}
+      $isHome={props.isHome}
       style={props.containerStyle}
     >
       {variant === 'cart' && (
@@ -52,7 +48,7 @@ export const HeaderOption = (props) => {
       )}
       {
         variant === 'delivery' && (
-          <DeliveryType isChew={isChew}>
+          <DeliveryType>
             {(orderTypeList && orderTypeList[orderStatus?.options.type - 1]) || t('DELIVERY', 'Delivery')}
           </DeliveryType>
         )

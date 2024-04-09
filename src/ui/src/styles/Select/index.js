@@ -72,7 +72,7 @@ export const Select = (props) => {
   return (
     isOneOption && !disableOneOption
       ? (
-      <SelectInput id='select-input' isHome={isHome}>
+      <SelectInput id='select-input' $isHome={isHome}>
         <Selected ref={selectedOptionRef} onClick={() => handleSelectClick()}>
           <Header>
             {options[0].content}
@@ -83,7 +83,7 @@ export const Select = (props) => {
       : (
       <SelectInput
         id='select-input'
-        isHome={isHome}
+        $isHome={isHome}
         disabled={(orderState.loading && !notReload) || props.isDisabled}
       >
         {!selectedOption && <Selected><Header>{placeholder || ''}</Header><Chevron>{CustomArrow ? <CustomArrow id='arrow' /> : <BsChevronDown />}</Chevron></Selected>}
@@ -100,7 +100,7 @@ export const Select = (props) => {
           </Selected>
         )}
         {open && options && (
-          <Options id='list' position='right' ref={dropdownReference} isHome={isHome} zIndex={zIndex}>
+          <Options id='list' position='right' ref={dropdownReference} $isHome={isHome} zIndex={zIndex}>
             {
               options.map((option, i) => (
                 <Option

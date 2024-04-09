@@ -147,36 +147,39 @@ export const OrderContextUI = (props) => {
           )}
         </Modal>
       )}
-      <Modal
-        title={t('ADDRESS_FORM', 'Address Form')}
-        open={modals.formOpen}
-        onClose={() => setModals({ ...modals, formOpen: false })}
-      >
-        <AddressForm
-          useValidationFileds
-          address={orderState?.options?.address || {}}
+      {modals.formOpen && (
+        <Modal
+          title={t('ADDRESS_FORM', 'Address Form')}
+          open={modals.formOpen}
           onClose={() => setModals({ ...modals, formOpen: false })}
-          onCancel={() => setModals({ ...modals, formOpen: false })}
-          onSaveAddress={() => setModals({ ...modals, formOpen: false })}
-        />
-      </Modal>
-
-      <Modal
-        title={t('ADDRESSES', 'Address List')}
-        open={modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, listOpen: false })}
-      >
-        <AddressList
-          isModal
-          changeOrderAddressWithDefault
-          userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-          onCancel={() => setModals({ ...modals, listOpen: false })}
-          onAccept={() => handleFindBusinesses()}
-          isCustomerMode={isCustomerMode}
-          isMobile
-        />
-      </Modal>
+        >
+          <AddressForm
+            useValidationFileds
+            address={orderState?.options?.address || {}}
+            onClose={() => setModals({ ...modals, formOpen: false })}
+            onCancel={() => setModals({ ...modals, formOpen: false })}
+            onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+          />
+        </Modal>
+      )}
+      {modals.listOpen && (
+        <Modal
+          title={t('ADDRESSES', 'Address List')}
+          open={modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, listOpen: false })}
+        >
+          <AddressList
+            isModal
+            changeOrderAddressWithDefault
+            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+            onCancel={() => setModals({ ...modals, listOpen: false })}
+            onAccept={() => handleFindBusinesses()}
+            isCustomerMode={isCustomerMode}
+            isMobile
+          />
+        </Modal>
+      )}
       <Alert
         title={t('ORDERING', 'Ordering')}
         content={alertState.content}

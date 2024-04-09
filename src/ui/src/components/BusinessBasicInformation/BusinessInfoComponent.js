@@ -28,7 +28,6 @@ import {
 
 export const BusinessInfoComponent = (props) => {
   const {
-    isChew,
     loading,
     business,
     isInfoShrunken,
@@ -69,7 +68,7 @@ export const BusinessInfoComponent = (props) => {
   }
 
   return (
-    <BusinessInfoContainer isChew={isChew} isFlexEnd={windowSize.width >= 768}>
+    <BusinessInfoContainer isFlexEnd={windowSize.width >= 768}>
       <BusinessInfoContent>
         <BusinessInfo className='info'>
           <BusinessInfoItem isInfoShrunken={isInfoShrunken}>

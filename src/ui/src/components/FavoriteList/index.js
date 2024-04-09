@@ -341,58 +341,62 @@ const FavoriteListUI = (props) => {
           ))
         )}
       </Container>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleClickBusiness}
-          showButton
-        />
-      </Modal>
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      >
-        <FavPopupView>
-          {(favProduct?.images) && (
-            <Image>
-             <img src={favProduct.images} alt={`product-${favProduct?.name}`} width='150px' height='150px' loading='lazy' />
-            </Image>
-          )}
-            <h2>
-             {favProduct?.name}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleClickBusiness}
+            showButton
+          />
+        </Modal>
+      )}
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+        >
+          <FavPopupView>
+            {(favProduct?.images) && (
+              <Image>
+              <img src={favProduct.images} alt={`product-${favProduct?.name}`} width='150px' height='150px' loading='lazy' />
+              </Image>
+            )}
+              <h2>
+              {favProduct?.name}
+              </h2>
+              <h2>
+              { favProduct?.businesses && favProduct?.businesses?.length > 1
+                ? t('AVAILABLE_BUSINESSES_FOR_PRODUCT', 'Available businesses for this product')
+                : favProduct?.businesses && favProduct?.businesses?.length === 1
+                  ? t('AVAILABLE_BUSINESSE_FOR_PRODUCT', 'Available business for this product')
+                  : t('NOT_AVAILABLE_BUSINESSE', 'Business is not available for this product')
+              }
             </h2>
-            <h2>
-            { favProduct?.businesses && favProduct?.businesses?.length > 1
-              ? t('AVAILABLE_BUSINESSES_FOR_PRODUCT', 'Available businesses for this product')
-              : favProduct?.businesses && favProduct?.businesses?.length === 1
-                ? t('AVAILABLE_BUSINESSE_FOR_PRODUCT', 'Available business for this product')
-                : t('NOT_AVAILABLE_BUSINESSE', 'Business is not available for this product')
-            }
-          </h2>
-          <div>
-            {favProduct?.businesses?.map(business => {
-              return (
-                <SingleBusinessOffer key={business.id}>
-                  <BusinessLogo bgimage={business?.logo} />
-                  <BusinessInfo>
-                    <p>{business.name}</p>
-                    <Button
-                      onClick={() => handleOpenProduct(business)}
-                      color='primary'
-                    >
-                      {t('GO_TO_BUSINESSS', 'Go to business')}
-                    </Button>
-                  </BusinessInfo>
-                </SingleBusinessOffer>
-              )
-            })}
-          </div>
-        </FavPopupView>
-      </Modal>
+            <div>
+              {favProduct?.businesses?.map(business => {
+                return (
+                  <SingleBusinessOffer key={business.id}>
+                    <BusinessLogo bgimage={business?.logo} />
+                    <BusinessInfo>
+                      <p>{business.name}</p>
+                      <Button
+                        onClick={() => handleOpenProduct(business)}
+                        color='primary'
+                      >
+                        {t('GO_TO_BUSINESSS', 'Go to business')}
+                      </Button>
+                    </BusinessInfo>
+                  </SingleBusinessOffer>
+                )
+              })}
+            </div>
+          </FavPopupView>
+        </Modal>
+      )}
     </>
   )
 }

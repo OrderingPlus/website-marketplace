@@ -698,60 +698,64 @@ const CartUI = (props) => {
             onAccept={confirm.handleOnAccept}
             closeOnBackdrop={false}
           />
-          <Modal
-            width='700px'
-            open={openProduct}
-            padding='0'
-            closeOnBackdrop
-            onClose={() => setModalIsOpen(false)}
-            disableOverflowX
-          >
-            {!curProduct?.calendar_event
-              ? (
-              <ProductForm
-                isCartProduct
-                productCart={curProduct}
-                businessSlug={cart?.business?.slug}
-                businessId={cart?.business_id}
-                categoryId={curProduct?.category_id}
-                productId={curProduct?.id}
-                onSave={handlerProductAction}
-                viewString={viewString}
-                setProductLoading={setProductLoading}
+          {openProduct && (
+            <Modal
+              width='700px'
+              open={openProduct}
+              padding='0'
+              closeOnBackdrop
+              onClose={() => setModalIsOpen(false)}
+              disableOverflowX
+            >
+              {!curProduct?.calendar_event
+                ? (
+                <ProductForm
+                  isCartProduct
+                  productCart={curProduct}
+                  businessSlug={cart?.business?.slug}
+                  businessId={cart?.business_id}
+                  categoryId={curProduct?.category_id}
+                  productId={curProduct?.id}
+                  onSave={handlerProductAction}
+                  viewString={viewString}
+                  setProductLoading={setProductLoading}
+                />
+                  )
+                : (
+                <ServiceForm
+                  isCartProduct
+                  isService
+                  productCart={curProduct}
+                  businessSlug={cart?.business?.slug}
+                  businessId={cart?.business_id}
+                  categoryId={curProduct?.category_id}
+                  productId={curProduct?.id}
+                  onSave={handlerProductAction}
+                  professionalSelected={curProduct?.calendar_event?.professional}
+                  setProductLoading={setProductLoading}
+                />
+                  )}
+            </Modal>
+          )}
+          {openTaxModal.open && (
+            <Modal
+              width='70%'
+              open={openTaxModal.open}
+              padding='20px'
+              closeOnBackdrop
+              title={`${openTaxModal.data?.name ||
+                t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2 ? `(${typeof openTaxModal.data?.rate === 'number' ? `${openTaxModal.data?.rate}%` : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})` : ''}  `}
+              onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}
+              modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <TaxInformation
+                type={openTaxModal.type}
+                data={openTaxModal.data}
+                products={cart?.products}
+                useKioskApp={useKioskApp}
               />
-                )
-              : (
-              <ServiceForm
-                isCartProduct
-                isService
-                productCart={curProduct}
-                businessSlug={cart?.business?.slug}
-                businessId={cart?.business_id}
-                categoryId={curProduct?.category_id}
-                productId={curProduct?.id}
-                onSave={handlerProductAction}
-                professionalSelected={curProduct?.calendar_event?.professional}
-                setProductLoading={setProductLoading}
-              />
-                )}
-          </Modal>
-          <Modal
-            width='70%'
-            open={openTaxModal.open}
-            padding='20px'
-            closeOnBackdrop
-            title={`${openTaxModal.data?.name ||
-              t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2 ? `(${typeof openTaxModal.data?.rate === 'number' ? `${openTaxModal.data?.rate}%` : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})` : ''}  `}
-            onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}
-            modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
-          >
-            <TaxInformation
-              type={openTaxModal.type}
-              data={openTaxModal.data}
-              products={cart?.products}
-              useKioskApp={useKioskApp}
-            />
-          </Modal>
+            </Modal>
+          )}
           {(openUpselling || isUpselling) && (
             <UpsellingPage
               useKioskApp={useKioskApp}
@@ -766,25 +770,25 @@ const CartUI = (props) => {
             />
           )}
         </CartSticky>
-
-        <Modal
-          width='70%'
-          title={t('CHANGE_STORE', 'Change store')}
-          open={openChangeStore}
-          padding='20px'
-          closeOnBackdrop
-          modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
-          onClose={() => setOpenChangeStore(false)}
-        >
-          <CartStoresListing
-            isStore={isStore}
-            pageChangeStore='business'
-            cartuuid={cart?.uuid}
+        {openChangeStore && (
+          <Modal
+            width='70%'
+            title={t('CHANGE_STORE', 'Change store')}
+            open={openChangeStore}
+            padding='20px'
+            closeOnBackdrop
+            modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
             onClose={() => setOpenChangeStore(false)}
-            handleCustomStoreRedirect={handleStoreRedirect}
-          />
-        </Modal>
-
+          >
+            <CartStoresListing
+              isStore={isStore}
+              pageChangeStore='business'
+              cartuuid={cart?.uuid}
+              onClose={() => setOpenChangeStore(false)}
+              handleCustomStoreRedirect={handleStoreRedirect}
+            />
+          </Modal>
+        )}
       </CartContainer>
     </>
   )
