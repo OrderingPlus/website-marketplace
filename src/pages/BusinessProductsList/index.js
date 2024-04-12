@@ -170,7 +170,7 @@ export const BusinessProductsList = (props) => {
     categoryId,
     productId,
     businessNearestState,
-    requireSlug: true,
+    isSlugRequired: true,
     businessProps: [
       'id',
       'name',
