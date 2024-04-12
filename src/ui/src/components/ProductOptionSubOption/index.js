@@ -3,28 +3,19 @@ import BsCircleFill from '@meronex/icons/bs/BsCircleFill'
 import BsCircleHalf from '@meronex/icons/bs/BsCircleHalf'
 import BsDashCircle from '@meronex/icons/bs/BsDashCircle'
 import BsPlusCircle from '@meronex/icons/bs/BsPlusCircle'
-import MdCheckBox from '@meronex/icons/md/MdCheckBox'
-import MdCheckBoxOutlineBlank from '@meronex/icons/md/MdCheckBoxOutlineBlank'
-import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
-import MdRadioButtonUnchecked from '@meronex/icons/md/MdRadioButtonUnchecked'
 
 import {
   Container,
-  SuboptionPrice,
   QuantityControl,
   PositionControl,
-  IconControl,
   Text,
-  SubOptionThumbnail,
-  LeftOptionContainer,
   RightOptionContainer,
-  ExtraControl,
-  ExtraItem
+  HeaderSuboption,
+  AddRemoveControl
 } from './styles'
 
 import {
   ProductOptionSuboption as ProductSubOptionController,
-  useUtils,
   useLanguage
 } from '~components'
 
@@ -51,7 +42,7 @@ const ProductOptionSubOptionUI = React.memo((props) => {
     setIsScrollAvailable,
     usePizzaValidation,
     pizzaState,
-    changeQuantity
+    disabled
   } = props
 
   const disableIncrement =
@@ -61,9 +52,7 @@ const ProductOptionSubOptionUI = React.memo((props) => {
         ? (balance === option?.max || state.quantity === suboption.max)
         : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 
-  const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
   const [, t] = useLanguage()
-  const [{ parsePrice }] = useUtils()
   const [showMessage, setShowMessage] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const dirtyRef = useRef(null)
@@ -93,11 +82,6 @@ const ProductOptionSubOptionUI = React.memo((props) => {
     }
   }
 
-  const handleChangeQuantity = (e, quantity) => {
-    e.stopPropagation()
-    changeQuantity(quantity)
-  }
-
   useEffect(() => {
     const minMaxValidation = option?.with_half_option ? usePizzaValidation : (!state.selected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1))
     if (!minMaxValidation) {
@@ -117,41 +101,25 @@ const ProductOptionSubOptionUI = React.memo((props) => {
   return (
     <>
       <Container onClick={() => handleSuboptionClick()}>
-        <LeftOptionContainer>
-          <IconControl>
-            {((option?.min === 0 && option?.max === 1) || option?.max > 1)
-              ? (state?.selected
-                  ? <MdCheckBox />
-                  : <MdCheckBoxOutlineBlank disabled />)
-              : (state?.selected
-                  ? <RiRadioButtonFill />
-                  : <MdRadioButtonUnchecked disabled />
-                )}
-          </IconControl>
-          {suboption.image && suboption.image !== '-' && (
-            <SubOptionThumbnail src={suboption.image} />
-          )}
+        <HeaderSuboption>
           <Text>
-            <div>{suboption?.name}</div>
+            {suboption?.name}
           </Text>
-        </LeftOptionContainer>
+          <AddRemoveControl disabled={disabled} onPress={() => handleSuboptionClick()}>
+            {state?.selected
+              ? (
+                <Text>
+                  {t('TOUCH_FOR_DELETE', 'Touch for delete')}
+                </Text>
+                )
+              : (
+                <Text>
+                  {t('TOUCH_FOR_ADD', 'Touch for add')}
+                </Text>
+                )}
+          </AddRemoveControl>
+        </HeaderSuboption>
         <RightOptionContainer>
-
-          <QuantityControl>
-            {!(option?.max === 1 && option?.min === 1) && option?.allow_suboption_quantity && state?.selected && (
-              <>
-                <BsDashCircle
-                  disabled={state.quantity === 0 || isSoldOut}
-                  onClick={handleDecrement}
-                />
-                {state.quantity}
-                <BsPlusCircle
-                  disabled={disableIncrement || isSoldOut || usePizzaValidation}
-                  onClick={handleIncrement}
-                />
-              </>
-            )}
-          </QuantityControl>
           <PositionControl>
             {
               option?.with_half_option && state?.selected && (
@@ -177,26 +145,23 @@ const ProductOptionSubOptionUI = React.memo((props) => {
               )
             }
           </PositionControl>
-          {option?.with_half_option && state?.selected && state.quantity > 0 && (
-            <ExtraControl>
-              {(state.quantity >= 2)
-                ? (<ExtraItem onClick={(e) => handleChangeQuantity(e, 1)}>
-                    <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBox />
-                  </ExtraItem>)
-                : (<ExtraItem
-                    onClick={(e) => handleChangeQuantity(e, 2)}
-                    className={(pizzaState?.[`option:${option?.id}`]?.value >= option?.max) && !(option?.max === 1 && option?.min === 1) ? 'disabled' : ''}
-                  >
-                    <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBoxOutlineBlank disabled />
-                  </ExtraItem>)}
-            </ExtraControl>
-          )}
+          <QuantityControl>
+            {!(option?.max === 1 && option?.min === 1) && option?.allow_suboption_quantity && state?.selected && (
+              <>
+                <BsDashCircle
+                  disabled={state.quantity === 0 || isSoldOut}
+                  onClick={handleDecrement}
+                />
+                {state.quantity}
+                <BsPlusCircle
+                  disabled={disableIncrement || isSoldOut || usePizzaValidation}
+                  onClick={handleIncrement}
+                />
+              </>
+            )}
+          </QuantityControl>
         </RightOptionContainer>
-        <SuboptionPrice>
-          {price > 0 && (
-            <>+ {parsePrice(price)}</>
-          )}
-        </SuboptionPrice>
+
       </Container>
       {showMessage && (
         <Text noMargin>

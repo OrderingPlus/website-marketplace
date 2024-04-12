@@ -11,9 +11,7 @@ import {
   RibbonBox,
   CategoryDescription,
   DescriptionContainer,
-  SubcategorySearchContainer,
-  PreviouslyOrderedContainer,
-  PreviouslyOrderedWrapper
+  SubcategorySearchContainer
 } from './styles'
 
 import { SubcategoriesComponent } from './SubcategoriesComponent'
@@ -22,9 +20,10 @@ import {
   SingleProductCard,
   NotFoundSource,
   Modal,
-  shape,
-  AutoScroll
+  shape
 } from '~ui'
+import { BusinessProductsCategoriesScroll } from '../BusinessProductsCategoriesScroll'
+import { useTheme } from 'styled-components'
 
 const BusinessProductsListUI = (props) => {
   const {
@@ -37,7 +36,6 @@ const BusinessProductsListUI = (props) => {
     isBusinessLoading,
     onProductClick,
     handleSearchRedirect,
-    featured,
     useKioskApp,
     searchValue,
     isCartOnProductsList,
@@ -50,11 +48,13 @@ const BusinessProductsListUI = (props) => {
     handleUpdateProducts,
     isSearchMode,
     business,
-    previouslyProducts
+    categorySelected,
+    selectedCategoryId
   } = props
 
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
+  const theme = useTheme()
   const isUseParentCategory = configs?.use_parent_category?.value === 'true' || configs?.use_parent_category?.value === '1'
   const [openDescription, setOpenDescription] = useState(null)
   const headerRef = useRef()
@@ -77,15 +77,34 @@ const BusinessProductsListUI = (props) => {
 
   const productsCategorySelected = categoryState.products
     ?.filter(product =>
-      !subcategoriesSelected?.find(subcategory => subcategory?.parent_category_id === category?.id) ||
+      !subcategoriesSelected?.find(subcategory => subcategory?.parent_category_id === selectedCategoryId?.id) ||
       subcategoriesSelected?.some(subcategory => subcategory.id === product?.category_id))
 
   return (
     <>
       <ProductsContainer>
+        {!category?.id && business?.categories?.length > 0 && selectedCategoryId && (
+          <BusinessProductsCategoriesScroll
+            categories={[
+              { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
+              ...business?.categories.sort((a, b) => a.rank - b.rank)
+            ]}
+            categorySelected={categorySelected}
+            onClickCategory={onClickCategory}
+            business={business}
+            currentCart={currentCart}
+            wContainerStyle={useKioskApp && 'calc(100% - 50px)'}
+            isProfessional={business?.professionals?.length > 0 && !useKioskApp}
+            selectedCategoryId={selectedCategoryId}
+          />
+        )}
+
         {category?.id && (
           <>
             <HeaderWrapper>
+              <h2>
+                {categories.find(_category => _category?.id === category?.id)?.name}
+              </h2>
               {category?.subcategories?.length > 0 && !isSearchMode && (
                 <SubcategoriesComponent
                   category={category}
@@ -109,101 +128,8 @@ const BusinessProductsListUI = (props) => {
                 />
               ))}
             </ProductsListing>
-            {isSearchMode && category?.subcategories?.length > 0 && category?.subcategories?.filter(subcategory => productsCategorySelected?.some(product => product?.category_id === subcategory?.id))?.map(subcategory => (
-              <SubcategorySearchContainer key={subcategory?.id}>
-                <h4>{subcategory?.name}</h4>
-                <ProductsListing isSubcategorySearch>
-                  {productsCategorySelected?.filter(product => product?.category_id === subcategory?.id)?.map((product, i) => (
-                    <SingleProductCard
-                      key={i}
-                      isSoldOut={product.inventoried && !product.quantity}
-                      businessId={businessId}
-                      product={product}
-                      onProductClick={onProductClick}
-                      isCartOnProductsList={isCartOnProductsList}
-                      handleUpdateProducts={handleUpdateProducts}
-                      useKioskApp={useKioskApp}
-                      productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                    />
-                  ))}
-                </ProductsListing>
-              </SubcategorySearchContainer>
-            ))}
           </>
         )}
-        {
-          !category?.id && previouslyProducts?.length > 0 && (
-            <WrapAllCategories id='previously_block'>
-              <h3>{t('ORDER_IT_AGAIN', 'Order it again')}</h3>
-              <CategoryDescription maxWidth={headerRef?.current?.clientWidth}>
-                <p>
-                  {t('ORDER_IT_AGAIN_DESC', 'Quickly add items from your past orders.')}
-                </p>
-              </CategoryDescription>
-              <PreviouslyOrderedContainer>
-                <PreviouslyOrderedWrapper>
-                  <AutoScroll scrollId='previously_ordered'>
-                    {previouslyProducts?.map((product, i) => (
-                      <SingleProductCard
-                        key={i}
-                        isSoldOut={(product.inventoried && !product.quantity)}
-                        product={product}
-                        useKioskApp={useKioskApp}
-                        businessId={businessId}
-                        onProductClick={onProductClick}
-                        isCartOnProductsList={isCartOnProductsList}
-                        handleUpdateProducts={handleUpdateProducts}
-                        productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                      />
-                    ))}
-                  </AutoScroll>
-                </PreviouslyOrderedWrapper>
-              </PreviouslyOrderedContainer>
-            </WrapAllCategories>
-          )
-        }
-        {
-          !category?.id && (
-            <>
-              {
-                featured && categoryState?.products?.find(product => product.featured) && (
-                  <WrapAllCategories id='categoryfeatured'>
-                    <h3>{t('FEATURED', 'Featured')}</h3>
-                    <ProductsListing>
-                      {categoryState.products?.map((product, i) => product.featured && (
-                        <SingleProductCard
-                          key={i}
-                          isSoldOut={(product.inventoried && !product.quantity)}
-                          product={product}
-                          useKioskApp={useKioskApp}
-                          businessId={businessId}
-                          onProductClick={onProductClick}
-                          isCartOnProductsList={isCartOnProductsList}
-                          handleUpdateProducts={handleUpdateProducts}
-                          productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                        />
-                      ))}
-                      {!business?.food && !categoryState?.loading && categoryState?.products?.filter(product => product.featured)?.length > 9 && (
-                        <SingleProductCard
-                          useCustomFunctionality
-                          onCustomClick={() => onClickCategory(category)}
-                          isCartOnProductsList={isCartOnProductsList}
-                          handleUpdateProducts={handleUpdateProducts}
-                          customText={t('MORE', 'More')}
-                          customStyle={{
-                            display: 'flex',
-                            justifyContent: 'center'
-                          }}
-                        />
-                      )}
-                    </ProductsListing>
-                  </WrapAllCategories>
-                )
-              }
-            </>
-          )
-        }
-
         {
           !category?.id && categories.filter(category => category?.id !== null).map((category, i, _categories) => {
             const _products = !isUseParentCategory
@@ -223,11 +149,11 @@ const BusinessProductsListUI = (props) => {
                     <WrapAllCategories id={`category${category?.id}`}>
                       <HeaderWrapper ref={headerRef}>
                         <div className='category-title'>
-                          {
+                          {/* {
                             category?.image && (
                               <img src={category.image} />
                             )
-                          }
+                          } */}
                           <h3>{category.name}</h3>
                           {category?.ribbon?.enabled && (
                             <RibbonBox
@@ -260,39 +186,8 @@ const BusinessProductsListUI = (props) => {
                       <ProductsListing isSubcategorySearch={isSubcategorySearch}>
                         {isSearchMode && category?.subcategories?.length > 0
                           ? (
-                          <>
-                            {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
-                              <SingleProductCard
-                                key={i}
-                                isSoldOut={product.inventoried && !product.quantity}
-                                businessId={businessId}
-                                product={product}
-                                onProductClick={onProductClick}
-                                useKioskApp={useKioskApp}
-                                isCartOnProductsList={isCartOnProductsList}
-                                handleUpdateProducts={handleUpdateProducts}
-                                productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                              />
-                            ))}
-                            {!business?.food && !categoryState?.loading && products?.length > 9 && (
-                              <SingleProductCard
-                                useCustomFunctionality
-                                onCustomClick={() => onClickCategory(category)}
-                                isCartOnProductsList={isCartOnProductsList}
-                                handleUpdateProducts={handleUpdateProducts}
-                                customText={t('MORE', 'More')}
-                                customStyle={{
-                                  display: 'flex',
-                                  justifyContent: 'center'
-                                }}
-                              />
-                            )}
-                          </>
-                            )
-                          : (
-                          <>
-                            {
-                              products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
+                            <>
+                              {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
                                 <SingleProductCard
                                   key={i}
                                   isSoldOut={product.inventoried && !product.quantity}
@@ -304,22 +199,53 @@ const BusinessProductsListUI = (props) => {
                                   handleUpdateProducts={handleUpdateProducts}
                                   productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                                 />
-                              ))
-                            }
-                            {!business?.food && !categoryState?.loading && products?.length > 9 && (
-                              <SingleProductCard
-                                useCustomFunctionality
-                                onCustomClick={() => onClickCategory(category)}
-                                isCartOnProductsList={isCartOnProductsList}
-                                handleUpdateProducts={handleUpdateProducts}
-                                customText={t('MORE', 'More')}
-                                customStyle={{
-                                  display: 'flex',
-                                  justifyContent: 'center'
-                                }}
-                              />
-                            )}
-                          </>
+                              ))}
+                              {!business?.food && !categoryState?.loading && products?.length > 9 && (
+                                <SingleProductCard
+                                  useCustomFunctionality
+                                  onCustomClick={() => onClickCategory(category)}
+                                  isCartOnProductsList={isCartOnProductsList}
+                                  handleUpdateProducts={handleUpdateProducts}
+                                  customText={t('MORE', 'More')}
+                                  customStyle={{
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                  }}
+                                />
+                              )}
+                            </>
+                            )
+                          : (
+                            <>
+                              {
+                                products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
+                                  <SingleProductCard
+                                    key={i}
+                                    isSoldOut={product.inventoried && !product.quantity}
+                                    businessId={businessId}
+                                    product={product}
+                                    onProductClick={onProductClick}
+                                    useKioskApp={useKioskApp}
+                                    isCartOnProductsList={isCartOnProductsList}
+                                    handleUpdateProducts={handleUpdateProducts}
+                                    productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                                  />
+                                ))
+                              }
+                              {!business?.food && !categoryState?.loading && products?.length > 9 && (
+                                <SingleProductCard
+                                  useCustomFunctionality
+                                  onCustomClick={() => onClickCategory(category)}
+                                  isCartOnProductsList={isCartOnProductsList}
+                                  handleUpdateProducts={handleUpdateProducts}
+                                  customText={t('MORE', 'More')}
+                                  customStyle={{
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                  }}
+                                />
+                              )}
+                            </>
                             )}
                         {
                           categoryState.loading && (i + 1) === _categories.length && [...Array(categoryState.pagination.nextPageItems).keys()].map(i => (

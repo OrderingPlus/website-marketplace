@@ -5,9 +5,10 @@ export const AccordionSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 10px 0px;
+  padding: 15px 10px;
   background: #FFF;
   border-bottom: 1px solid #D9D9D9;
+  box-sizing: border-box;
   background: ${isCheckout => isCheckout ? 'transparent' : '#FFF'};
 `
 
@@ -18,7 +19,6 @@ const AccordionStyled = styled.div`
   justify-content: space-between;
   cursor: initial;
   transition: background-color 0.6s ease;
-  margin: 0px 10px;
 
   .rotate {
     transform: rotate(180deg);
@@ -52,24 +52,14 @@ export const Accordion = (props) => {
 }
 
 export const WrapperProductImage = styled.div`
-  max-width: 50px;
-  max-height: 50px;
-  height: 50px;
-  width: 50px;
-
-  @media (min-width: 361px) {
-    max-width: 55px;
-    max-height: 55px;
-    height: 55px;
-    width: 55px;
-  }
-
-  @media (min-width: 411px) {
-    max-width: 65px;
-    max-height: 65px;
-    height: 65px;
-    width: 65px;
-  }
+  max-width: 43px;
+  max-height: 43px;
+  height: 43px;
+  width: 43px;
+  min-width: 43px;
+  min-height: 43px;
+  border-radius: 10px;
+  margin-right: 5px;
 `
 
 const ProductImageStyled = styled.div`
@@ -79,10 +69,10 @@ const ProductImageStyled = styled.div`
   box-sizing: border-box;
   position: relative;
   background-repeat: no-repeat, repeat;
-  background-size: contain;
+  background-size: cover;
   object-fit: cover;
   background-position: center;
-  border-radius: 7.6px;
+  border-radius: 10px;
 `
 
 export const ProductImage = (props) => {
@@ -101,12 +91,7 @@ export const ContentInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   text-transform: capitalize;
-  width: 55%;
-
-  @media (min-width: 411px) {
-    width: calc(65% - 60px);
-  }
-
+  flex: 1;
   ${props => props.theme?.rtl && css`
     margin-right: 10px;
     margin-left: 0px;
@@ -119,6 +104,8 @@ export const ContentInfo = styled.div`
   }
 
   > div {
+    display: flex;
+    justify-content: space-between;
     > p {
       font-size: 10px;
       color: ${props => props.theme?.colors.darkGray};
@@ -174,26 +161,13 @@ export const AccordionText = styled.div`
 `
 
 export const ProductComment = styled.div`
-  padding-left: 40px;
-  ${props => props.theme?.rtl && css`
-    padding-right: 40px;
-    padding-left: 0px;
-  `}
   p {
-    font-weight: bold;
     margin: 0px;
+    font-size: 10px;
   }
 
   h3 {
-    font-weight: normal;
-    text-transform: capitalize;
-    margin: 0px 20px 0px 40px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    ${props => props.theme?.rtl && css`
-      margin: 0px 40px 0px 20px
-    `}
+    font-size: 10px;
   }
 `
 
@@ -210,21 +184,13 @@ export const ProductInfo = styled.div`
   }
 
   p {
-    font-size: 20px;
-    margin: 0px 5px;
+    margin: 0px;
   }
 
   ${({ isValid }) => !isValid && css`
     opacity: 0.5;
   `}
 
-  @media (min-width: 411px) {
-    width: 80%;
-  }
-
-  @media (min-width: 481px) {
-    width: 70%;
-  }
 `
 
 export const ProductError = styled.div`
@@ -300,10 +266,6 @@ export const ProductPrice = styled.div`
     font-weight: 500;
   }
 
-  p {
-    margin: 0px 5px;
-  }
-
   svg {
     cursor: pointer;
   }
@@ -311,16 +273,10 @@ export const ProductPrice = styled.div`
 
 export const ProductSelectWrapper = styled.div`
   position: relative;
-
+  top: 2px;
   > svg {
-    font-size: 10px;
-    position: absolute;
-    top: 9px;
-    right: 10px;
-    ${props => props.theme?.rtl && css`
-      left: 10px;
-      right: initial;
-    `}
+    color: ${({ theme }) => theme?.colors?.primary};
+    font-size: 16px;
   }
 `
 
@@ -354,15 +310,13 @@ export const ProductNotAvailable = styled.span`
   color: #D81212;
 `
 
-export const ProductOptionsList = styled.ul`
+export const ProductOptionsList = styled.div`
   list-style-type: none;
-
+  font-size: 10px;
+  p {
+    font-size: 10px;
+  }
   .suboption {
-    margin-left: -25px;
-    ${props => props.theme?.rtl && css`
-      margin-right: -25px;
-      margin-left: 0px;
-  `}
   }
 
   p:nth-child(1) {
@@ -379,16 +333,13 @@ export const ProductOptionsList = styled.ul`
   }
 
   li.ingredient {
-    padding-left: 15px;
-    ${props => props.theme?.rtl && css`
-      padding-right: 15px;
-      padding-left: 0px;
-    `}
   }
 `
 
 export const ProductQuantity = styled.span`
   margin: 0 5px;
+  font-size: 14px;
+
 `
 
 export const ScheduleInfoWrapper = styled.div`
@@ -414,5 +365,55 @@ export const ScheduleInfo = styled.div`
     font-size: 12px;
     line-height: 15px;
     color: ${props => props.theme.colors.darkGray};
+  }
+`
+
+export const ProductInfoQuantity = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background: #F8F9FA;
+  border-radius: 10px;
+  padding: 5px;
+  margin-right: 5px;
+  width: ${({ $isOrderDetails }) => $isOrderDetails ? '15px' : '50px'};
+  max-width: ${({ $isOrderDetails }) => $isOrderDetails ? '15px' : '50px'};
+  span svg {
+    position: relative;
+    top: 2px;
+  }
+`
+
+export const Price = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  p {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  span svg {
+    font-size: 15px;
+  }
+`
+
+export const ProductOption = styled.div`
+
+`
+
+export const ProductSubOption = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+export const ProductContentInfo = styled.div`
+  width: 75%;
+
+  p, span {
+    font-weight: 400;
+    font-size: 10px;
+    color: #909BA9;
+  }
+  span {
+    margin-left: 5px;
   }
 `

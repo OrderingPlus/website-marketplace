@@ -1,6 +1,12 @@
 import styled, { css } from 'styled-components'
 
-export const Container = styled.div``
+export const Container = styled.div`
+  border-radius: 10px;
+  border: 2px solid #E9ECEF;
+  padding: 10px;
+  margin: 20px;
+  display: flex;
+`
 
 export const Header = styled.div`
   display: flex;
@@ -31,11 +37,9 @@ export const Header = styled.div`
 
 export const SideForm = styled.div`
   width: 100%;
-  margin-top: 25px;
-  @media (min-width: 768px) {
-    display: flex;
-    align-items: center;
-  }
+  flex-direction: column;
+  display: flex;
+  align-items: center;
 `
 
 export const UserData = styled.div`
@@ -47,11 +51,9 @@ export const UserData = styled.div`
     text-align: right;
   `}
   position: relative;
-  > * {
-    margin: 5px 0;
-  }
 
   p {
+    margin: 0;
     font-size: 14px;
     color: ${props => props.theme?.colors.darkTextColor};
   }
@@ -59,18 +61,18 @@ export const UserData = styled.div`
 
 export const UserName = styled.p`
   font-weight: 600;
+  font-size: 20px;
 `
 
 export const ModalIcon = styled.span`
   font-size: 30px;
   cursor: pointer;
   z-index: 2;
-
+  align-self: flex-end;
   svg{
     /* background: rgba(255,255,255,0.5); */
     border-radius: 50%;
   }
-
 `
 
 export const TitleContainer = styled.div`
@@ -105,9 +107,7 @@ export const PhoneContainer = styled.div`
   display: flex;
   align-items: center;
   height: 30px;
-  p {
-    margin: 1rem 0;
-  }
+  margin-bottom: 10px;
 `
 
 export const SkeletonsContainer = styled.div`
@@ -121,8 +121,10 @@ export const ChangeCustomerText = styled.div`
     color: ${props => props.theme.colors.primary};
     cursor: pointer;
     user-select: none;
-    &:hover {
-        text-decoration: underline;
-      }
+    text-decoration: underline;
   }
+`
+
+export const UserIcon = styled.div`
+  margin-right: 10px;
 `

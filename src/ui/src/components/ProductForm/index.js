@@ -5,7 +5,6 @@ import { useTheme } from 'styled-components'
 import FiMinusCircle from '@meronex/icons/fi/FiMinusCircle'
 import FiPlusCircle from '@meronex/icons/fi/FiPlusCircle'
 import MdcPlayCircleOutline from '@meronex/icons/mdc/MdcPlayCircleOutline'
-import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Thumbs } from 'swiper/modules'
 import 'swiper/css'
@@ -22,26 +21,22 @@ import {
   ProductComment,
   SkeletonBlock,
   WrapperSubOption,
-  SkuContent,
   ProductFormTitle,
   WrapperIngredients,
-  ProductTabContainer,
   Divider,
   ProductShareWrapper,
   ProductName,
   Properties,
-  ProductMeta,
-  EstimatedPersons,
+
   ProductDescription,
-  PriceContent,
   WeightUnitSwitch,
   WeightUnitItem,
-  ProductTagsListContainer,
-  ProductTagWrapper,
+
   VideoGalleryWrapper,
   TitleWrapper,
   GuestUserLink,
-  LoadingWrapper
+  LoadingWrapper,
+  IngredientsContainer
 } from './styles'
 
 import {
@@ -61,10 +56,8 @@ import {
   Modal,
   Alert,
   Button,
-  Tabs, Tab,
   Input, TextArea,
   LinkableText,
-  AutoScroll,
   ProductIngredient,
   ProductOption,
   ProductOptionSubOption,
@@ -95,10 +88,8 @@ const ProductOptionsUI = (props) => {
     handleChangeCommentState,
     productAddedToCartLength,
     pizzaState,
-    handleFavoriteProduct,
     handleCreateGuestUser,
-    actionStatus,
-    isCustomerMode
+    actionStatus
   } = props
 
   const { product, loading, error } = productObject
@@ -108,13 +99,12 @@ const ProductOptionsUI = (props) => {
   const [, t] = useLanguage()
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [orderState] = useOrder()
-  const [{ optimizeImage, parsePrice }] = useUtils()
+  const [{ parsePrice }] = useUtils()
   const theme = useTheme()
   const [{ site }] = useSite()
   const productUrlTemplate = site?.product_url_template
   const [urlToShare, setUrlToShare] = useState(null)
   const [modalPageToShow, setModalPageToShow] = useState('login')
-  const [tabValue, setTabValue] = useState('all')
   const productContainerRef = useRef(null)
   const [gallery, setGallery] = useState([])
   const [videoGallery, setVideoGallery] = useState(null)
@@ -125,7 +115,7 @@ const ProductOptionsUI = (props) => {
     weight_unit: false,
     pieces: true
   })
-  const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
+  const [/* pricePerWeightUnit */, setPricePerWeightUnit] = useState(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
   const galleryLength = gallery?.length + videoGallery?.length
@@ -136,7 +126,6 @@ const ProductOptionsUI = (props) => {
   const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
   const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
   const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
-  const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.hidden
 
   const closeModal = () => {
     setModalIsOpen(false)
@@ -146,15 +135,6 @@ const ProductOptionsUI = (props) => {
   const handleSuccessLogin = (user) => {
     if (user) {
       closeModal()
-    }
-  }
-
-  const handleChangeFavorite = () => {
-    if (auth) {
-      handleFavoriteProduct && handleFavoriteProduct(product, !product?.favorite)
-    } else {
-      setModalPageToShow('login')
-      setModalIsOpen(true)
     }
   }
 
@@ -199,19 +179,6 @@ const ProductOptionsUI = (props) => {
       classnames += ' soldout'
     }
     return classnames
-  }
-
-  const handleChangeTabValue = (value) => {
-    if (document.getElementById(`${value}`)) {
-      const extraHeight = 55
-      const top = document.getElementById(`${value}`).offsetTop - extraHeight
-      const scrollElement = document.querySelector('.popup-dialog')
-
-      scrollElement.scrollTo({
-        top,
-        behavior: 'smooth'
-      })
-    }
   }
 
   const handleSwitchQtyUnit = (val) => {
@@ -277,50 +244,6 @@ const ProductOptionsUI = (props) => {
       scrollDown()
     }
   }, [errors])
-
-  useEffect(() => {
-    const scrollElement = document.querySelector('.popup-dialog')
-    const handleScroll = () => {
-      const extraHeight = 60
-      if (product?.ingredients.length > 0 || product?.extras.length > 0) {
-        const menuList = []
-        if (product?.ingredients?.length > 0) {
-          menuList.push('ingredients')
-        }
-        ((product?.extras.length > 0 && product?.extras) || []).sort((a, b) => a.rank - b.rank).forEach(extra => {
-          ((extra?.options.length > 0 && extra?.options) || []).sort((a, b) => a.rank - b.rank).forEach(option => {
-            showOption(option) && menuList.push(`id_${option?.id}`)
-          })
-        })
-        menuList.length && menuList.forEach(menu => {
-          const elementTop = scrollElement.scrollTop
-          if (document.getElementById(menu)) {
-            const topPos = document.getElementById(menu).offsetTop
-            if (Math.abs(elementTop - topPos) < extraHeight) {
-              setTabValue(menu)
-              const elementLeft = document.getElementById(`menu_${menu}`).offsetLeft
-              const scrollLeft = document.getElementById('all').scrollLeft
-              if (elementLeft < scrollLeft) {
-                document.getElementById('all').scrollTo({
-                  left: elementLeft,
-                  behavior: 'smooth'
-                })
-              }
-              if (elementLeft < scrollLeft + scrollElement.clientWidth) {
-                document.getElementById('all').scrollTo({
-                  left: elementLeft - scrollElement.clientWidth / 2,
-                  behavior: 'smooth'
-                })
-              }
-            }
-          }
-        })
-      }
-    }
-    scrollElement && scrollElement.addEventListener('scroll', handleScroll)
-
-    return () => scrollElement && scrollElement.removeEventListener('scroll', handleScroll)
-  }, [showOption])
 
   useEffect(() => {
     const imageList = []
@@ -512,47 +435,8 @@ const ProductOptionsUI = (props) => {
                 <ProductName>
                   <span>{product?.name}</span>
                 </ProductName>
-                {!isCustomerMode && !hideFavoriteIcon && (
-                  <span className='favorite' onClick={() => handleChangeFavorite()}>
-                    {product?.favorite ? <Like /> : <DisLike />}
-                  </span>
-                )}
               </TitleWrapper>
               <Properties>
-                {isHaveWeight
-                  ? (
-                  <PriceContent>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</PriceContent>
-                    )
-                  : (
-                  <PriceContent>
-                    <p>{product?.price ? parsePrice(product?.price) : ''}</p>
-                    {product?.in_offer && (<span className='offer-price'>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</span>)}
-                  </PriceContent>
-                    )}
-                <ProductMeta>
-                  {product?.calories && (
-                    <>
-                      <span className='calories'>{product?.calories}{' '}cal</span>
-                      <span>&nbsp;&#183;&nbsp;</span>
-                    </>
-                  )}
-                  {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && (
-                    <SkuContent>
-                      <span>{t('SKU', theme?.defaultLanguages?.SKU || 'Sku')}&nbsp;</span>
-                      <span>{product?.sku}</span>
-                    </SkuContent>
-                  )}
-                  {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
-                    <span>&nbsp;&#183;&nbsp;</span>
-                  )}
-                  {product?.estimated_person && (
-                    <EstimatedPersons>
-                      <span>{product?.estimated_person}&nbsp;</span>
-                      <span>{t('ESTIMATED_PERSONS', 'persons')}</span>
-                    </EstimatedPersons>
-                  )}
-                </ProductMeta>
-              </Properties>
               {product?.description && !hideProductDescription && (
                 <ProductDescription>
                   <LinkableText
@@ -560,61 +444,12 @@ const ProductOptionsUI = (props) => {
                   />
                 </ProductDescription>
               )}
+              </Properties>
             </ProductFormTitle>
-            {product?.tags?.length > 0 && (
-              <ProductTagsListContainer>
-                {product.tags.map(tag => (
-                  <ProductTagWrapper key={tag.id}>
-                    <img src={optimizeImage(tag?.image || theme.images?.dummies?.product, 'h_40,c_limit')} alt='' />
-                    <span>{tag.name}</span>
-                  </ProductTagWrapper>
-                ))}
-              </ProductTagsListContainer>
-            )}
             <Divider />
             <ProductEdition>
-              {
-                (product?.ingredients?.length > 0 || product?.extras?.length > 0) && (
-                  <ProductTabContainer id='all'>
-                    <Tabs>
-                      <AutoScroll scrollId='optionList'>
-                        {
-                          product?.ingredients?.length > 0 && (
-                            <Tab
-                              key='ingredients'
-                              id='menu_ingredients'
-                              active={tabValue === 'ingredients'}
-                              onClick={() => handleChangeTabValue('ingredients')}
-                              borderBottom
-                            >
-                              {t('INGREDIENTS', 'ingredients')}
-                            </Tab>
-                          )
-                        }
-                        {
-                          product?.extras.sort((a, b) => a.rank - b.rank).map(extra => extra.options?.sort((a, b) => a.rank - b.rank).map(option => {
-                            return (
-                              showOption(option) && (
-                                <Tab
-                                  key={option?.id}
-                                  id={`menu_id_${option?.id}`}
-                                  active={tabValue === `id_${option?.id}`}
-                                  onClick={() => handleChangeTabValue(`id_${option?.id}`)}
-                                  borderBottom
-                                >
-                                  {option?.name}
-                                </Tab>
-                              )
-                            )
-                          }))
-                        }
-                      </AutoScroll>
-                    </Tabs>
-                  </ProductTabContainer>
-                )
-              }
               {product?.ingredients?.length > 0 && (
-                <div id='ingredients'>
+                <IngredientsContainer id='ingredients'>
                   {product?.ingredients?.length > 0 && (<SectionTitle>{t('INGREDIENTS', theme?.defaultLanguages.INGREDIENTS || 'Ingredients')}</SectionTitle>)}
                   <WrapperIngredients isProductSoldout={isSoldOut || maxProductQuantity <= 0}>
                     {product?.ingredients.map(ingredient => (
@@ -627,7 +462,7 @@ const ProductOptionsUI = (props) => {
                       />
                     ))}
                   </WrapperIngredients>
-                </div>
+                </IngredientsContainer>
               )}
               <div>
                 {
@@ -671,16 +506,18 @@ const ProductOptionsUI = (props) => {
                 }
               </div>
               {!product?.hide_special_instructions && (
-                <ProductComment>
+                <>
                   <SectionTitle>{t('COMMENTS', theme?.defaultLanguages?.SPECIAL_COMMENT || 'COMMENTS')}</SectionTitle>
+                <ProductComment>
                   <TextArea
                     rows={4}
                     placeholder={t('SPECIAL_COMMENT', theme?.defaultLanguages?.SPECIAL_COMMENT || 'Special comment')}
                     defaultValue={productCart.comment}
                     onChange={handleChangeCommentState}
                     disabled={!(productCart && !isSoldOut && maxProductQuantity)}
-                  />
+                    />
                 </ProductComment>
+                    </>
               )}
             </ProductEdition>
             <ProductActions isColumn={(auth && !(orderState.options?.address_id || unaddressedTypes.includes(orderState?.options?.type)))}>
@@ -692,7 +529,6 @@ const ProductOptionsUI = (props) => {
                   )
                 : (
                 <>
-                  <div className='price-amount-block'>
                     <div className='price'>
                       <h4>{productCart.total && parsePrice(productCart.total)}</h4>
                       {product?.minimum_per_order && (productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order && productCart?.quantity !== 1 && <span>{t('MINIMUM_TO_ORDER', 'Minimum _number_ to order').replace('_number_', product?.minimum_per_order)}</span>}
@@ -735,7 +571,6 @@ const ProductOptionsUI = (props) => {
                         </div>
                       )
                     }
-                  </div>
 
                   {productCart && !isSoldOut && maxProductQuantity > 0 && auth && (orderState.options?.address_id || unaddressedTypes.includes(orderState?.options?.type)) && (
                     <Button

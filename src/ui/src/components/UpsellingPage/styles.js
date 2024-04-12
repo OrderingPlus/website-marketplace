@@ -1,30 +1,17 @@
 import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  button {
-    width: 46%;
-    margin-top: 20px;
-  }
-
-  @media (min-width: 768px){
-    justify-content: flex-start;
-    height: auto;
-    button {
-      width: 46%;
-      margin-top: 20px;
-    }
-  }
+  overflow-x: auto;
+  margin: 10px;
 `
 export const UpsellingContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  overflow: auto;
+
+  > div {
+    width: 150px;
+    max-width: 150px;
+    min-width: 150px;
+  }
 `
 
 export const Item = styled.div`
@@ -108,10 +95,14 @@ export const Details = styled.div`
 export const CloseUpselling = styled.div`
   width: 100%;
   text-align: center;
-
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  button:first-child{
+    margin-bottom: 10px;
+  }
   button{
-    width: 90%;
-    font-size: 1.4em;
     padding: 10px 0;
   }
 
@@ -261,13 +252,102 @@ export const UpsellingPageTitleWrapper = styled.div`
 `
 
 export const Divider = styled.div`
-  background: #F8F9FA;
-  height: 8px;
-  width: calc(100% + 20px);
-  margin-left: -10px;
+  background: #E9ECEF;
+  height: 1px;
 
-  @media (min-width: 768px) {
-    width: calc(100% + 60px);
-    margin-left: -30px;
+`
+
+export const EmptyBtnWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  span {
+    font-weight: 600;
+    font-size: 16px;
+    color: ${props => props.theme.colors.darkTextColor};
   }
+
+  button {
+    color: #748194;
+    background: #F8F9FA;
+    border: 1px solid #F8F9FA;
+    border-radius: 7.6px;
+    height: 44px;
+    font-size: 14px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+`
+
+export const EmptyCart = styled.div`
+  margin-top: 25px;
+  margin-bottom: 10px;
+  .empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    svg {
+      font-size: 45px;
+      color: #B1BCCC;
+      margin-top: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #B1BCCC;
+      margin: 23px 0 0 0;
+    }
+  }
+`
+
+export const SubtitleContainer = styled.div`
+  background: #E9ECEF;
+  padding: 15px 10px;
+  p {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+  }
+`
+
+export const OrderBillContainer = styled.div`
+  margin: 10px 20px;
+`
+
+export const OrderDetailsTitle = styled.div`
+  padding: 15px 20px;
+  background: ${({ theme }) => theme?.colors?.primary};
+  p {
+    margin: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+  }
+`
+
+export const CheckProductsContainer = styled.div`
+  display: flex;
+  margin: 10px 20px;
+  align-items: center;
+  p {
+    color: #909BA9;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  button {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0;
+    min-width: 50%;
+    height: 50px;
+  }
+`
+
+export const UpsellingTitle = styled.h1`
+  margin: 30px 20px 10px 20px;
+  font-size: 36px;
+  font-weight: 600;
 `

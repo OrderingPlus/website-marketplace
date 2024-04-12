@@ -1,38 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import { useTheme } from 'styled-components'
+import React from 'react'
 import Skeleton from 'react-loading-skeleton'
 
-import { CategoriesContainer } from './styles'
+import { CategoriesContainer, CategoriesListing, CategoryContainer, CategoryInfomation } from './styles'
 
-import { BusinessProductsCategories as ProductsCategories } from '~components'
-import {
-  Tabs, Tab,
-  useWindowSize,
-  AutoScroll
-} from '~ui'
+import { BusinessProductsCategories as ProductsCategories, useUtils } from '~components'
 
 const BusinessProductsCategoriesUI = (props) => {
   const {
     isSkeleton,
     categories,
-    featured,
-    openBusinessInformation,
     business,
     handlerClickCategory,
-    categorySelected,
-    useKioskApp,
-    isProfessional
+    onClickCategory,
+    setSelectedCategoryId
   } = props
 
-  const theme = useTheme()
-  const windowSize = useWindowSize()
-  const [selectedCategory, setSelectedCateogry] = useState({ id: null })
+  const [{ optimizeImage }] = useUtils()
   const scrollTopSpan = 60
 
   const handleChangeCategory = (category) => {
+    setSelectedCategoryId(category?.id)
     const isBlockScroll = window.location.search.includes('category') &&
       window.location.search.includes('product')
 
+    onClickCategory(category)
     if (business?.lazy_load_products_recommended) {
       handlerClickCategory({ ...category })
       return
@@ -49,149 +40,41 @@ const BusinessProductsCategoriesUI = (props) => {
     }
   }
 
-  const ProductCategories = () => {
-    return (
-      categories && categories.length && categories.map((category, i) => (
-        <Tab
-          key={i}
-          id={`category-menu${category?.id || '-all'}`}
-          className={`category ${category.id === 'featured' ? 'special' : ''}`}
-          active={business?.lazy_load_products_recommended ? (categorySelected?.id === category.id) : (selectedCategory?.id === category.id)}
-          onClick={() => handleChangeCategory(category)}
-          borderBottom
-        >
-          {category.name}
-        </Tab>
-      ))
-    )
-  }
-
-  const handleScroll = () => {
-    if (business?.lazy_load_products_recommended) return
-    const featuredElement = document.getElementById('categoryfeatured')
-    const _categories = featuredElement ? [...categories] : categories.filter(category => category.id !== 'featured')
-
-    const windowTop = window.scrollY
-    const categoryListsElement = document.getElementById('category-lists')
-    const categoryAreaWidth = categoryListsElement?.clientWidth || 0
-    const categoryScrollChange = categoryListsElement?.scrollLeft
-
-    const _diff = -50
-    const _moveDiff = 30
-    const _paddDiff = scrollTopSpan + 10
-
-    _categories?.length && _categories.some(category => {
-      const topPos = category?.id
-        ? document.getElementById(`category${category.id}`)?.offsetTop
-        : document.getElementById('businessProductList')?.offsetTop
-      const HeightOfEle = category?.id ? document.getElementById(`category${category.id}`)?.clientHeight : 0
-      if ((windowTop > topPos - _paddDiff && windowTop < topPos + HeightOfEle - _paddDiff) &&
-        category?.id) {
-        const choosedCategory = document.getElementById(`category-menu${category?.id || '-all'}`)
-        const choosedCategoryLeft = choosedCategory?.offsetLeft || 0
-
-        if (choosedCategoryLeft - categoryAreaWidth - categoryScrollChange > _diff || categoryScrollChange - choosedCategoryLeft > 0) {
-          const moveAmount = (choosedCategoryLeft < 100) ? 0 : choosedCategoryLeft - _moveDiff
-          categoryListsElement.scrollTo({
-            top: 0,
-            left: moveAmount,
-            behavior: 'auto'
-          })
-        }
-        setSelectedCateogry(category)
-        return true
-      }
-    })
-
-    const navbar = document.getElementById('category-lists')
-    const search = document.getElementById('WrapperSearchAbsolute')
-    const wrapperCategories = document.getElementById('wrapper-categories')
-    let limit
-    if (windowSize.width >= 993) {
-      limit = window.pageYOffset >= wrapperCategories?.offsetTop && window.pageYOffset > 0
-    } else {
-      limit = window.pageYOffset >= (wrapperCategories?.offsetTop - 56) && window.pageYOffset > 0
-    }
-
-    if (limit) {
-      const classAdded = navbar.classList.contains('sticky-prod-cat')
-      if (!classAdded) {
-        navbar && navbar.classList.add('sticky-prod-cat')
-        search && search.classList.add('sticky-search')
-      }
-    } else {
-      navbar && navbar.classList.remove('sticky-prod-cat')
-      search && search.classList.remove('sticky-search')
-    }
-  }
-
-  useEffect(() => {
-    const styleSheet = document.getElementById('styles')?.sheet
-
-    if (Object.values(styleSheet.cssRules)?.length) {
-      styleSheet?.deleteRule(0)
-    }
-    const disabledCustomWidth = !useKioskApp
-
-    let style0 = '.sticky-prod-cat {'
-    style0 += 'position: fixed !important;'
-    style0 += `top: ${useKioskApp ? '0px' : '56px'} !important;`
-    style0 += 'left: 0px !important;'
-    style0 += 'z-index: 9999 !important;'
-    style0 += 'padding: 5px 5px 0px 20px !important;'
-    style0 += 'width: 100% !important;'
-    !disabledCustomWidth && (style0 += `width: calc(100% - ${useKioskApp ? '50px' : '0px'}) !important;`)
-    style0 += '}'
-
-    let style1 = '.sticky-search {'
-    style1 += 'position: fixed !important;'
-    style1 += 'top: 0px !important;'
-    style1 += 'right: 0% !important;'
-    style1 += 'z-index: 9999 !important;'
-    style1 += 'width: 50px !important;'
-    style1 += `background-color: ${theme.colors.backgroundPage} !important;`
-    style1 += '}'
-
-    styleSheet.insertRule(style0, 0)
-    styleSheet.insertRule(style1, 1)
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [useKioskApp, windowSize.width])
-
-  useEffect(() => {
-    if (business?.professionals?.length > 0 && !useKioskApp) {
-      const element = document.getElementById('category-lists')
-      element.setAttribute('style', 'width: 100% !important')
-    }
-  }, [business?.professionals, useKioskApp])
-
   return (
-    <CategoriesContainer id='category-lists' className='category-lists' featured={featured} w={props.wContainerStyle} isProfessional={isProfessional}>
+    <CategoriesContainer>
       {!isSkeleton
         ? (
-        <Tabs variant='primary'>
-          {openBusinessInformation
-            ? (
-            <>
-              <ProductCategories />
-            </>
-              )
-            : (
-            <AutoScroll>
-              <ProductCategories />
-            </AutoScroll>
-              )}
-        </Tabs>
+          <CategoriesListing>
+            {categories && categories.length && categories.map((category, i) => (
+              <CategoryContainer key={i} onClick={() => handleChangeCategory(category)}>
+                <img
+                  src={optimizeImage(category.image, 'h_1024,c_limit')}
+                />
+                <CategoryInfomation>
+                  <h3>{category?.name}</h3>
+                  {category?.description && (
+                    <p>{category?.description}</p>
+                  )}
+                </CategoryInfomation>
+              </CategoryContainer>
+            ))}
+          </CategoriesListing>
           )
         : (
-        <Tabs variant='primary'>
-          {[...Array(4).keys()].map(i => (
-            <Tab key={i}>
-              <Skeleton width={100} />
-            </Tab>
-          ))}
-        </Tabs>
+          <div>
+            <Skeleton height={50} />
+            <CategoriesListing>
+              {[...Array(5)].map((_, i) => (
+                <CategoryContainer key={i} >
+                  <Skeleton className='category-img' />
+                  <CategoryInfomation>
+                    <Skeleton className='category-title' />
+                    <Skeleton className='category-description' />
+                  </CategoryInfomation>
+                </CategoryContainer>
+              ))}
+            </CategoriesListing>
+          </div>
           )}
     </CategoriesContainer>
   )

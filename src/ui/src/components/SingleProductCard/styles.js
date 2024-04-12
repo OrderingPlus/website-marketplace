@@ -2,12 +2,11 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 
 export const CardContainer = styled.div`
-  ${({ isShowAddButt }) => css`
-    min-height: ${isShowAddButt ? '162px' : '110px'};
-  `}
+  width: calc(50% - 20px);
+  max-width: calc(50% - 20px);
+  height: 25vh;
   background: ${({ soldOut, theme }) => soldOut ? '#6c757d33' : theme?.colors?.backgroundPage};
   border: 1px solid #E9ECEF;
-  padding: 10px;
   margin: 10px;
   border-radius: 7.6px;
   box-sizing: border-box;
@@ -16,20 +15,13 @@ export const CardContainer = styled.div`
   flex-direction: column;
   cursor: pointer;
   position: relative;
-
   > div {
     display: flex;
     justify-content: space-between;
-    ${({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'
-    ? css`
-      flex-direction: row-reverse;
-    `
-    : css`
-      flex-direction: row;
-    `
-  }
+    flex-direction: row;
     align-items: center;
     width: 100%;
+    height: 100%;
   }
 
   button {
@@ -37,45 +29,7 @@ export const CardContainer = styled.div`
     margin-top: 10px;
     padding: 4px;
   }
-  ${({ productsRows }) => productsRows
-? css`
-    width: ${() => productsRows === 3 ? 'calc(33% - 20px)' : 'calc(50% - 20px)'};
-    margin: 10px 0;
 
-  `
-: css`
-    width: 100%;
-    margin: 10px;
-    @media (min-width: 576px) {
-      margin: 10px;
-      width: calc(100% - 20px);
-    }
-
-  ${({ isCartOnProductsList }) => isCartOnProductsList
-? css`
-    @media (min-width: 993px) {
-      width: calc(50% - 20px);
-      margin: 10px 20px 10px 0px;
-      ${props => props.theme?.rtl && css`
-        margin: 10px 0px 10px 20px;
-      `}
-    }
-  `
-: css`
-    @media (min-width: 681px) {
-      width: calc(49% - 20px);
-    }
-
-    @media (min-width: 1440px) {
-      width: calc(33% - 20px);
-      margin: 10px 20px 10px 0px;
-      ${props => props.theme?.rtl && css`
-        margin: 10px 0px 10px 20px;
-      `}
-    }
-  `}
-
-  `}
 `
 
 export const SoldOut = styled.span`
@@ -106,12 +60,11 @@ export const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 86px;
-  ${({ isBgimage }) => css`
-    width: ${isBgimage ? 'calc(100% - 90px)' : '100%'};
-  `}
-  > * {
-    margin: 3px;
-  }
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
   p {
     color: #909BA9;
     text-align: left;
@@ -207,7 +160,10 @@ const CardLogoStyled = styled.div`
   background-position: center;
   object-fit: cover;
   min-height: 86px;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  width: 100%;
+  flex: 1;
 `
 export const CardLogo = (props) => {
   const style = {}
@@ -264,6 +220,7 @@ export const QuantityContainer = styled.div`
   text-align: center;
   border-radius: 50%;
   transform: translate(-20px, 50%);
+  z-index: 100;
 
   @media (min-width: 768px) {
     transform: translate(-50%, 50%);
@@ -318,16 +275,16 @@ export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  width: 100%;
   h1 {
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-    color: ${props => props.theme.colors.headingColor};
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     margin: 0px;
+    padding: 10px;
   }
 
   > span {
@@ -335,6 +292,7 @@ export const TitleWrapper = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    margin-right: 10px;
     svg {
       color: ${props => props.theme.colors.danger500};
       font-size: 16px;

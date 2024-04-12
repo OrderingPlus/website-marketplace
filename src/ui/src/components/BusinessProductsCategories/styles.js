@@ -1,49 +1,71 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const CategoriesContainer = styled.div`
-  display: flex;
-  overflow-x: auto;
-  padding: 5px 0px 0px 0px;
-  background: ${props => props.theme.colors.backgroundPage};
-  z-index: 1000;
-  position: absolute;
-  top: 0;
-  border-bottom: 1px solid #D9D9D9;
-  text-align: center;
-  width: ${props => props.w || '100%'};
   box-sizing: border-box;
-  div.category {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  width: 100%;
+  * {
+    box-sizing: border-box;
+  }
+`
+
+export const CategoriesListing = styled.div`
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+`
+
+export const CategoryContainer = styled.div`
+  border-radius: 10px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.10);
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  width: 100%;
+  .category-img, img {
+    width: 105px;
+    min-width: 105px;
+    height: 68px;
+    min-width: 105px;
+    border-radius: 10px;
+    margin-right: 15px;
+  }
+`
+
+export const CategoryInfomation = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+
+  h3, p {
+    text-align: left;
     overflow: hidden;
-    padding: 10px 0px;
-    margin: 0 15px;
-    &:nth-of-type(1) {
-      margin-left: 0;
-      ${props => props.theme.rtl && css`
-        margin-left: 15px;
-        margin-right: 15px;
-      `}
-    }
+    text-overflow: ellipsis;
+    width: 100%;
   }
-
-  div.special {
-    ${props => !props.featured && css`
-      display: none
-    `}
+  h3 {
+    color: ${({ theme }) => theme?.colors?.primary};
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
   }
-
-  /* @media (min-width: 381px) {
-    padding: 15px 0px 0px 0px;
-  } */
-  @media (min-width: 769px) {
-    ${({ isProfessional }) => isProfessional && css`
-      width: 100%;
-    `}
+  p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
   }
-  @media (min-width: 992px) {
-    ${(props) => props.w && css`
-      width: ${props.w};
-    `}
+  .category-title {
+    width: 45vw;
+  }
+  .category-description {
+    width: 25vw;
   }
 `

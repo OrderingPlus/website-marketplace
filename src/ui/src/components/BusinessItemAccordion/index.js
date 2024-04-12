@@ -42,7 +42,8 @@ export const BusinessItemAccordion = (props) => {
     setPreorderBusiness,
     handleChangeStore,
     isMultiCheckout,
-    isGiftCart
+    isGiftCart,
+    hideBusinessDetails
   } = props
 
   const [orderState] = useOrder()
@@ -133,7 +134,7 @@ export const BusinessItemAccordion = (props) => {
   return (
     <AccordionSection isClosed={isClosed} isCartOnProductsList={isCartOnProductsList}>
       {
-        !isCheckout && (
+        !isCheckout && !hideBusinessDetails && (
           <Accordion
             isClosed={isClosed}
             className={`accordion ${setActive}`}

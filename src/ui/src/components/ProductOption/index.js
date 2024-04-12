@@ -13,7 +13,7 @@ import { ProductOption as ProductOptionController, useLanguage } from '~componen
 import { Alert } from '~ui'
 
 const ProductOptionUI = (props) => {
-  const { children, option } = props
+  const { children, option, error } = props
 
   const [, t] = useLanguage()
   const [incrementPriceAlert, setIncrementPriceAlert] = useState(false)
@@ -29,7 +29,7 @@ const ProductOptionUI = (props) => {
 
   return (
     <>
-      <Container id={`id_${option?.id}`}>
+      <Container id={`id_${option?.id}`} $error={error}>
         <WrapHeader>
           <TitleContainer>
             {option.image && option.image !== '-' && (

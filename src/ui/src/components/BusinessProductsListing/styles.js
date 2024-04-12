@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components'
 
 export const ProductsContainer = styled.div`
-  width: 95%;
-  margin: 20px auto 0px;
+  width: 100%;
   > svg {
     color: ${props => props.theme.colors.headingColor};
     font-size: 24px;
@@ -55,7 +54,10 @@ export const MobileCartViewWrapper = styled.div`
 
   button {
     height: 44px;
+    width: 100%;
     border-radius: 7.6px;
+    font-weight: 600;
+    font-size: 14px;
   }
 `
 
@@ -144,6 +146,14 @@ export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  h1{
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0px;
+    padding: 0 30px;
+  }
+
   .back-arrow {
     font-size: 24px;
     cursor: pointer;
@@ -173,7 +183,7 @@ export const HeaderContent = styled.div`
     }
   }
   .fixed-arrow-width{
-    width: 100vw;      
+    width: 100vw;
   }
 `
 export const OrderContextUIWrapper = styled.div`

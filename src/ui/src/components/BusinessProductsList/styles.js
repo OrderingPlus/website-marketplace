@@ -14,9 +14,9 @@ export const ErrorMessage = styled.div`
 `
 
 export const ProductsListing = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: ${({ isSubcategorySearch }) => isSubcategorySearch ? '0px' : '45px'};
 `
 
 export const WrapAllCategories = styled.div`
@@ -52,7 +52,7 @@ export const WrapAllCategories = styled.div`
 
   h3 {
     font-weight: 600;
-    font-size: 24px;
+    font-size: 40px;
     color: ${props => props.theme?.colors.darkTextColor};
     margin: 0px 0px 0px 10px;
     ${props => props.theme?.rtl && css`
@@ -96,7 +96,11 @@ export const WrapperNotFound = styled.div`
   }
 `
 
-export const HeaderWrapper = styled.div``
+export const HeaderWrapper = styled.div`
+  h2 {
+    margin-left: 10px;
+  }
+`
 
 export const DescriptionModalContainer = styled.div`
   display: flex;

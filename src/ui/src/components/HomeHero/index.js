@@ -1,67 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'styled-components'
-import HiOutlineLocationMarker from '@meronex/icons/hi/HiOutlineLocationMarker'
+import { nanoid } from 'nanoid'
 import {
   HeroContainer,
   ContentWrapper,
-  Title,
-  Slogan,
-  WrapInput,
   LogoWrapper,
   UseAccount,
-  HeroContent,
-  SectionHeader,
-  PoweredByOrdering
+  HeroContent
 } from './styles'
-import { useSession, useOrder, useLanguage, useConfig } from '~components'
+import { useSession, useOrder, useLanguage, useEvent, useApi } from '~components'
 
 import {
   Modal,
   Button,
-  AddressForm,
   LoginForm,
   SignUpForm,
   ForgotPasswordForm,
-  AddressList,
   useWindowSize
 } from '~ui'
 
 export const HomeHero = (props) => {
-  const { onFindBusiness, notificationState } = props
+  const { notificationState } = props
 
-  const [{ auth }, { login }] = useSession()
-  const [orderState] = useOrder()
+  const [{ auth, user }, { login }] = useSession()
+  const [orderState, { changeType }] = useOrder()
   const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
+  const [events] = useEvent()
+  const [ordering] = useApi()
   const [modals, setModals] = useState({ listOpen: false, formOpen: false })
   const theme = useTheme()
-  const userCustomer = parseInt(window.localStorage.getItem('user-customer'))
   const windowSize = useWindowSize()
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [modalPageToShow, setModalPageToShow] = useState(null)
   const [newAddressModalOpened, setNewAddressModalOpened] = useState(false)
 
-  const isShowLoginAccount = !theme?.mobile_view_web?.components?.home?.components?.login_account?.hidden
   const bgImg = theme?.my_products?.components?.images?.components?.homepage_background?.components?.image
   const mobileBgImg = theme?.my_products?.components?.images?.components?.homepage_mobile_background?.components?.image
   const isFullScreen = theme?.my_products?.components?.images?.components?.homepage_image_fullscreen
-  const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
-  const handleFindBusinesses = () => {
-    if (!orderState?.options?.address?.location) {
-      setModals({ ...modals, formOpen: true })
-      return
-    }
-    setModals({ listOpen: false, formOpen: false })
-    onFindBusiness && onFindBusiness()
-  }
-
-  const handleAddressInput = () => {
-    if (auth) {
-      setModals({ ...modals, listOpen: true })
-    } else {
-      setModals({ ...modals, formOpen: true })
-    }
-  }
 
   const handleOpenLoginSignUp = (index) => {
     setModalPageToShow(index)
@@ -91,6 +66,39 @@ export const HomeHero = (props) => {
     })
   }
 
+  const handleCreateGuestUser = async (values) => {
+    try {
+      const { content: { error, result } } = await ordering.users().save(values)
+      if (!error) {
+        login({
+          user: result,
+          token: result.session?.access_token
+        })
+      } else {
+        // setState({ ...state, error: result, loading: false })
+      }
+    } catch (err) {
+      // setState({ ...state, error: err.message, loading: false })
+    }
+  }
+
+  const handleUpdateGuest = async () => {
+    const guestToken = nanoid()
+    if (guestToken) await handleCreateGuestUser({ guest_token: guestToken })
+  }
+
+  const handleGoToOrders = () => {
+    events.emit('go_to_page', { page: 'my_orders' })
+  }
+
+  const handleGoToOrderTypes = async (orderType) => {
+    await changeType(orderType)
+    if (!auth && !user?.guestId) {
+      await handleUpdateGuest()
+    }
+    events.emit('go_to_page', { page: 'order_types' })
+  }
+
   useEffect(() => {
     return () => setModals({ listOpen: false, formOpen: false })
   }, [])
@@ -105,7 +113,6 @@ export const HomeHero = (props) => {
 
   return (
     <HeroContainer
-      mb={!auth && isShowLoginAccount && '30vh'}
       bgimage={windowSize.width < 576
         ? (mobileBgImg || theme.images?.general?.homeHeroMobile)
         : (bgImg || theme.images?.general?.homeHero)}
@@ -114,79 +121,21 @@ export const HomeHero = (props) => {
       <ContentWrapper>
         {windowSize.width < 576 && (
           <LogoWrapper>
-            <img alt='Logotype' src={theme?.images?.logos?.logotypeInvert} loading='lazy' />
+            <img alt='Logotype' src={theme?.images?.logos?.logoWhite} loading='lazy' />
           </LogoWrapper>
         )}
         <HeroContent>
-          <Title>{t('TITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'All We need is Food.')}</Title>
-          <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start to order food now')}</Slogan>
-          <WrapInput onClick={handleAddressInput} $withIcon>
-            <HiOutlineLocationMarker />
-            <p>
-              {orderState?.options?.address?.address || t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-            </p>
-          </WrapInput>
-
-          <Button
-            color='primary'
-            name='find-business'
-            onClick={handleFindBusinesses}
-          >
-            {t('FIND_BUSINESSES', theme?.defaultLanguages?.FIND_BUSINESSES || 'Find businesses')}
-          </Button>
+          <UseAccount>
+            <Button color='primary' onClick={() => handleGoToOrderTypes(1)}>{t('DELIVERY', 'DELIVERY')}</Button>
+            <Button color='primary' onClick={() => handleGoToOrderTypes(2)}>{t('PICKUP', 'PICKUP')}</Button>
+            <Button
+              color='primary'
+              onClick={() => auth ? handleGoToOrders() : handleOpenLoginSignUp('login')}>
+              {auth ? t('PREVIOUS_ORDERS', 'PREVIOUS ORDERS') : t('LOGIN', 'login')}
+            </Button>
+          </UseAccount>
         </HeroContent>
       </ContentWrapper>
-
-      {windowSize.width < 576 && !auth && isShowLoginAccount && (
-        <>
-          {enabledPoweredByOrdering && (
-            <PoweredByOrdering>
-              {t('POWERED_BY', 'Powered by')}
-              <a href='https://www.ordering.co'>
-                {t('ORDERING_CO', 'Ordering.co')}
-              </a>
-            </PoweredByOrdering>
-          )}
-          <UseAccount>
-            <SectionHeader>
-              {t('YOUR_ACCOUNT', 'Use your account')}
-            </SectionHeader>
-            <Button color='primary' onClick={() => handleOpenLoginSignUp('login')}>{t('LOGIN', 'login')}</Button>
-            <Button color='primary' onClick={() => handleOpenLoginSignUp('signup')}>{t('SIGNUP', 'signUp')}</Button>
-          </UseAccount>
-        </>
-      )}
-      {modals.formOpen && (
-        <Modal
-          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-          open={modals.formOpen}
-          onClose={() => setModals({ ...modals, formOpen: false })}
-        >
-          <AddressForm
-            useValidationFileds
-            address={orderState?.options?.address || {}}
-            onClose={() => setModals({ ...modals, formOpen: false })}
-            onSaveAddress={() => setModals({ ...modals, formOpen: false })}
-            onCancel={() => setModals({ ...modals, formOpen: false })}
-          />
-        </Modal>
-      )}
-      {modals.listOpen && (
-        <Modal
-          title={t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
-          open={modals.listOpen}
-          width='70%'
-          onClose={() => setModals({ ...modals, listOpen: false })}
-        >
-          <AddressList
-            isModal
-            changeOrderAddressWithDefault
-            userId={isNaN(userCustomer) ? null : userCustomer}
-            onCancel={() => setModals({ ...modals, listOpen: false })}
-            onAccept={() => handleFindBusinesses()}
-          />
-        </Modal>
-      )}
       {authModalOpen && !auth && (
         <Modal
           open={authModalOpen}

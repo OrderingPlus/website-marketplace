@@ -13,8 +13,7 @@ import FaUserCircle from '@meronex/icons/fa/FaUserCircle'
 import BiHelpCircle from '@meronex/icons/bi/BiHelpCircle'
 import SiJsonwebtokens from '@meronex/icons/si/SiJsonwebtokens'
 import BiMessageDetail from '@meronex/icons/bi/BiMessageDetail'
-import BsSearch from '@meronex/icons/bs/BsSearch'
-import { Heart, Tag } from 'react-bootstrap-icons'
+import { Tag } from 'react-bootstrap-icons'
 
 import {
   Container,
@@ -54,13 +53,11 @@ export const SidebarMenu = (props) => {
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
   const isPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
-  const hideBrowse = theme?.bar_menu?.components?.browse?.hidden
   const hideOrders = theme?.bar_menu?.components?.orders?.hidden
   const hideProfile = theme?.bar_menu?.components?.profile?.hidden
   const hideWallet = theme?.bar_menu?.components?.wallet?.hidden
   const hideMessages = theme?.bar_menu?.components?.messages?.hidden
   const hideHelp = theme?.bar_menu?.components?.help?.hidden
-  const hideFavorites = theme?.bar_menu?.components?.favortes?.hidden
   const hideSession = theme?.bar_menu?.components?.sessions?.hidden
   const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 
@@ -160,7 +157,7 @@ export const SidebarMenu = (props) => {
         )}
 
         <MenuLink
-          onClick={() => handleGoToPage({ page: options?.address?.location ? 'search' : 'home' })}
+          onClick={() => handleGoToPage({ page: options?.type === 2 && options?.address?.location ? 'search' : 'home' })}
         >
           <WrappContent>
             <MenuLinkIcon
@@ -170,7 +167,7 @@ export const SidebarMenu = (props) => {
                 window.location.pathname === '/search'
               }
             >
-              {options?.address?.location
+              {options?.type === 2 && options?.address?.location
                 ? (
                 <BiStore />
                   )
@@ -186,7 +183,7 @@ export const SidebarMenu = (props) => {
                   window.location.pathname === '/search'
                 }
               >
-                {options?.address?.location
+                {options?.type === 2 && options?.address?.location
                   ? (
                       t('BUSINESSES', 'Businesses')
                     )
@@ -204,35 +201,7 @@ export const SidebarMenu = (props) => {
         </MenuLink>
         {auth && (
           <>
-            {!hideBrowse && (
-              <MenuLink
-                onClick={() => handleGoToPage({ page: 'business_search' })}
-              >
-                <WrappContent>
-                  <MenuLinkIcon
-                    active={
-                      window.location.pathname === '/business_search'
-                    }
-                  >
-                    <BsSearch />
-                  </MenuLinkIcon>
-                  <MenuLinkText>
-                    <TextInfo
-                      active={
-                        window.location.pathname === '/business_search'
-                      }
-                    >
-                      {t('BROWSE_SEARCH', 'Browse & Search')}
-                    </TextInfo>
-                  </MenuLinkText>
-                  <MenuLinkSeparator>
-                    <div>
-                      <hr />
-                    </div>
-                  </MenuLinkSeparator>
-                </WrappContent>
-              </MenuLink>
-            )}
+
             {
               !isCustomerMode && !hideOrders && (
                 <MenuLink
@@ -428,35 +397,6 @@ export const SidebarMenu = (props) => {
                       }
                     >
                       {t('SESSIONS', 'Sessions')}
-                    </TextInfo>
-                  </MenuLinkText>
-                  <MenuLinkSeparator>
-                    <div>
-                      <hr />
-                    </div>
-                  </MenuLinkSeparator>
-                </WrappContent>
-              </MenuLink>
-            )}
-            {!hideFavorites && (
-              <MenuLink
-                onClick={() => handleGoToPage({ page: 'favorite' })}
-              >
-                <WrappContent>
-                  <MenuLinkIcon
-                    active={
-                      window.location.pathname === '/favorite'
-                    }
-                  >
-                    <Heart />
-                  </MenuLinkIcon>
-                  <MenuLinkText>
-                    <TextInfo
-                      active={
-                        window.location.pathname === '/favorite'
-                      }
-                    >
-                      {t('FAVORITES', 'Favorites')}
                     </TextInfo>
                   </MenuLinkText>
                   <MenuLinkSeparator>

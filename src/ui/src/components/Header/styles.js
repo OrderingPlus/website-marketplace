@@ -5,7 +5,7 @@ export const Header = styled.div`
   flex-direction: column;
   width: 100%;
   background-color: ${props => props.theme?.header?.components?.style?.backgroundColor};
-  border-bottom: 1px solid #E9ECEF;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
 `
 
 export const InnerHeader = styled.div`
@@ -13,7 +13,7 @@ export const InnerHeader = styled.div`
   width: 100%;
   color: #FFF;
   justify-content: space-between;
-  margin: 15px 0;
+  margin: 10px 0;
   align-items: center;
 
   #left-side {
@@ -100,6 +100,13 @@ export const LeftHeader = styled.div`
   align-self: center;
   display: flex;
   align-items: center;
+  h2 {
+    color: ${({ theme }) => theme?.colors?.black};
+    margin: 0;
+    margin-left: 10px;
+    font-size: 15px;
+    font-weight: 600;
+  }
 `
 
 export const RightHeader = styled.div`
@@ -159,6 +166,7 @@ export const Menu = styled.div`
     justify-content: center;
     position: relative;
     height: 44px;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
 
     @media (min-width: 850px) {
       border: 1px solid #DEE2E6;
@@ -242,9 +250,10 @@ export const MenuItem = styled.div`
 
 export const MenuLink = styled.a`
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   padding: 10px;
-  color: #333;
+  font-weight: 600;
+  color: ${({ theme }) => theme?.colors?.black};
   cursor: pointer;
 `
 
@@ -320,10 +329,10 @@ export const AddressMenu = styled.div`
   }
 
   ${({ isCustomerMode }) => isCustomerMode
-? css`
+    ? css`
     flex: 0.8;
   `
-: css`
+    : css`
     width: 50%;
   `}
 

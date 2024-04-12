@@ -29,11 +29,12 @@ import {
   SelectSpotContainer,
   WrapperActionsInput,
   MobileWrapperPlaceOrderButton,
-  OrderContextUIWrapper,
   HeaderContent,
   AuthButtonList,
   Flag,
-  SectionTitleContainer
+  SectionTitleContainer,
+  OrderTypeOptions,
+  AddressDetailsContainer
 } from './styles'
 
 import {
@@ -69,7 +70,8 @@ import {
   Cart,
   CartContent,
   PlaceSpot,
-  OrderContextUI
+  MomentContent,
+  OrderTypeSelector
 } from '~ui'
 
 const mapConfigs = {
@@ -109,7 +111,7 @@ const CheckoutUI = (props) => {
   const theme = useTheme()
   const [{ options, loading }] = useOrder()
   const [, t] = useLanguage()
-  const [{ parsePrice }] = useUtils()
+  const [{ parsePrice, parseDate }] = useUtils()
   const [{ user, loading: userLoading }, { login }] = useSession()
   const [{ configs }] = useConfig()
   const [customerState] = useCustomer()
@@ -126,7 +128,7 @@ const CheckoutUI = (props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [requiredFields, setRequiredFields] = useState([])
   const [isSuccess, setIsSuccess] = useState(false)
-  const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false })
+  const [openModal, setOpenModal] = useState({ login: false, signup: false, isGuest: false, moment: null, delivery: null })
   const [allowedGuest, setAllowedGuest] = useState(false)
   const [cardList, setCardList] = useState([])
   const [paymethodClicked, setPaymethodClicked] = useState(null)
@@ -191,6 +193,7 @@ const CheckoutUI = (props) => {
 
   const creditPointPlan = loyaltyPlansState?.result?.find(loyal => loyal.type === 'credit_point')
   const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find(b => b.business_id === cart?.business_id && b.accumulates)
+  const orderTypeList = [t('DELIVERY', 'Delivery'), t('PICKUP', 'Pickup'), t('EAT_IN', 'Eat in'), t('CURBSIDE', 'Curbside'), t('DRIVE_THRU', 'Drive thru'), '', t('CATERING_DELIVERY', 'Catering Delivery'), t('CATERING_PICKUP', 'Catering pickup')]
 
   const handlePlaceOrder = () => {
     if (placing) return
@@ -374,11 +377,7 @@ const CheckoutUI = (props) => {
         <WrapperLeftContent>
           <HeaderContent>
             <ArrowLeft className='back-arrow' onClick={() => history.goBack()} />
-            {windowSize?.width < 576 && (
-              <OrderContextUIWrapper>
-                <OrderContextUI isCheckOut />
-              </OrderContextUIWrapper>
-            )}
+            <h1>{t('FINISH_ORDER', 'Finish order')}</h1>
           </HeaderContent>
           {!cartState.loading && cart?.status === 2 && (
             <WarningMessage>
@@ -388,129 +387,165 @@ const CheckoutUI = (props) => {
               </h1>
             </WarningMessage>
           )}
-          <h2 className='checkout-title'>{t('CHECKOUT', 'Checkout')}</h2>
-
-          {!useKioskApp
-            ? (
+          {!hideCustomerDetails && (
             <>
-              {cart?.business_id && !hideBusinessMap && (
-                <>
-                  {(businessDetails?.loading || cartState.loading)
-                    ? (
-                    <div style={{ width: '100%', marginBottom: '20px' }}>
+              <UserDetailsContainer>
+                <WrapperUserDetails>
+                  {cartState.loading || (isCustomerMode && !customerState?.user?.id)
+                    ? (<div>
                       <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                      <Skeleton height={150} />
-                    </div>
-                      )
-                    : (
-                    <AddressDetails
-                      location={cart?.business?.location}
-                      businessLogo={businessDetails?.business?.logo || theme.images?.dummies?.businessLogo}
-                      isCartPending={cart?.status === 2}
-                      businessId={cart?.business_id}
-                      apiKey={configs?.google_maps_api_key?.value}
-                      mapConfigs={mapConfigs}
-                      isCustomerMode={isCustomerMode}
-                      cart={cart}
-                      primaryColor={hexTest.test(primaryColor || '') ? `0x${primaryColor}` : 'red'}
-                    />
+                      <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                      <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                      <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                      <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                    </div>)
+                    : ((user?.guest_id && !allowedGuest)
+                        ? (<AuthButtonList>
+                        <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
+                          {t('SIGN_UP', 'Sign up')}
+                        </Button>
+                        <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
+                          {t('LOGIN', 'Login')}
+                        </Button>
+                        <Button color='black' outline onClick={() => setAllowedGuest(true)}>
+                          {t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                        </Button>
+                      </AuthButtonList>)
+                        : (<UserDetails
+                        isUserDetailsEdit={isUserDetailsEdit}
+                        cartStatus={cart?.status}
+                        businessId={cart?.business_id}
+                        useDefualtSessionManager
+                        useSessionUser={!isCustomerMode}
+                        isCustomerMode={isCustomerMode}
+                        userData={isCustomerMode && customerState.user}
+                        userId={isCustomerMode && customerState?.user?.id}
+                        isOrderTypeValidationField
+                        requiredFields={requiredFields}
+                        checkoutFields={checkoutFields}
+                        isSuccess={isSuccess}
+                        isCheckout
+                      />)
                       )}
-                </>
-              )}
-              {!hideCustomerDetails && (
-                <UserDetailsContainer>
-                  <WrapperUserDetails>
-                    {cartState.loading || (isCustomerMode && !customerState?.user?.id)
-                      ? (<div>
-                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        </div>)
-                      : ((user?.guest_id && !allowedGuest)
-                          ? (<AuthButtonList>
-                              <h2>{t('CUSTOMER_DETAILS', 'Customer details')}</h2>
-                              <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
-                                {t('SIGN_UP', 'Sign up')}
-                              </Button>
-                              <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
-                                {t('LOGIN', 'Login')}
-                              </Button>
-                              <Button color='black' outline onClick={() => setAllowedGuest(true)}>
-                                {t('CONTINUE_AS_GUEST', 'Continue as guest')}
-                              </Button>
-                            </AuthButtonList>)
-                          : (<UserDetails
-                              isUserDetailsEdit={isUserDetailsEdit}
-                              cartStatus={cart?.status}
-                              businessId={cart?.business_id}
-                              useDefualtSessionManager
-                              useSessionUser={!isCustomerMode}
-                              isCustomerMode={isCustomerMode}
-                              userData={isCustomerMode && customerState.user}
-                              userId={isCustomerMode && customerState?.user?.id}
-                              isOrderTypeValidationField
-                              requiredFields={requiredFields}
-                              checkoutFields={checkoutFields}
-                              isSuccess={isSuccess}
-                              isCheckout
-                            />)
-                        )}
-                  </WrapperUserDetails>
-                </UserDetailsContainer>
-              )}
-              {cart?.business_id && !hideBusinessDetails && (
-                <BusinessDetailsContainer>
-                  {(businessDetails?.loading || cartState.loading) && !businessDetails?.error && (
-                    <div>
-                      <div>
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                      </div>
-                    </div>
-                  )}
-                  {!cartState.loading && businessDetails?.business && Object.values(businessDetails?.business)?.length > 0 && (
-                    <div>
-                      <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
-                      <div>
-                        {!hideBusinessAddress && (
-                          <p>{businessDetails?.business?.address}</p>
-                        )}
-                        <p>{businessDetails?.business?.name}</p>
-                        <p>{businessDetails?.business?.email}</p>
-                        <p>{businessDetails?.business?.cellphone}</p>
-                        {businessDetails?.business?.address_notes && <p>{businessDetails?.business?.address_notes}</p>}
-                      </div>
-                    </div>
-                  )}
-                  {businessDetails?.error && businessDetails?.error?.length > 0 && (
-                    <div>
-                      <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
-                      <NotFoundSource
-                        content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
-                      />
-                    </div>
-                  )}
-                </BusinessDetailsContainer>
-              )}
+                </WrapperUserDetails>
+              </UserDetailsContainer>
               <CheckOutDivider />
             </>
+          )}
+          {!isGiftCardCart && (
+            <OrderTypeOptions>
+              <h1>{t('DELIVERY_OPTIONS', 'Delivery options')}</h1>
+              <Button
+                onClick={() => setOpenModal({ ...openModal, delivery: true })}
+              >
+                <img src={options?.type === 1 ? theme?.images?.general?.deliveryIcon : theme?.images?.general?.pickupIcon} />
+                <p>{(orderTypeList && orderTypeList[options.type - 1]) || t('DELIVERY', 'Delivery')}</p>
+              </Button>
+              <Button
+                onClick={() => setOpenModal({ ...openModal, moment: true })}
+              >
+                <img src={theme?.images?.general?.alarmClock} />
+                <p>
+                  {options?.moment
+                    ? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+                    : t('ASAP', 'ASAP')}
+                </p>
+              </Button>
+            </OrderTypeOptions>
+          )}
+          {!useKioskApp
+            ? (
+              <>
+                {cart?.business_id && !hideBusinessMap && (
+                  <AddressDetailsContainer>
+                    {(businessDetails?.loading || cartState.loading)
+                      ? (
+                        <div style={{ width: '100%', marginBottom: '20px' }}>
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={150} />
+                        </div>
+                        )
+                      : (
+                        <AddressDetails
+                          location={cart?.business?.location}
+                          businessLogo={businessDetails?.business?.logo || theme.images?.dummies?.businessLogo}
+                          isCartPending={cart?.status === 2}
+                          businessId={cart?.business_id}
+                          apiKey={configs?.google_maps_api_key?.value}
+                          mapConfigs={mapConfigs}
+                          isCustomerMode={isCustomerMode}
+                          cart={cart}
+                          primaryColor={hexTest.test(primaryColor || '') ? `0x${primaryColor}` : 'red'}
+                          handleOpenAddressList={() => setOpenModal({ ...openModal, delivery: true })}
+                        />
+                        )}
+                  </AddressDetailsContainer>
+                )}
+                {!useKioskApp && cart?.business_id && (
+                  <>
+                    {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+                      <DeliveryOptionsContainer>
+                        <Select
+                          defaultValue={deliveryOptionSelected}
+                          options={deliveryOptions}
+                          onChange={(val) => handleChangeDeliveryOption(val)}
+                        />
+                      </DeliveryOptionsContainer>
+                    )}
+                    <CheckOutDivider />
+                  </>
+                )}
+                {cart?.business_id && !hideBusinessDetails && (
+                  <BusinessDetailsContainer>
+                    {(businessDetails?.loading || cartState.loading) && !businessDetails?.error && (
+                      <div>
+                        <div>
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                        </div>
+                      </div>
+                    )}
+                    {!cartState.loading && businessDetails?.business && Object.values(businessDetails?.business)?.length > 0 && (
+                      <div>
+                        <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
+                        <div>
+                          {!hideBusinessAddress && (
+                            <p>{businessDetails?.business?.address}</p>
+                          )}
+                          <p>{businessDetails?.business?.name}</p>
+                          <p>{businessDetails?.business?.email}</p>
+                          <p>{businessDetails?.business?.cellphone}</p>
+                          {businessDetails?.business?.address_notes && <p>{businessDetails?.business?.address_notes}</p>}
+                        </div>
+                      </div>
+                    )}
+                    {businessDetails?.error && businessDetails?.error?.length > 0 && (
+                      <div>
+                        <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
+                        <NotFoundSource
+                          content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+                        />
+                      </div>
+                    )}
+                  </BusinessDetailsContainer>
+                )}
+                <CheckOutDivider />
+              </>
               )
             : (
-            <WrapperActionsInput>
-              <h1>
-                {t('WHATS_YOUR_NAME', "What's your name?")}
-              </h1>
-              <Input
-                placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
-                autoComplete='off'
-                onChange={(e) => setBehalfName(e?.target?.value)}
-              />
-            </WrapperActionsInput>
+              <WrapperActionsInput>
+                <h1>
+                  {t('WHATS_YOUR_NAME', "What's your name?")}
+                </h1>
+                <Input
+                  placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
+                  autoComplete='off'
+                  onChange={(e) => setBehalfName(e?.target?.value)}
+                />
+              </WrapperActionsInput>
               )}
 
           {cartState.loading && (
@@ -521,134 +556,112 @@ const CheckoutUI = (props) => {
               </div>
             </div>
           )}
-
-          {!useKioskApp && cart?.business_id && (
+          {
+            !driverTipsField &&
             <>
-              {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
-                <DeliveryOptionsContainer>
-                  <h2>{t('DELIVERY_DETAILS', 'Delivery Details')}</h2>
-                  <Select
-                    defaultValue={deliveryOptionSelected}
-                    options={deliveryOptions}
-                    onChange={(val) => handleChangeDeliveryOption(val)}
-                  />
-                </DeliveryOptionsContainer>
-              )}
-              <CheckOutDivider />
+              <DriverTipContainer>
+                <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
+                <p>{t('100%_OF_THE_TIP_YOUR_DRIVER', '100% of the tip goes to your driver')}</p>
+                <DriverTips
+                  businessId={cart?.business_id}
+                  driverTipsOptions={driverTipsOptions}
+                  isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
+                  isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                  driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
+                    ? cart?.driver_tip
+                    : cart?.driver_tip_rate}
+                  cart={cart}
+                  useOrderContext
+                />
+              </DriverTipContainer>
+              <DriverTipDivider />
             </>
+          }
+          {!cartState.loading && placeSpotsEnabled && cart?.business_id && (
+            <SelectSpotContainer>
+              <PlaceSpot
+                isCheckout
+                isInputMode
+                isHomeStyle
+                cart={cart}
+                spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
+                vehicleDefault={cart?.vehicle}
+                setPlaceSpotNumber={setPlaceSpotNumber}
+              />
+            </SelectSpotContainer>
           )}
-
           {!cartState.loading && cart && (
-            <PaymentMethodContainer className='paymentsContainer'>
-              <SectionTitleContainer>
-                <h1>{t('PAYMENT_METHODS', 'Payment Methods')}</h1>
-                <Flag>{t('REQUIRED', 'Required')}</Flag>
-              </SectionTitleContainer>
-              {!cartState.loading && cart?.status === 4 && (
-                <WarningMessage style={{ marginTop: 20 }}>
-                  <VscWarning />
-                  <h1>
-                    {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
-                  </h1>
-                </WarningMessage>
-              )}
-              <PaymentOptions
+            <CartContainer>
+              <CartHeader>
+                <h1>{t('PRODUCTS', 'Products')}</h1>
+              </CartHeader>
+              <Cart
+                isCartPending={cart?.status === 2}
                 cart={cart}
                 useKioskApp={useKioskApp}
-                isDisabled={cart?.status === 2}
-                businessId={!isGiftCardCart ? businessDetails?.business?.id : -1}
-                isLoading={!isGiftCardCart ? businessDetails.loading : false}
-                paymethods={businessDetails?.business?.paymethods}
-                onPaymentChange={handlePaymethodChange}
-                errorCash={errorCash}
-                setErrorCash={setErrorCash}
-                handleOrderRedirect={handleOrderRedirect}
-                isCustomerMode={isCustomerMode}
-                paySelected={paymethodSelected}
-                handlePlaceOrder={handlePlaceOrder}
-                onPlaceOrderClick={onPlaceOrderClick}
-                setCardList={setCardList}
-                requiredFields={requiredFields}
-                openUserModal={setIsOpen}
-                paymethodClicked={paymethodClicked}
-                setPaymethodClicked={setPaymethodClicked}
+                isCheckout
+                isProducts={cart?.products?.length || 0}
+                viewString='checkout'
+                businessConfigs={businessConfigs}
+                loyaltyRewardRate={
+                  creditPointPlanOnBusiness?.accumulation_rate ??
+                  (!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
+                }
+                productLoading={productLoading}
+                setProductLoading={setProductLoading}
               />
-            </PaymentMethodContainer>
-          )}
-
-          {isWalletEnabled && !businessDetails?.loading && (
-            <WalletPaymentOptionContainer>
-              <PaymentOptionWallet
-                cart={cart}
-                loyaltyPlansState={loyaltyPlansState}
-                businessConfigs={businessDetails?.business?.configs}
-              />
-            </WalletPaymentOptionContainer>
+            </CartContainer>
           )}
         </WrapperLeftContent>
       </WrapperLeftContainer>
       <WrapperRightContainer>
 
-        {
-          !!driverTipsField &&
-          <>
-            <DriverTipContainer>
-              <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
-              <p>{t('100%_OF_THE_TIP_YOUR_DRIVER', '100% of the tip goes to your driver')}</p>
-              <DriverTips
-                businessId={cart?.business_id}
-                driverTipsOptions={driverTipsOptions}
-                isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
-                isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-                driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
-                  ? cart?.driver_tip
-                  : cart?.driver_tip_rate}
-                cart={cart}
-                useOrderContext
-              />
-            </DriverTipContainer>
-            <DriverTipDivider />
-          </>
-        }
-        {!cartState.loading && placeSpotsEnabled && cart?.business_id && (
-          <SelectSpotContainer>
-            <PlaceSpot
-              isCheckout
-              isInputMode
-              isHomeStyle
-              cart={cart}
-              spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
-              vehicleDefault={cart?.vehicle}
-              setPlaceSpotNumber={setPlaceSpotNumber}
-            />
-          </SelectSpotContainer>
-        )}
         {!cartState.loading && cart && (
-          <CartContainer>
-            <CartHeader>
-              <h1>{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}</h1>
-              {cart?.business?.slug && (
-                <span onClick={() => cart?.business?.slug && handleStoreRedirect && handleStoreRedirect(cart?.business?.slug)}>{t('ADD_PRODUCTS', 'Add products')}</span>
-              )}
-            </CartHeader>
-            <Cart
-              isCartPending={cart?.status === 2}
+          <PaymentMethodContainer className='paymentsContainer'>
+            <SectionTitleContainer>
+              <h1>{t('PAYMENT_METHODS', 'Payment Methods')}</h1>
+              <Flag>{t('REQUIRED', 'Required')}</Flag>
+            </SectionTitleContainer>
+            {!cartState.loading && cart?.status === 4 && (
+              <WarningMessage style={{ marginTop: 20 }}>
+                <VscWarning />
+                <h1>
+                  {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+                </h1>
+              </WarningMessage>
+            )}
+            <PaymentOptions
               cart={cart}
               useKioskApp={useKioskApp}
-              isCheckout
-              isProducts={cart?.products?.length || 0}
-              viewString='checkout'
-              businessConfigs={businessConfigs}
-              loyaltyRewardRate={
-                creditPointPlanOnBusiness?.accumulation_rate ??
-                (!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
-              }
-              hideCommentsByValidationCheckout={!guestCheckoutComment?.enabled}
-              hideCouponByValidationCheckout={!guestCheckoutCoupon?.enabled}
-              productLoading={productLoading}
-              setProductLoading={setProductLoading}
+              isDisabled={cart?.status === 2}
+              businessId={!isGiftCardCart ? businessDetails?.business?.id : -1}
+              isLoading={!isGiftCardCart ? businessDetails.loading : false}
+              paymethods={businessDetails?.business?.paymethods}
+              onPaymentChange={handlePaymethodChange}
+              errorCash={errorCash}
+              setErrorCash={setErrorCash}
+              handleOrderRedirect={handleOrderRedirect}
+              isCustomerMode={isCustomerMode}
+              paySelected={paymethodSelected}
+              handlePlaceOrder={handlePlaceOrder}
+              onPlaceOrderClick={onPlaceOrderClick}
+              setCardList={setCardList}
+              requiredFields={requiredFields}
+              openUserModal={setIsOpen}
+              paymethodClicked={paymethodClicked}
+              setPaymethodClicked={setPaymethodClicked}
             />
-          </CartContainer>
+          </PaymentMethodContainer>
+        )}
+
+        {isWalletEnabled && !businessDetails?.loading && (
+          <WalletPaymentOptionContainer>
+            <PaymentOptionWallet
+              cart={cart}
+              loyaltyPlansState={loyaltyPlansState}
+              businessConfigs={businessDetails?.business?.configs}
+            />
+          </WalletPaymentOptionContainer>
         )}
 
         {windowSize.width >= 576 && !cartState.loading && cart && cart?.status !== 2 && (
@@ -660,11 +673,11 @@ const CheckoutUI = (props) => {
             >
               {!cart?.valid_maximum
                 ? (
-                `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                  `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                   )
                 : (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))
                     ? (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                       )
                     : placing ? t('PLACING_ORDER', 'Placing order') : t('PLACE_ORDER', 'Place Order')}
             </Button>
@@ -737,11 +750,11 @@ const CheckoutUI = (props) => {
           >
             {!cart?.valid_maximum
               ? (
-              `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                 )
               : (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))
                   ? (
-              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                  `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                     )
                   : placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')}
           </Button>
@@ -842,6 +855,27 @@ const CheckoutUI = (props) => {
           />
         </Modal>
       )}
+      <Modal
+        open={openModal.moment}
+        onClose={() => setOpenModal({ ...openModal, moment: false })}
+        width={options?.user_id ? '70%' : '50%'}
+        padding='0px'
+      >
+        <MomentContent
+          isHeader
+        />
+      </Modal>
+      <Modal
+        open={openModal.delivery}
+        onClose={() => setOpenModal({ ...openModal, delivery: false })}
+        width={options?.user_id ? '70%' : '50%'}
+        padding='20px 0px'
+      >
+        <OrderTypeSelector
+          isCheckout
+          onBusinessClick={() => setOpenModal({ ...openModal, delivery: false })}
+        />
+      </Modal>
     </Container>
   )
 }

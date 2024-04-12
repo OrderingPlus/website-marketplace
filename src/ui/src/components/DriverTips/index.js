@@ -65,6 +65,7 @@ const DriverTipsUI = (props) => {
           ))}
           {isDriverTipUseCustom && (
             <TipCard
+              $custom
               className={`${customTip ? 'active' : ''}`}
               onClick={() => setCustomTip(true)}
             >

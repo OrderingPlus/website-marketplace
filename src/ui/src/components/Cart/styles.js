@@ -252,3 +252,13 @@ export const WarningText = styled.p`
   text-align: center;
   color: ${props => props.theme.colors.primary};
 `
+
+export const AddMoreProducts = styled.div`
+  button{
+    height: 44px;
+    width: 100%;
+    background: #fff;
+    border: 1px solid ${({ theme }) => theme?.colors?.primary};
+    color: ${({ theme }) => theme?.colors?.primary};
+  }
+`

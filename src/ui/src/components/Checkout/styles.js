@@ -19,7 +19,6 @@ export const Container = styled.div`
 export const WrapperLeftContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 20px 30px;
 
   @media (min-width: 769px) {
     width: 55%;
@@ -33,9 +32,7 @@ export const WrapperLeftContainer = styled.div`
 
 export const WrapperRightContainer = styled.div`
   width: 100%;
-  background: #F8F9FA;
   box-sizing: border-box;
-  padding: 40px 20px;
 
   @media (min-width: 769px) {
     width: 45%;
@@ -50,20 +47,20 @@ export const WrapperUserDetails = styled.div`
 export const UserDetailsContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 25px;
+  margin-top: 5px;
   flex-wrap: wrap;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #E9ECEF;
 `
 
 export const BusinessDetailsContainer = styled(UserDetailsContainer)`
   border: none;
+  padding: 20px;
+  flex-direction: column;
   div {
     h1 {
       text-transform: capitalize;
       margin: 0px;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 22px;
     }
     p {
       font-size: 14px;
@@ -76,16 +73,16 @@ export const BusinessDetailsContainer = styled(UserDetailsContainer)`
 export const PaymentMethodContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px 0px 0px;
+  padding: 20px;
   h1 {
-    margin: 0px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 20px;
-    color: ${props => props.theme.colors.darkTextColor};
+    margin-bottom: 3px;
   }
 `
 
 export const DriverTipContainer = styled(PaymentMethodContainer)`
+  padding-bottom: 0px;
   > p {
     margin: 0;
     font-size: 16px;
@@ -94,8 +91,8 @@ export const DriverTipContainer = styled(PaymentMethodContainer)`
 `
 
 export const CartContainer = styled(PaymentMethodContainer)`
-  margin-bottom: 20px;
   position: relative;
+  padding-bottom: 0px;
 `
 
 export const WalletPaymentOptionContainer = styled(PaymentMethodContainer)`
@@ -189,31 +186,23 @@ export const WrapperLeftContent = styled.div`
 `
 export const CheckOutDivider = styled.div`
   height: 8px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
+  width: 100%;
   background: #F8F9FA;
 
-  @media(min-width: 769px) {
-    width: calc(100% + 100px);
-    margin-left: -40px;
-  }
 `
 
 export const DriverTipDivider = styled.div`
   height: 8px;
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  background: #E9ECEF;
+  width: 100%;
+  background: #F8F9FA;
 
-  @media(min-width: 769px) {
-    width: calc(100% + 80px);
-    margin-left: -40px;
-  }
 `
 
 export const DeliveryOptionsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0px 20px;
+  margin-bottom: 15px;
   #select-input {
     margin-bottom: 10px;
   }
@@ -335,8 +324,15 @@ export const OrderContextUIWrapper = styled.div`
 
 export const HeaderContent = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 10px;
+  padding: 20px 20px 0px 20px;
+  h1{
+    margin: 0px;
+    font-size: 48px;
+    font-weight: 600;
+  }
   .back-arrow {
     font-size: 24px;
     cursor: pointer;
@@ -346,6 +342,7 @@ export const HeaderContent = styled.div`
 export const AuthButtonList = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 20px;
   h2 {
     font-weight: 600;
     font-size: 20px;
@@ -385,4 +382,31 @@ export const SpinnerContainer = styled.div`
   width: 100%;
   left: 0;
   top: -100%;
+`
+
+export const OrderTypeOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px;
+  button {
+    margin-bottom: 20px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+  p {
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+  }
+`
+
+export const AddressDetailsContainer = styled.div`
+  padding: 20px;
 `

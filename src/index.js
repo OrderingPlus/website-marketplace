@@ -9,7 +9,7 @@ import { Router } from './router'
 import theme from './theme.json'
 
 import { OrderingProvider } from '~components'
-import { Alert, ThemeProvider, Toast } from '~ui'
+import { Alert, BusinessSelectedProvider, ThemeProvider, Toast } from '~ui'
 
 /**
  * Theme images
@@ -18,7 +18,7 @@ import logotype from './assets/images/logotype.svg'
 import logotypeInvert from './assets/images/logotype-invert.svg'
 import isotype from './assets/images/isotype.svg'
 import isotypeInvert from './assets/images/isotype-invert.svg'
-
+import logoWhite from './assets/images/logo-white.svg'
 import delivered from './assets/icons/delivered.png'
 import driver from './assets/icons/driver.png'
 import home from './assets/icons/home.png'
@@ -101,13 +101,18 @@ import eatinIco from './assets/images/eatin.svg'
 import curbsideIco from './assets/images/curbside.svg'
 import drivethruIco from './assets/images/drivethru.svg'
 import cateringIco from './assets/images/catering.svg'
+import alarmClock from './assets/images/alarm-clock.svg'
+import deliveryIcon from './assets/images/delivery-icon.svg'
+import pickupIcon from './assets/images/pickup-icon.svg'
+import orderDetailsBanner from './assets/images/order_details_banner.png'
 import { SubdomainComponent } from './components/SubdomainComponent'
 
 const logos = {
   logotype,
   logotypeInvert,
   isotype,
-  isotypeInvert
+  isotypeInvert,
+  logoWhite
 }
 
 theme.images = {
@@ -147,7 +152,11 @@ theme.images = {
     curbsideIco,
     drivethruIco,
     cateringIco,
-    driverPng
+    driverPng,
+    deliveryIcon,
+    pickupIcon,
+    alarmClock,
+    orderDetailsBanner
   },
   icons: {
     delivered,
@@ -209,8 +218,10 @@ root.render(
   <ThemeProvider theme={theme}>
     <SubdomainComponent>
       <OrderingProvider Alert={Alert}>
-        <Router />
-        <Toast />
+        <BusinessSelectedProvider>
+          <Router />
+          <Toast />
+        </BusinessSelectedProvider>
       </OrderingProvider>
     </SubdomainComponent>
   </ThemeProvider>

@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 export const HeroContainerStyled = styled.div`
   width: 100%;
   height: fit-content;
-  height: 374px;
+  height: 90vh;
   position:relative;
   ${({ mb }) => mb && css`
     margin-bottom: ${mb};
@@ -17,10 +17,6 @@ export const HeroContainerStyled = styled.div`
     object-fit: cover;
     background-position: center;
   `}
-
-  @media (min-width: 375px) {
-    height: 374px;
-  }
 
   @media (min-width: 567px) {
     height: calc(100vh - 65px);
@@ -186,19 +182,19 @@ export const WrapInput = styled.div`
     color: ${props => props.theme.colors.primary};
     font-size: 22px;
     ${props => props.theme?.rtl
-? css`
+    ? css`
       margin-left: 12px;
     `
-: css`
+    : css`
       margin-right: 12px;
     `}
 
     @media (min-width: 576px) {
       ${props => props.theme?.rtl
-? css`
+    ? css`
         margin-left: 20px;
       `
-: css`
+    : css`
         margin-right: 20px;
       `}
     }
@@ -206,11 +202,8 @@ export const WrapInput = styled.div`
 `
 
 export const UseAccount = styled.div`
-  position: absolute;
-  left: 0;
   width: 100%;
   min-height: 30vh;
-  padding: 10vw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -223,12 +216,15 @@ export const UseAccount = styled.div`
     padding-bottom: 10px;
     font-size: 14px;
     line-height: 24px;
+    background-color: #E9F2FE;
+    color: ${props => props.theme.colors.primary};
+    font-weight: 600;
   }
 
   > *:last-child {
-    margin-top: 14px;
-    background-color: #E9F2FE;
-    color: ${props => props.theme.colors.primary};
+    background-color: ${({ theme }) => theme?.colors?.primary};
+    color: ${({ theme }) => theme.colors.white};
+    border: 1px solid ${({ theme }) => theme.colors.white};
   }
 
   @media (min-width: 576px) {
@@ -247,10 +243,10 @@ export const SectionHeader = styled.div`
 `
 
 export const LogoWrapper = styled.div`
-  width: 150px;
-  margin: 53px auto;
+  width: 80%;
   display: flex;
   justify-content: center;
+  margin: 0 auto;
   img {
     width: 100%;
     object-fit: fill;
@@ -258,12 +254,12 @@ export const LogoWrapper = styled.div`
 `
 export const HeroContent = styled.div`
   button{
-    font-size: 12px;
+    font-size: 16px;
     line-height: 18px;
     padding: 10px 16px;
-    margin-bottom: 45px;
+    margin-bottom: 15px;
     white-space: nowrap;
-
+    height: 44px;
     @media (min-width: 576px) {
       padding-top: 5px;
       padding-bottom: 5px;

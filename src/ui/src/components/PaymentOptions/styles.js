@@ -9,8 +9,8 @@ export const PaymentMethodsContainer = styled.div`
 
 export const PaymentMethodsList = styled.div`
   display: flex;
-  flex-wrap: wrap;
   width: calc(100% + 15px);
+  overflow: auto;
   margin-left: -15px;
 `
 
@@ -19,35 +19,28 @@ export const Container = styled.div`
 `
 
 export const PayCard = styled.div`
-  width: calc(50% - 30px);
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 15px;
+  margin: 10px;
   text-align: center;
-
+  border: 1px solid #E9ECEF;
+  border-radius: 7.6px;
+  padding: 10px;
   ${props => props.isDisabled && css`
     pointer-events: none;
   `}
 
   > div {
-    max-width: 88px;
-    width: 100%;
-    border: 1px solid #DEE2E6;
-    border-radius: 7.6px;
-    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 12px;
     box-sizing: border-box;
-
+    margin-right: 10px;
     > svg {
-      font-size: 25px;
+      font-size: 16px;
       path {
-        fill: #DEE2E6;
+        fill: #000;
       }
     }
   }
@@ -56,27 +49,11 @@ export const PayCard = styled.div`
     margin: 0px;
     font-size: 13px;
     text-align: center;
-    color: #DEE2E6;
     white-space: nowrap;
   }
 
-  @media (min-width: 351px) {
-    width: calc(33% - 30px);
-  }
-
-  @media (min-width: 513px) {
-    width: calc(25% - 30px);
-  }
-
-  @media (min-width: 768px) {
-    width: calc(25% - 30px);
-  }
-
-  @media (min-width: 1200px) {
-    width: calc(20% - 30px);
-  }
-
   &.active {
+    border: 1px solid ${props => props.theme.colors.primary};
     > div {
       border: 1px solid ${props => props.theme.colors.primary};
       svg path {
@@ -84,7 +61,7 @@ export const PayCard = styled.div`
       }
     }
     p {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme.colors.primary};
     }
   }
 

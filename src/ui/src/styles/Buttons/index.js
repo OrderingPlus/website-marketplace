@@ -67,13 +67,14 @@ export const IconButton = styled.button`
 
 export const Button = styled.button`
   background: #E9ECEF;
-  color: #FFF;
+  color: #000000;
   border: 1px solid #E9ECEF;
   border-radius: 7.6px;
   line-height: 30px;
   padding-left: 15px;
   padding-right: 15px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   outline: none;
   overflow: hidden;
