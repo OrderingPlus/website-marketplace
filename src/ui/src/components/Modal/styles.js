@@ -91,7 +91,7 @@ export const ModalHeader = styled.div`
   display: flex;
   margin-top: 40px;
 
-  @media(min-width: 450px){
+  @media(min-width: 576px){
     margin-top: 0;
   }
 

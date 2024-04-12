@@ -14,10 +14,6 @@ export const WrapContent = styled.div`
   padding: 5px;
   background: ${props => props.theme.colors.backgroundPage};
 
-  ${({ isGroceries }) => !isGroceries && css`
-    margin-top: 70px;
-  `}
-
   @media (min-width: 576px) {
     padding: 0px;
   }
@@ -30,7 +26,6 @@ export const WrapContent = styled.div`
 `
 
 export const BusinessContent = styled.div`
-  margin-top: ${props => props.isCustomLayout ? 0 : 30}px;
   display: flex;
   flex-direction: column;
 
@@ -248,12 +243,36 @@ export const PageBannerWrapper = styled.div`
 `
 
 export const BackButton = styled.div`
-  button {
+  margin-left: 20px;
+  display: flex;
+  position: relative;
+  top: 20px;
+  width: 50px;
+`
+
+export const TabsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ theme }) => theme?.colors?.border};
+  justify-content: space-between;
+  width: 100%;
+  min-height: 30px;
+  background: #E9ECEF;
+  > div {
+    width: 50%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    svg {
-      margin-right: 10px;
+    justify-content: center;
+  }
+  p {
+    margin: 0px;
+    color: #000;
+    font-weight: 600;
+  }
+  .selected {
+    border-bottom: 1px solid ${({ theme }) => theme?.colors?.primary};
+    p {
+      color: ${({ theme }) => theme?.colors?.primary};
     }
   }
 `

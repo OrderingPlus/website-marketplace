@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import FcCancel from '@meronex/icons/fc/FcCancel'
 import Skeleton from 'react-loading-skeleton'
 import { parsePhoneNumber } from 'libphonenumber-js'
 import MdClose from '@meronex/icons/md/MdClose'
+import FaRegUser from '@meronex/icons/fa/FaRegUser'
 import PhoneInput from 'react-phone-number-input'
 
 import {
   Container,
-  Header,
   SideForm,
   UserData,
   UserName,
   ModalIcon,
-  TitleContainer,
   CountryFlag,
   PhoneContainer,
   SkeletonsContainer,
-  ChangeCustomerText
+  ChangeCustomerText,
+  UserIcon
 } from './styles'
 
 import {
@@ -37,23 +36,24 @@ const UserDetailsUI = (props) => {
   const {
     isEdit,
     formState,
-    cleanFormState,
+    // cleanFormState,
     cartStatus,
     toggleIsEdit,
     validationFields,
     isUserDetailsEdit,
     isCustomerMode,
     userState,
-    isModal,
+    // isModal,
     setIsOpenUserData,
-    isAddressFormOpen,
+    // isAddressFormOpen,
     onClose,
     handleSendVerifyCode,
     verifyPhoneState,
     requiredFields,
     setFormState,
     setIsSuccess,
-    isCheckoutPlace
+    isCheckoutPlace,
+    isCheckout
   } = props
 
   const [, t] = useLanguage()
@@ -85,10 +85,10 @@ const UserDetailsUI = (props) => {
     } else { resetOtpLeftTime() }
   }, [verifyPhoneState?.result?.result])
 
-  const toggleEditState = () => {
-    toggleIsEdit()
-    cleanFormState({ changes: {} })
-  }
+  // const toggleEditState = () => {
+  //   toggleIsEdit()
+  //   cleanFormState({ changes: {} })
+  // }
 
   const handleSendOtp = () => {
     if (willVerifyOtpState && formState?.changes?.cellphone && formState?.changes?.country_phone_code) {
@@ -161,67 +161,58 @@ const UserDetailsUI = (props) => {
       )}
 
       {!(validationFields.loading || formState.loading || userState.loading || loading) && (
-        <Container>
-          {isModal && (
-            <TitleContainer isAddressFormOpen={isAddressFormOpen && !isEdit}>
-              {!isCheckoutPlace && (
-                <ModalIcon>
-                  <MdClose onClick={() => onClose()} />
-                </ModalIcon>
-              )}
-              <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>
-            </TitleContainer>
-          )}
-          {!isCheckoutPlace && (
-            <Header className='user-form'>
-              {!isModal && (
-                <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>
-              )}
-              {cartStatus !== 2 && isEdit && <FcCancel className='cancel' onClick={() => toggleEditState()} />}
-            </Header>
-          )}
-
+        <Container isCheckout={isCheckout}>
           {!isEdit
             ? (
-            <UserData>
-              {(userData?.name || userData?.middle_name || userData?.lastname || userData?.second_lastname) && (
-                <UserName>
-                  {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
-                </UserName>
-              )}
-              {(userData?.email ?? userData?.guest_email) && (
-                <p>{userData?.guest_id ? userData?.guest_email : userData?.email}</p>
-              )}
-              {((userData?.cellphone ?? userData?.guest_cellphone) || (user?.cellphone ?? user?.guest_cellphone)) && (
-                <PhoneContainer>
-                  <CountryFlag>
-                    {
-                      userData?.country_phone_code && (userData?.cellphone ?? userData?.guest_cellphone) && (
-                        <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.[userData?.guest_id ? 'guest_cellphone' : 'cellphone']?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
-                      )
-                    }
-                  </CountryFlag>
-                  <p>
-                    {userData?.guest_id ? userData?.guest_cellphone : userData?.cellphone}
-                  </p>
-                </PhoneContainer>
-              )}
-              <ChangeCustomerText>
-                {cartStatus !== 2 && (
-                  <span onClick={() => toggleIsEdit()}>{t('CHANGE_USER_DETAILS', 'Change customer details')}</span>
-                )}
-              </ChangeCustomerText>
-            </UserData>
+              <>
+                <UserIcon>
+                  <FaRegUser />
+                </UserIcon>
+                <UserData>
+                  {(userData?.name || userData?.middle_name || userData?.lastname || userData?.second_lastname) && (
+                    <UserName>
+                      {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
+                    </UserName>
+                  )}
+                  {((userData?.cellphone ?? userData?.guest_cellphone) || (user?.cellphone ?? user?.guest_cellphone)) && (
+                    <PhoneContainer>
+                      <CountryFlag>
+                        {
+                          userData?.country_phone_code && (userData?.cellphone ?? userData?.guest_cellphone) && (
+                            <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.[userData?.guest_id ? 'guest_cellphone' : 'cellphone']?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
+                          )
+                        }
+                      </CountryFlag>
+                      <p>
+                        {userData?.guest_id ? userData?.guest_cellphone : userData?.cellphone}
+                      </p>
+                    </PhoneContainer>
+                  )}
+                  {(userData?.email ?? userData?.guest_email) && (
+                    <p>{userData?.guest_id ? userData?.guest_email : userData?.email}</p>
+                  )}
+                </UserData>
+                <ChangeCustomerText>
+                  {cartStatus !== 2 && (
+                    <span onClick={() => toggleIsEdit()}>{t('CHANGE', 'Change')}</span>
+                  )}
+                </ChangeCustomerText>
+              </>
               )
             : (
-            <SideForm>
-              <UserFormDetailsUI
-                {...props}
-                userData={userData}
-                isCustomerMode={isCustomerMode}
-                setWillVerifyOtpState={setWillVerifyOtpState}
-              />
-            </SideForm>
+              <SideForm>
+                {!isCheckoutPlace && (
+                  <ModalIcon>
+                    <MdClose onClick={() => toggleIsEdit()} />
+                  </ModalIcon>
+                )}
+                <UserFormDetailsUI
+                  {...props}
+                  userData={userData}
+                  isCustomerMode={isCustomerMode}
+                  setWillVerifyOtpState={setWillVerifyOtpState}
+                />
+              </SideForm>
               )}
         </Container>
       )}

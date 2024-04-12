@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 export const ProductContainer = styled.div`
   max-height: 100vh;
   position: relative;
-  padding: 50px 20px 20px;
 
   @media (min-width: 768px) {
     height: 100%;
@@ -98,7 +97,7 @@ export const SwiperWrapper = styled.div`
 
   .swiper {
     width: 100%;
-    height: 500px;
+    height: 200px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -145,6 +144,7 @@ export const SwiperWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    margin-top: 10px;
     ${({ theme }) => theme?.business_view?.components?.products?.components?.layout?.type === 'starbucks' && css`
       border-radius: 50% !important;
     `}
@@ -221,7 +221,7 @@ export const ProductInfo = styled.div`
 
 export const ProductFormTitle = styled.div`
   overflow-wrap: break-word;
-
+  padding: 0 10px;
   .price-discount {
     text-decoration: line-through;
   }
@@ -232,22 +232,24 @@ export const ProductEdition = styled.div`
   margin-bottom: 20px;
 `
 
-export const SectionTitle = styled.h3`
+export const SectionTitle = styled.span`
   text-transform: capitalize;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
   padding: 7px 0px;
   margin-bottom: 0px;
-  margin-top: 15px;
   color: ${props => props.theme.colors.headingColor};
+  padding: 20px;
+  background: #E9ECEF;
+  display: flex;
 `
 
 export const ProductComment = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 130px;
-
+  margin-bottom: 100px;
+  padding: 0 20px;
   textarea {
     margin-top: 8px;
   }
@@ -269,12 +271,13 @@ export const ProductComment = styled.div`
 
 export const ProductActions = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;
+  padding: 10px;
   width: 100%;
   z-index: 9999997;
-
+  box-sizing: border-box;
   position: fixed;
   bottom: 0;
   right: 0;
@@ -330,6 +333,11 @@ export const ProductActions = styled.div`
     color: #CED4DA;
   }
 
+  button {
+    width: 30%;
+    margin: 0px;
+  }
+
   button:disabled,
   button.disabled {
     background: #E9ECEF;
@@ -338,9 +346,7 @@ export const ProductActions = styled.div`
   }
 
   button.add {
-    width: 90%;
     padding: 5px 10px;
-    margin-top: 10px;
     position: relative;
 
     &.soldout {
@@ -354,7 +360,7 @@ export const ProductActions = styled.div`
     display: flex;
     align-items: center;
     height: 38px;
-    min-width: 60px;
+    max-width: 30px;
     box-sizing: border-box;
     padding: 0;
     margin: 0 10px;
@@ -515,6 +521,11 @@ export const ProductName = styled.h1`
     display: flex;
     align-items: flex-end;
   }
+  span {
+    font-size: 34px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
   @media (min-width: 768px) {
     font-size: 22px;
     line-height: 34px;
@@ -530,7 +541,8 @@ export const Properties = styled.div`
 export const ProductDescription = styled.p`
   margin-top: 0px;
   white-space: pre-wrap;
-  color: #909BA9;
+  font-size: 16px;
+  font-weight: 400;
 `
 export const PriceContent = styled.div`
   display: flex;
@@ -648,4 +660,8 @@ export const LoadingWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+`
+
+export const IngredientsContainer = styled.div`
+
 `

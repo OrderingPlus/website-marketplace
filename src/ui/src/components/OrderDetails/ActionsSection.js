@@ -1,5 +1,4 @@
 import React from 'react'
-import BiStoreAlt from '@meronex/icons/bi/BiStoreAlt'
 import AiFillExclamationCircle from '@meronex/icons/ai/AiFillExclamationCircle'
 import BsPhone from '@meronex/icons/bs/BsPhone'
 import BiMessageRounded from '@meronex/icons/bi/BiMessageRounded'
@@ -14,8 +13,6 @@ export const ActionsSection = (props) => {
   const {
     actionType,
     order,
-    handleBusinessRedirect,
-    businessData,
     unreadAlert,
     setOpenMessages,
     readMessages,
@@ -41,11 +38,6 @@ export const ActionsSection = (props) => {
         <span onClick={() => window.open(`tel:${order?.[actionType]?.phone}`)}>
           <BsPhone />
         </span>}
-      {actionType === 'business' && (
-        <span>
-          <BiStoreAlt onClick={() => handleBusinessRedirect(businessData?.slug)} />
-        </span>
-      )}
       {showMessages && (
         <MessagesIcon onClick={() => handleOpenMessages({ driver: actionType === 'driver', business: actionType === 'business' })}>
           {order?.unread_count > 0 && unreadAlert?.[actionType] && (

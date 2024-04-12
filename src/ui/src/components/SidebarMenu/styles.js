@@ -51,7 +51,7 @@ export const IconContent = styled.button`
 `
 
 export const SidebarContent = styled.div`
-  height: 100%;
+  height: calc(100vh - 60px);
   width: 0;
   position: fixed;
   z-index: 2050;

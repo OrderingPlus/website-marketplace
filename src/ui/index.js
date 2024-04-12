@@ -82,6 +82,7 @@ import { OrderPreferencesSection } from './src/components/OrderDetails/OrderPref
 import { OrderProgress } from './src/components/OrderProgress'
 import { OrdersOption } from './src/components/OrdersOption'
 import { OrderSuccessModal } from './src/components/OrderSuccessModal'
+import { OrderTypeSelector } from './src/components/OrderTypeSelector'
 import { OrderTypeSelectorContent } from './src/components/OrderTypeSelectorContent'
 import { OrderTypeSelectorHeader } from './src/components/OrderTypeSelectorHeader'
 import { PageBanner } from './src/components/PageBanner'
@@ -162,6 +163,7 @@ import { Toast } from './src/styles/Toast'
 // context
 import { ThemeContext, ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { InfoShareContext, InfoShareProvider, useInfoShare } from './contexts/InfoShareContext'
+import { BusinessSelectedContext, BusinessSelectedProvider, useBusinessSelected } from './contexts/BusinessSelected'
 
 // hooks
 import { useOnlineStatus } from './hooks/useOnlineStatus'
@@ -295,6 +297,7 @@ export {
   OrderPreferencesSection,
   OrderProgress,
   OrderSuccessModal,
+  OrderTypeSelector,
   OrderTypeSelectorContent,
   OrderTypeSelectorHeader,
   OrdersOption,
@@ -389,6 +392,9 @@ export {
   InfoShareContext,
   InfoShareProvider,
   useInfoShare,
+  BusinessSelectedContext,
+  BusinessSelectedProvider,
+  useBusinessSelected,
   // hooks
   useOnlineStatus,
   useWindowSize,

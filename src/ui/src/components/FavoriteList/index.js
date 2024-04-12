@@ -206,7 +206,7 @@ const FavoriteListUI = (props) => {
           )
         }
         <FavoriteListWrapper isLoading={favoriteList?.loading || favoriteList?.favorites?.length === 0}>
-          <FavoriteListing isOrder={isOrder}>
+          <FavoriteListing isOrder={isOrder} isProduct={isProduct}>
             <AutoScroll scrollId='favorite'>
               {isBusiness && (
                 <>
@@ -404,6 +404,7 @@ const FavoriteListUI = (props) => {
 export const FavoriteList = (props) => {
   const favoriteListProps = {
     ...props,
+    enableLoadingAtRender: true,
     UIComponent: FavoriteListUI
   }
   return <FavoriteListController {...favoriteListProps} />

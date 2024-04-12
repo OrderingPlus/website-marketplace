@@ -2,9 +2,12 @@ import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 10px 0px;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 10px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #E9ECEF;
   cursor: pointer;
 
   -webkit-touch-callout: none;
@@ -32,13 +35,14 @@ export const IconControl = styled.div`
   }
 `
 export const Text = styled.div`
-  flex: 1 1 auto;
+  flex: 1;
   display: flex;
-  font-weight: 300;
-  color: #555;
+  font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0 8px;
+  margin: 5px 8px;
+  font-size: 15px;
+  cursor: pointer;
 
   div {
     overflow: hidden;
@@ -56,7 +60,7 @@ export const Text = styled.div`
     text-overflow: ellipsis;
     ${props => props.theme?.rtl && css`
       margin-left: 0;
-      margin-right: 10px;    
+      margin-right: 10px;
     `}
   }
 
@@ -133,16 +137,16 @@ export const QuantityControl = styled.div`
 export const PositionControl = styled.div`
   display: flex;
   align-items: center;
-  color: #CBCBCB;
+  color: #909BA9;
   font-weight: 300;
   font-size: 18px;
   margin: 0 5px;
 
   svg {
     font-size: 20px;
-    margin-right: 3px;
+    margin-right: 5px;
     ${props => props.theme?.rtl && css`
-      margin-left: 3px;
+      margin-left: 5px;
       margin-right: 0px;
     `}
     &.reverse {
@@ -192,8 +196,7 @@ export const LeftOptionContainer = styled.div`
 
 export const RightOptionContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 25%;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 
@@ -230,4 +233,21 @@ export const ExtraItem = styled.div`
       pointer-events: none;
       opacity: 0.2
     }
+`
+
+export const HeaderSuboption = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const AddRemoveControl = styled.div`
+  flex-direction: row;
+  align-items: center;
+  div {
+    color: ${({ theme }) => theme?.colors?.primary};
+    font-size: 15px;
+    font-weight: 600;
+  }
 `

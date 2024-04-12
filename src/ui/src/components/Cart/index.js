@@ -15,7 +15,8 @@ import {
   IconContainer,
   NoValidProductMessage,
   DriverTipContainer,
-  SpinnerCart
+  SpinnerCart,
+  AddMoreProducts
 } from './styles'
 
 import {
@@ -84,7 +85,10 @@ const CartUI = (props) => {
     productLoading,
     setProductLoading,
     hideCommentsByValidationCheckout,
-    hideCouponByValidationCheckout
+    hideCouponByValidationCheckout,
+    hideDetails,
+    hideProducts,
+    hideCheckoutButtons
   } = props
 
   const theme = useTheme()
@@ -247,10 +251,12 @@ const CartUI = (props) => {
     })
   }
 
-  const handleUpsellingPage = () => {
+  const handleUpsellingPage = (goToCheckout) => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    handleClickCheckout()
+    if (goToCheckout) {
+      handleClickCheckout()
+    }
   }
 
   const checkOutBtnClick = (uuid) => {
@@ -316,8 +322,9 @@ const CartUI = (props) => {
             handleChangeStore={!useKioskApp && handleChangeStore}
             isMultiCheckout={isMultiCheckout}
             isGiftCart={!cart?.business_id}
+            hideBusinessDetails
           >
-            {cart?.products?.length > 0 && cart?.products.map(product => (
+            {!hideProducts && cart?.products?.length > 0 && cart?.products.map(product => (
               <ProductItemAccordion
                 key={product.code}
                 isCartPending={isCartPending}
@@ -335,12 +342,21 @@ const CartUI = (props) => {
                 viewString={viewString}
               />
             ))}
-            {!cart?.valid_products && (
+            {cart?.business?.slug && isCheckout && (
+              <AddMoreProducts>
+                <Button
+                  onClick={() => cart?.business?.slug && handleStoreRedirect && handleStoreRedirect(cart?.business?.slug)}
+                >
+                  {t('ADD_MORE_PRODUCTS', 'Add products')}
+                </Button>
+              </AddMoreProducts>
+            )}
+            {!cart?.valid_products && !hideDetails && (
               <NoValidProductMessage>
                 {t('REMOVE_NOT_AVAILABLE_CART_PRODUCTS', 'To continue with your checkout, please remove from your cart the products that are not available.')}
               </NoValidProductMessage>
             )}
-            {cart?.valid_products && (
+            {cart?.valid_products && !hideDetails && (
               <OrderBill isCheckout={isCheckout}>
                 <table className='order-info'>
                   <tbody>
@@ -352,13 +368,13 @@ const CartUI = (props) => {
                       <tr>
                         {cart?.discount_type === 1
                           ? (
-                          <td>
-                            {t('DISCOUNT', 'Discount')}{' '}
-                            <span>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</span>
-                          </td>
+                            <td>
+                              {t('DISCOUNT', 'Discount')}{' '}
+                              <span>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</span>
+                            </td>
                             )
                           : (
-                          <td>{t('DISCOUNT', 'Discount')}</td>
+                            <td>{t('DISCOUNT', 'Discount')}</td>
                             )}
                         <td>- {parsePrice(cart?.discount || 0)}</td>
                       </tr>
@@ -394,10 +410,10 @@ const CartUI = (props) => {
                           <td>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</td>
                           {cart?.business?.tax_type === 1
                             ? (
-                            <td>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</td>
+                              <td>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</td>
                               )
                             : (
-                            <td>{parsePrice(cart?.subtotal_with_discount ?? 0)}</td>
+                              <td>{parsePrice(cart?.subtotal_with_discount ?? 0)}</td>
                               )}
                         </tr>
                       )
@@ -662,7 +678,7 @@ const CartUI = (props) => {
                 />
               </div>
             )}
-            {(onClickCheckout || isForceOpenCart) && !isCheckout && cart?.valid && (!isMultiCheckout || isStore || !cart?.business_id) && (
+            {!hideCheckoutButtons && (onClickCheckout || isForceOpenCart) && !isCheckout && cart?.valid && (!isMultiCheckout || isStore || !cart?.business_id) && (
               <CheckoutAction>
                 <p>{cart?.total >= 1 && parsePrice(cart?.total)}</p>
                 <Button
@@ -676,11 +692,11 @@ const CartUI = (props) => {
                       )
                     : !cart?.valid_maximum
                         ? (
-                    `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                        `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                           )
                         : subtotalWithTaxes < cart?.minimum
                           ? (
-                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                          `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                             )
                           : !openUpselling ^ canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')}
                 </Button>
@@ -709,31 +725,31 @@ const CartUI = (props) => {
             >
               {!curProduct?.calendar_event
                 ? (
-                <ProductForm
-                  isCartProduct
-                  productCart={curProduct}
-                  businessSlug={cart?.business?.slug}
-                  businessId={cart?.business_id}
-                  categoryId={curProduct?.category_id}
-                  productId={curProduct?.id}
-                  onSave={handlerProductAction}
-                  viewString={viewString}
-                  setProductLoading={setProductLoading}
-                />
+                  <ProductForm
+                    isCartProduct
+                    productCart={curProduct}
+                    businessSlug={cart?.business?.slug}
+                    businessId={cart?.business_id}
+                    categoryId={curProduct?.category_id}
+                    productId={curProduct?.id}
+                    onSave={handlerProductAction}
+                    viewString={viewString}
+                    setProductLoading={setProductLoading}
+                  />
                   )
                 : (
-                <ServiceForm
-                  isCartProduct
-                  isService
-                  productCart={curProduct}
-                  businessSlug={cart?.business?.slug}
-                  businessId={cart?.business_id}
-                  categoryId={curProduct?.category_id}
-                  productId={curProduct?.id}
-                  onSave={handlerProductAction}
-                  professionalSelected={curProduct?.calendar_event?.professional}
-                  setProductLoading={setProductLoading}
-                />
+                  <ServiceForm
+                    isCartProduct
+                    isService
+                    productCart={curProduct}
+                    businessSlug={cart?.business?.slug}
+                    businessId={cart?.business_id}
+                    categoryId={curProduct?.category_id}
+                    productId={curProduct?.id}
+                    onSave={handlerProductAction}
+                    professionalSelected={curProduct?.calendar_event?.professional}
+                    setProductLoading={setProductLoading}
+                  />
                   )}
             </Modal>
           )}

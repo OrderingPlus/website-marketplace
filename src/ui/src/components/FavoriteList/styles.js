@@ -66,6 +66,16 @@ export const FavoriteListing = styled.div`
       }
     }
   `}
+  ${({ isProduct }) => isProduct && css`
+  #favorite {
+    > div {
+      width: calc(50vw - 20px);
+      max-width: calc(50vw - 20px);
+      min-width: calc(50vw - 20px);
+      height: 25vh;
+    }
+  }
+  `}
 `
 
 export const ReadMoreCard = styled.div`

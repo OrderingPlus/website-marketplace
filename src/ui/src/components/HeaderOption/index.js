@@ -30,7 +30,7 @@ export const HeaderOption = (props) => {
       {variant === 'cart' && (
         <span>
           <AiOutlineShoppingCart id='icon' />
-          {totalCarts > 0 && <span>{totalCarts}</span>}
+          {totalCarts >= 0 && <span>{totalCarts || 0}</span>}
         </span>
       )}
       {variant === 'address' && (

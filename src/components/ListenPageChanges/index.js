@@ -42,7 +42,8 @@ export const ListenPageChanges = ({ children }) => {
     sessions: '/sessions',
     promotions: '/promotions',
     addresses: '/profile/addresses',
-    favorite: '/favorite'
+    favorite: '/favorite',
+    order_types: '/order_types'
   }
 
   const handleGoToPage = ({ page, params = {}, search, replace = false }) => {

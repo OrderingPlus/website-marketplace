@@ -3,14 +3,14 @@ import Skeleton from 'react-loading-skeleton'
 import { useTheme } from 'styled-components'
 import RiUser2Fill from '@meronex/icons/ri/RiUser2Fill'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
-import ExclamationTriangleIcon from '@meronex/icons/bs/BsExclamationTriangle'
+import BiStoreAlt from '@meronex/icons/bi/BiStoreAlt'
+import FaRegUser from '@meronex/icons/fa/FaRegUser'
 
 import {
   Container,
   WrapperContainer,
   Content,
   OrderBusiness,
-  BusinessWrapper,
   BusinessInfo,
   OrderInfo,
   OrderIdSec,
@@ -19,7 +19,6 @@ import {
   PhotoBlock,
   Map,
   OrderDriver,
-  WrapperDriver,
   OrderProducts,
   SkeletonBlockWrapp,
   SkeletonBlock,
@@ -30,22 +29,20 @@ import {
   SkeletonWrapper,
   ReviewWrapper,
   TitleContainer,
-  ReOrder,
-  SectionTitleContainer,
   OrderPreferences,
   HeaderTitle,
   PlaceSpotSection,
-  BtsOrderStatus,
   OrderStatusAndLinkContainer,
   LinkWrapper,
-  MapWrapper,
-  BusinessExternalWrapper,
   DirectionButtonWrapper,
   ProfessionalWrapper,
   ProfessionalBlock,
   PlaceSpotWrapper,
   PoweredByOrdering,
-  ValidationText
+  Logo,
+  OrderDetailsBanner,
+  Divider,
+  OrderDriverContainer
 } from './styles'
 
 import {
@@ -55,7 +52,6 @@ import {
   useUtils,
   useConfig,
   useOrder,
-  useCustomer,
   useSession,
   GoogleMapsMap
 } from '~components'
@@ -65,11 +61,8 @@ import { OrderBillSection } from './OrderBillSection'
 import { ActionsSection } from './ActionsSection'
 import { OrderPreferencesSection } from './OrderPreferencesSections'
 import { OrderHistory } from './OrderHistory'
-import { OrderActionsSection } from './OrderActionsSection'
-import { OrderHeaderInfoSection } from './OrderHeaderInfoSection'
 
 import {
-  getGoogleMapImage,
   getOrderStatuPickUp,
   getOrderStatus,
   Button,
@@ -90,8 +83,6 @@ import {
 
 const OrderDetailsUI = (props) => {
   const {
-    userCustomerId,
-    handleChangeOrderStatus,
     handleBusinessRedirect,
     handleOrderRedirect,
     googleMapsControls,
@@ -113,8 +104,7 @@ const OrderDetailsUI = (props) => {
   const [{ token }] = useSession()
   const [events] = useEvent()
   const [{ parsePrice, parseDate }] = useUtils()
-  const [, { deleteUserCustomer }] = useCustomer()
-  const [{ carts }, { refreshOrderOptions }] = useOrder()
+  const [{ carts }] = useOrder()
   const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
   const [isOrderReviewed, setIsOrderReviewed] = useState(false)
   const [isProductReviewed, setIsProductReviewed] = useState(false)
@@ -128,15 +118,13 @@ const OrderDetailsUI = (props) => {
   const [isService, setIsService] = useState(false)
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
-  const [isShowBusinessLogo, setIsShowBusinessLogo] = useState(true)
+  const [, setIsShowBusinessLogo] = useState(true)
   const { order, loading, businessData, error } = props.order
   const yourSpotString = order?.delivery_type === 3 ? t('TABLE_NUMBER', 'Table number') : t('SPOT_NUMBER', 'Spot number')
   const acceptedStatus = [1, 2, 5, 6, 10, 11, 12, 15]
   const completedStatus = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
   const placeSpotTypes = [3, 4, 5]
   const activeStatus = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
-  const preorderStatus = [0, 13]
-  const googleMapsApiKey = configs?.google_maps_api_key?.value
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const showStarbucksHeader = configs?.alternative_confirmation_page?.value === '1'
   const changeIdToExternalId = configs?.change_order_id?.value === '1'
@@ -146,7 +134,6 @@ const OrderDetailsUI = (props) => {
   const hideOrderActions = deliveryTypes?.includes(order?.delivery_type)
   const isGiftCardOrder = !order?.business_id
 
-  const isOriginalLayout = theme?.confirmation?.components?.layout?.type === 'original'
   const hideDeliveryType = theme?.confirmation?.components?.order?.components?.delivery_type?.hidden
   const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
   const hideDeliveryProgress = theme?.confirmation?.components?.order?.components?.progress?.hidden
@@ -154,7 +141,6 @@ const OrderDetailsUI = (props) => {
   const hideBusinessMessages = theme?.confirmation?.components?.business?.components?.messages?.hidden
   const hideBusinessEmail = theme?.confirmation?.components?.business?.components?.email?.hidden
   const hideBusinessAddress = theme?.confirmation?.components?.business?.components?.address?.hidden
-  const hideBusinessMap = theme?.confirmation?.components?.business?.components?.map?.hidden
   const hideDriverName = theme?.confirmation?.components?.driver?.components?.name?.hidden
   const hideDriverPhone = theme?.confirmation?.components?.driver?.components?.phone?.hidden
   const hideDriverMessages = theme?.confirmation?.components?.driver?.components?.messages?.hidden
@@ -163,10 +149,8 @@ const OrderDetailsUI = (props) => {
   const hideCustomerPhone = theme?.confirmation?.components?.customer?.components?.phone?.hidden
   const hideCustomerAddress = theme?.confirmation?.components?.customer?.components?.address?.hidden
   const hideCustomerEmail = theme?.confirmation?.components?.customer?.components?.email?.hidden
-  const hideCustomerPhoto = theme?.confirmation?.components?.customer?.components?.photo?.hidden
 
   const validTrackingStatus = [9, 19, 23, 26]
-  const mapConfigs = { zoom: 15 }
 
   const handleGoToPage = (data) => {
     events.emit('go_to_page', data)
@@ -249,16 +233,6 @@ const OrderDetailsUI = (props) => {
     }
   }
 
-  const handleStartNewOrder = (orderId) => {
-    if (isOriginalLayout) {
-      handleReorder(orderId)
-      return
-    }
-    deleteUserCustomer(true)
-    refreshOrderOptions()
-    handleGoToPage({ page: 'home' })
-  }
-
   const handleClickReorder = (order) => {
     if (carts[`businessId:${order?.business_id}`] && carts[`businessId:${order?.business_id}`]?.products?.length > 0) {
       setConfirm({
@@ -304,6 +278,7 @@ const OrderDetailsUI = (props) => {
                 product={product}
                 showArrowIcon
                 toppingsRemoved={order?.toppings_removed?.[product?.code]}
+                isOrderDetails
               />
             ))}
           </ProfessionalBlock>
@@ -314,6 +289,7 @@ const OrderDetailsUI = (props) => {
             product={product}
             showArrowIcon
             toppingsRemoved={order?.toppings_removed?.[product?.code]}
+            isOrderDetails
           />
         ))}
       </>
@@ -371,7 +347,7 @@ const OrderDetailsUI = (props) => {
     if (!reorderState?.error && reorderState.loading === false && businessData?.id) {
       const _businessId = 'businessId:' + businessData?.id
       const products = carts?.[_businessId]?.products
-      const available = products.every(product => product.valid === true)
+      const available = products?.every?.(product => product.valid === true)
       if (available && reorderState?.result?.uuid && (products?.length === order?.products.length)) {
         handleGoToPage({ page: 'checkout', params: { cartUuid: reorderState?.result.uuid } })
       } else {
@@ -397,9 +373,6 @@ const OrderDetailsUI = (props) => {
     window.scrollTo(0, 0)
   }, [])
 
-  const disableLeftButton = [1, 2, 5, 15, 16, 17, 20, 21]
-  const disableRightButton = [1, 2, 5, 15, 16, 17, 21]
-
   const progressBarObjt = order?.delivery_type && order?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
 
   return (
@@ -407,8 +380,33 @@ const OrderDetailsUI = (props) => {
       {!loading && order && Object.keys(order).length > 0 && !(openMessages.driver || openMessages.business) && (
         <WrapperContainer>
           <WrapperLeftContainer>
+
             {!showStarbucksHeader && (
               <>
+                <Logo>
+                  <img
+                    src={theme?.images?.logos?.logotype}
+                  />
+                </Logo>
+                <OrderDetailsBanner>
+                  <h1>{t('YOUR_ORDER_HAS_RECEIVED', 'Your order has been received')}</h1>
+                  <p>{t('ORDER_DETAILS_HEADER_DESCRIPTION', 'Order details header description')}</p>
+                  <div>
+                    <Button
+                      onClick={() => handleGoToPage({ page: 'orders' })}
+                    >
+                      {t('VIEW_ORDERS', 'VIEW ORDERS')}
+                    </Button>
+                    {(completedStatus?.includes(parseInt(order?.status)) && order?.cart) && !isGiftCardOrder && (
+                      <Button
+                        color='primary'
+                        onClick={() => handleClickReorder(order)}
+                      >
+                        {order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'REORDER')}
+                      </Button>
+                    )}
+                  </div>
+                </OrderDetailsBanner>
                 <OrderInfo>
                   <TitleContainer>
                     <OrderIdSec>{isService ? t('APPOINTMENT', 'Appointment') : t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} {(changeIdToExternalId && order?.external_id) || `#${order?.id}`}</OrderIdSec>
@@ -441,69 +439,29 @@ const OrderDetailsUI = (props) => {
                     {!!order?.integration_id_date && (
                       <h1>{t('N_ORDER', 'N. Orden')}: {order?.integration_id_date}</h1>
                     )}
-                    {!hideDeliveryType && (
-                      <p className='types'>
-                        {isService
-                          ? t('SERVICE_AT_HOME', 'Service at home')
-                          : orderTypes?.find(type => order?.delivery_type === type?.value)?.text}
-                      </p>
-                    )}
                     {!hideDeliveryDate && (
                       <>
-                        {cateringTypes.includes(order?.delivery_type) && (
-                          <p className='date'>
-                            {t('CREATED_AT', 'Created at')}: {parseDate(order?.created_at)}
-                          </p>
-                        )}
-                        <p className='date'>
+                        <p
+                          size={12}
+                          color={theme.colors.textNormal}
+                        >
                           {activeStatus.includes(order?.status)
                             ? (
-                            <>
-                              {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`} />
-                            </>
+                              <>
+                                {cateringTypes.includes(order?.delivery_type) ? `${t('CREATED_AT', 'Created at')}: ${parseDate(order?.created_at)}\n` : ''}
+                                {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} />
+                              </>
                               )
                             : (
-                                parseDate(order?.reporting_data?.at[`status:${order.status}`], { outputFormat: `YYYY-MM-DD ${configs?.general_hour_format?.value}` })
-                              )}
+                                parseDate(order?.reporting_data?.at[`status:${order.status}`])
+                              )} {'\u2022'} {isService
+                                ? t('SERVICE_AT_HOME', 'Service at home')
+                                : orderTypes?.find(type => order?.delivery_type === type?.value)?.text}
                         </p>
                       </>
                     )}
-                    {(acceptedStatus.includes(parseInt(order?.status, 10)) ||
-                      !isOriginalLayout
-                    ) && !isGiftCardOrder &&
-                      (
-                        <ReOrder>
-                          <Button
-                            color='primary'
-                            outline
-                            onClick={() => handleStartNewOrder(order.id)}
-                            disabled={reorderState?.loading}
-                          >
-                            {t('START_NEW_ORDER', 'Start new order')}
-                          </Button>
-                          {completedStatus.includes(parseInt(order?.status, 10)) && (
-                            <Button
-                              color='primary'
-                              outline
-                              onClick={() => handleClickReorder(order)}
-                              disabled={reorderState?.loading}
-                            >
-                              {reorderState?.loading
-                                ? t('LOADING', 'Loading...')
-                                : t('REORDER', 'Reorder')}
-                            </Button>
-                          )}
-                        </ReOrder>
-                      )}
                   </TitleContainer>
-                  {props.isCustomerMode && !!order?.debug_payment_response?.message && (
-                    <div id='error-subs'>
-                      <ValidationText>
-                        <ExclamationTriangleIcon />
-                        <span>{order?.debug_payment_response?.message}</span>
-                      </ValidationText>
-                    </div>
-                  )}
+
                   {!hideDeliveryProgress && !isGiftCardOrder && (
                     <>
                       <StatusBar percentage={progressBarObjt(order?.status)?.percentage} />
@@ -535,73 +493,35 @@ const OrderDetailsUI = (props) => {
                 </OrderInfo>
                 {!isGiftCardOrder && !hideStaticMap && (
                   <OrderBusiness>
-                    <BusinessExternalWrapper>
-                      <BusinessWrapper
-                        w='calc(100% - 20px)'
-                        borderTop={!hideDeliveryType && placeSpotTypes.includes(order?.delivery_type)}
-                      >
-                        {isShowBusinessLogo && <img src={order?.business?.logo} />}
-                        <BusinessInfo>
-                          <h2>{order?.business?.name}</h2>
-                          <ActionsSection
-                            {...ActionsSectionProps}
-                            actionType='business'
-                            showPhone={!hideBusinessPhone}
-                            showMessages={!hideBusinessMessages}
-                          />
-                          {!hideBusinessEmail && (
-                            <p>{order?.business?.email}</p>
-                          )}
-                          {!hideBusinessPhone && (
-                            <p>{order?.business?.cellphone}</p>
-                          )}
-                          {!hideBusinessAddress && (
-                            <p>{order?.business?.address}</p>
-                          )}
-                          {order?.place?.name && (
-                            <PlaceSpotSection>
-                              <p>
-                                {yourSpotString}: {order?.place?.name}
-                              </p>
-                            </PlaceSpotSection>
-                          )}
-                          {!hideOrderActions && (
-                            <DirectionButtonWrapper>
-                              <Button
-                                color='primary'
-                                onClick={() => window.open(`http://maps.google.com/?q=${order?.business?.address}`)}
-                              >
-                                {t('GET_DIRECTIONS', 'Get Directions')}
-                              </Button>
-                            </DirectionButtonWrapper>
-                          )}
-                        </BusinessInfo>
-                        {!hideOrderActions && !preorderStatus.includes(order?.status) && (
-                          <BtsOrderStatus>
-                            <div>
-                              <Button
-                                style={{ fontSize: 14 }}
-                                color={order?.status === 20 ? 'secundary' : 'primary'}
-                                onClick={() => handleChangeOrderStatus(20)}
-                                disabled={disableLeftButton.includes(order?.status)}
-                              >
-                                {progressBarObjt(20)?.value}
-                              </Button>
-                            </div>
-                            <div>
-                              <Button
-                                style={{ fontSize: 14 }}
-                                color={order?.status === 20 ? 'primary' : 'secundary'}
-                                disabled={disableRightButton.includes(order?.status)}
-                                onClick={() => handleChangeOrderStatus(21)}
-                              >
-                                {progressBarObjt(21)?.value}
-                              </Button>
-                            </div>
-                          </BtsOrderStatus>
-                        )}
-                      </BusinessWrapper>
-
+                    <BiStoreAlt />
+                    <BusinessInfo>
+                      <h2>{order?.business?.name}</h2>
+                      {!hideBusinessEmail && (
+                        <p>{order?.business?.email}</p>
+                      )}
+                      {!hideBusinessPhone && (
+                        <p>{order?.business?.cellphone}</p>
+                      )}
+                      {!hideBusinessAddress && (
+                        <p>{order?.business?.address}</p>
+                      )}
+                      {order?.place?.name && (
+                        <PlaceSpotSection>
+                          <p>
+                            {yourSpotString}: {order?.place?.name}
+                          </p>
+                        </PlaceSpotSection>
+                      )}
+                      {!hideOrderActions && (
+                        <DirectionButtonWrapper>
+                          <Button
+                            color='primary'
+                            onClick={() => window.open(`http://maps.google.com/?q=${order?.business?.address}`)}
+                          >
+                            {t('GET_DIRECTIONS', 'Get Directions')}
+                          </Button>
+                        </DirectionButtonWrapper>
+                      )}
                       {!hideDeliveryType && placeSpotTypes.includes(order?.delivery_type) && (
                         <PlaceSpotWrapper>
                           <PlaceSpot
@@ -612,114 +532,73 @@ const OrderDetailsUI = (props) => {
                           />
                         </PlaceSpotWrapper>
                       )}
-                    </BusinessExternalWrapper>
-                    {googleMapsApiKey && !hideBusinessMap && (
-                      <MapWrapper>
-                        <Map style={{ width: '100%' }}>
-                          <img
-                            src={getGoogleMapImage(order?.business?.location, googleMapsApiKey, mapConfigs)}
-                            id='google-maps-image'
-                            alt='google-maps-location'
-                            width='100%'
-                            height='100%'
-                            loading='lazy'
-                          />
-                        </Map>
-                      </MapWrapper>
-                    )}
-                  </OrderBusiness>
-                )}
-              </>
-            )}
-            {hideStaticMap && (
-              <OrderCustomer>
-                <WrapperDriver>
-                  {isShowBusinessLogo && order?.business?.logo && (
-                    <PhotoBlock src={order?.business?.logo} />
-                  )}
-                  <div>
-                    <p>{order?.business?.name}</p>
+                    </BusinessInfo>
                     <ActionsSection
                       {...ActionsSectionProps}
                       actionType='business'
                       showPhone={!hideBusinessPhone}
                       showMessages={!hideBusinessMessages}
                     />
-                    {!hideBusinessEmail && (
-                      <p>{order?.business?.email}</p>
-                    )}
-                    {!hideBusinessPhone && (
-                      <p>{order?.business?.cellphone}</p>
-                    )}
-                    {!hideBusinessAddress && (
-                      <p>{order?.business?.address}</p>
-                    )}
-                    {order?.place?.name && (
-                      <PlaceSpotSection>
-                        <p>
-                          {yourSpotString}: {order?.place?.name}
-                        </p>
-                      </PlaceSpotSection>
-                    )}
-                  </div>
-                </WrapperDriver>
-              </OrderCustomer>
+                  </OrderBusiness>
+                )}
+              </>
             )}
             <OrderCustomer>
-              <WrapperDriver>
-                {!hideCustomerPhoto && order?.customer?.photo && (
-                  <PhotoBlock src={order?.customer?.photo} />
+              <FaRegUser />
+              <BusinessInfo>
+                <h2>{order?.customer?.name} {order?.customer?.lastname}</h2>
+                {!hideCustomerEmail && (
+                  <p>{order?.customer?.guest_id ? order?.customer?.guest_email : order?.customer?.email}</p>
                 )}
-                <div>
-                  <p>{order?.customer?.name} {order?.customer?.lastname}</p>
-                  {!hideCustomerEmail && (
-                    <p>{order?.customer?.guest_id ? order?.customer?.guest_email : order?.customer?.email}</p>
-                  )}
-                  {!hideCustomerPhone && (
-                    <p>{order?.customer?.guest_id ? order?.customer?.guest_cellphone : (order?.customer?.cellphone || order?.customer?.phone)}</p>
-                  )}
-                  {!hideCustomerAddress && (
-                    <p>{order?.customer?.address}</p>
-                  )}
-                </div>
-              </WrapperDriver>
+                {!hideCustomerPhone && (
+                  <p>{order?.customer?.guest_id ? order?.customer?.guest_cellphone : (order?.customer?.cellphone || order?.customer?.phone)}</p>
+                )}
+                {!hideCustomerAddress && (
+                  <p>{order?.customer?.address}</p>
+                )}
+              </BusinessInfo>
             </OrderCustomer>
+            {(deliveryTypes?.includes(order?.delivery_type) || order?.comment) && !isGiftCardOrder && !showStarbucksHeader && (
+              <OrderPreferences>
+                <OrderPreferencesSection
+                  order={order}
+                  placeSpotTypes={placeSpotTypes}
+                />
+              </OrderPreferences>
+            )}
+            <Divider />
             {order?.driver && (
-              <>
+              <OrderDriverContainer>
+                <h2>{t('DRIVER', theme?.defaultLanguages?.DRIVER || 'Driver')}</h2>
                 <OrderDriver>
-                  <SectionTitleContainer>
-                    <h2>{t('DRIVER', theme?.defaultLanguages?.DRIVER || 'Driver')}</h2>
-                    <ActionsSection
-                      {...ActionsSectionProps}
-                      actionType='driver'
-                      showPhone={!hideDriverPhone}
-                      showMessages={!hideDriverMessages}
-                    />
-                  </SectionTitleContainer>
-                  <WrapperDriver>
-                    {!hideDriverPhoto && (
-                      <div className='photo'>
-                        {order?.driver?.photo
-                          ? (
+                  {!hideDriverPhoto && (
+                    <div className='photo'>
+                      {order?.driver?.photo
+                        ? (
                           <PhotoBlock src={order?.driver?.photo} />
-                            )
-                          : (
+                          )
+                        : (
                           <RiUser2Fill />
-                            )}
-                      </div>
-                    )}
-                    <div>
-                      {!hideDriverName && (
-                        <h2>{order?.driver?.name} {order?.driver?.lastname}</h2>
-                      )}
-                      {!hideDriverEmail && (
-                        <p>{order?.driver?.email}</p>
-                      )}
-                      {!hideDriverPhone && (
-                        <p>{order?.driver?.cellphone || order?.driver?.phone}</p>
-                      )}
+                          )}
                     </div>
-                  </WrapperDriver>
+                  )}
+                  <BusinessInfo>
+                    {!hideDriverName && (
+                      <h2>{order?.driver?.name} {order?.driver?.lastname}</h2>
+                    )}
+                    {!hideDriverEmail && (
+                      <p>{order?.driver?.email}</p>
+                    )}
+                    {!hideDriverPhone && (
+                      <p>{order?.driver?.cellphone || order?.driver?.phone}</p>
+                    )}
+                  </BusinessInfo>
+                  <ActionsSection
+                    {...ActionsSectionProps}
+                    actionType='driver'
+                    showPhone={!hideDriverPhone}
+                    showMessages={!hideDriverMessages}
+                  />
                 </OrderDriver>
                 {
                   order?.driver?.location &&
@@ -741,41 +620,13 @@ const OrderDetailsUI = (props) => {
                     </Map>
                   )
                 }
-              </>
-            )}
-            {(deliveryTypes?.includes(order?.delivery_type) || order?.comment) && !isGiftCardOrder && !showStarbucksHeader && (
-              <OrderPreferences>
-                <OrderPreferencesSection
-                  order={order}
-                  placeSpotTypes={placeSpotTypes}
-                />
-              </OrderPreferences>
+              </OrderDriverContainer>
             )}
           </WrapperLeftContainer>
           <WrapperRightContainer>
             <OrderProducts>
               <HeaderTitle>
-                {!showStarbucksHeader
-                  ? (
-                  <>
-                    <OrderHeaderInfoSection isService={isService} />
-                    <OrderActionsSection
-                      userCustomerId={userCustomerId}
-                      isService={isService}
-                      handleGoToPage={handleGoToPage}
-                    />
-                  </>
-                    )
-                  : (
-                  <div
-                    style={{ display: 'flex', flexDirection: 'column' }}
-                  >
-                    <OrderPreferencesSection
-                      order={order}
-                      placeSpotTypes={placeSpotTypes}
-                    />
-                  </div>
-                    )}
+                <h1>{t('YOUR_ORDER', 'Your order')}</h1>
               </HeaderTitle>
               {!showStarbucksHeader && sortedProductList}
               <OrderBillSection
@@ -839,16 +690,16 @@ const OrderDetailsUI = (props) => {
       {!loading && error && (
         error.includes('ERROR_ACCESS_EXPIRED')
           ? (
-          <NotFoundSource
-            content={t(error[0], 'Sorry, the order has expired.')}
-          />
+            <NotFoundSource
+              content={t(error[0], 'Sorry, the order has expired.')}
+            />
             )
           : (
-          <NotFoundSource
-            content={t('NOT_FOUND_ORDER', theme?.defaultLanguages?.NOT_FOUND_ORDER || 'Sorry, we couldn\'t find the requested order.')}
-            btnTitle={t('ORDERS_REDIRECT', theme?.defaultLanguages?.ORDERS_REDIRECT || 'Go to Orders')}
-            onClickButton={handleOrderRedirect}
-          />
+            <NotFoundSource
+              content={t('NOT_FOUND_ORDER', theme?.defaultLanguages?.NOT_FOUND_ORDER || 'Sorry, we couldn\'t find the requested order.')}
+              btnTitle={t('ORDERS_REDIRECT', theme?.defaultLanguages?.ORDERS_REDIRECT || 'Go to Orders')}
+              onClickButton={handleOrderRedirect}
+            />
             )
       )}
       {
@@ -870,29 +721,29 @@ const OrderDetailsUI = (props) => {
               {
                 reviewStatus?.order
                   ? (
-                  <ReviewOrder
-                    order={order}
-                    hashKey={props.hashKey}
-                    closeReviewOrder={closeReviewOrder}
-                    setIsReviewed={setIsOrderReviewed}
-                  />)
-                  : (reviewStatus?.product
-                      ? (
-                    <ReviewProduct
+                    <ReviewOrder
                       order={order}
                       hashKey={props.hashKey}
-                      closeReviewProduct={closeReviewProduct}
-                      setIsProductReviewed={setIsProductReviewed}
+                      closeReviewOrder={closeReviewOrder}
+                      setIsReviewed={setIsOrderReviewed}
                     />)
-                      : (reviewStatus?.professional
-                          ? (
-                      <ReviewProfessional
+                  : (reviewStatus?.product
+                      ? (
+                      <ReviewProduct
                         order={order}
                         hashKey={props.hashKey}
-                        closeReviewProfessional={handleCloseReivew}
-                        setIsProfessionalReviewed={setIsProReviewed}
-                        isProfessional
+                        closeReviewProduct={closeReviewProduct}
+                        setIsProductReviewed={setIsProductReviewed}
                       />)
+                      : (reviewStatus?.professional
+                          ? (
+                        <ReviewProfessional
+                          order={order}
+                          hashKey={props.hashKey}
+                          closeReviewProfessional={handleCloseReivew}
+                          setIsProfessionalReviewed={setIsProReviewed}
+                          isProfessional
+                        />)
                           : (
                         <ReviewDriver
                           order={order}

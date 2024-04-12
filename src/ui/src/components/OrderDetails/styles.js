@@ -14,7 +14,6 @@ export const Container = styled.div`
 `
 
 export const WrapperContainer = styled.div`
-  width: 80%;
   display: flex;
   flex-direction: column;
   min-height: auto;
@@ -53,20 +52,21 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  right: 0;
+  right: 20px;
 `
 
 export const OrderBusiness = styled.div`
   display: flex;
   box-sizing: border-box;
-  width: 100%;
-  flex-direction: column;
   align-items: flex-start;
-  border-radius: 7.6px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0px 4px 10px 0px #0000001F;
-
+  padding: 15px;
+  border: 1px solid #E9ECEF;
+  border-radius: 10px;
+  margin: 20px;
+  > svg {
+    width: 25px;
+    height: 25px;
+  }
   @media (min-width: 769px) {
     flex-direction: row;
   }
@@ -79,14 +79,6 @@ export const BusinessWrapper = styled.div`
   align-items: center;
   flex-direction: column;
 
-  ${props => props.borderBottom && css`
-    padding-bottom: 15px;
-    border-bottom: 1px solid ${props => props.theme.colors.lightGray};
-  `}
-  ${props => props.borderTop && css`
-    margin-top: 15px;
-    border-top: 1px solid ${props => props.theme.colors.lightGray};
-  `}
   img {
     width: 100px;
     height: 100px;
@@ -124,11 +116,10 @@ export const BtsOrderStatus = styled.div`
 `
 
 export const BusinessInfo = styled.div`
-  width: 100%;
   box-sizing: border-box;
   margin-right: 0;
-  margin-top: 10px;
-
+  flex: 1;
+  margin-left: 10px;
   h1,
   p {
     margin: 0;
@@ -139,11 +130,11 @@ export const BusinessInfo = styled.div`
   h2 {
     font-weight: 500;
     font-size: 18px;
-    margin: 0px 0px 5px 0px;
+    margin: 0px;
   }
   p {
     font-size: 14px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
   }
 
   @media (min-width: 400px) {
@@ -177,16 +168,16 @@ export const ActionsBlock = styled.div`
 `
 
 export const OrderInfo = styled.div`
+  padding: 20px;
   width: 100%;
-  margin: 0px 0px 35px;
   position: relative;
+  box-sizing: border-box;
   h1, p {
     margin: 0px;
-    color: ${props => props.theme.colors.darkTextColor};
   }
   h1 {
     margin-bottom: 5px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 32px;
   }
   p {
@@ -292,11 +283,11 @@ export const ReviewOrderLink = styled.span`
 `
 
 const StatusBarStyled = styled.div`
-  height: 12px;
+  height: 24px;
   margin: 18px 0px 8px;
-  background: ${props => `linear-gradient(to right, ${props.theme.colors.primary} ${props.percentage}%, ${props.theme.colors.disabled} ${props.percentage}%)`};
+  background: ${props => `linear-gradient(to right, ${props.theme.colors.primary} ${props.percentage}%, #F8F9FA ${props.percentage}%)`};
   ${props => props.theme?.rtl && css`
-    background: linear-gradient(to left, ${props.theme.colors.primary} ${props.percentage}%, ${props.theme.colors.disabled} ${props.percentage}%);
+    background: linear-gradient(to left, ${props.theme.colors.primary} ${props.percentage}%, #F8F9FA ${props.percentage}%);
   `}
 `
 
@@ -325,20 +316,13 @@ export const SectionTitleContainer = styled.div`
   }
 `
 
-export const OrderCustomer = styled(BusinessInfo)`
-  display: flex;
-  flex-direction: column;
-  border-radius: 7.6px;
-  padding: 20px;
-  box-shadow: 0px 4px 10px 0px #0000001F;
-  margin-bottom: 30px;
+export const OrderCustomer = styled(OrderBusiness)`
 `
 
 export const PhotoBlock = styled.img`
   border-radius: 7.6px;
-  width: 100px;
-  height: 100px;
-  margin-right: 40px;
+  width: 100%;
+  height: 100%;
 `
 
 export const Map = styled.div`
@@ -356,7 +340,16 @@ export const Map = styled.div`
   }
 `
 
-export const OrderDriver = styled(OrderCustomer)``
+export const OrderDriver = styled(OrderCustomer)`
+  .photo {
+    border-radius: 7.6px;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.10);
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    height: 50px;
+  }
+`
 
 export const WrapperDriver = styled.div`
   display: flex;
@@ -380,18 +373,20 @@ export const WrapperDriver = styled.div`
   }
 `
 
-export const OrderProducts = styled(OrderCustomer)`
+export const OrderProducts = styled.div`
   flex-direction: column;
+  padding: 20px;
 `
 
 export const OrderBill = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 25px;
   margin-top: 10px;
   table {
     width: 100%;
     font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 20px;
     td span {
       unicode-bidi: bidi-override;
     }
@@ -410,12 +405,12 @@ export const OrderBill = styled.div`
       font-size: 14px;
       td:nth-child(1) {
         font-weight: 600;
-        font-size: 20px;
+        font-size: 18px;
         padding-top: 10px;
       }
       td:nth-child(2) {
         font-weight: 600;
-        font-size: 20px;
+        font-size: 18px;
         padding-top: 10px;
       }
     }
@@ -591,15 +586,9 @@ export const WrapperLeftContainer = styled.div`
 export const WrapperRightContainer = styled(WrapperLeftContainer)``
 
 export const Divider = styled.div`
-  height: 8px;
+  height: 6px;
   background: #F8F9FA;
-  width: calc(100% + 40px);
-  margin-left: -20px;
 
-  @media(min-width: 769px) {
-    width: calc(100% + 80px);
-    margin-left: -40px;
-  }
 `
 
 export const MyOrderActions = styled.div``
@@ -638,9 +627,7 @@ export const OrderActions = styled.div`
 export const TitleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 90%;
-  margin: auto;
+  align-items: flex-start;
   button {
     display: flex;
     align-items: center;
@@ -705,7 +692,6 @@ export const OrderStatusAndLinkContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   @media (min-width: 450px) {
     flex-direction: row;
   }
@@ -714,6 +700,7 @@ export const LinkWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px;
 `
 
 export const OrderHistoryContainer = styled.div``
@@ -864,5 +851,63 @@ export const PoweredByOrdering = styled.p`
   }
   a:hover{
     text-decoration: underline;
+  }
+`
+
+export const Logo = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+`
+
+export const OrderDetailsBanner = styled.div`
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${({ theme }) => theme?.images?.general?.orderDetailsBanner});
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 20px;
+  h1, p{
+    margin: 0;
+    color: #fff;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  p{
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  div {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    button {
+      height: 44px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      width: 150px;
+    }
+    button:first-child{
+      background: transparent;
+      margin-bottom: 10px;
+    }
+  }
+`
+
+export const OrderDriverContainer = styled.div`
+  > h2 {
+    font-size: 20px;
+    margin: 0;
+    padding: 20px 20px 0px 20px;
   }
 `

@@ -5,9 +5,7 @@ import Skeleton from 'react-loading-skeleton'
 import {
   Container,
   UpsellingContainer,
-  Item,
-  Image,
-  Details,
+
   CloseUpselling,
   SkeletonContainer,
   HorizontalUpsellingContainer,
@@ -16,7 +14,13 @@ import {
   HorizontalDetails,
   WrapAutoScroll,
   UpsellingPageTitleWrapper,
-  Divider
+  Divider,
+  EmptyCart,
+  SubtitleContainer,
+  OrderBillContainer,
+  OrderDetailsTitle,
+  CheckProductsContainer,
+  UpsellingTitle
 } from './styles'
 
 import { UpsellingPage as UpsellingPageController, useLanguage, useUtils } from '~components'
@@ -25,8 +29,11 @@ import {
   Button,
   Modal,
   AutoScroll,
-  ProductForm
+  ProductForm,
+  Cart,
+  SingleProductCard
 } from '~ui'
+import { Cart3 } from 'react-bootstrap-icons'
 
 const UpsellingPageUI = (props) => {
   const {
@@ -36,7 +43,11 @@ const UpsellingPageUI = (props) => {
     canOpenUpselling,
     setCanOpenUpselling,
     business,
-    isCustomMode
+    isCustomMode,
+    currentCart,
+    productLoading,
+    isCartOnProductsList,
+    handleCartOpen
   } = props
 
   const [, t] = useLanguage()
@@ -51,11 +62,7 @@ const UpsellingPageUI = (props) => {
 
   useEffect(() => {
     if (!isCustomMode) {
-      if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
-        setCanOpenUpselling && setCanOpenUpselling(true)
-      } else if (!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) {
-        handleUpsellingPage()
-      }
+      setCanOpenUpselling && setCanOpenUpselling(true)
     }
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
 
@@ -79,38 +86,30 @@ const UpsellingPageUI = (props) => {
       <Container>
         <UpsellingContainer>
           {
-            !upsellingProducts.loading
-              ? (
+            !upsellingProducts.loading && (
               <>
                 {
                   (!upsellingProducts.error && upsellingProducts.products?.length > 0)
                     ? upsellingProducts.products.map((product, i) => (
-                    <Item key={product.id} name={product.name}>
-                      <Image>
-                        <img src={product.images} alt={`product-${i}`} width='150px' height='150px' loading='lazy' />
-                      </Image>
-                      <Details>
-                        <div>
-                          <h3 title={product.name}>{product.name}</h3>
-                        </div>
-                        <p>{parsePrice(product.price)}</p>
-                        <Button color='primary' onClick={() => handleFormProduct(product)}>{t('ADD', 'Add')}</Button>
-                      </Details>
-                    </Item>
+                      <SingleProductCard
+                        key={'prod_' + product.id + `_${i}`}
+                        isSoldOut={product.inventoried && !product.quantity}
+                        product={product}
+                        businessId={business?.id}
+                        productsList={upsellingProducts.products}
+                        onProductClick={() => handleFormProduct(product)}
+                      // handleUpdateProducts={handleUpdateProducts}
+                      // navigation={navigation}
+                      />
                     ))
                     : (
-                    <div>
-                      {upsellingProducts.message || t('NO_UPSELLING_PRODUCTS', 'There are no upselling products')}
-                    </div>
+                      <h4>
+                        {upsellingProducts.message}
+                      </h4>
                       )
                 }
               </>
-                )
-              : [...Array(8)].map((item, i) => (
-              <SkeletonContainer key={i}>
-                <Skeleton width={150} height={250} />
-              </SkeletonContainer>
-                ))
+            )
           }
         </UpsellingContainer>
       </Container>
@@ -123,84 +122,154 @@ const UpsellingPageUI = (props) => {
         ? (
             showUpselling
               ? (
-          <>
-            <Divider />
-            <UpsellingPageTitleWrapper>
-              <p>{t('UPSELLING_QUESTION', 'Do you want something else?')}</p>
-              <MdClose onClick={() => setShowUpSelling(false)} />
-            </UpsellingPageTitleWrapper>
-            <WrapAutoScroll>
-              <HorizontalUpsellingContainer>
-                {
-                  !upsellingProducts.loading
-                    ? (
-                    <AutoScroll scrollId='upSelling' isColumnMode={upsellingProducts.products.length === 1}>
-                      {
-                        (!upsellingProducts.error && upsellingProducts.products.length > 0)
-                          ? upsellingProducts.products.map((product, i) => (
-                          <HorizontalItem key={product.id} name={product.name}>
-                            <HorizontalDetails>
-                              <div>
-                                <h3 title={product.name}>{product.name}</h3>
-                              </div>
-                              <div>
-                                <span>{parsePrice(product.price)}</span>
-                              </div>
-                              <Button color='primary' onClick={() => handleFormProduct(product)}>{t('ADD', 'Add')}</Button>
-                            </HorizontalDetails>
-                            {(product?.images || (!hideProductDummyLogo && theme?.images?.dummies?.product)) && (
-                              <HorizontalImage>
-                                <img src={product.images} alt={`product-${i}`} loading='lazy' />
-                              </HorizontalImage>
-                            )}
-                          </HorizontalItem>
+              <>
+                <Divider />
+                <UpsellingPageTitleWrapper>
+                  <p>{t('UPSELLING_QUESTION', 'Do you want something else?')}</p>
+                  <MdClose onClick={() => setShowUpSelling(false)} />
+                </UpsellingPageTitleWrapper>
+                <WrapAutoScroll>
+                  <HorizontalUpsellingContainer>
+                    {
+                      !upsellingProducts.loading
+                        ? (
+                          <AutoScroll scrollId='upSelling' isColumnMode={upsellingProducts.products.length === 1}>
+                            {
+                              (!upsellingProducts.error && upsellingProducts.products.length > 0)
+                                ? upsellingProducts.products.map((product, i) => (
+                                  <HorizontalItem key={product.id} name={product.name}>
+                                    <HorizontalDetails>
+                                      <div>
+                                        <h3 title={product.name}>{product.name}</h3>
+                                      </div>
+                                      <div>
+                                        <span>{parsePrice(product.price)}</span>
+                                      </div>
+                                      <Button color='primary' onClick={() => handleFormProduct(product)}>{t('ADD', 'Add')}</Button>
+                                    </HorizontalDetails>
+                                    {(product?.images || (!hideProductDummyLogo && theme?.images?.dummies?.product)) && (
+                                      <HorizontalImage>
+                                        <img src={product.images} alt={`product-${i}`} loading='lazy' />
+                                      </HorizontalImage>
+                                    )}
+                                  </HorizontalItem>
+                                ))
+                                : (
+                                  <div>
+                                    {upsellingProducts.message || t('NO_UPSELLING_PRODUCTS', 'There are no upselling products')}
+                                  </div>
+                                  )
+                            }
+                          </AutoScroll>
+                          )
+                        : [...Array(8)].map((item, i) => (
+                          <SkeletonContainer key={i}>
+                            <Skeleton width={250} height={100} />
+                          </SkeletonContainer>
                           ))
-                          : (
-                          <div>
-                            {upsellingProducts.message || t('NO_UPSELLING_PRODUCTS', 'There are no upselling products')}
-                          </div>
-                            )
-                      }
-                    </AutoScroll>
-                      )
-                    : [...Array(8)].map((item, i) => (
-                    <SkeletonContainer key={i}>
-                      <Skeleton width={250} height={100} />
-                    </SkeletonContainer>
-                      ))
-                }
-              </HorizontalUpsellingContainer>
-            </WrapAutoScroll>
-          </>
+                    }
+                  </HorizontalUpsellingContainer>
+                </WrapAutoScroll>
+              </>
                 )
               : null
           )
         : (
-        <>
-          {!(!canOpenUpselling || upsellingProducts?.products?.length === 0)
-            ? openUpselling
-              ? (
-              <Modal
-                title={t('UPSELLING_QUESTION', 'Do you want something else?')}
-                open={openUpselling}
-                onClose={() => handleUpsellingPage()}
-                width='70%'
-              >
-                <UpsellingLayout />
-                <CloseUpselling>
-                  <Button
-                    color='secondary'
-                    outline
-                    onClick={() => handleUpsellingPage(false)}
+          <>
+            {canOpenUpselling
+              ? openUpselling
+                ? (
+                  <Modal
+                    open={openUpselling}
+                    onClose={() => handleUpsellingPage(false)}
+                    width='70%'
+                    padding='0px'
                   >
-                    {t('NO_THANKS', 'No, Thanks')}
-                  </Button>
-                </CloseUpselling>
-              </Modal>
-                )
-              : null
-            : null}
-        </>
+                    {currentCart?.products?.length > 0
+                      ? (
+                        <>
+                          <UpsellingTitle>{t('CART', 'Cart')}</UpsellingTitle>
+                          <OrderDetailsTitle>
+                            <p>{t('ORDER_DETAILS', 'Order details')}</p>
+                          </OrderDetailsTitle>
+                          <CheckProductsContainer>
+                            <p>{t('CHECK_AND_MODIFY_PRODUCTS', 'Check and modify your products here')}</p>
+                            <Button
+                              color='primary'
+                              onClick={() => handleUpsellingPage(false)}
+                            >
+                              {t('ADD_MORE_PRODUCTS', 'Add more products')}
+                            </Button>
+                          </CheckProductsContainer>
+                          <SubtitleContainer>
+                            <p>{t('CONFIRM_YOUR_SELECTION', 'Corfirm your selection')}</p>
+                          </SubtitleContainer>
+                          <Cart
+                            isStore
+                            isForceOpenCart
+                            hideDetails
+                            hideCheckoutButtons
+                            cart={currentCart}
+                            isCartPending={currentCart?.status === 2}
+                            isProducts={currentCart.products.length}
+                            isCartOnProductsList={isCartOnProductsList}
+                            handleCartOpen={handleCartOpen}
+                            businessConfigs={business?.configs}
+                            productLoading={productLoading}
+                          />
+                        </>
+                        )
+                      : (
+                        <EmptyCart>
+                          <div className='empty-content'>
+                            <Cart3 />
+                            <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                          </div>
+                        </EmptyCart>
+                        )}
+                    <SubtitleContainer>
+                      <p>{t('SELECT_YOUR_ADDITIONALS', 'Select your additionals')}</p>
+                    </SubtitleContainer>
+                    <UpsellingLayout />
+                    {currentCart?.products?.length > 0 && (
+                      <OrderBillContainer>
+                        <Divider />
+                        <Cart
+                          isStore
+                          isForceOpenCart
+                          hideProducts
+                          hideCheckoutButtons
+                          cart={currentCart}
+                          isCartPending={currentCart?.status === 2}
+                          isProducts={currentCart.products.length}
+                          isCartOnProductsList={isCartOnProductsList}
+                          handleCartOpen={handleCartOpen}
+                          businessConfigs={business?.configs}
+                          productLoading={productLoading}
+                        />
+                      </OrderBillContainer>
+                    )}
+                    <CloseUpselling>
+                      {currentCart?.products?.length > 0 && (
+                        <Button
+                          color='primary'
+                          onClick={() => handleUpsellingPage(true)}
+                        >
+                          {t('PAY', 'Pay')}
+                        </Button>
+                      )}
+                      <Button
+                        color='secondary'
+                        onClick={() => handleUpsellingPage(false)}
+                      >
+                        {t('ADD_ARTICLES', 'Add articles')}
+                      </Button>
+                    </CloseUpselling>
+                  </Modal>
+                  )
+                : null
+              : null}
+          </>
           )}
       {modalIsOpen && (
         <Modal

@@ -16,20 +16,22 @@ export const TipCard = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  border: 1px solid #E9ECEF;
-  width: 62px;
-  height: 62px;
-  min-width: 62px;
+  border: 1px solid #B1BCCC;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
   cursor: pointer;
   text-transform: capitalize;
   font-size: 14px;
-  color: #B1BCCC;
   transition: all 0.3s;
   text-align: center;
   &.active {
-    background-color: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.primaryContrast};
+    border-color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.primary};
   }
+  ${({ $custom }) => $custom && css`
+    font-size: 10px;
+  `}
 `
 
 export const FormDriverTip = styled.div`
@@ -80,7 +82,7 @@ export const DriverTipMessage = styled.p`
 export const WrapperTips = styled.div`
   display: flex;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
 
