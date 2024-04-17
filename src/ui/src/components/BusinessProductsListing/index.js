@@ -350,11 +350,9 @@ const BusinessProductsListingUI = (props) => {
   return (
     <>
       <ProductsContainer>
-        {!props.useKioskApp && (
-          <HeaderContent useFullWidth={fullWidthArrowThemes.includes(searchThemeType) || fullWidthArrowThemes.includes(headerThemeType)}>
-            <h1>{t('MENU', 'Menu')}</h1>
-          </HeaderContent>
-        )}
+        <HeaderContent useFullWidth={fullWidthArrowThemes.includes(searchThemeType) || fullWidthArrowThemes.includes(headerThemeType)}>
+          <h1>{t('MENU', 'Menu')}</h1>
+        </HeaderContent>
         <RenderProductsLayout
           errors={errors}
           isError={error}

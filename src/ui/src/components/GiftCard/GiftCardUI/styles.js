@@ -21,7 +21,7 @@ export const TitleWrapper = styled.div`
 export const ActionWrapper = styled.div`
   display: flex;
   > button {
-    height: 44px;
+    min-height: 44px;
     &:first-child {
       ${props => props.theme?.rtl
 ? css`

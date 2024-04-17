@@ -863,6 +863,7 @@ const CheckoutUI = (props) => {
       >
         <MomentContent
           isHeader
+          onClose={() => setOpenModal({ ...openModal, moment: false })}
         />
       </Modal>
       <Modal

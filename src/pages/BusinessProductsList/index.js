@@ -161,7 +161,7 @@ export const BusinessProductsList = (props) => {
   const businessProductsProps = {
     ...props,
     ordering,
-    avoidBusinessLoading: true,
+    avoidBusinessLoading: false,
     isCustomLayout: settings?.use_marketplace || store,
     useKioskApp: settings?.use_kiosk,
     isSearchByName: true,

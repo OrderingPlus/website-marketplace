@@ -20,6 +20,10 @@ export const OrderTypeSelectorContainer = styled.div`
     flex: 1;
     font-weight: 600;
     padding-right: 20px;
+    p {
+      text-align: center;
+      margin: 0 auto
+    }
   }
   .selected {
     background: ${({ theme }) => theme?.colors?.primary};

@@ -47,7 +47,7 @@ export const OrderTypeSelectorUI = (props) => {
           <img
             src={theme?.images?.general?.deliveryIcon}
           />
-          {t(orderTypes[0]?.text)}
+          <p>{t(orderTypes[0]?.text)}</p>
         </Button>
         <Button
           initialIcon
@@ -57,7 +57,7 @@ export const OrderTypeSelectorUI = (props) => {
           <img
             src={theme?.images?.general?.pickupIcon}
           />
-          {t(orderTypes[1]?.text)}
+          <p>{t(orderTypes[1]?.text)}</p>
         </Button>
       </OrderTypeSelectorContainer>
       <AdvancedAddressForm
