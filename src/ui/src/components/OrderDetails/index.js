@@ -782,6 +782,7 @@ const OrderDetailsUI = (props) => {
                 order={order}
                 setOpenTaxModal={setOpenTaxModal}
                 showOnlyTotals={showStarbucksHeader}
+                isGiftCardOrder={isGiftCardOrder}
               />
             </OrderProducts>
           </WrapperRightContainer>
