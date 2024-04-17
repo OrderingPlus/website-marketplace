@@ -439,7 +439,7 @@ const AdvancedAddressFormUI = (props) => {
             autoComplete='off'
           >
             {inputNames.map(field => showField && showField(field.name) && (
-              field.name === 'address' && !openSpreadForm
+              field.name === 'address'
                 ? (
                   <React.Fragment key={field.name}>
                     <AddressWrap className='google-control'>

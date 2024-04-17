@@ -243,7 +243,7 @@ export const PageBannerWrapper = styled.div`
 `
 
 export const BackButton = styled.div`
-  margin-left: 20px;
+  margin-left: 15px;
   display: flex;
   position: relative;
   top: 20px;

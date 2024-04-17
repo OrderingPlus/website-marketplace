@@ -151,7 +151,7 @@ export const HeaderContent = styled.div`
     font-size: 36px;
     font-weight: 600;
     margin: 0px;
-    padding: 0 30px;
+    padding: 0 15px;
   }
 
   .back-arrow {

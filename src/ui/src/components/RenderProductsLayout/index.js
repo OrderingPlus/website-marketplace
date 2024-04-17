@@ -17,7 +17,7 @@ import {
   BackButton
 } from './styles'
 
-import { useLanguage, useUtils } from '~components'
+import { ToastType, useEvent, useLanguage, useToast, useUtils } from '~components'
 import { SpinnerCart } from '../Cart/styles'
 
 import {
@@ -73,7 +73,9 @@ export const RenderProductsLayout = (props) => {
   const theme = useTheme()
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
+  const [events] = useEvent()
   const windowSize = useWindowSize()
+  const [, { showToast }] = useToast()
   const [isCartModal, setisCartModal] = useState(false)
   const [tabSelected, setTabSelected] = useState(1)
   const [selectedCategoryId, setSelectedCategoryId] = useState(null)
@@ -96,11 +98,17 @@ export const RenderProductsLayout = (props) => {
     handleSaveProduct()
   }, [categorySelected])
 
+  useEffect(() => {
+    if (!isLoading && !business?.id) {
+      events.emit('go_to_page', { page: 'order_types' })
+      showToast(ToastType.Error, t(businessNearestState?.error) || t('NO_BUSINESS_NEAR_LOCATION', 'No business near of you location'))
+    }
+  }, [isLoading, business?.id])
+
   return (
     <>
       {!isLoading && business?.id && (
         <WrappLayout isCartOnProductsList={isCartOnProductsList}>
-
           <div className='bp-list'>
             {!(businessState?.loading || businessNearestState?.loading) && business?.id && !(business?.categories?.length === 0) && !selectedCategoryId && (
               <>

@@ -17,11 +17,11 @@ export const InnerHeader = styled.div`
   align-items: center;
 
   #left-side {
-    width: ${({ theme }) => theme?.header?.components?.layout?.type === 'starbucks' ? '30%' : '25%'};
+    width: '60%';
     justify-content: flex-start;
   }
   #right-side {
-    width: ${({ theme }) => theme?.header?.components?.layout?.type === 'starbucks' ? '30%' : '40%'};
+    width: '40%';
     justify-content: flex-end;
   }
   #center-side {

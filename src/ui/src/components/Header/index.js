@@ -205,7 +205,7 @@ export const Header = (props) => {
   const returnHeaderTitle = () => {
     const homePathnames = ['/', '/home']
     return window.location.pathname.includes('/store') || window.location.pathname.includes(`${businessSelected?.slug}`)
-      ? businessSelected?.slug
+      ? businessSelected?.name
       : window.location.pathname === '/search'
         ? t('STORES', 'Stores')
         : window.location.pathname === '/profile/orders'

@@ -128,13 +128,13 @@ export const ModalOrderTypes = styled.div`
 `
 export const ModalIcon = styled.span`
   position: fixed;
-  left: 25px;
+  left: 15px;
   top: 30px;
   font-size: 30px;
   cursor: pointer;
   z-index: 2;
   ${props => props.theme?.rtl && css`
-    right: 25px;
+    right: 15px;
     left: initial;
   `}
   ${({ isProductForm }) => isProductForm && css`

@@ -97,6 +97,7 @@ const ModalUI = (props) => {
 export const Modal = (props) => {
   const ModalProps = {
     ...props,
+    disableDefaultStyleOnRender: true,
     UIComponent: ModalUI
   }
 
