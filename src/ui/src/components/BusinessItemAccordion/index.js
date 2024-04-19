@@ -64,8 +64,7 @@ export const BusinessItemAccordion = (props) => {
   const changeStore = useRef(null)
 
   const viewString = isStore ? 'business_view' : 'header'
-  const giftCardAddonEnabled = isGiftCart && configs?.addon_gift_card?.value
-  const hideBusinessLogo = giftCardAddonEnabled || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
+  const hideBusinessLogo = isGiftCart || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
   const hideBusinessTime = theme?.[viewString]?.components?.cart?.components?.business?.components?.time?.hidden
 
   const toggleAccordion = (e) => {
@@ -149,7 +148,7 @@ export const BusinessItemAccordion = (props) => {
                 </WrapperBusinessLogo>
               )}
               <ContentInfo className='info' isStore={isStore} isLogo={!hideBusinessLogo}>
-                {giftCardAddonEnabled && (
+                {isGiftCart && (
                   <h2>{t('GIFT_CARD_CHECKOUT', 'Gift card checkout')}</h2>
                 )}
                 {!!business?.name && (
