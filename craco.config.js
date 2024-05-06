@@ -1,3 +1,5 @@
+const CracoWorkboxPlugin = require('craco-workbox')
+
 module.exports = {
   webpack: {
     configure: (webpackConfig, { paths }) => {
@@ -8,5 +10,8 @@ module.exports = {
       }
       return webpackConfig
     }
-  }
+  },
+  plugins: [{
+    plugin: CracoWorkboxPlugin
+  }]
 }
