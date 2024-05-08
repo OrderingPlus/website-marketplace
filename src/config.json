@@ -1,5 +1,6 @@
 {
   "app_id": "ordering-react",
+  "app_internal_name": "website",
   "notification_app": "orderingweb",
   "app_name": "Ordering",
   "project": "demosv5",
