@@ -478,7 +478,7 @@ const AddressFormUI = (props) => {
                     )}
                   </AddressWrap>
 
-                  {!isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
+                  {!useAlternativeMap && !isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
                     <WrapperMap>
                       <GoogleMapsMap
                         apiKey={googleMapsApiKey}
