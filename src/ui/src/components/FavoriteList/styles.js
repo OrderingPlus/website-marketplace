@@ -19,13 +19,13 @@ export const FavoriteListWrapper = styled.div`
   width: 100%;
 
   ${({ isLoading }) => isLoading
-? css`
+    ? css`
     ::-webkit-scrollbar {
         width: 0px;
         height: 0px;
     }
   `
-: css`
+    : css`
       ::-webkit-scrollbar {
           width: 6px;
           height: 6px;
@@ -73,6 +73,17 @@ export const FavoriteListing = styled.div`
       max-width: calc(50vw - 20px);
       min-width: calc(50vw - 20px);
       height: 25vh;
+      @media (min-width: 1000px){
+        width: calc(33vw - 20px);
+        max-width: calc(33vw - 20px);
+        min-width: calc(33vw - 20px);
+        height: 20vh;
+      }
+      @media (min-width: 1200px){
+        width: calc(25vw - 20px);
+        max-width: calc(25vw - 20px);
+        min-width: calc(25vw - 20px);
+      }
     }
   }
   `}

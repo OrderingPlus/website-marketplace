@@ -23,6 +23,7 @@ export const CategoryContainer = styled.div`
   margin-bottom: 10px;
   display: flex;
   width: 100%;
+  cursor: pointer;
   .category-img, img {
     width: 105px;
     min-width: 105px;

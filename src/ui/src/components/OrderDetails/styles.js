@@ -8,8 +8,13 @@ export const Container = styled.div`
   align-items: center;
   margin: 45px 0 20px;
 
-  @media (min-width: 740px) {
-    margin: 20px 0;
+  @media (min-width: 768px) {
+    margin: 0px;
+  }
+
+  @media (min-width: 1200px) {
+    width: 75%;
+    margin: 0 auto;
   }
 `
 
@@ -18,7 +23,7 @@ export const WrapperContainer = styled.div`
   flex-direction: column;
   min-height: auto;
   position: relative;
-
+  width: 100%;
   @media (min-width: 993px) {
     min-height: calc(100vh - 337px);
     box-sizing: border-box;
@@ -184,7 +189,6 @@ export const OrderInfo = styled.div`
     font-size: 14px;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
   }
 
   .date {
@@ -859,6 +863,9 @@ export const Logo = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
+  @media (min-width: 768px){
+    display: none;
+  }
 `
 
 export const OrderDetailsBanner = styled.div`
@@ -901,6 +908,15 @@ export const OrderDetailsBanner = styled.div`
       background: transparent;
       margin-bottom: 10px;
     }
+  }
+
+  @media (min-width: 768px){
+    height: 300px;
+    justify-content: center;
+  }
+
+  @media (min-width: 1200px){
+    height: 400px;
   }
 `
 

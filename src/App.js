@@ -52,7 +52,6 @@ import {
 import { lazyRetry } from './components/LazyRetry'
 
 const AddressList = loadable(() => lazyRetry(() => import('./pages/AddressList')))
-const BusinessesList = loadable(() => lazyRetry(() => import('./pages/BusinessesList')))
 const BusinessProductsList = loadable(() => lazyRetry(() => import('./pages/BusinessProductsList')))
 const CheckoutPage = loadable(() => lazyRetry(() => import('./pages/Checkout')))
 const Cms = loadable(() => lazyRetry(() => import('./pages/Cms')))
@@ -79,7 +78,6 @@ const ResetPassword = loadable(() => lazyRetry(() => import('./pages/ResetPasswo
 const MultiCheckout = loadable(() => lazyRetry(() => import('./pages/MultiCheckout')))
 const MultiCart = loadable(() => lazyRetry(() => import('./pages/MultiCart')))
 const MultiOrdersDetails = loadable(() => lazyRetry(() => import('./pages/MultiOrdersDetails')))
-const BusinessListingSearch = loadable(() => lazyRetry(() => import('./pages/BusinessListingSearch')))
 const OrderTypes = loadable(() => lazyRetry(() => import('./pages/OrderTypes')))
 
 export const App = () => {
@@ -170,10 +168,6 @@ export const App = () => {
   const websiteThemeType = themeUpdated?.my_products?.components?.website_theme?.components?.type
   const websiteThemeBusinessSlug = themeUpdated?.my_products?.components?.website_theme?.components?.business_slug
   const updatedBusinessSlug = (websiteThemeType === 'single_store' && websiteThemeBusinessSlug) || settings?.businessSlug
-  const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map(value => Number(value)) || []
-  const franchiseLayout = themeUpdated?.my_products?.components?.website_theme?.components?.franchise_slug
-  const isAllowUnaddressOrderType = unaddressedTypes.includes(orderStatus?.options?.type)
-  const isFranchiseOne = franchiseLayout === 'franchise_1'
   const businessesSlug = {
     marketplace: 'marketplace',
     kiosk: updatedBusinessSlug,
@@ -299,7 +293,7 @@ export const App = () => {
 
   const OrderReviewRequired = (order) => {
     setLastOrderReview({
-      isReviewOpen: !!((location?.pathname === '/' || location?.pathname === '/search' || location?.pathname === '/home')),
+      isReviewOpen: !!((location?.pathname === '/' || location?.pathname === '/order_types' || location?.pathname === '/home')),
       order,
       defaultStar: 5,
       reviewStatus: { trigger: true, order: false, product: false, driver: false },
@@ -560,7 +554,7 @@ export const App = () => {
                             <>
                               {orderStatus?.options?.address?.location && orderStatus?.options?.type === 2 && auth
                                 ? (
-                                  <Redirect to='/search' />
+                                  <Redirect to='/order_types' />
                                   )
                                 : (
                                   <>
@@ -585,7 +579,7 @@ export const App = () => {
                             <>
                               {orderStatus?.options?.address?.location && orderStatus?.options?.type === 2 && auth
                                 ? (
-                                  <Redirect to='/search' />
+                                  <Redirect to='/order_types' />
                                   )
                                 : (
                                   <>
@@ -669,7 +663,7 @@ export const App = () => {
                       <Route exact path='/verify'>
                         {isUserVerifyRequired && !guestCheckoutEnabled
                           ? <UserVerification />
-                          : <Redirect to={(auth || isKioskApp) ? singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/search' : '/'} />}
+                          : <Redirect to={(auth || isKioskApp) ? singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/order_types' : '/'} />}
                       </Route>
                       <Route exact path='/profile/orders'>
                         {auth
@@ -695,7 +689,7 @@ export const App = () => {
                           : (
                               isKioskApp
                                 ? <Redirect to={singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/'} />
-                                : <Redirect to={{ pathname: '/search' }} />
+                                : <Redirect to={{ pathname: '/order_types' }} />
                             )}
                       </Route>
                       <Route exact path='/help'>
@@ -704,46 +698,6 @@ export const App = () => {
                             ? <Redirect to='/verify' />
                             : (<Help />)
                           : <Redirect to={singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/'} />}
-                      </Route>
-                      <Route exact path='/search'>
-                        {
-                          isKioskApp || businessesSlug?.business
-                            ? <Redirect to={singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/'} />
-                            : queryIntegrationToken && queryIntegrationCode === 'spoonity'
-                              ? <QueryLoginSpoonity token={queryIntegrationToken} notificationState={oneSignalState} />
-                              : (
-                                  orderStatus.loading && !orderStatus.options?.address?.location
-                                    ? (
-                                    <SpinnerLoader />
-                                      )
-                                    : (
-                                        isUserVerifyRequired && !guestCheckoutEnabled
-                                          ? (
-                                        <Redirect to='/verify' />
-                                            )
-                                          : (
-                                              auth && orderStatus?.options?.type === 2 && (orderStatus.options?.address?.location || isAllowUnaddressOrderType || isFranchiseOne) && !singleBusinessConfig.isActive
-                                                ? <BusinessesList searchValueCustom={searchValue} />
-                                                : <Redirect to={singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/'} />
-                                            )
-                                      )
-                                )
-                        }
-                      </Route>
-                      <Route exact path='/business_search'>
-                        {isUserVerifyRequired && !guestCheckoutEnabled
-                          ? (
-                            <Redirect to='/verify' />
-                            )
-                          : (
-                              (orderStatus.options?.address?.location || isAllowUnaddressOrderType) && !isKioskApp && !singleBusinessConfig.isActive
-                                ? (
-                                <BusinessListingSearch />
-                                  )
-                                : (
-                                <Redirect to={singleBusinessConfig.isActive ? `/${singleBusinessConfig.businessSlug}` : '/'} />
-                                  )
-                            )}
                       </Route>
                       <Route exact path='/promotions'>
                         {orderStatus.loading && !orderStatus.options?.address?.location

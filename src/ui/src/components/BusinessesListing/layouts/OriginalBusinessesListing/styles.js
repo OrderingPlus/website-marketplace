@@ -33,6 +33,7 @@ export const BusinessSearch = styled.div`
 export const BusinessList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-top: 30px;
 `
 
 export const WrapperSearch = styled.div`
@@ -42,7 +43,6 @@ export const WrapperSearch = styled.div`
 
   svg{
     align-self: center;
-    cursor: pointer;
     font-size: 26px;
     color: ${props => props.theme?.colors?.primary};
     margin-left: 10px;
@@ -275,4 +275,38 @@ export const Title = styled.h2`
 export const TypesWrapper = styled.div`
   margin-left: 20px;
   width: 600px;
+`
+
+export const AddressMenu = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid #DEE2E6;
+  height: 45px;
+  cursor: pointer;
+  span {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  svg {
+    color: ${({ theme }) => theme?.colors?.primary};
+    position: relative;
+    margin-right: 20px;
+    margin-left: 30px;
+    top: 1px;
+  }
+`
+
+export const PaginationWrapper = styled.div`
+  position: relative;
+  align-self: flex-end;
+`
+
+export const BusinessListingContainer = styled.div`
+
+  @media (min-width: 1200px){
+    position: relative;
+    right: 100%;
+    top: 170px;
+    margin-bottom: 170px;
+  }
 `

@@ -27,7 +27,7 @@ export const CartContent = (props) => {
   const [currentCartUuid, setCurrentCartUuid] = useState(null)
   const [productLoading, setProductLoading] = useState(false)
 
-  const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
+  const checkoutMultiBusinessEnabled = false
 
   const totalCartsPrice = carts?.length && carts.reduce((total, cart) => { return total + cart?.total }, 0)
   const totalCartsFee = carts?.length && carts

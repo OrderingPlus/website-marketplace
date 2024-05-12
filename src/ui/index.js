@@ -1,6 +1,7 @@
 import { AccordionDropdown } from './src/components/AccordionDropdown'
 import { ActionsSection } from './src/components/OrderDetails/ActionsSection'
 import { AddressDetails } from './src/components/AddressDetails'
+import { AddressOrderDetails } from './src/components/AddressOrderDetails'
 import { AddressForm } from './src/components/AddressForm'
 import { AddressList } from './src/components/AddressList'
 import { AddressesPopover } from './src/components/AddressesPopover'
@@ -212,6 +213,7 @@ import {
 export {
   AccordionDropdown,
   ActionsSection,
+  AddressOrderDetails,
   AddressDetails,
   AddressForm,
   AddressList,

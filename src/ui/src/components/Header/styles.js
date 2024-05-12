@@ -45,13 +45,13 @@ export const InnerHeader = styled.div`
 
   @media (min-width: 1200px) {
     #center-side {
-      width: calc(70% - 200px);
+      width: calc(80% - 200px);
     }
   }
 
   @media (min-width: 1500px) {
     #center-side {
-      width: calc(60% - 260px);
+      width: calc(70% - 260px);
     }
   }
 `
@@ -101,11 +101,16 @@ export const LeftHeader = styled.div`
   display: flex;
   align-items: center;
   h2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     color: ${({ theme }) => theme?.colors?.black};
     margin: 0;
     margin-left: 10px;
     font-size: 15px;
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `
 
@@ -511,5 +516,8 @@ export const LeftSide = styled.div`
     flex-direction: ${({ theme }) =>
     ['center', 'right']?.includes(theme?.header?.components?.logo?.components?.layout?.position) ? 'row-reverse' : 'row'};
     width: 62%;
+  }
+  @media (min-width: 1024px){
+    width: 68%;
   }
 `

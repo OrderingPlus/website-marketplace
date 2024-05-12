@@ -113,7 +113,7 @@ const BusinessProductsListingUI = (props) => {
   const isMounted = useIsMounted()
 
   const isQuickAddProduct = configs?.add_product_with_one_click?.value === '1'
-  const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
+  const checkoutMultiBusinessEnabled = false
   const currentCart = Object.values(carts).find(cart => cart?.business?.slug === business?.slug) ?? {}
   const isLazy = businessState?.business?.lazy_load_products_recommended
   const showViewOrderButton = !theme?.business_view?.components?.order_view_button?.hidden

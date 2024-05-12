@@ -1,7 +1,9 @@
 import React from 'react'
+import MdCheckBox from '@meronex/icons/md/MdCheckBox'
+import MdCheckBoxOutlineBlank from '@meronex/icons/md/MdCheckBoxOutlineBlank'
 
-import { AddRemoveControl, Container, Text } from './styles'
-import { ProductIngredient as ProductIngredientController, useLanguage } from '~components'
+import { Container } from './styles'
+import { ProductIngredient as ProductIngredientController } from '~components'
 
 const ProductIngredientUI = (props) => {
   const {
@@ -11,25 +13,20 @@ const ProductIngredientUI = (props) => {
     isSoldOut
   } = props
 
-  const [, t] = useLanguage()
   return (
     <Container isSoldOut={isSoldOut} onClick={() => toggleSelect()}>
       <span>
-        {ingredient.name}
-      </span>
-      <AddRemoveControl>
         {state?.selected && !isSoldOut
           ? (
-            <Text>
-              {t('TOUCH_FOR_DELETE', 'Touch for delete')}
-            </Text>
+          <MdCheckBox />
             )
           : (
-            <Text>
-              {t('TOUCH_FOR_ADD', 'Touch for add')}
-            </Text>
+          <MdCheckBoxOutlineBlank disabled />
             )}
-      </AddRemoveControl>
+      </span>
+      <span>
+        {ingredient.name}
+      </span>
     </Container>
   )
 }

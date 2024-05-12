@@ -141,8 +141,9 @@ export const OrderTypeListTitle = styled.h1`
 `
 
 export const OrderTypesContainer = styled.div`
-  padding: 10px;
+  padding: 10px 0px;
   text-align: center;
+
   h2 {
     font-size: 24px;
     font-weight: 700;
@@ -152,5 +153,41 @@ export const OrderTypesContainer = styled.div`
     margin-top: 0px;
     font-size: 18px;
     font-weight: 400;
+  }
+  @media (min-width: 1200px){
+    display: flex;
+    flex-direction: ${({ openBusinessList }) => openBusinessList ? 'row' : 'column'};
+    align-items: ${({ openBusinessList }) => openBusinessList ? 'flex-start' : 'center'};
+    position: relative;
+    h2{
+      font-size: 46px;
+    }
+    h3 {
+      font-size: 24px;
+    }
+  }
+`
+
+export const OrderTypesButtonsContainer = styled.div`
+  @media (min-width: 1200px){
+    width: 50%;
+  }
+`
+
+export const ArrowContainer = styled.div`
+  display: none;
+  @media (min-width: 1200px){
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    cursor: pointer;
+    svg {
+      color: ${({ theme }) => theme?.colors?.primary};
+    }
+    p{
+      text-decoration: underline;
+      color: ${({ theme }) => theme?.colors?.primary};
+    }
   }
 `

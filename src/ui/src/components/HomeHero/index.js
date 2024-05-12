@@ -119,11 +119,9 @@ export const HomeHero = (props) => {
       isFullScreen={isFullScreen}
     >
       <ContentWrapper>
-        {windowSize.width < 576 && (
           <LogoWrapper>
             <img alt='Logotype' src={theme?.images?.logos?.logoWhite} loading='lazy' />
           </LogoWrapper>
-        )}
         <HeroContent>
           <UseAccount>
             <Button color='primary' onClick={() => handleGoToOrderTypes(1)}>{t('DELIVERY', 'DELIVERY')}</Button>

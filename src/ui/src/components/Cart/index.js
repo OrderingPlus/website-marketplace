@@ -88,7 +88,8 @@ const CartUI = (props) => {
     hideCouponByValidationCheckout,
     hideDetails,
     hideProducts,
-    hideCheckoutButtons
+    hideCheckoutButtons,
+    hideBusinessDetails
   } = props
 
   const theme = useTheme()
@@ -119,7 +120,7 @@ const CartUI = (props) => {
 
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
   const cateringTypes = [7, 8]
-  const isMultiCheckout = configs?.checkout_multi_business_enabled?.value === '1'
+  const isMultiCheckout = false
   const cart = cartMulticart || orderState?.carts?.[`businessId:${props.cart?.business_id}`]
   const viewString = isStore ? 'business_view' : 'header'
   const hideCartComments = isCheckout ? hideCommentsByValidationCheckout : !validationFields?.fields?.checkout?.comments?.enabled || theme?.[viewString]?.components?.cart?.components?.comments?.hidden
@@ -322,7 +323,7 @@ const CartUI = (props) => {
             handleChangeStore={!useKioskApp && handleChangeStore}
             isMultiCheckout={isMultiCheckout}
             isGiftCart={!cart?.business_id}
-            hideBusinessDetails
+            hideBusinessDetails={hideBusinessDetails}
           >
             {!hideProducts && cart?.products?.length > 0 && cart?.products.map(product => (
               <ProductItemAccordion

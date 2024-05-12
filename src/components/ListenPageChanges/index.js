@@ -19,7 +19,6 @@ export const ListenPageChanges = ({ children }) => {
 
   const routes = {
     home: '/',
-    search: '/search',
     profile: '/profile',
     messages: '/messages',
     verify: '/verify',
