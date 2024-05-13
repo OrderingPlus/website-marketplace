@@ -8,6 +8,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals'
 import { Router } from './router'
 import theme from './theme.json'
+import settings from './config'
 
 import { OrderingProvider } from '~components'
 import { Alert, ThemeProvider, Toast } from '~ui'
@@ -106,7 +107,7 @@ import { SubdomainComponent } from './components/SubdomainComponent'
 
 Sentry.init({
   environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
-  dsn: 'https://fbefa227f674598dcc13b50162cfe69a@o460529.ingest.us.sentry.io/4507052293292032',
+  dsn: settings.sentry_key,
   release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
   // We recommend adjusting this value in production, or using tracesSampler
   // for finer control
