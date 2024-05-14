@@ -11,6 +11,7 @@
   "socket": {
     "url": "https://socket-v3.ordering.co"
   },
+  "sentry_key": "https://fbefa227f674598dcc13b50162cfe69a@o460529.ingest.us.sentry.io/4507052293292032",
   "use_marketplace": false,
   "use_project_domain": false,
   "use_project_subdomain": false,
