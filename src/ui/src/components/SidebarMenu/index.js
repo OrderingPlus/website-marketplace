@@ -8,7 +8,6 @@ import FaRegAddressCard from '@meronex/icons/fa/FaRegAddressCard'
 import FaRegListAlt from '@meronex/icons/fa/FaRegListAlt'
 import AiOutlineHome from '@meronex/icons/ai/AiOutlineHome'
 import BiWallet from '@meronex/icons/bi/BiWallet'
-import BiStore from '@meronex/icons/bi/BiStore'
 import FaUserCircle from '@meronex/icons/fa/FaUserCircle'
 import BiHelpCircle from '@meronex/icons/bi/BiHelpCircle'
 import SiJsonwebtokens from '@meronex/icons/si/SiJsonwebtokens'
@@ -28,7 +27,7 @@ import {
   MenuLinkSeparator
 } from './styles'
 
-import { useEvent, useLanguage, useOrder, useSession, useConfig } from '~components'
+import { useEvent, useLanguage, useSession, useConfig } from '~components'
 import {
   useWindowSize,
   LogoutButton,
@@ -44,7 +43,6 @@ export const SidebarMenu = (props) => {
   const [events] = useEvent()
   const [{ configs }] = useConfig()
   const [, t] = useLanguage()
-  const [{ options }] = useOrder()
   const theme = useTheme()
   const { width } = useWindowSize()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -157,7 +155,7 @@ export const SidebarMenu = (props) => {
         )}
 
         <MenuLink
-          onClick={() => handleGoToPage({ page: options?.type === 2 && options?.address?.location ? 'search' : 'home' })}
+          onClick={() => handleGoToPage({ page: 'home' })}
         >
           <WrappContent>
             <MenuLinkIcon
@@ -167,29 +165,17 @@ export const SidebarMenu = (props) => {
                 window.location.pathname === '/search'
               }
             >
-              {options?.type === 2 && options?.address?.location
-                ? (
-                <BiStore />
-                  )
-                : (
-                <AiOutlineHome />
-                  )}
+              <AiOutlineHome />
             </MenuLinkIcon>
             <MenuLinkText>
               <TextInfo
                 active={
                   window.location.pathname === '/' ||
                   window.location.pathname === '/home' ||
-                  window.location.pathname === '/search'
+                  window.location.pathname === '/order_types'
                 }
               >
-                {options?.type === 2 && options?.address?.location
-                  ? (
-                      t('BUSINESSES', 'Businesses')
-                    )
-                  : (
-                      t('HOME', 'Home')
-                    )}
+                {t('HOME', 'Home')}
               </TextInfo>
             </MenuLinkText>
             <MenuLinkSeparator>

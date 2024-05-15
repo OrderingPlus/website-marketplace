@@ -18,9 +18,10 @@ export const OrderTypes = (props) => {
     addressList: user?.addresses,
     isProfile: true,
     isModal: true,
+    propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'address', 'ribbon', 'timezone', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug', 'city', 'city_id', 'configs'],
     onBusinessClick: (business) => {
       if (businessUrlTemplate === '/store/:business_slug' || businessUrlTemplate === '/:business_slug') {
-        events.emit('go_to_page', { page: 'business', params: { business_slug: business.slug } })
+        events.emit('go_to_page', { page: 'business', params: { business_slug: business?.slug } })
       } else {
         events.emit('go_to_page', { page: 'business', search: `?${businessUrlTemplate.split('?')[1].replace(':business_slug', '')}${business.slug}` })
       }

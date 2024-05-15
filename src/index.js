@@ -52,6 +52,7 @@ import driverCongratulationNoApproval from './assets/images/driver_congratulatio
 import driverSignUpHero from './assets/images/driver-signup-hero.jpg'
 import loyaltyLevel from './assets/images/loyalty_level.jpg'
 import driverPng from './assets/images/driver.png'
+import pizzahutpin from './assets/images/pizzahutpin.svg'
 
 import orderStatus0 from './assets/images/order/status-0.svg'
 import orderStatus1 from './assets/images/order/status-1.svg'
@@ -156,7 +157,8 @@ theme.images = {
     deliveryIcon,
     pickupIcon,
     alarmClock,
-    orderDetailsBanner
+    orderDetailsBanner,
+    pizzahutpin
   },
   icons: {
     delivered,

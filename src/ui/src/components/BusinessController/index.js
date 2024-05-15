@@ -2,35 +2,28 @@ import React, { useState, useRef } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
-import BiCar from '@meronex/icons/bi/BiCar'
-import BiBasket from '@meronex/icons/bi/BiBasket'
 import GoPrimitiveDot from '@meronex/icons/go/GoPrimitiveDot'
-import BisStar from '@meronex/icons/bi/BisStar'
-import FaCrown from '@meronex/icons/fa/FaCrown'
 
 import {
   ContainerCard,
   WrapperBusinessCard,
   BusinessHero,
-  BusinessHeader,
-  WrapperBusinessLogo,
-  BusinessTags,
   BusinessContent,
-  BusinessLogo,
   BusinessInfo,
   BusinessInfoItem,
   BusinessName,
   Medadata,
-  CallCenterInformation,
-  CallCenterInformationBullet,
-  BusinessLogoWrapper,
-  BusinessStarInfo,
   RibbonBox,
   FavoriteWrapper,
-  BusinessHeaderClosedContainer
+  BusinessNameContainer,
+  BusinessDistance,
+  BusinessNameContainerRight,
+  OpenAtContainer,
+  BusinessAddress,
+  ButtonSkeleton
 } from './styles'
 
-import { useLanguage, useUtils, useOrder, useConfig, useSession, BusinessController as BusinessSingleCard } from '~components'
+import { useLanguage, useUtils, useOrder, useSession, BusinessController as BusinessSingleCard } from '~components'
 import {
   Alert,
   Modal,
@@ -39,42 +32,38 @@ import {
   ForgotPasswordForm,
   convertHoursToMinutes,
   lightenDarkenColor,
-  shape
+  shape,
+  Button
 } from '~ui'
+import moment from 'moment'
+import dayjs from 'dayjs'
 
 const BusinessControllerUI = (props) => {
   const {
     isSkeleton,
     business,
-    getBusinessOffer,
     handleClick,
     orderType,
-    isCustomLayout,
     isCustomerMode,
     isBusinessOpen,
-    businessWillCloseSoonMinutes,
     onPreorderBusiness,
     firstCard,
     minWidthEnabled,
     typeButton,
     children,
-    businessHeader,
-    businessFeatured,
-    businessOffers,
-    businessLogo,
-    businessReviews,
     businessDeliveryPrice,
     businessDeliveryTime,
     businessPickupTime,
     businessDistance,
     handleFavoriteBusiness,
-    businessState
+    businessState,
+    isBusinessMap
   } = props
-  const [configState] = useConfig()
+
   const theme = useTheme()
   const [, t] = useLanguage()
   const [{ auth }, { login }] = useSession()
-  const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
+  const [{ parsePrice, parseDistance, parseTime }] = useUtils()
   const [orderState] = useOrder()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -82,19 +71,10 @@ const BusinessControllerUI = (props) => {
 
   const favoriteRef = useRef(null)
   const businessRows = theme?.business_listing_view?.components?.layout?.rows
-  const hideBusinessLogo = theme?.business_listing_view?.components?.business?.components?.logo?.hidden
   const hideBusinessFee = theme?.business_listing_view?.components?.business?.components?.fee?.hidden
   const hideBusinessTime = theme?.business_listing_view?.components?.business?.components?.time?.hidden
   const hideBusinessDistance = theme?.business_listing_view?.components?.business?.components?.distance?.hidden
-  const hideBusinessReviews = theme?.business_listing_view?.components?.business?.components?.reviews?.hidden
   const hideBusinessFavorite = theme?.business_listing_view?.components?.business?.components?.favorite?.hidden
-  const hideBusinessOffer = theme?.business_listing_view?.components?.business?.components?.offer?.hidden
-  const hideBusinessHeader = theme?.business_listing_view?.components?.business?.components?.header?.hidden
-  const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
-
-  // const handleShowAlert = () => {
-  //   setAlertState({ open: true, content: [t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The Business is closed at the moment')] })
-  // }
 
   const handleBusinessClick = (e) => {
     if (favoriteRef?.current?.contains(e.target)) return
@@ -134,7 +114,19 @@ const BusinessControllerUI = (props) => {
     })
   }
 
-  const hasInformationLength = !!business?.idle_drivers_count || !!business?.busy_drivers_count || !!business?.activated_orders
+  const checkTime = (val) => val < 10 ? `0${val}` : val
+
+  const findTodayLapse = () => {
+    if (business?.today?.enabled) {
+      const currentDate = dayjs().tz(business?.timezone)
+      const lapse = business?.today?.lapses?.find((lapse) => {
+        const from = currentDate.hour(lapse.open.hour).minute(lapse.open.minute)
+        const to = currentDate.hour(lapse.close.hour).minute(lapse.close.minute)
+        return currentDate.unix() >= from.unix() && currentDate.unix() <= to.unix()
+      })
+      return lapse || business?.today?.lapses?.[0]
+    }
+  }
 
   if (typeButton) {
     return (
@@ -148,13 +140,13 @@ const BusinessControllerUI = (props) => {
     <>
       <ContainerCard
         isSkeleton={isSkeleton}
-        isCustomerMode={isCustomerMode && hasInformationLength}
         firstCard={firstCard}
         minWidthEnabled={minWidthEnabled}
         businessRows={businessRows}
         disabled={business?.enabled === false}
+        isBusinessMap={isBusinessMap}
       >
-        <WrapperBusinessCard disabled={business?.enabled === false} isSkeleton={isSkeleton} onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}>
+        <WrapperBusinessCard disabled={business?.enabled === false} isSkeleton={isSkeleton}>
           {business?.ribbon?.enabled && (
             <RibbonBox
               bgColor={business?.ribbon?.color}
@@ -167,106 +159,69 @@ const BusinessControllerUI = (props) => {
             </RibbonBox>
           )}
           <BusinessHero>
-            {isSkeleton
-              ? (
-              <Skeleton height={isCustomerMode ? 100 : 140} />
-                )
-              : (
-              <BusinessHeader bgimage={!hideBusinessHeader ? optimizeImage((businessHeader || business?.header || theme.images?.dummies?.businessHeader), 'h_400,c_limit') : ''} isClosed={!isBusinessOpen}>
-                <BusinessTags>
-                  {(businessFeatured ?? business?.featured) && !hideBusinessFavoriteBadge &&
-                    <span className='crown'>
-                      <FaCrown />
-                    </span>}
-                  {!hideBusinessOffer && !isCustomLayout && (configState?.configs?.preorder_status_enabled?.value === '1') && (
-                    <div>
-                      {!!getBusinessOffer((businessOffers ?? business?.offers)) && <span>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((businessOffers ?? business?.offers))}</span>}
-                      {!isBusinessOpen && <span>{t('PREORDER', 'PreOrder')}</span>}
-                    </div>
+            <BusinessNameContainer>
+              {business?.name
+                ? (
+                  <BusinessName>{business?.name}</BusinessName>
+                  )
+                : (
+                  <Skeleton width={150} />
                   )}
-                </BusinessTags>
-                <BusinessHeaderClosedContainer>
-                  <div>
-                    {!!businessWillCloseSoonMinutes && orderState?.options?.moment === null && isBusinessOpen && business?.enabled !== false && (
-                      <h1>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</h1>
-                    )}
-                    {!isBusinessOpen && <h1 className='closed'>{t('CLOSED', 'Closed')}{business?.enabled === false && `(${t('DISABLED', 'Disabled')})`}</h1>}
-                  </div>
-                  {business?.disabled_reason && business?.enabled === false && (
-                    <h2 className='disabled'>{business?.disabled_reason}</h2>
-                  )}
-                </BusinessHeaderClosedContainer>
-              </BusinessHeader>
-                )}
-          </BusinessHero>
-          <BusinessContent isCustomerMode={isCustomerMode}>
-            <BusinessLogoWrapper>
-              {!hideBusinessLogo && (
-                <WrapperBusinessLogo isSkeleton={isSkeleton} isCustomerMode={isCustomerMode}>
-                  {!isSkeleton && (businessLogo || business?.logo || theme.images?.dummies?.businessLogo)
+            </BusinessNameContainer>
+            <BusinessNameContainerRight>
+              {!hideBusinessDistance && (
+                <>
+                  {(businessDistance ?? business?.distance) >= 0
                     ? (
-                    <BusinessLogo bgimage={optimizeImage((businessLogo || business?.logo || theme.images?.dummies?.businessLogo), 'h_200,c_limit')} />
+                      <BusinessDistance>
+                        {parseDistance((businessDistance ?? business?.distance))}
+                      </BusinessDistance>
                       )
                     : (
-                    <Skeleton height={70} width={70} />
+                      <Skeleton width={65} />
                       )}
-                </WrapperBusinessLogo>
+                </>
               )}
-              <BusinessStarInfo>
-                {!hideBusinessReviews && (
-                  <>
-                    {!isSkeleton
-                      ? (
-                          (businessReviews ?? business?.reviews?.total) > 0 && (
-                        <div className='reviews'>
-                          <BisStar />
-                          <span>{(businessReviews ?? business?.reviews?.total)}</span>
-                        </div>
-                          )
-                        )
-                      : (
-                      <Skeleton width={50} />
-                        )}
-                  </>
-                )}
-                {!hideBusinessFavorite && !isCustomerMode && (
-                  <FavoriteWrapper ref={favoriteRef} onClick={handleChangeFavorite}>
-                    {!isSkeleton
-                      ? (
+              {!hideBusinessFavorite && !isCustomerMode && (
+                <FavoriteWrapper ref={favoriteRef} onClick={handleChangeFavorite}>
+                  {!isSkeleton
+                    ? (
                       <>
                         {(businessState?.business?.favorite) ? <Like /> : <DisLike />}
                       </>
-                        )
-                      : (
-                      <Skeleton width={16} height={16} />
-                        )}
-                  </FavoriteWrapper>
-                )}
-              </BusinessStarInfo>
-            </BusinessLogoWrapper>
-            <BusinessInfo className='info' isCustomerMode={isCustomerMode}>
-              <BusinessInfoItem>
-                <div>
-                  {business?.name
-                    ? (
-                    <BusinessName>{business?.name}</BusinessName>
                       )
                     : (
-                    <Skeleton width={100} />
+                      <Skeleton width={16} height={16} />
                       )}
-                </div>
-                <Medadata isCustomerMode={isCustomerMode} isSkeleton={isSkeleton}>
+                </FavoriteWrapper>
+              )}
+            </BusinessNameContainerRight>
+          </BusinessHero>
+          <BusinessContent>
+            {!isSkeleton
+              ? (
+                <BusinessAddress>
+                  {business?.address}
+                </BusinessAddress>
+                )
+              : (
+                <Skeleton width={195} />
+                )}
+            <BusinessInfo className='info'>
+              <BusinessInfoItem>
+                <Medadata isSkeleton={isSkeleton}>
                   {!hideBusinessFee && orderType === 1 && (
                     <>
                       {(businessDeliveryPrice ?? business?.delivery_price) >= 0
                         ? (
-                        <p>
-                          <span>{t('DELIVERY_FEE', 'Delivery fee')}</span>
-                          {business && parsePrice((businessDeliveryPrice ?? business?.delivery_price))}
-                        </p>
+                          <p>
+                            <span>{t('DELIVERY_FEE', 'Delivery fee')}</span>
+                            {business && parsePrice((businessDeliveryPrice ?? business?.delivery_price))}
+                            <GoPrimitiveDot />
+                          </p>
                           )
                         : (
-                        <Skeleton width={isCustomerMode ? 70 : 65} />
+                          <Skeleton width={65} />
                           )}
                     </>
                   )}
@@ -274,56 +229,48 @@ const BusinessControllerUI = (props) => {
                     <>
                       {Object.keys(business).length > 0
                         ? (
-                        <p className='bullet'>
-                          <GoPrimitiveDot />
-                          {convertHoursToMinutes(orderState?.options?.type === 1 ? (businessDeliveryTime ?? business?.delivery_time) : (businessPickupTime ?? business?.pickup_time)) || <Skeleton width={100} />}
-                        </p>
+                          <p className='bullet'>
+                            {convertHoursToMinutes(orderState?.options?.type === 1 ? (businessDeliveryTime ?? business?.delivery_time) : (businessPickupTime ?? business?.pickup_time)) || <Skeleton width={100} />}
+                          </p>
                           )
                         : (
-                        <Skeleton width={65} />
+                          <Skeleton width={65} />
                           )}
                     </>
-                  )}
-                  {!hideBusinessDistance && (
-                    <>
-                      {(businessDistance ?? business?.distance) >= 0
-                        ? (
-                        <p className='bullet'>
-                          <GoPrimitiveDot />
-                          {parseDistance((businessDistance ?? business?.distance))}
-                        </p>
-                          )
-                        : (
-                        <Skeleton width={65} />
-                          )}
-                    </>
-                  )}
-                  {isCustomerMode && hasInformationLength && (
-                    <CallCenterInformation>
-                      {business?.idle_drivers_count > 0 && (
-                        <CallCenterInformationBullet bgcolor='#4CAF50'>
-                          <BiCar />
-                          {business?.idle_drivers_count}
-                        </CallCenterInformationBullet>
-                      )}
-                      {business?.busy_drivers_count > 0 && (
-                        <CallCenterInformationBullet bgcolor='#E91E63'>
-                          <BiCar />
-                          {business?.busy_drivers_count}
-                        </CallCenterInformationBullet>
-                      )}
-                      {business?.activated_orders > 0 && (
-                        <CallCenterInformationBullet bgcolor='#FF9800'>
-                          <BiBasket />
-                          {business?.activated_orders}
-                        </CallCenterInformationBullet>
-                      )}
-                    </CallCenterInformation>
                   )}
                 </Medadata>
               </BusinessInfoItem>
             </BusinessInfo>
+            <OpenAtContainer isClosed={!(business?.open && business?.today?.enabled)}>
+              {!isSkeleton
+                ? (
+                  <p>
+                    {business?.open && business?.today?.enabled
+                      ? `${t('OPEN_AT', 'OPEN AT')} ${parseTime(moment(`${checkTime(findTodayLapse()?.open?.hour)}:${checkTime(findTodayLapse()?.open?.minute)}`, 'HH:mm'))}`
+                      : t('STORE_CLOSED', 'Store closed')}
+                  </p>
+                  )
+                : (
+                  <Skeleton width={65} />
+                  )}
+            </OpenAtContainer>
           </BusinessContent>
+            {!isSkeleton
+              ? (
+                <Button
+                  color={business?.open && business?.today?.enabled ? 'primary' : 'secondary'}
+                  onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}
+                >
+                  {business?.open && business?.today?.enabled
+                    ? t('START_ORDER', 'START ORDER')
+                    : t('VIEW_MENU', 'VIEW MENU')}
+                </Button>
+                )
+              : (
+                <ButtonSkeleton>
+                  <Skeleton height={45} />
+                </ButtonSkeleton>
+                )}
         </WrapperBusinessCard>
       </ContainerCard>
       <Alert

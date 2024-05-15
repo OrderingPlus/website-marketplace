@@ -1,18 +1,18 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const Container = styled.div`
-
-  ${({ $error }) => $error && css`
-    background: rgba(255, 0, 0, 0.05);
-  `}
+  &.error {
+    background-color: orange;
+  }
 `
 
 export const WrapHeader = styled.div`
-  padding: 15px 20px;
+  padding: 7px 0px;
+  margin-top: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #E9ECEF;
+  background-color: ${(props) => props.theme?.colors?.backgroundPage};
 `
 
 export const TitleContainer = styled.div`
@@ -34,8 +34,9 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled.h3`
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
   display: flex;
   flex-direction: column;
   margin: 0px;

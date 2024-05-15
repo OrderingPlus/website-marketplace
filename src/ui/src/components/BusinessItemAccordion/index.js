@@ -57,7 +57,7 @@ export const BusinessItemAccordion = (props) => {
   const [setRotate, setRotateState] = useState('accordion__icon')
   const [cartProductUpdated, setCartProductUpdated] = useState(null)
   const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
-  const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
+  const checkoutMultiBusinessEnabled = false
 
   const content = useRef(null)
   const businessStore = useRef(null)

@@ -103,7 +103,7 @@ export const WrapperPlaceOrderButton = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-
+  box-sizing: border-box;
   button {
     width: 100%;
     padding: 5px 20px;
@@ -114,6 +114,13 @@ export const WrapperPlaceOrderButton = styled.div`
       opacity: 0.5;
       cursor: not-allowed;
     }
+  }
+
+  @media (min-width: 576px){
+    padding: 20px;
+  }
+  @media (min-width: 769px){
+    padding: 0px;
   }
 `
 

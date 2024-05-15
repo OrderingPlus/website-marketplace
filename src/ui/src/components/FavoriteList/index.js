@@ -260,7 +260,7 @@ const FavoriteListUI = (props) => {
                     ))
                   }
                   {favoriteList?.loading && (
-                    [...Array(5).keys()].map(i => (
+                    [...Array(3).keys()].map(i => (
                       <SingleProductCard
                         key={`skeleton:${i}`}
                         isSkeleton

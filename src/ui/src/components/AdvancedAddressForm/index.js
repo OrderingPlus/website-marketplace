@@ -16,11 +16,7 @@ import {
   WrapperSkeleton,
   Container,
   AddressSummary,
-  PinInfo,
-  AddressOrderDetails,
-  AddressOrderDetailsTitle,
-  BlockInfo,
-  Divider
+  PinInfo
 } from './styles'
 
 import {
@@ -31,8 +27,8 @@ import {
   useSession,
   useOrder,
   useConfig,
-  useUtils,
-  useEvent
+  ToastType,
+  useToast
 } from '~components'
 
 import {
@@ -41,12 +37,10 @@ import {
   Input,
   TextArea,
   GoogleGpsButton,
-  Modal,
-  useBusinessSelected
+  useBusinessSelected,
+  BusinessesListing,
+  AddressOrderDetails
 } from '~ui'
-import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
-import MdRadioButtonUnchecked from '@meronex/icons/md/MdRadioButtonUnchecked'
-import { MomentContent } from '../MomentContent'
 
 const inputNames = [
   { name: 'address', code: 'Address' },
@@ -70,7 +64,11 @@ const AdvancedAddressFormUI = (props) => {
     userCustomerSetup,
     getNearestBusiness,
     businessNearestState,
-    onBusinessClick
+    onBusinessClick,
+    openSpreadForm,
+    setOpenSpreadForm,
+    openBusinessList,
+    setOpenBusinessList
   } = props
 
   const [configState] = useConfig()
@@ -78,9 +76,7 @@ const AdvancedAddressFormUI = (props) => {
   const [, t] = useLanguage()
   const formMethods = useForm()
   const [{ auth }] = useSession()
-  const [{ parseDate }] = useUtils()
-  const [{ configs }] = useConfig()
-  const [events] = useEvent()
+  const [, { showToast }] = useToast()
   const theme = useTheme()
   const [, { onChangeBusinessSelected }] = useBusinessSelected()
   const [state, setState] = useState({ selectedFromAutocomplete: true })
@@ -89,16 +85,13 @@ const AdvancedAddressFormUI = (props) => {
   const googleInputRef = useRef()
   const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: null })
   const isEditing = !!addressState.address?.id
-  const [openSpreadForm, setOpenSpreadForm] = useState(false)
   const [locationChange, setLocationChange] = useState(
     addressState?.address?.location || formState?.changes?.location
   )
-  const [modalIsOpen, setModalIsOpen] = useState(false)
   const [enableRedirect, setEnableRedirect] = useState(false)
   const [addressSpreadForm] = useState(null)
 
   const isHideMap = theme?.address?.components?.map?.hidden
-  const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true')
 
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
@@ -276,15 +269,15 @@ const AdvancedAddressFormUI = (props) => {
     return !theme?.address?.components?.[name]?.hidden
   }
 
-  const handleOpenPreorder = () => {
-    setModalIsOpen(true)
-  }
-
   const handleRedirectContinue = async () => {
+    if (!businessNearestState?.business) {
+      showToast(ToastType.Error, t('NO_BUSINESS_NEAR_LOCATION', 'No business near of you location'))
+      return
+    }
     await onChangeBusinessSelected(businessNearestState?.business || null)
     orderState?.options?.type === 1
       ? await onBusinessClick(businessNearestState?.business)
-      : events.emit('go_to_page', { page: 'BusinessList' })
+      : setOpenBusinessList(true)
   }
 
   useEffect(() => {
@@ -426,245 +419,186 @@ const AdvancedAddressFormUI = (props) => {
 
   return (
     <Container className='address-form'>
-      {(configState.loading || addressState.loading) && (
-        <WrapperSkeleton>
-          <Skeleton height={50} count={5} style={{ marginBottom: '10px' }} />
-        </WrapperSkeleton>
-      )}
-      <>
-        {!configState.loading && !addressState.loading && (
-          <FormControl
-            onSubmit={formMethods.handleSubmit(onSubmit)}
-            onKeyDown={(e) => checkKeyDown(e)}
-            autoComplete='off'
-          >
-            {inputNames.map(field => showField && showField(field.name) && (
-              field.name === 'address'
-                ? (
-                  <React.Fragment key={field.name}>
-                    <AddressWrap className='google-control'>
-                      <WrapAddressInput>
-                        <GoogleAutocompleteInput
-                          className='input-autocomplete'
-                          apiKey={googleMapsApiKey}
-                          placeholder={t('ADDRESS', 'Address')}
-                          onChangeAddress={(e) => {
-                            formMethods.setValue('address', e.address)
-                            handleChangeAddress(e)
-                          }}
-                          onChange={(e) => {
-                            handleChangeInput({ target: { name: 'address', value: e.target.value } })
-                            setAddressValue(e.target.value)
-                          }}
-                          childRef={(ref) => {
-                            googleInputRef.current = ref
-                          }}
-                          defaultValue={
-                            formState?.result?.result
-                              ? formState?.result?.result?.address
-                              : formState?.changes?.address ?? addressValue
-                          }
-                          autoComplete='new-password'
-                          countryCode={configState?.configs?.country_autocomplete?.value || '*'}
-                        />
-                      </WrapAddressInput>
-                      <GoogleGpsButton
-                        className='gps-button'
-                        apiKey={googleMapsApiKey}
-                        onAddress={(e) => {
-                          formMethods.setValue('address', e.address)
-                          handleChangeAddress(e)
-                        }}
-                        onError={setMapErrors}
-                        IconButton={GeoAlt}
-                        IconLoadingButton={CgSearchLoading}
-                      />
-                    </AddressWrap>
-
-                    {!isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
-                      <WrapperMap>
-                        <GoogleMapsMap
-                          apiKey={googleMapsApiKey}
-                          location={locationChange}
-                          fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
-                          mapControls={googleMapsControls}
-                          handleChangeAddressMap={handleChangeAddress}
-                          setErrors={setMapErrors}
-                          maxLimitLocation={parseInt(maxLimitLocation, 10)}
-                        />
-                      </WrapperMap>
-                    )}
-                  </React.Fragment>
-                  )
-                : openSpreadForm && (
-                  <React.Fragment key={field.name}>
-                    {(isRequiredField(field.name) || showFieldWithTheme(field.name)) && (
-                      <>
-                        {field.name !== 'address_notes'
-                          ? (
-                            <Input
-                              className={field.name}
-                              placeholder={t(field.name.toUpperCase(), field.code)}
-                              value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
-                              onChange={(e) => {
-                                formMethods.setValue(field.name, e.target.value)
-                                handleChangeInput({ target: { name: field.name, value: e.target.value } })
-                              }}
-                              autoComplete='new-field'
-                              maxLength={30}
-                            />
-                            )
-                          : (
-                            <TextArea
-                              rows={3}
-                              placeholder={t('ADDRESS_NOTES', 'Address Notes')}
-                              value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
-                              onChange={(e) => {
-                                formMethods.setValue('address_notes', e.target.value)
-                                handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
-                              }}
-                              autoComplete='new-field'
-                              maxLength={250}
-                            />
-                            )}
-                      </>
-                    )}
-                  </React.Fragment>
-                )
-            ))}
-            {(addressState?.address?.location || formState?.changes?.location) && (
-              <AddressSummary>
-                <h4>
-                  {t('DELIVER_IN', 'Deliver in')}:
-                </h4>
-                {(addressState?.address?.address || formState?.changes?.address) && (
-                  <span>{addressState?.address?.address || formState?.changes?.address}{', '}</span>
-                )}
-                {(addressState?.address?.country || formState?.changes?.country) && (
-                  <span>{addressState?.address?.country || formState?.changes?.country}{', '}</span>
-                )}
-                {(addressState?.address?.address_notes || formState?.changes?.address_notes) && (
-                  <span>{addressState?.address?.address_notes || formState?.changes?.address_notes}{', '}</span>
-                )}
-                {(addressState?.address?.internal_number || formState?.changes?.internal_number) && (
-                  <span>{addressState?.address?.internal_number || formState?.changes?.internal_number}{', '}</span>
-                )}
-                {(addressState?.address?.zipcode || formState?.changes?.zipcode) && (
-                  <span>{addressState?.address?.zipcode || formState?.changes?.zipcode}{', '}</span>
-                )}
-                <PinInfo>({t('CAN_MOVE_PIN_LOCATION', 'You can move the PIN to another precise location')})</PinInfo>
-                {!formState.loading && formState.error && <p style={{ color: '#c10000' }}>{formState.error}</p>}
-              </AddressSummary>
+      {!openBusinessList
+        ? (
+          <>
+            {(configState.loading || addressState.loading) && (
+              <WrapperSkeleton>
+                <Skeleton height={50} count={5} style={{ marginBottom: '10px' }} />
+              </WrapperSkeleton>
             )}
-            <FormActions>
-                <Button
-                  id='submit-btn'
-                  type='submit'
-                  disabled={formState.loading || !(addressState?.address?.location || formState?.changes?.location)}
-                  color='primary'
+            <>
+              {!configState.loading && !addressState.loading && (
+                <FormControl
+                  onSubmit={formMethods.handleSubmit(onSubmit)}
+                  onKeyDown={(e) => checkKeyDown(e)}
+                  autoComplete='off'
                 >
-                  {!formState.loading
-                    ? (
-                      <>
-                        {
-                          openSpreadForm
-                            ? t('CONFIRM', 'CONFIRM')
-                            : t('CONTINUE', 'CONTINUE')
-                        }
-                      </>
+                  {inputNames.map(field => showField && showField(field.name) && (
+                    field.name === 'address'
+                      ? (
+                        <React.Fragment key={field.name}>
+                          <AddressWrap className='google-control'>
+                            <WrapAddressInput>
+                              <GoogleAutocompleteInput
+                                className='input-autocomplete'
+                                apiKey={googleMapsApiKey}
+                                placeholder={t('ADDRESS', 'Address')}
+                                onChangeAddress={(e) => {
+                                  formMethods.setValue('address', e.address)
+                                  handleChangeAddress(e)
+                                }}
+                                onChange={(e) => {
+                                  handleChangeInput({ target: { name: 'address', value: e.target.value } })
+                                  setAddressValue(e.target.value)
+                                }}
+                                childRef={(ref) => {
+                                  googleInputRef.current = ref
+                                }}
+                                defaultValue={
+                                  formState?.result?.result
+                                    ? formState?.result?.result?.address
+                                    : formState?.changes?.address ?? addressValue
+                                }
+                                autoComplete='new-password'
+                                countryCode={configState?.configs?.country_autocomplete?.value || '*'}
+                              />
+                            </WrapAddressInput>
+                            <GoogleGpsButton
+                              className='gps-button'
+                              apiKey={googleMapsApiKey}
+                              onAddress={(e) => {
+                                formMethods.setValue('address', e.address)
+                                handleChangeAddress(e)
+                              }}
+                              onError={setMapErrors}
+                              IconButton={GeoAlt}
+                              IconLoadingButton={CgSearchLoading}
+                            />
+                          </AddressWrap>
+
+                          {!isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
+                            <WrapperMap openSpreadForm={openSpreadForm}>
+                              <GoogleMapsMap
+                                apiKey={googleMapsApiKey}
+                                location={locationChange}
+                                fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
+                                mapControls={googleMapsControls}
+                                handleChangeAddressMap={handleChangeAddress}
+                                setErrors={setMapErrors}
+                                maxLimitLocation={parseInt(maxLimitLocation, 10)}
+                              />
+                            </WrapperMap>
+                          )}
+                        </React.Fragment>
+                        )
+                      : openSpreadForm && (
+                        <React.Fragment key={field.name}>
+                          {(isRequiredField(field.name) || showFieldWithTheme(field.name)) && (
+                            <>
+                              {field.name !== 'address_notes'
+                                ? (
+                                  <Input
+                                    className={field.name}
+                                    placeholder={t(field.name.toUpperCase(), field.code)}
+                                    value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
+                                    onChange={(e) => {
+                                      formMethods.setValue(field.name, e.target.value)
+                                      handleChangeInput({ target: { name: field.name, value: e.target.value } })
+                                    }}
+                                    autoComplete='new-field'
+                                    maxLength={30}
+                                  />
+                                  )
+                                : (
+                                  <TextArea
+                                    rows={3}
+                                    placeholder={t('ADDRESS_NOTES', 'Address Notes')}
+                                    value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
+                                    onChange={(e) => {
+                                      formMethods.setValue('address_notes', e.target.value)
+                                      handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
+                                    }}
+                                    autoComplete='new-field'
+                                    maxLength={250}
+                                  />
+                                  )}
+                            </>
+                          )}
+                        </React.Fragment>
                       )
-                    : (
-                        t('LOADING', 'Loading')
+                  ))}
+                  {(addressState?.address?.location || formState?.changes?.location) && (
+                    <AddressSummary>
+                      <h4>
+                        {t('DELIVER_IN', 'Deliver in')}:
+                      </h4>
+                      {(addressState?.address?.address || formState?.changes?.address) && (
+                        <span>{addressState?.address?.address || formState?.changes?.address}{', '}</span>
                       )}
-                </Button>
-            </FormActions>
-          </FormControl>
-        )}
-      </>
-      {(addressState?.address?.location || formState?.changes?.location) && businessNearestState?.business && (
-        <AddressOrderDetails>
-          <h4>
-            {t('ORDER_DETAILS', 'ORDER DETAILS')}
-          </h4>
-          <Divider />
-          <BlockInfo>
-            <AddressOrderDetailsTitle>
-              {t('YOUR_STORE', 'Your store')}
-            </AddressOrderDetailsTitle>
-            <div>
-              <p>
-                {businessNearestState?.business?.name}
-              </p>
-              <p>
-                {businessNearestState?.business?.address}
-              </p>
-              {businessNearestState?.business?.cellphone && (
-                <p>
-                  {businessNearestState?.business?.cellphone}
-                </p>
+                      {(addressState?.address?.country || formState?.changes?.country) && (
+                        <span>{addressState?.address?.country || formState?.changes?.country}{', '}</span>
+                      )}
+                      {(addressState?.address?.address_notes || formState?.changes?.address_notes) && (
+                        <span>{addressState?.address?.address_notes || formState?.changes?.address_notes}{', '}</span>
+                      )}
+                      {(addressState?.address?.internal_number || formState?.changes?.internal_number) && (
+                        <span>{addressState?.address?.internal_number || formState?.changes?.internal_number}{', '}</span>
+                      )}
+                      {(addressState?.address?.zipcode || formState?.changes?.zipcode) && (
+                        <span>{addressState?.address?.zipcode || formState?.changes?.zipcode}{', '}</span>
+                      )}
+                      <PinInfo>({t('CAN_MOVE_PIN_LOCATION', 'You can move the PIN to another precise location')})</PinInfo>
+                      {!formState.loading && formState.error && <p style={{ color: '#c10000' }}>{formState.error}</p>}
+                    </AddressSummary>
+                  )}
+                  <FormActions>
+                    <Button
+                      id='submit-btn'
+                      type='submit'
+                      disabled={formState.loading || !(addressState?.address?.location || formState?.changes?.location)}
+                      color='primary'
+                    >
+                      {!formState.loading
+                        ? (
+                          <>
+                            {
+                              openSpreadForm
+                                ? t('CONFIRM', 'CONFIRM')
+                                : t('CONTINUE', 'CONTINUE')
+                            }
+                          </>
+                          )
+                        : (
+                            t('LOADING', 'Loading')
+                          )}
+                    </Button>
+                  </FormActions>
+                </FormControl>
               )}
-            </div>
-          </BlockInfo>
-          <BlockInfo>
-            <AddressOrderDetailsTitle>
-              {t('SERVICE_METHOD', 'Service method')}
-            </AddressOrderDetailsTitle>
-            <div>
-              <p>
-                {orderState.options?.type === 1
-                  ? t('DELIVERY', 'Delivery')
-                  : orderState.options?.type === 2
-                    ? t('PICKUP', 'Pickup')
-                    : t('OTHER', 'Other')
-                }
-              </p>
-            </div>
-          </BlockInfo>
-          <BlockInfo>
-            <AddressOrderDetailsTitle>
-              {t('WHEN_YOU_WANT_YOUR_ORDER', 'When you want your order?')}
-            </AddressOrderDetailsTitle>
-            <div
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <div onClick={() => handleOpenPreorder()}>
-                <p>
-                  {!orderState.options?.moment ? <RiRadioButtonFill /> : <MdRadioButtonUnchecked disabled />}
-                  {t('ASAP', 'ASAP')}
-                </p>
-                {isPreorderEnabled && (
-                  <p>
-                    {orderState.options?.moment ? <RiRadioButtonFill /> : <MdRadioButtonUnchecked disabled />}
-                    {t('SCHEDULE_YOUR_ORDER', 'Schedule your order')}
-                    {orderState.options?.moment && ` (${parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })})`}
-                  </p>
-                )}
-              </div>
-            </div>
-          </BlockInfo>
-        </AddressOrderDetails>
-      )}
-      <Modal
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        width='700px'
-      >
-        <MomentContent
-          onClose={() => setModalIsOpen(false)}
-        />
-      </Modal>
-      <Alert
-        title={t('ADDRESS', 'Address')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
+            </>
+            {(addressState?.address?.location || formState?.changes?.location) && businessNearestState?.business && (
+              <AddressOrderDetails
+                businessNearestState={businessNearestState}
+              />
+            )}
+            <Alert
+              title={t('ADDRESS', 'Address')}
+              content={alertState.content}
+              acceptText={t('ACCEPT', 'Accept')}
+              open={alertState.open}
+              onClose={() => closeAlert()}
+              onAccept={() => closeAlert()}
+              closeOnBackdrop={false}
+            />
+          </>
+          )
+        : (
+          <BusinessesListing
+            {...props}
+          />
+          )}
+
     </Container>
   )
 }

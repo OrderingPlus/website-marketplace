@@ -18,7 +18,7 @@ export const FormActions = styled.div`
 `
 
 export const FormControl = styled.form`
-  padding: 0px;
+  padding: 10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -203,6 +203,11 @@ export const WrapperMap = styled.div`
     height: 100% !important;
     border-radius: 15px;
   }
+  @media (min-width: 1200px){
+    ${({ openSpreadForm }) => openSpreadForm && css`
+      display: none;
+    `}
+  };
 `
 
 export const WrapperSkeleton = styled.div`
@@ -217,7 +222,11 @@ export const WrapperSkeleton = styled.div`
 
 export const Container = styled.div`
   margin-top: 20px;
-  padding: 10px;
+
+  @media (min-width: 1200px){
+    width: 50%;
+    position: relative;
+  }
 `
 
 export const AddressSummary = styled.div`
@@ -238,7 +247,7 @@ export const PinInfo = styled.p`
   color: #B1BCCC;
 `
 
-export const AddressOrderDetails = styled.div`
+export const AddressOrderDetailsContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.10);
   h4 {
@@ -248,6 +257,20 @@ export const AddressOrderDetails = styled.div`
     margin: 0;
     text-align: left;
     padding: 20px;
+  }
+  @media (min-width: 1200px){
+    position: absolute;
+    top: -100px;
+    right: -230px;
+    width: 200px;
+  }
+  @media (min-width: 1200px){
+    width: 250px;
+    right: -280px;
+  }
+  @media (min-width: 1400px){
+    width: 300px;
+    right: -330px;
   }
 `
 

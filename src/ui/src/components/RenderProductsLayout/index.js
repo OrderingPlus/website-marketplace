@@ -14,7 +14,8 @@ import {
   EmptyBtnWrapper,
 
   TabsContainer,
-  BackButton
+  BackButton,
+  BusinessProductsListContainer
 } from './styles'
 
 import { ToastType, useEvent, useLanguage, useToast, useUtils } from '~components'
@@ -109,7 +110,7 @@ export const RenderProductsLayout = (props) => {
     <>
       {!isLoading && business?.id && (
         <WrappLayout isCartOnProductsList={isCartOnProductsList}>
-          <div className='bp-list'>
+          <BusinessProductsListContainer className='bp-list'>
             {!(businessState?.loading || businessNearestState?.loading) && business?.id && !(business?.categories?.length === 0) && !selectedCategoryId && (
               <>
                 <TabsContainer>
@@ -205,55 +206,56 @@ export const RenderProductsLayout = (props) => {
                       />
                     </WrapContent>
                   </BusinessCategoryProductWrapper>
-                  {(windowSize.width >= 1000 && windowSize.height >= 600) && showCartOnProductList && (
-                    <BusinessCartContainer isProfessional={business?.professionals?.length > 0 && !useKioskApp}>
-                      <BusinessCartContent maxHeight={window.innerHeight - 100}>
-                        {currentCart?.products?.length > 0
-                          ? (
-                            <>
-                              <Title>{t('YOUR_CART', 'Your cart')}</Title>
-                              <Cart
-                                isStore
-                                isCustomMode
-                                isForceOpenCart
-                                useKioskApp={useKioskApp}
-                                cart={currentCart}
-                                isCartPending={currentCart?.status === 2}
-                                isProducts={currentCart.products.length}
-                                isCartOnProductsList={isCartOnProductsList}
-                                handleCartOpen={handleCartOpen}
-                                businessConfigs={business?.configs}
-                                productLoading={productLoading}
-                                setProductLoading={setProductLoading}
-                              />
-                            </>
-                            )
-                          : (
-                            <EmptyCart>
-                              <div className='empty-content'>
-                                <Cart3 />
-                                <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
-                              </div>
-                              <EmptyBtnWrapper>
-                                <span>{parsePrice(0)}</span>
-                                <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
-                              </EmptyBtnWrapper>
-                              {productLoading && (
-                                <SpinnerCart emptyCart>
-                                  <SpinnerLoader
-                                    style={{ height: 100 }}
-                                  />
-                                </SpinnerCart>
-                              )}
-                            </EmptyCart>
-                            )}
-                      </BusinessCartContent>
-                    </BusinessCartContainer>
-                  )}
+
                 </BusinessContent>
               </>
             )}
-          </div>
+          </BusinessProductsListContainer>
+          {(windowSize.width >= 1000 && windowSize.height >= 600) && (
+            <BusinessCartContainer isProfessional={business?.professionals?.length > 0 && !useKioskApp}>
+              <BusinessCartContent maxHeight={window.innerHeight - 100}>
+                {currentCart?.products?.length > 0
+                  ? (
+                    <>
+                      <Title>{t('YOUR_CART', 'Your cart')}</Title>
+                      <Cart
+                        isStore
+                        isCustomMode
+                        isForceOpenCart
+                        useKioskApp={useKioskApp}
+                        cart={currentCart}
+                        isCartPending={currentCart?.status === 2}
+                        isProducts={currentCart.products.length}
+                        isCartOnProductsList={isCartOnProductsList}
+                        handleCartOpen={handleCartOpen}
+                        businessConfigs={business?.configs}
+                        productLoading={productLoading}
+                        setProductLoading={setProductLoading}
+                      />
+                    </>
+                    )
+                  : (
+                    <EmptyCart>
+                      <div className='empty-content'>
+                        <Cart3 />
+                        <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                      </div>
+                      <EmptyBtnWrapper>
+                        <span>{parsePrice(0)}</span>
+                        <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
+                      </EmptyBtnWrapper>
+                      {productLoading && (
+                        <SpinnerCart emptyCart>
+                          <SpinnerLoader
+                            style={{ height: 100 }}
+                          />
+                        </SpinnerCart>
+                      )}
+                    </EmptyCart>
+                    )}
+              </BusinessCartContent>
+            </BusinessCartContainer>
+          )}
         </WrappLayout>
       )}
 
@@ -279,7 +281,7 @@ export const RenderProductsLayout = (props) => {
               </div>
             </BusinessCategoryProductWrapper>
           </BusinessContent>
-          {(/* categoryClicked || */ windowSize.width >= 993) && (
+          {(selectedCategoryId || windowSize.width >= 993) && (
             <WrapContent>
               <BusinessProductsList
                 categories={[]}

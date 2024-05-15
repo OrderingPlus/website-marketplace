@@ -30,6 +30,16 @@ export const CardContainer = styled.div`
     padding: 4px;
   }
 
+  @media (min-width: 1000px){
+    width: calc(33% - 20px);
+    max-width: calc(33% - 20px);
+    height: 20vh;
+  }
+
+  @media (min-width: 1200px){
+    width: calc(25% - 20px);
+    max-width: calc(25% - 20px);
+  }
 `
 
 export const SoldOut = styled.span`

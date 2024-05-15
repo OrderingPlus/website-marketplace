@@ -548,74 +548,73 @@ const CheckoutUI = (props) => {
               </WrapperActionsInput>
               )}
 
-          {cartState.loading && (
-            <div>
-              <div>
-                <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                <Skeleton height={55} style={{ marginBottom: '10px' }} />
-              </div>
-            </div>
-          )}
-          {
-            !driverTipsField &&
-            <>
-              <DriverTipContainer>
-                <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
-                <p>{t('100%_OF_THE_TIP_YOUR_DRIVER', '100% of the tip goes to your driver')}</p>
-                <DriverTips
-                  businessId={cart?.business_id}
-                  driverTipsOptions={driverTipsOptions}
-                  isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
-                  isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-                  driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
-                    ? cart?.driver_tip
-                    : cart?.driver_tip_rate}
-                  cart={cart}
-                  useOrderContext
-                />
-              </DriverTipContainer>
-              <DriverTipDivider />
-            </>
-          }
-          {!cartState.loading && placeSpotsEnabled && cart?.business_id && (
-            <SelectSpotContainer>
-              <PlaceSpot
-                isCheckout
-                isInputMode
-                isHomeStyle
-                cart={cart}
-                spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
-                vehicleDefault={cart?.vehicle}
-                setPlaceSpotNumber={setPlaceSpotNumber}
-              />
-            </SelectSpotContainer>
-          )}
-          {!cartState.loading && cart && (
-            <CartContainer>
-              <CartHeader>
-                <h1>{t('PRODUCTS', 'Products')}</h1>
-              </CartHeader>
-              <Cart
-                isCartPending={cart?.status === 2}
-                cart={cart}
-                useKioskApp={useKioskApp}
-                isCheckout
-                isProducts={cart?.products?.length || 0}
-                viewString='checkout'
-                businessConfigs={businessConfigs}
-                loyaltyRewardRate={
-                  creditPointPlanOnBusiness?.accumulation_rate ??
-                  (!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
-                }
-                productLoading={productLoading}
-                setProductLoading={setProductLoading}
-              />
-            </CartContainer>
-          )}
         </WrapperLeftContent>
       </WrapperLeftContainer>
       <WrapperRightContainer>
-
+        {cartState.loading && (
+          <div>
+            <div>
+              <Skeleton height={35} style={{ marginBottom: '10px' }} />
+              <Skeleton height={55} style={{ marginBottom: '10px' }} />
+            </div>
+          </div>
+        )}
+        {
+          !driverTipsField &&
+          <>
+            <DriverTipContainer>
+              <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>
+              <p>{t('100%_OF_THE_TIP_YOUR_DRIVER', '100% of the tip goes to your driver')}</p>
+              <DriverTips
+                businessId={cart?.business_id}
+                driverTipsOptions={driverTipsOptions}
+                isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1}
+                isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1
+                  ? cart?.driver_tip
+                  : cart?.driver_tip_rate}
+                cart={cart}
+                useOrderContext
+              />
+            </DriverTipContainer>
+            <DriverTipDivider />
+          </>
+        }
+        {!cartState.loading && placeSpotsEnabled && cart?.business_id && (
+          <SelectSpotContainer>
+            <PlaceSpot
+              isCheckout
+              isInputMode
+              isHomeStyle
+              cart={cart}
+              spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
+              vehicleDefault={cart?.vehicle}
+              setPlaceSpotNumber={setPlaceSpotNumber}
+            />
+          </SelectSpotContainer>
+        )}
+        {!cartState.loading && cart && (
+          <CartContainer>
+            <CartHeader>
+              <h1>{t('PRODUCTS', 'Products')}</h1>
+            </CartHeader>
+            <Cart
+              isCartPending={cart?.status === 2}
+              cart={cart}
+              useKioskApp={useKioskApp}
+              isCheckout
+              isProducts={cart?.products?.length || 0}
+              viewString='checkout'
+              businessConfigs={businessConfigs}
+              loyaltyRewardRate={
+                creditPointPlanOnBusiness?.accumulation_rate ??
+                (!!creditPointPlanOnBusiness && creditPointPlan?.accumulation_rate) ?? 0
+              }
+              productLoading={productLoading}
+              setProductLoading={setProductLoading}
+            />
+          </CartContainer>
+        )}
         {!cartState.loading && cart && (
           <PaymentMethodContainer className='paymentsContainer'>
             <SectionTitleContainer>

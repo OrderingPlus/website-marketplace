@@ -82,7 +82,6 @@ export const OrdersContainer = styled.div`
     p{
       margin-block-end: 0;
       margin-block-start: 0;
-      color: #9A9A9A
     }
 
     @media(min-width: 480px){
@@ -212,7 +211,7 @@ export const ImageNotFound = styled.div`
 
   margin: 0 auto;
   img{
-    width: 100%
+    width: 100%;
   }
 `
 
@@ -222,9 +221,7 @@ export const BusinessInformation = styled.div`
   flex: 1;
   padding-left: 10px;
   font-size: 0.9em;
-  ${({ activeOrders }) => activeOrders && css`
-      width: 30%;
-  `}
+
   ${props => props.theme?.rtl && css`
     padding-right: 10px;
     padding-left: 0;
@@ -243,30 +240,23 @@ export const BusinessInformation = styled.div`
     }
   }
   h2 {
-    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 14px;
+    font-size: 16px;
     margin-block-end: 0;
     margin-block-start: 0;
+    color: ${({ theme }) => theme?.colors?.primary};
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
   }
   p {
     margin-block-end: 0.1em;
     margin-block-start: 0.1em;
-    color : #9A9A9A;
     white-space: nowrap;
     font-size: 0.9em;
     ${({ activeOrders }) => activeOrders && css`
       font-size: 0.8em;
     `}
-  }
-
-  .order-status {
-    color: #03459E;
-    width: 170px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   p[name='view_order'] {

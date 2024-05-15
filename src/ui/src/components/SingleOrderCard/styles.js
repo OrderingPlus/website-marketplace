@@ -11,31 +11,11 @@ export const Container = styled.div`
   transition: all 0.3s ease;
   padding: 10px;
   border-radius: 8px;
-
-  ${props => props.theme.rtl
-? css`
-    margin-left: 15px;
-  `
-: css`
-    margin-right: 15px;
-  `}
+  box-sizing: border-box;
 
   > span {
     display: flex;
   }
-
-  ${({ isCustomerMode }) => isCustomerMode
-? css`
-    min-width: 300px;
-    width: 300px;
-    display: inline-block;
-  `
-: css`
-    min-width: ${({ w }) => w ?? 380}px;
-    width: ${({ w }) => w ?? 380}px;
-    height: ${({ isBusinessesPage }) => isBusinessesPage && '300px'};
-    max-height: ${({ isBusinessesPage }) => isBusinessesPage ? '300px' : '220px'};
-  `}
 
   &:hover {
     box-shadow: rgb(0 0 0 / 20%) 0px 8px 24px;
@@ -59,12 +39,6 @@ export const Container = styled.div`
     justify-content: center;
   `}
 
-  @media (min-width: 480px) {
-    min-width: 430px;
-    max-height: ${({ isBusinessesPage }) => isBusinessesPage ? '300px' : '250px'};
-    width: 430px;
-  }
-
   @media (min-width: 768px) {
     margin: 10px;
     border-radius: 16px;
@@ -84,10 +58,10 @@ export const Content = styled.div`
   border-radius: 16px;
   padding: 0;
   ${({ isCustomerMode }) => isCustomerMode
-? css`
+    ? css`
     align-items: center;
   `
-: css`
+    : css`
     align-items: flex-start;
     flex: 1;
   `}
@@ -98,26 +72,16 @@ export const Content = styled.div`
 `
 
 export const Price = styled.div`
+  display: flex;
   width: 35%;
-
-  ${({ isCustomerMode }) => isCustomerMode
-? css`
-  text-align: end;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  `
-: css`
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-    align-items: flex-end;
-  `}
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: flex-start;
 
   h2 {
     font-size: 16px;
-    margin-block-end: ${({ isBusinessesPage }) => isBusinessesPage ? '0.1em' : '1em'};
-    margin-block-start: 0.1em;
-    font-weight: normal;
+    margin: 0;
+    font-weight: 600;
   }
   p {
     margin-block-end: 0.1em;
@@ -146,8 +110,8 @@ const BusinessLogoWrapperStyled = styled.div`
   display: flex;
   width: 55px;
   min-width: 55px;
-  height: 55px;
-  min-height: 55px;
+  height: 90px;
+  min-height: 90px;
   box-sizing: border-box;
   position: relative;
   background-repeat: no-repeat, repeat;
@@ -208,30 +172,31 @@ export const BusinessLogoWrapper = (props) => {
 export const ButtonWrapper = styled.div`
   position: absolute;
   right: 0px;
-  ${({ isCustomerMode }) => isCustomerMode ? css`bottom: 4px;` : css`top: 4px;`}
+  bottom: 0px;
   display: flex;
+  flex-direction: column;
   align-items: center;
 
   button {
-    border-radius: 50px;
+    width: 60px;
+    border-radius: 30px;
     font-size: 10px;
     line-height: 15px;
     padding: 4px 8px;
+    height: 26px;
     border: 1px solid ${props => props.theme.colors.primaryContrast};
-    margin: 5px;
-
+    margin: 5px 0px;
+    background: #DCA8AE80;
     &.reorder {
-      background: ${props => props.theme.colors.primaryContrast};
-      &:hover {
-        background: ${props => props.theme.colors.primary};
-      }
+      background: ${props => props.theme.colors.primary};
+      color: #fff;
     }
   }
 `
 
 export const Logo = styled.div`
   width: 55px;
-  height: 55px;
+  height: 90px;
   filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.1));
   border-radius: 7.6px;
 
@@ -272,18 +237,14 @@ export const Map = styled.div`
 `
 
 export const FavoriteWrapper = styled.div`
-  position: absolute;
+  position: relative;
   cursor: pointer;
   display: flex;
   z-index: 10;
   align-items: center;
   justify-content: center;
-  top: 41px;
-  right: 10px;
-  ${props => props.theme.rtl && css`
-    left: 10px;
-    right: initial;
-  `}
+  margin-left: 5px;
+  top: 5px;
   svg {
     color: ${props => props.theme.colors.danger500};
     font-size: 16px;
@@ -300,5 +261,20 @@ export const MultiLogosContainer = styled.div`
   align-items: center;
   p {
     white-space: nowrap;
+  }
+`
+
+export const OrderStatusContainer = styled.div`
+  .order-status {
+    color: ${({ theme }) => theme?.colors?.primary};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  @media (min-width: 576px){
+    display: flex;
+    .order-status{
+      margin-left: 10px;
+    }
   }
 `

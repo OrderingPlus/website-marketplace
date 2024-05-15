@@ -216,6 +216,7 @@ const UpsellingPageUI = (props) => {
                             handleCartOpen={handleCartOpen}
                             businessConfigs={business?.configs}
                             productLoading={productLoading}
+                            hideBusinessDetails
                           />
                         </>
                         )
@@ -246,6 +247,7 @@ const UpsellingPageUI = (props) => {
                           handleCartOpen={handleCartOpen}
                           businessConfigs={business?.configs}
                           productLoading={productLoading}
+                          hideBusinessDetails
                         />
                       </OrderBillContainer>
                     )}

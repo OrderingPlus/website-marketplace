@@ -2,12 +2,9 @@ import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  flex-direction: column;
-  width: 100%;
-  padding: 15px 10px;
-  box-sizing: border-box;
-  border-bottom: 1px solid #E9ECEF;
+  padding: 10px 0px;
   cursor: pointer;
 
   -webkit-touch-callout: none;
@@ -35,14 +32,13 @@ export const IconControl = styled.div`
   }
 `
 export const Text = styled.div`
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
-  font-weight: 400;
+  font-weight: 300;
+  color: #555;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 5px 8px;
-  font-size: 15px;
-  cursor: pointer;
+  margin: 0 8px;
 
   div {
     overflow: hidden;
@@ -137,16 +133,16 @@ export const QuantityControl = styled.div`
 export const PositionControl = styled.div`
   display: flex;
   align-items: center;
-  color: #909BA9;
+  color: #CBCBCB;
   font-weight: 300;
   font-size: 18px;
   margin: 0 5px;
 
   svg {
     font-size: 20px;
-    margin-right: 5px;
+    margin-right: 3px;
     ${props => props.theme?.rtl && css`
-      margin-left: 5px;
+      margin-left: 3px;
       margin-right: 0px;
     `}
     &.reverse {
@@ -196,7 +192,8 @@ export const LeftOptionContainer = styled.div`
 
 export const RightOptionContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  width: 25%;
   align-items: center;
   justify-content: space-between;
 
@@ -233,21 +230,4 @@ export const ExtraItem = styled.div`
       pointer-events: none;
       opacity: 0.2
     }
-`
-
-export const HeaderSuboption = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`
-
-export const AddRemoveControl = styled.div`
-  flex-direction: row;
-  align-items: center;
-  div {
-    color: ${({ theme }) => theme?.colors?.primary};
-    font-size: 15px;
-    font-weight: 600;
-  }
 `

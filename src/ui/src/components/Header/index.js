@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useTheme } from 'styled-components'
-import { GeoAlt } from 'react-bootstrap-icons'
 import TiWarningOutline from '@meronex/icons/ti/TiWarningOutline'
 
 import {
@@ -12,14 +11,14 @@ import {
   RightHeader,
   Menu,
   MenuLink,
-  SubMenu,
   UserEdit,
-  AddressMenu,
   MomentMenu,
   FarAwayMessage,
   AddressFormWrapper,
   HeaderSearchMode,
-  LeftSide
+  LeftSide,
+  AddressMenu,
+  SubMenu
 } from './styles'
 
 import { useSession, useLanguage, useOrder, useEvent, useConfig, useCustomer, useUtils, useBusiness } from '~components'
@@ -48,6 +47,7 @@ import {
   BusinessPreorder,
   useBusinessSelected
 } from '~ui'
+import { GeoAlt } from 'react-bootstrap-icons'
 
 export const Header = (props) => {
   const {
@@ -250,11 +250,11 @@ export const Header = (props) => {
                 </FarAwayMessage>
               )}
 
-              {onlineStatus && windowSize.width > 820 && (
+              {onlineStatus && windowSize.width >= 850 && (
                 <>
                   {!isCustomerMode && (
                     <AddressMenu
-                      onClick={() => openModal('address')}
+                      onClick={() => handleGoToPage({ page: 'order_types' })}
                     >
                       <GeoAlt />
                       <span>
@@ -364,7 +364,7 @@ export const Header = (props) => {
                   withLogout
                   isCustomerMode={isCustomerMode}
                   open={openPopover.user}
-                  handleOpenAddressModal={() => openModal('address')}
+                  handleOpenAddressModal={() => handleGoToPage({ page: 'order_types' })}
                   onClick={() => handleTogglePopover('user')}
                   onClose={() => handleClosePopover('user')}
                 />
@@ -376,29 +376,33 @@ export const Header = (props) => {
       {onlineStatus && isShowOrderOptions && !props.isCustomLayout && !isCustomerMode && (
         windowSize.width > 768 && windowSize.width <= 820
           ? (
-            <SubMenu>
-              {isFarAway && (
-                <FarAwayMessage>
-                  <TiWarningOutline />
-                  <span>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</span>
-                </FarAwayMessage>
+            <>
+              {window.location.pathname !== '/order_types' && (
+                <SubMenu>
+                  {isFarAway && (
+                    <FarAwayMessage>
+                      <TiWarningOutline />
+                      <span>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</span>
+                    </FarAwayMessage>
+                  )}
+                  <AddressMenu onClick={() => handleGoToPage({ page: 'order_types' })}>
+                    <GeoAlt /> {orderState.options?.address?.address || t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
+                  </AddressMenu>
+                  {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
+                    <HeaderOption
+                      variant='moment'
+                      momentState={orderState?.options?.moment}
+                      onClick={configState?.configs?.max_days_preorder?.value === -1 || configState?.configs?.max_days_preorder?.value === 0
+                        ? null
+                        : (variant) => openModal(variant)}
+                    />
+                  )}
+                </SubMenu>
               )}
-              <AddressMenu onClick={() => openModal('address')}>
-                <GeoAlt /> {orderState.options?.address?.address || t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
-              </AddressMenu>
-              {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
-                <HeaderOption
-                  variant='moment'
-                  momentState={orderState?.options?.moment}
-                  onClick={configState?.configs?.max_days_preorder?.value === -1 || configState?.configs?.max_days_preorder?.value === 0
-                    ? null
-                    : (variant) => openModal(variant)}
-                />
-              )}
-            </SubMenu>
+            </>
             )
           : (
-              windowSize.width >= 576 && (
+              window.location.pathname !== '/order_types' && windowSize.width >= 576 && (
               <SubMenu>
                 {isFarAway && (
                   <FarAwayMessage>
@@ -409,7 +413,7 @@ export const Header = (props) => {
                 <HeaderOption
                   variant='address'
                   addressState={orderState?.options?.address?.address}
-                  onClick={(variant) => openModal(variant)}
+                  onClick={(variant) => handleGoToPage({ page: 'order_types' })}
                   containerStyle={{ width: '80%' }}
                 />
                 {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
@@ -418,7 +422,7 @@ export const Header = (props) => {
                     momentState={orderState?.options?.moment}
                     onClick={configState?.configs?.max_days_preorder?.value === -1 || configState?.configs?.max_days_preorder?.value === 0
                       ? null
-                      : (variant) => openModal(variant)}
+                      : (variant) => handleGoToPage({ page: 'order_types' })}
                   />
                 )}
               </SubMenu>

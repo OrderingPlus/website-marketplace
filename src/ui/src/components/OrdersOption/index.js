@@ -346,6 +346,7 @@ const OrdersOptionUI = (props) => {
             handleReorder={handleReorder}
             handleUpdateOrderList={handleUpdateOrderList}
             setRefreshOrders={setRefreshOrders}
+            pastOrders={pastOrders}
           />
             )
       )}

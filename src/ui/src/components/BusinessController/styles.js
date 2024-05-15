@@ -2,19 +2,14 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 
 export const ContainerCard = styled.div`
-  border: 1px solid #E9ECEF;
   box-sizing: border-box;
   border-radius: 7.6px;
-  max-height: 300px;
-  height: ${({ isSkeleton }) => isSkeleton ? 'auto' : '320px'};
   border-radius: 10px;
-  margin: 30px 20px;
-
-  ${({ isCustomerMode }) => isCustomerMode && css`
-    max-height: 400px;
-    height: ${({ isSkeleton }) => isSkeleton ? 'auto' : '400px'};
+  margin: 15px 20px;
+  padding-bottom: 30px;
+  ${({ isBusinessMap }) => !isBusinessMap && css`
+    border-bottom: 1px solid #E9ECEF;
   `}
-
   ${({ minWidthEnabled }) => minWidthEnabled && css`
     min-width: calc(65% - 40px);
   `}
@@ -45,39 +40,48 @@ export const ContainerCard = styled.div`
     }
 
     @media (min-width: 681px) {
-      width: calc(50% - 40px);
-    }
-
-    @media (min-width: 993px) {
-      width: calc(33% - 40px);
+      width: ${({ isBusinessMap }) => isBusinessMap ? 'calc(100% - 40px)' : 'calc(50% - 40px)'};
     }
 
     @media (min-width: 1200px) {
-      width: ${() => businessRows === 4 ? 'calc(25% - 40px)' : businessRows === 3 ? 'calc(33% - 40px)' : 'calc(50% - 40px)'};
+      width: calc(100% - 40px);
     }
   `}
 
 `
 
 export const WrapperBusinessCard = styled.div`
-  height: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
   cursor: ${({ isSkeleton }) => isSkeleton ? 'default' : 'pointer'};
   ${({ disabled }) => disabled && css`
     pointer-events: none;
     cursor: not-allowed;
   `}
+
+  button {
+    height: 44px;
+    min-height: 44px;
+    width: 100%;
+    margin-top: 15px;
+    align-self: flex-end
+  }
 `
 
 export const BusinessHero = styled.div`
   border-radius: 10px;
-
-  > span {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  > div {
     display: flex;
   }
 `
 
-const BusinessHeaderStyled = styled.div`
+export const BusinessHeader = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
@@ -117,21 +121,6 @@ const BusinessHeaderStyled = styled.div`
     min-height: 165px;
   }
 `
-
-export const BusinessHeader = (props) => {
-  const style = {}
-  if (props.bgimage && !props.isClosed) {
-    style.backgroundImage = `url(${props.bgimage})`
-  } else {
-    style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${props.bgimage})`
-  }
-
-  return (
-    <BusinessHeaderStyled {...props} style={style}>
-      {props.children}
-    </BusinessHeaderStyled>
-  )
-}
 
 export const BusinessHeaderClosedContainer = styled.div`
     display: flex;
@@ -196,16 +185,13 @@ export const BusinessTags = styled.div`
 export const BusinessContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  max-height: 135px;
-  padding: 0 20px 20px 20px;
-  ${({ isCustomerMode }) => !isCustomerMode && css`
-    height: calc(100% - 145px);
+  align-items: flex-start;
 
-    @media (min-width: 481px) {
-      height: calc(100% - 165px);
-    }
-  `}
+  p {
+    margin: 0;
+  }
+
+
 `
 
 export const WrapperBusinessLogo = styled.div`
@@ -317,14 +303,18 @@ export const BusinessInfoItem = styled.div`
 `
 
 export const BusinessName = styled.h6`
-  font-size: 16px;
+  font-size: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 500;
+  font-weight: 700;
   margin-block-start: 0;
   margin-block-end: 0;
-  color: ${props => props.theme.colors.darkTextColor};
+  color: ${props => props.theme.colors.primary};
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
 `
 
 export const Categories = styled.div`
@@ -338,7 +328,6 @@ export const Categories = styled.div`
 `
 
 export const Medadata = styled.div`
-  margin-top: 5px;
   display: flex;
   font-weight: 300;
   font-size: 12px;
@@ -463,7 +452,7 @@ export const RibbonBox = styled.div`
   font-weight: 400;
   font-size: 10px;
   line-height: 13px;
-  top: -4px;
+  top: -15px;
   right: -3px;
   background-color: ${props => props.theme.colors.primary};
   max-width: 180px;
@@ -500,7 +489,6 @@ export const RibbonBox = styled.div`
 
 export const FavoriteWrapper = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
   cursor: pointer;
   margin-left: 15px;
@@ -508,9 +496,40 @@ export const FavoriteWrapper = styled.div`
     margin-right: 15px;
     margin-left: 0px;
   `}
-
   svg {
-    font-size: 16px;
+    position: relative;
+    top: 6px;
+    font-size: 20px;
     color: ${props => props.theme.colors.danger500};
   }
+`
+
+export const BusinessNameContainer = styled.div`
+  width: 60%;
+`
+
+export const BusinessDistance = styled(BusinessName)`
+  color: #000;
+  text-align: right;
+  font-weight: 600;
+`
+
+export const BusinessNameContainerRight = styled.div`
+  max-width: 35%;
+`
+
+export const OpenAtContainer = styled.div`
+  color: ${({ isClosed, theme }) => isClosed ? theme?.colors?.primary : '#000'};
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 10px;
+`
+
+export const BusinessAddress = styled.div`
+  margin-bottom: 10px;
+`
+
+export const ButtonSkeleton = styled.div`
+  width: 100%;
+  margin-top: 15px;
 `

@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
-  padding: 20px;
   overflow: hidden;
   min-height: auto;
   width: 100%;
@@ -12,6 +11,7 @@ export const Container = styled.div`
   `}
 
   > h1 {
+    padding: 20px;
     font-weight: 600;
     font-size: 32px;
     line-height: 48px;
@@ -134,5 +134,32 @@ export const MyOrdersMenuContainer = styled.div`
   }
   @media (min-width: 992px) {
     width: auto;
+  }
+`
+
+export const TabsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ theme }) => theme?.colors?.border};
+  justify-content: space-between;
+  width: 100%;
+  min-height: 30px;
+  background: #E9ECEF;
+  > div {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+  p {
+    margin: 0px;
+    color: #000;
+    font-weight: 600;
+  }
+  .selected {
+    border-bottom: 1px solid ${({ theme }) => theme?.colors?.primary};
+    p {
+      color: ${({ theme }) => theme?.colors?.primary};
+    }
   }
 `

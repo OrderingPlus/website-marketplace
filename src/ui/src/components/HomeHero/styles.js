@@ -20,9 +20,7 @@ export const HeroContainerStyled = styled.div`
 
   @media (min-width: 567px) {
     height: calc(100vh - 65px);
-    ${({ isFullScreen }) => !isFullScreen && css`
-      height: calc(60vh - 65px);
-    `}
+
     margin-bottom: 0;
   }
 `
@@ -228,8 +226,21 @@ export const UseAccount = styled.div`
   }
 
   @media (min-width: 576px) {
-    display: none;
+    margin-top: 20px;
+    min-height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    flex-wrap: wrap;
+    button {
+      width: 45%;
+      &:last-child {
+        width: 100%;
+      }
+    }
   }
+
 `
 
 export const SectionHeader = styled.div`
@@ -251,6 +262,13 @@ export const LogoWrapper = styled.div`
     width: 100%;
     object-fit: fill;
   }
+  @media (min-width: 576px){
+    width: 50%;
+  }
+
+  @media (min-width: 1024px){
+    width: 350px;
+  }
 `
 export const HeroContent = styled.div`
   button{
@@ -260,13 +278,11 @@ export const HeroContent = styled.div`
     margin-bottom: 15px;
     white-space: nowrap;
     height: 44px;
-    @media (min-width: 576px) {
-      padding-top: 5px;
-      padding-bottom: 5px;
-      font-size: 18px;
-      width: 180px;
-      line-height: initial;
-    }
+  }
+  @media (min-width: 576px){
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 `
 

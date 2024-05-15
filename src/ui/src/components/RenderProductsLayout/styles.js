@@ -8,7 +8,10 @@ export const Title = styled.h1`
   margin-bottom: 18px;
 `
 
-export const WrappLayout = styled.div``
+export const WrappLayout = styled.div`
+  display: flex;
+  width: 100%;
+`
 
 export const WrapContent = styled.div`
   padding: 5px;
@@ -48,9 +51,6 @@ export const BusinessCategoryProductWrapper = styled.div`
     scrollbar-width: none;
   }
 
-  @media (min-width: 1000px) {
-    width: 70%;
-  }
 `
 
 export const BusinessCategoriesContainer = styled.div`
@@ -71,6 +71,7 @@ export const BusinessCartContainer = styled(BusinessCategoriesContainer)`
   margin-top: 70px;
   min-width: 325px;
   height: fit-content;
+  margin-left: 20px;
   @media (min-width: 769px) {
     ${({ isProfessional }) => isProfessional && css`
       margin-top: 0px;
@@ -275,4 +276,9 @@ export const TabsContainer = styled.div`
       color: ${({ theme }) => theme?.colors?.primary};
     }
   }
+`
+
+export const BusinessProductsListContainer = styled.div`
+  flex: 1;
+  width: 100%;
 `

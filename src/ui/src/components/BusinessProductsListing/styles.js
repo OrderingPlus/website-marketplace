@@ -204,3 +204,30 @@ export const SpinnerCart = styled.div`
   justify-content: center;
   align-items: center;
 `
+
+export const TabsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ theme }) => theme?.colors?.border};
+  justify-content: space-between;
+  width: 100%;
+  min-height: 30px;
+  background: #E9ECEF;
+  > div {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+  p {
+    margin: 0px;
+    color: #000;
+    font-weight: 600;
+  }
+  .selected {
+    border-bottom: 1px solid ${({ theme }) => theme?.colors?.primary};
+    p {
+      color: ${({ theme }) => theme?.colors?.primary};
+    }
+  }
+`
