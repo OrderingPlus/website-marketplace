@@ -26,8 +26,8 @@ export const HelmetTags = (props) => {
 
   return (
     <Helmet titleTemplate={!page ? '' : `${theme?.my_products?.components?.website_settings?.components?.values?.name || settings.app_name} - %s`}>
-      <title id={`route-${page}`}>{props.helmetMetaTags?.title || metaTag.title} {enabledPoweredByOrdering ? '- Powered by Ordering.co' : ''}</title>
-      <meta name='description' content={(theme?.my_products?.components?.website_settings?.components?.values?.description || props.helmetMetaTags?.description || metaTag.description) + (enabledPoweredByOrdering ? ' Powered by Ordering.co' : '')} />
+      <title id={`route-${page}`}>{props.helmetMetaTags?.title || metaTag.title} {enabledPoweredByOrdering ? '- Powered by Orderingplus' : ''}</title>
+      <meta name='description' content={(theme?.my_products?.components?.website_settings?.components?.values?.description || props.helmetMetaTags?.description || metaTag.description) + (enabledPoweredByOrdering ? ' Powered by Orderingplus' : '')} />
       <meta name='keywords' content={props.helmetMetaTags?.keywords || metaTag.keywords} />
       {props.robots
         ? (
