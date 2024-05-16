@@ -116,7 +116,7 @@
   },
   "react-dotenv": {
     "whitelist": [
-      "https://apiv4.ordering.co"
+      "https://apiv4.orderingplus"
     ]
   }
 }
