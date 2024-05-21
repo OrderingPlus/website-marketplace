@@ -46,7 +46,6 @@
     "IN_QUEUE": "In Queue",
     "EXPIRED": "Logistic expired",
     "RESOLVED": "Resolved",
-    "COMMENT": "Comment",
     "LOGISTIC_STATUS": "logistic status",
     "ORDER_REJECT_REASON_IS": "Order <b>reject reason</b> is _reject_reason_.",
     "ORDER_REFUNDED": "Order refunded",
@@ -347,6 +346,7 @@
     "EXTRA_VALUE_CHECKPRICE": "Extra value checkprice",
     "DRIVER_TIP": "Driver tip",
     "DRIVER_TIPS": "Driver Tips",
+    "100%_OF_THE_TIP_YOUR_DRIVER": "100% of the tip goes to your driver",
     "REWARD_LOYALTY_POINT": "Reward :amount: on loyalty points",
     "COMMENTS": "Comments",
     "SPECIAL_COMMENTS": "Special Comments",
@@ -389,6 +389,7 @@
     "PLACING": "Placing",
     "ERROR_CART_SELECTED": "Sorry, the selected cart was not found.",
     "CHECKOUT_REDIRECT": "Go to Checkout list",
+    "CHECKOUT ": "Checkout",
     "SELECT_A_STORE": "Select a store",
     "SEARCH_CITIES": "Search Cities",
     "CONTINUE": "Continue",
@@ -414,7 +415,7 @@
     "NOT_AVAILABLE_BUSINESSE": "Business is not available for this product",
     "GO_TO_BUSINESSS": "Go to business",
     "POWERED_BY": "Powered by",
-    "ORDERING_CO": "Ordering.co",
+    "ORDERING_PLUS": "Orderingplus",
     "LINK_SEND_SUCCESSFULLY": "Link Sent Successfully",
     "IF_ACCOUNT_EXIST_EMAIL_SEND_PASSWORD": "If an account exists with this email a password will be sent",
     "TITLE_FORGOT_PASSWORD": "Forgot your password?",
@@ -431,7 +432,7 @@
     "REDEEM_GIFT_CARD": "Redeem a gift card",
     "SELECT_ONE_OPTION": "Select one option",
     "GIFT_CARD_CODE": "Gift card code",
-    "VALIDATION_ERROR_REQUIRED": "To email is required",
+    "VALIDATION_ERROR_REQUIRED": "Project is required",
     "CODE": "Code",
     "GIFT_CARD_PASSWORD": "Gift card password",
     "PASSWORD": "Password",
@@ -569,6 +570,7 @@
     "TIME_ADDED_BY_DRIVER": "Time added by driver",
     "TIME_ADDED_BY_BUSINESS": "Time added by business",
     "DELIVERY_PREFERENCE": "Delivery preference",
+    "COMMENT": "Comment",
     "ORDER_IN_PROGRESS": "Order in progress",
     "RESTAURANT_PREPARING_YOUR_ORDER": "The restaurant is preparing your order",
     "GO_TO_THE_ORDER": "Go to the order",
@@ -943,7 +945,6 @@
     "QUICK_COMMENT_DISLIKE_0": "Not tasty",
     "QUICK_COMMENT_DISLIKE_1": "High price",
     "QUICK_COMMENT_DISLIKE_2": "Bad portion size",
-    "QUICK_COMMENT_DISLIKE_3": "Not packed well",
-    "ORDERING_PLUS": "Orderingplus"
+    "QUICK_COMMENT_DISLIKE_3": "Not packed well"
   }
 }
