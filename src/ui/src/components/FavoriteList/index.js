@@ -28,6 +28,7 @@ import {
   SingleOrderCard,
   SingleProfessionalCard
 } from '~ui'
+import { ProductsListing } from '../BusinessProductsList/styles'
 
 const FavoriteListUI = (props) => {
   const {
@@ -40,7 +41,8 @@ const FavoriteListUI = (props) => {
     isOrder,
     isProfessional,
     handleReorder,
-    reorderState
+    reorderState,
+    handleRedirectToList
   } = props
 
   const [, t] = useLanguage()
@@ -68,11 +70,7 @@ const FavoriteListUI = (props) => {
   }
 
   const handleGoToList = () => {
-    if (isOrder) {
-      events.emit('go_to_page', { page: 'orders' })
-      return
-    }
-    events.emit('go_to_page', { page: 'search' })
+    handleRedirectToList?.()
   }
 
   const handleClosePreorder = () => {
@@ -205,8 +203,34 @@ const FavoriteListUI = (props) => {
             </NotFoundSource>
           )
         }
+        {isProduct && (
+          <>
+            <ProductsListing>
+              {
+                !favoriteList?.loading && favoriteList?.favorites?.map((product, i) => (
+                  <SingleProductCard
+                    key={`${product.id}_${i}`}
+                    isSoldOut={product.inventoried && !product.quantity}
+                    product={product}
+                    onProductClick={() => onProductClick(product)}
+                    handleUpdateProducts={handleUpdateFavoriteList}
+                    isFavorite
+                  />
+                ))
+              }
+              {favoriteList?.loading && (
+                [...Array(4).keys()].map(i => (
+                  <SingleProductCard
+                    key={`skeleton:${i}`}
+                    isSkeleton
+                  />
+                ))
+              )}
+            </ ProductsListing>
+          </>
+        )}
         <FavoriteListWrapper isLoading={favoriteList?.loading || favoriteList?.favorites?.length === 0}>
-          <FavoriteListing isOrder={isOrder} isProduct={isProduct}>
+          <FavoriteListing isOrder={isOrder}>
             <AutoScroll scrollId='favorite'>
               {isBusiness && (
                 <>
@@ -240,30 +264,6 @@ const FavoriteListUI = (props) => {
                         business={{}}
                         isSkeleton
                         orderType={orderState?.options?.type}
-                      />
-                    ))
-                  )}
-                </>
-              )}
-              {isProduct && (
-                <>
-                  {
-                    !favoriteList?.loading && favoriteList?.favorites?.map((product, i) => (
-                      <SingleProductCard
-                        key={`${product.id}_${i}`}
-                        isSoldOut={product.inventoried && !product.quantity}
-                        product={product}
-                        onProductClick={() => onProductClick(product)}
-                        handleUpdateProducts={handleUpdateFavoriteList}
-                        isFavorite
-                      />
-                    ))
-                  }
-                  {favoriteList?.loading && (
-                    [...Array(3).keys()].map(i => (
-                      <SingleProductCard
-                        key={`skeleton:${i}`}
-                        isSkeleton
                       />
                     ))
                   )}
@@ -362,14 +362,14 @@ const FavoriteListUI = (props) => {
           <FavPopupView>
             {(favProduct?.images) && (
               <Image>
-              <img src={favProduct.images} alt={`product-${favProduct?.name}`} width='150px' height='150px' loading='lazy' />
+                <img src={favProduct.images} alt={`product-${favProduct?.name}`} width='150px' height='150px' loading='lazy' />
               </Image>
             )}
-              <h2>
+            <h2>
               {favProduct?.name}
-              </h2>
-              <h2>
-              { favProduct?.businesses && favProduct?.businesses?.length > 1
+            </h2>
+            <h2>
+              {favProduct?.businesses && favProduct?.businesses?.length > 1
                 ? t('AVAILABLE_BUSINESSES_FOR_PRODUCT', 'Available businesses for this product')
                 : favProduct?.businesses && favProduct?.businesses?.length === 1
                   ? t('AVAILABLE_BUSINESSE_FOR_PRODUCT', 'Available business for this product')

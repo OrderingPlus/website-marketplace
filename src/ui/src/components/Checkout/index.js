@@ -560,7 +560,7 @@ const CheckoutUI = (props) => {
           </div>
         )}
         {
-          !driverTipsField &&
+          driverTipsField &&
           <>
             <DriverTipContainer>
               <h1>{t('DRIVER_TIPS', 'Driver Tips')}</h1>

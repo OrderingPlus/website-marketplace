@@ -42,7 +42,7 @@ export const UserPopover = (props) => {
   const isPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
   const isAddressListNewPage = theme?.profile?.components?.address_list?.components?.layout?.position === 'new_page'
 
-  const hideBrowse = theme?.bar_menu?.components?.browse?.hidden
+  const hideBrowse = true
   const hideOrders = theme?.bar_menu?.components?.orders?.hidden
   const hideProfile = theme?.bar_menu?.components?.profile?.hidden
   const hideWallet = theme?.bar_menu?.components?.wallet?.hidden

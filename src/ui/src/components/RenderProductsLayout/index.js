@@ -67,8 +67,7 @@ export const RenderProductsLayout = (props) => {
     professionalSelected,
     isCustomerMode,
     productLoading,
-    setProductLoading,
-    businessNearestState
+    setProductLoading
   } = props
 
   const theme = useTheme()
@@ -102,7 +101,7 @@ export const RenderProductsLayout = (props) => {
   useEffect(() => {
     if (!isLoading && !business?.id) {
       events.emit('go_to_page', { page: 'order_types' })
-      showToast(ToastType.Error, t(businessNearestState?.error) || t('NO_BUSINESS_NEAR_LOCATION', 'No business near of you location'))
+      showToast(ToastType.Error, t('NO_BUSINESS_NEAR_LOCATION', 'No business near of you location'))
     }
   }, [isLoading, business?.id])
 
@@ -111,7 +110,7 @@ export const RenderProductsLayout = (props) => {
       {!isLoading && business?.id && (
         <WrappLayout isCartOnProductsList={isCartOnProductsList}>
           <BusinessProductsListContainer className='bp-list'>
-            {!(businessState?.loading || businessNearestState?.loading) && business?.id && !(business?.categories?.length === 0) && !selectedCategoryId && (
+            {!(businessState?.loading) && business?.id && !(business?.categories?.length === 0) && !selectedCategoryId && (
               <>
                 <TabsContainer>
                   <Tab
@@ -163,6 +162,7 @@ export const RenderProductsLayout = (props) => {
                     paginationSettings={{ initialPage: 1, pageSize: 50, controlType: 'infinity' }}
                     favoriteURL='favorite_products'
                     originalURL='products'
+                    handleRedirectToList={() => handleChangeTab(1)}
                   />
                 )}
               </>
@@ -281,19 +281,6 @@ export const RenderProductsLayout = (props) => {
               </div>
             </BusinessCategoryProductWrapper>
           </BusinessContent>
-          {(selectedCategoryId || windowSize.width >= 993) && (
-            <WrapContent>
-              <BusinessProductsList
-                categories={[]}
-                useKioskApp={useKioskApp}
-                category={categorySelected}
-                categoryState={categoryState}
-                isBusinessLoading={isLoading}
-                handleUpdateProducts={handleUpdateProducts}
-                errorQuantityProducts={errorQuantityProducts}
-              />
-            </WrapContent>
-          )}
         </>
       )}
       {isCartModal && (

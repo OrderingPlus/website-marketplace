@@ -155,8 +155,8 @@ export const Spinner = styled.div`
 export const CommentContainer = styled.td`
   position: relative;
   .spinner-content > div{
-    width: 50px;
-    height: 50px;
+    width: 50px !important;
+    height: 50px !important;
   }
 `
 

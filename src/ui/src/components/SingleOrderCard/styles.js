@@ -110,8 +110,8 @@ const BusinessLogoWrapperStyled = styled.div`
   display: flex;
   width: 55px;
   min-width: 55px;
-  height: 90px;
-  min-height: 90px;
+  height: 55px;
+  min-height: 55px;
   box-sizing: border-box;
   position: relative;
   background-repeat: no-repeat, repeat;

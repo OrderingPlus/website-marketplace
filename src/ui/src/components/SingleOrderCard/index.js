@@ -205,19 +205,30 @@ const SingleOrderCardUI = (props) => {
                   </div>
                   )
             }
-            {!hideDate && (
+            {isSkeleton
+              ? (
+              <div>
+                <Skeleton width={100} />
+              </div>
+                )
+              : (
               <>
-                <p>
-                  {
-                    pastOrders
-                      ? order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
-                        : parseDate(order?.delivery_datetime, { utc: false })
-                      : <OrderEta order={order} />
-                  }
-                </p>
+                {!hideDate && (
+                  <>
+                    <p>
+                      {
+                        pastOrders
+                          ? order?.delivery_datetime_utc
+                            ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
+                            : parseDate(order?.delivery_datetime, { utc: false })
+                          : <OrderEta order={order} />
+                      }
+                    </p>
+                  </>
+                )}
               </>
-            )}
+                )}
+
             <OrderStatusContainer>
               {order?.products?.length > 0 && (
                 <p>

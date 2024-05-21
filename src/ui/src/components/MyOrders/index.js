@@ -148,6 +148,7 @@ export const MyOrders = (props) => {
               favoriteURL='favorite_orders'
               originalURL='orders'
               isOrder
+              handleRedirectToList={() => handleChangeTab(1)}
             />
         )}
       </Container>

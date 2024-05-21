@@ -88,7 +88,6 @@ const AdvancedAddressFormUI = (props) => {
   const [locationChange, setLocationChange] = useState(
     addressState?.address?.location || formState?.changes?.location
   )
-  const [enableRedirect, setEnableRedirect] = useState(false)
   const [addressSpreadForm] = useState(null)
 
   const isHideMap = theme?.address?.components?.map?.hidden
@@ -236,7 +235,7 @@ const AdvancedAddressFormUI = (props) => {
 
     if (!isAddressAlreadyExist) {
       await saveAddress({})
-      setEnableRedirect(true)
+      await handleRedirectContinue()
       return
     }
     setAlertState({
@@ -410,12 +409,6 @@ const AdvancedAddressFormUI = (props) => {
       }
     }
   }, [addressSpreadForm])
-
-  useEffect(() => {
-    if (enableRedirect && orderState?.options?.address?.location) {
-      handleRedirectContinue()
-    }
-  }, [enableRedirect, orderState?.options?.address?.location])
 
   return (
     <Container className='address-form'>
