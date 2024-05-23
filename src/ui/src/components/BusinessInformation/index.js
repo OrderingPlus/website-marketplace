@@ -61,6 +61,7 @@ export const BusinessInformationUI = (props) => {
   const hideImages = theme?.business_view?.components?.information?.components?.images?.hidden
   const hideAddress = theme?.business_view?.components?.information?.components?.address?.hidden
   const formatTime = configs?.general_hour_format?.value
+  const useAlternativeMap = configs?.use_alternative_to_google_maps?.value === '1'
 
   const fillStyle = {
     fillColor: theme.colors.primary,
@@ -100,7 +101,7 @@ export const BusinessInformationUI = (props) => {
           </>
         )}
         {
-          !hideLocation && (
+          !hideLocation && !useAlternativeMap && (
             <>
               {businessLocation.location && (
                 <>

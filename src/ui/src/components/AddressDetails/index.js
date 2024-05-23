@@ -9,7 +9,7 @@ import {
   WrappMap
 } from './styles'
 
-import { AddressDetails as AddressDetailsController, useOrder, useLanguage, useCustomer } from '~components'
+import { AddressDetails as AddressDetailsController, useOrder, useLanguage, useCustomer, useConfig } from '~components'
 import { Modal, Alert, AddressList } from '~ui'
 
 const AddressDetailsUI = (props) => {
@@ -24,11 +24,13 @@ const AddressDetailsUI = (props) => {
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
+  const [{ configs }] = useConfig()
   const [openModal, setOpenModal] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isShowMap, setIsShowMap] = useState(false)
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
   const [{ user }] = useCustomer()
+  const useAlternativeMap = configs?.use_alternative_to_google_maps?.value === '1'
 
   useEffect(() => {
     return () => setOpenModal(false)
@@ -43,7 +45,7 @@ const AddressDetailsUI = (props) => {
             <span onClick={() => setOpenModal(true)}>{t('CHANGE_ADDRESS', 'Change address')}</span>}
         </Text>
       </Header>
-      {apiKey && (
+      {!useAlternativeMap && apiKey && (
         <>
           {!isShowMap && (
             <ToggleMap>

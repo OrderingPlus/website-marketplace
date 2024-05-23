@@ -415,8 +415,8 @@ const OrderDetailsUI = (props) => {
                     {enabledPoweredByOrdering && (
                       <PoweredByOrdering>
                         {t('POWERED_BY', 'Powered by')}
-                        <a href='https://www.ordering.co'>
-                          {t('ORDERING_CO', 'Ordering.co')}
+                        <a href='https://www.orderingplus.com'>
+                          {t('ORDERING_PLUS', 'Orderingplus')}
                         </a>
                       </PoweredByOrdering>
                     )}
@@ -782,6 +782,7 @@ const OrderDetailsUI = (props) => {
                 order={order}
                 setOpenTaxModal={setOpenTaxModal}
                 showOnlyTotals={showStarbucksHeader}
+                isGiftCardOrder={isGiftCardOrder}
               />
             </OrderProducts>
           </WrapperRightContainer>
