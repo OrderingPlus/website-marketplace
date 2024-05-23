@@ -381,6 +381,7 @@ export const MessagesListing = (props) => {
           <NotFoundSourceWrapper>
             <NotFoundSource
               image={imageFails}
+              content={t('NOT_FOUND_MESSAGES', 'Not found messages')}
             />
           </NotFoundSourceWrapper>
         )}
