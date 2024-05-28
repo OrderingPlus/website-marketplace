@@ -90,19 +90,6 @@ const BusinessProductsCategoriesUI = (props) => {
                 )}
           </IterateCategoriesContainer>
         ))}
-
-        {list && list?.length === 0 && isSub && (
-          <CategoryTab
-            active={categorySelected?.id === currentCat.id}
-            className={`${currentCat.id === 'featured' ? 'special' : ''}`}
-            categorySpace={categorySpace[currentCat?.level ?? 1]}
-            onClick={() => handleClickItem(currentCat, true)}
-          >
-            <span>
-              {currentCat.name}
-            </span>
-          </CategoryTab>
-        )}
       </>
     )
   }
