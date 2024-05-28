@@ -105,18 +105,19 @@ import drivethruIco from './assets/images/drivethru.svg'
 import cateringIco from './assets/images/catering.svg'
 import { SubdomainComponent } from './components/SubdomainComponent'
 
+const sentryDNS = settings.sentry_key
 Sentry.init({
   environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
-  dsn: settings.sentry_key,
   release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
-  // We recommend adjusting this value in production, or using tracesSampler
-  // for finer control
-  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.2,
-  // Release health
-  autoSessionTracking: true,
+  dsn: sentryDNS,
   integrations: [
     Sentry.browserTracingIntegration()
-  ]
+  ],
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5,
+  // Release health
+  autoSessionTracking: true
 })
 
 const logos = {
