@@ -151,7 +151,7 @@ const ProductOptionsUI = (props) => {
 
   const handleChangeFavorite = () => {
     if (auth) {
-      handleFavoriteProduct && handleFavoriteProduct(product, !product?.favorite)
+      handleFavoriteProduct && handleFavoriteProduct(product, !productCart?.favorite)
     } else {
       setModalPageToShow('login')
       setModalIsOpen(true)
@@ -514,21 +514,17 @@ const ProductOptionsUI = (props) => {
                 </ProductName>
                 {!isCustomerMode && !hideFavoriteIcon && (
                   <span className='favorite' onClick={() => handleChangeFavorite()}>
-                    {product?.favorite ? <Like /> : <DisLike />}
+                    {productCart?.favorite ? <Like /> : <DisLike />}
                   </span>
                 )}
               </TitleWrapper>
               <Properties>
                 {isHaveWeight
-                  ? (
-                  <PriceContent>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</PriceContent>
-                    )
-                  : (
-                  <PriceContent>
-                    <p>{product?.price ? parsePrice(product?.price) : ''}</p>
-                    {product?.in_offer && (<span className='offer-price'>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</span>)}
-                  </PriceContent>
-                    )}
+                  ? <PriceContent>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</PriceContent>
+                  : <PriceContent>
+                      <p>{product?.price ? parsePrice(product?.price) : ''}</p>
+                      {product?.in_offer && (<span className='offer-price'>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</span>)}
+                    </PriceContent>}
                 <ProductMeta>
                   {product?.calories && (
                     <>

@@ -181,6 +181,7 @@ const AddressListUI = (props) => {
   const handleCloseAddressForm = () => {
     setAddressOpen(false)
     setIsAddressFormOpen && setIsAddressFormOpen(false)
+    onCancel && onCancel()
   }
 
   /**
@@ -364,14 +365,10 @@ const AddressListUI = (props) => {
   return (
     <AddressListContainer id='address_control' isLoading={actionStatus?.loading || orderState?.loading} isCompletedLayout={isCompletedLayout}>
       {!isCompletedLayout
-        ? (
-        <AddressListCallcenterLayout>
-          <AddressListContent />
-        </AddressListCallcenterLayout>
-          )
-        : (
-        <AddressListContent />
-          )}
+        ? <AddressListCallcenterLayout>
+            <AddressListContent />
+          </AddressListCallcenterLayout>
+        : <AddressListContent />}
       {
         !isPopover && addressOpen && isCompletedLayout && (
           <Modal

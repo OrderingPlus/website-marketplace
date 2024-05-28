@@ -447,7 +447,7 @@ export const App = () => {
       languageState?.error?.includes('This project does not exist') &&
       settings?.use_project_subdomain
     ) {
-      window.open('https://www.ordering.co', '_self')
+      window.open('https://www.orderingplus', '_self')
     }
   }, [languageState])
 

@@ -37,7 +37,7 @@ export const SwiperWrapper = styled.div`
 
   .swiper {
     width: 100%;
-    height: 500px;
+    max-height: 500px;
     margin-left: auto;
     margin-right: auto;
   }

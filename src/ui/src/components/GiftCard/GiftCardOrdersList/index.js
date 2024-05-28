@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   Container,
-  Divider,
   NoOrdersWrapper
 } from './styles'
 
@@ -22,10 +21,6 @@ export const GiftCardOrdersList = (props) => {
         setIsEmpty={setIsEmptyPending}
         scrollId='pendingGifts'
       />
-
-      {isEmptyPending && isEmptySent && isEmptyRedeemed && (
-        <Divider />
-      )}
 
       <HorizontalGiftCardOrdersLayout
         title={t('SENT', 'Sent')}

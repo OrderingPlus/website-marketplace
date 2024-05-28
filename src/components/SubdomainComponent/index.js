@@ -3,7 +3,7 @@ import settings from '../../config'
 
 export const SubdomainComponent = (props) => {
   const projectFromSubdomain = window.location.hostname.split('.').slice(0, 1).join()
-  const isValidSubdomain = window.location.hostname.includes('tryordering.com') || window.location.hostname.includes('ordering.co')
+  const isValidSubdomain = window.location.hostname.includes('tryordering.com') || window.location.hostname.includes('orderingplus')
 
   let project = settings?.project
   if (settings?.use_project_subdomain && isValidSubdomain) {
