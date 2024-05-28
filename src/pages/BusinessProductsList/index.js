@@ -142,7 +142,13 @@ export const BusinessProductsList = (props) => {
       'snapchat_profile',
       'previously_products',
       'configs',
-      'types'
+      'types',
+      'available_products_count',
+      'today',
+      'lazy_load_products_recommended',
+      'minimum',
+      'ribbon',
+      'valid_service'
     ],
     handleSearchRedirect: () => {
       events.emit('go_to_page', { page: 'search' })
