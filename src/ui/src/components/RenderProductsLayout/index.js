@@ -371,6 +371,7 @@ export const RenderProductsLayout = (props) => {
                       <>
                         {(!categoryClicked || windowSize.width >= 993) && (
                           <BusinessProductsCategories
+                            layoutOne
                             component='categories'
                             categories={[
                               { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
