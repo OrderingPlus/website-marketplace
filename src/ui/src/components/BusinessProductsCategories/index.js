@@ -10,14 +10,12 @@ import {
   useWindowSize,
   AutoScroll
 } from '~ui'
-import { ParentCategory } from './ParentCategory'
 
 const BusinessProductsCategoriesUI = (props) => {
   const {
     isSkeleton,
     categories,
     featured,
-    layoutOne,
     openBusinessInformation,
     business,
     handlerClickCategory,
@@ -169,33 +167,29 @@ const BusinessProductsCategoriesUI = (props) => {
   }, [business?.professionals, useKioskApp])
 
   return (
-    <>
-      {layoutOne
-        ? <ParentCategory {...props} />
-        : <CategoriesContainer
-          id='category-lists'
-          className='category-lists'
-          featured={featured}
-          w={props.wContainerStyle}
-          isProfessional={isProfessional}
-        >
-          {!isSkeleton
-            ? <Tabs variant='primary'>
-                {openBusinessInformation
-                  ? <ProductCategories />
-                  : <AutoScroll>
-                      <ProductCategories />
-                    </AutoScroll>}
-              </Tabs>
-            : <Tabs variant='primary'>
-                {[...Array(4).keys()].map(i => (
-                  <Tab key={i}>
-                    <Skeleton width={100} />
-                  </Tab>
-                ))}
-              </Tabs>}
-        </CategoriesContainer>}
-    </>
+    <CategoriesContainer
+      id='category-lists'
+      className='category-lists'
+      featured={featured}
+      w={props.wContainerStyle}
+      isProfessional={isProfessional}
+    >
+      {!isSkeleton
+        ? <Tabs variant='primary'>
+            {openBusinessInformation
+              ? <ProductCategories />
+              : <AutoScroll>
+                  <ProductCategories />
+                </AutoScroll>}
+          </Tabs>
+        : <Tabs variant='primary'>
+            {[...Array(4).keys()].map(i => (
+              <Tab key={i}>
+                <Skeleton width={100} />
+              </Tab>
+            ))}
+          </Tabs>}
+    </CategoriesContainer>
   )
 }
 
