@@ -156,7 +156,8 @@ export const HighestRated = (props) => {
   const highestRatedProps = {
     ...props,
     UIComponent: HighestRatedUI,
-    initialOrderByValue: 'rating'
+    initialOrderByValue: 'rating',
+    avoidRefreshUserInfo: true
   }
   return <BusinessListController {...highestRatedProps} />
 }

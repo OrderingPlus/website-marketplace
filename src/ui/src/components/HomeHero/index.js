@@ -29,7 +29,7 @@ import {
 export const HomeHero = (props) => {
   const { onFindBusiness, notificationState } = props
 
-  const [{ auth }, { login }] = useSession()
+  const [{ auth, loading: sessionLoading }, { login }] = useSession()
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
@@ -97,11 +97,11 @@ export const HomeHero = (props) => {
 
   useEffect(() => {
     if (newAddressModalOpened) return
-    if (auth && !orderState.loading && !orderState?.options?.address?.location) {
+    if (auth && !sessionLoading && !orderState.loading && !orderState?.options?.address?.location) {
       setModals({ ...modals, listOpen: true })
       setNewAddressModalOpened(true)
     }
-  }, [auth, orderState, newAddressModalOpened])
+  }, [auth, orderState, sessionLoading, newAddressModalOpened])
 
   return (
     <HeroContainer
