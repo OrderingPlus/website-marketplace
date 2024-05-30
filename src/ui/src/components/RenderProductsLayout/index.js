@@ -40,7 +40,9 @@ import {
   BusinessBasicInformation,
   BusinessProductsCategories,
   BusinessProductsList,
-  SearchProducts as SearchProductsOriginal
+  SearchProducts as SearchProductsOriginal,
+  CategoriesLayoutGroceries,
+  ProductListLayoutGroceries
 } from '~ui'
 
 const layoutOne = 'groceries'
@@ -107,6 +109,14 @@ export const RenderProductsLayout = (props) => {
   const showCartOnProductList = !theme?.business_view?.components?.cart?.components?.hidden
   const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
   const hidePreviousOrdered = theme?.business_view?.components?.products_ordered?.hidden
+
+  const BusinessLayoutCategories = businessLayout.layoutOne
+    ? CategoriesLayoutGroceries
+    : BusinessProductsCategories
+
+  const BusinessLayoutProductsList = businessLayout.layoutOne
+    ? ProductListLayoutGroceries
+    : BusinessProductsList
 
   const handleSaveProduct = () => {
     if (windowSize.width < 993) {
@@ -213,7 +223,7 @@ export const RenderProductsLayout = (props) => {
                   )}
                   <div style={{ position: 'relative' }}>
                     {!(business?.categories?.length === 0 && !categoryId) && !categorySelected?.id && (
-                      <BusinessProductsCategories
+                      <BusinessLayoutCategories
                         categories={[
                           { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                           { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },
@@ -274,7 +284,7 @@ export const RenderProductsLayout = (props) => {
                     )}
                   </div>
                   <WrapContent id='businessProductList'>
-                    <BusinessProductsList
+                    <BusinessLayoutProductsList
                       categories={[
                         { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                         { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },
@@ -310,23 +320,23 @@ export const RenderProductsLayout = (props) => {
                     <BusinessCartContent maxHeight={window.innerHeight - 100}>
                       {currentCart?.products?.length > 0
                         ? (
-                        <>
-                          <Title>{t('YOUR_CART', 'Your cart')}</Title>
-                          <Cart
-                            isStore
-                            isCustomMode
-                            isForceOpenCart
-                            useKioskApp={useKioskApp}
-                            cart={currentCart}
-                            isCartPending={currentCart?.status === 2}
-                            isProducts={currentCart.products.length}
-                            isCartOnProductsList={isCartOnProductsList}
-                            handleCartOpen={handleCartOpen}
-                            businessConfigs={business?.configs}
-                            productLoading={productLoading}
-                            setProductLoading={setProductLoading}
-                          />
-                        </>
+                          <>
+                            <Title>{t('YOUR_CART', 'Your cart')}</Title>
+                            <Cart
+                              isStore
+                              isCustomMode
+                              isForceOpenCart
+                              useKioskApp={useKioskApp}
+                              cart={currentCart}
+                              isCartPending={currentCart?.status === 2}
+                              isProducts={currentCart.products.length}
+                              isCartOnProductsList={isCartOnProductsList}
+                              handleCartOpen={handleCartOpen}
+                              businessConfigs={business?.configs}
+                              productLoading={productLoading}
+                              setProductLoading={setProductLoading}
+                            />
+                          </>
                           )
                         : (
                         <EmptyCart>
@@ -370,7 +380,7 @@ export const RenderProductsLayout = (props) => {
                     {!(business?.categories?.length === 0 && !categoryId) && (
                       <>
                         {(!categoryClicked || windowSize.width >= 993) && (
-                          <BusinessProductsCategories
+                          <BusinessLayoutCategories
                             component='categories'
                             categories={[
                               { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
@@ -402,7 +412,7 @@ export const RenderProductsLayout = (props) => {
                             isGroceries
                           />
                         )}
-                        <BusinessProductsList
+                        <BusinessLayoutProductsList
                           categories={[
                             { id: null, name: t('ALL', theme?.defaultLanguages?.ALL || 'All') },
                             { id: 'featured', name: t('FEATURED', theme?.defaultLanguages?.FEATURED || 'Featured') },

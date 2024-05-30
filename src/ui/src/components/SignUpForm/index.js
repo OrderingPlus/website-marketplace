@@ -113,9 +113,9 @@ const SignUpFormUI = (props) => {
   const [reCaptchaVersion, setRecaptchaVersion] = useState({ version: '', siteKey: '' })
   const [, { login }] = useSession()
   const isFacebookLogin = configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1'
-  const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
-  const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-  const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+  const googleLoginEnabled = configs?.google_login_enabled?.value === '1'
+  const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1'
+  const appleLoginEnabled = configs?.apple_login_enabled?.value === '1'
 
   const [otpLeftTime, , resetOtpLeftTime] = useCountdownTimer(600, !checkPhoneCodeState?.loading && willVerifyOtpState)
   const [userPhoneNumber, setUserPhoneNumber] = useState('')

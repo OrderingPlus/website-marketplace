@@ -167,32 +167,28 @@ const BusinessProductsCategoriesUI = (props) => {
   }, [business?.professionals, useKioskApp])
 
   return (
-    <CategoriesContainer id='category-lists' className='category-lists' featured={featured} w={props.wContainerStyle} isProfessional={isProfessional}>
+    <CategoriesContainer
+      id='category-lists'
+      className='category-lists'
+      featured={featured}
+      w={props.wContainerStyle}
+      isProfessional={isProfessional}
+    >
       {!isSkeleton
-        ? (
-        <Tabs variant='primary'>
-          {openBusinessInformation
-            ? (
-            <>
-              <ProductCategories />
-            </>
-              )
-            : (
-            <AutoScroll>
-              <ProductCategories />
-            </AutoScroll>
-              )}
-        </Tabs>
-          )
-        : (
-        <Tabs variant='primary'>
-          {[...Array(4).keys()].map(i => (
-            <Tab key={i}>
-              <Skeleton width={100} />
-            </Tab>
-          ))}
-        </Tabs>
-          )}
+        ? <Tabs variant='primary'>
+            {openBusinessInformation
+              ? <ProductCategories />
+              : <AutoScroll>
+                  <ProductCategories />
+                </AutoScroll>}
+          </Tabs>
+        : <Tabs variant='primary'>
+            {[...Array(4).keys()].map(i => (
+              <Tab key={i}>
+                <Skeleton width={100} />
+              </Tab>
+            ))}
+          </Tabs>}
     </CategoriesContainer>
   )
 }
