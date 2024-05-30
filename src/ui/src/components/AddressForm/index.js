@@ -245,15 +245,18 @@ const AddressFormUI = (props) => {
     })
   }
 
-  const handleChangeAddress = (address) => {
+  const handleChangeAddress = (address, forceUpdate) => {
     setState({
       ...state,
       selectedFromAutocomplete: true
     })
     updateChanges({
       ...address,
-      address: googleInputRef?.current?.value || address?.address
+      address: forceUpdate ? address?.address : (googleInputRef?.current?.value || address?.address)
     })
+    if (forceUpdate && googleInputRef.current) {
+      googleInputRef.current.value = address?.address
+    }
   }
 
   const setMapErrors = (errKey) => {
@@ -435,7 +438,7 @@ const AddressFormUI = (props) => {
                           apiKey={googleMapsApiKey}
                           onAddress={(e) => {
                             formMethods.setValue('address', e.address)
-                            handleChangeAddress(e)
+                            handleChangeAddress(e, true)
                           }}
                           onError={setMapErrors}
                           IconButton={GeoAlt}

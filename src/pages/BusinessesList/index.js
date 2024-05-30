@@ -25,6 +25,7 @@ export const BusinessesList = (props) => {
     isSearchByDescription: true,
     franchiseId: updatedFranchiseSlug,
     businessId: updatedBusinessSlug,
+    avoidRefreshUserInfo: true,
     onBusinessClick: (business) => {
       if (businessUrlTemplate === '/store/:business_slug' || businessUrlTemplate === '/:business_slug') {
         events.emit('go_to_page', { page: 'business', params: { business_slug: business.slug } })

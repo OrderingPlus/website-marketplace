@@ -18,7 +18,9 @@ import { BusinessesListing } from './src/components/BusinessesListing'
 import { BusinessesMap } from './src/components/BusinessesMap'
 import { BusinessPreorder } from './src/components/BusinessPreorder'
 import { BusinessProductsCategories } from './src/components/BusinessProductsCategories'
+import { BusinessProductsCategories as CategoriesLayoutGroceries } from './src/components/BusinessProductsCategories/layouts/groceries'
 import { BusinessProductsList } from './src/components/BusinessProductsList'
+import { BusinessProductsList as ProductListLayoutGroceries } from './src/components/BusinessProductsList/layouts/groceries'
 import { BusinessProductsListing } from './src/components/BusinessProductsListing'
 import { BusinessReviews } from './src/components/BusinessReviews'
 import { BusinessTypeFilter } from './src/components/BusinessTypeFilter'
@@ -227,7 +229,9 @@ export {
   BusinessMenuList,
   BusinessPreorder,
   BusinessProductsCategories,
+  CategoriesLayoutGroceries,
   BusinessProductsList,
+  ProductListLayoutGroceries,
   BusinessProductsListing,
   BusinessReviews,
   BusinessTypeFilter,
