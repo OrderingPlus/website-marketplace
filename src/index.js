@@ -10,48 +10,36 @@ import theme from './theme.json'
 
 import { OrderingProvider } from '~components'
 import { Alert, ThemeProvider, Toast } from '~ui'
+import { SubdomainComponent } from './components/SubdomainComponent'
 
 /**
  * Theme images
  */
-import logotype from './assets/images/logotype.svg'
-import logotypeInvert from './assets/images/logotype-invert.svg'
-import isotype from './assets/images/isotype.svg'
-import isotypeInvert from './assets/images/isotype-invert.svg'
+
+import leftArrow from './assets/left-arrow.svg'
+import rightArrow from './assets/right-arrow.svg'
 
 import delivered from './assets/icons/delivered.png'
 import driver from './assets/icons/driver.png'
 import home from './assets/icons/home.png'
 import store from './assets/icons/store.png'
 
-import homeHero from './assets/images/home-hero.jpg'
-import homeHeroMobile from './assets/images/home-hero-mobile.jpg'
-import businessHero from './assets/images/business-hero.jpg'
-import notFound from './assets/images/not-found.svg'
-import notNetwork from './assets/images/not-network.svg'
-import notFound404 from './assets/images/not-found-404.svg'
-import notFoundLighting from './assets/images/not-found-lighting.svg'
-import searchIcon from './assets/images/search-icon.svg'
-import emptyActiveOrders from './assets/images/empty-active-orders.svg'
-import emptyPastOrders from './assets/images/empty-past-orders.svg'
-import visa from './assets/images/visa.jpg'
-import mastercard from './assets/images/mastercard.jpg'
-import credit from './assets/images/credit.jpg'
-import businessSignUpHero from './assets/images/business_signup.jpg'
-import amex from './assets/images/amex.svg'
-import diners from './assets/images/diners.svg'
-import discover from './assets/images/discover.svg'
-import jcb from './assets/images/jcb.svg'
-import unionpay from './assets/images/unionpay.svg'
-import businessSignUpBG from './assets/images/business-signup-background.jpg'
-import CongratulationApproval from './assets/images/congratulation_approval.jpg'
-import CongratulationNoApproval from './assets/images/congratulation_no_approval.jpg'
-import driverSignUpBG from './assets/images/driver-signup-background.jpg'
-import driverCongratulationApproval from './assets/images/driver_congratulation_approval.jpg'
-import driverCongratulationNoApproval from './assets/images/driver_congratulation_no_approval.jpg'
-import driverSignUpHero from './assets/images/driver-signup-hero.jpg'
-import loyaltyLevel from './assets/images/loyalty_level.jpg'
-import driverPng from './assets/images/driver.png'
+import categoryFood from './assets/images/categories/category-food.jpg'
+import categoryGroceries from './assets/images/categories/category-groceries.jpg'
+import categoryAlcohol from './assets/images/categories/category-alcohol.jpg'
+import categoryLaundry from './assets/images/categories/category-laundry.jpg'
+import categoryAll from './assets/images/categories/category-all.jpg'
+
+import delivery from './assets/images/delivery-types/delivery.jpg'
+import curbside from './assets/images/delivery-types/curbside.jpg'
+import driveThru from './assets/images/delivery-types/drive_thru.jpg'
+import eatIn from './assets/images/delivery-types/eat_in.jpg'
+import pickUp from './assets/images/delivery-types/pickup.jpg'
+import cateringDelivery from './assets/images/delivery-types/catering_delivery.png'
+import cateringPickup from './assets/images/delivery-types/catering_pickup.png'
+
+import productDummy from './assets/images/dummies/product.jpg'
+import storeDummy from './assets/images/dummies/store.jpg'
 
 import orderStatus0 from './assets/images/order/status-0.svg'
 import orderStatus1 from './assets/images/order/status-1.svg'
@@ -76,32 +64,41 @@ import orderStatus19 from './assets/images/order/status-19.svg'
 import orderStatus20 from './assets/images/order/status-20.svg'
 import orderStatus21 from './assets/images/order/status-21.svg'
 
-import categoryFood from './assets/images/categories/category-food.jpg'
-import categoryGroceries from './assets/images/categories/category-groceries.jpg'
-import categoryAlcohol from './assets/images/categories/category-alcohol.jpg'
-import categoryLaundry from './assets/images/categories/category-laundry.jpg'
-import categoryAll from './assets/images/categories/category-all.jpg'
+import logotype from './assets/images/logotype.svg'
+import logotypeInvert from './assets/images/logotype-invert.svg'
+import isotype from './assets/images/isotype.svg'
+import isotypeInvert from './assets/images/isotype-invert.svg'
 
-import productDummy from './assets/images/dummies/product.jpg'
-import storeDummy from './assets/images/dummies/store.jpg'
-
-import leftArrow from './assets/left-arrow.svg'
-import rightArrow from './assets/right-arrow.svg'
-
-import delivery from './assets/images/delivery-types/delivery.jpg'
-import curbside from './assets/images/delivery-types/curbside.jpg'
-import driveThru from './assets/images/delivery-types/drive_thru.jpg'
-import eatIn from './assets/images/delivery-types/eat_in.jpg'
-import pickUp from './assets/images/delivery-types/pickup.jpg'
-import cateringDelivery from './assets/images/delivery-types/catering_delivery.png'
-import cateringPickup from './assets/images/delivery-types/catering_pickup.png'
+import amex from './assets/images/amex.svg'
+import businessSignUpHero from './assets/images/business_signup.jpg'
+import businessHero from './assets/images/business-hero.jpg'
+import businessSignUpBG from './assets/images/business-signup-background.jpg'
+import CongratulationApproval from './assets/images/congratulation_approval.jpg'
+import CongratulationNoApproval from './assets/images/congratulation_no_approval.jpg'
+import credit from './assets/images/credit.jpg'
 import deliveryIco from './assets/images/delivery.svg'
+import diners from './assets/images/diners.svg'
+import discover from './assets/images/discover.svg'
+import driverCongratulationApproval from './assets/images/driver_congratulation_approval.jpg'
+import driverCongratulationNoApproval from './assets/images/driver_congratulation_no_approval.jpg'
+import driverSignUpBG from './assets/images/driver-signup-background.jpg'
+import driverSignUpHero from './assets/images/driver-signup-hero.jpg'
+import driverPng from './assets/images/driver.png'
+import emptyActiveOrders from './assets/images/empty-active-orders.svg'
+import emptyPastOrders from './assets/images/empty-past-orders.svg'
+import homeHeroMobile from './assets/images/home-hero-mobile.jpg'
+import homeHero from './assets/images/home-hero.jpg'
+import jcb from './assets/images/jcb.svg'
+import loyaltyLevel from './assets/images/loyalty_level.jpg'
+import mastercard from './assets/images/mastercard.jpg'
+import notFound404 from './assets/images/not-found-404.svg'
+import notFoundLighting from './assets/images/not-found-lighting.svg'
+import notFound from './assets/images/not-found.svg'
+import notNetwork from './assets/images/not-network.svg'
 import pickupIco from './assets/images/pickup.svg'
-import eatinIco from './assets/images/eatin.svg'
-import curbsideIco from './assets/images/curbside.svg'
-import drivethruIco from './assets/images/drivethru.svg'
-import cateringIco from './assets/images/catering.svg'
-import { SubdomainComponent } from './components/SubdomainComponent'
+import searchIcon from './assets/images/search-icon.svg'
+import unionpay from './assets/images/unionpay.svg'
+import visa from './assets/images/visa.jpg'
 
 const logos = {
   logotype,
@@ -113,41 +110,38 @@ const logos = {
 theme.images = {
   logos,
   general: {
-    homeHero,
-    homeHeroMobile,
-    businessHero,
-    notFound,
-    notFound404,
-    notFoundLighting,
-    searchIcon,
-    notNetwork,
-    emptyActiveOrders,
-    emptyPastOrders,
-    visa,
+    leftArrow,
+    rightArrow,
     amex,
-    diners,
-    discover,
-    jcb,
-    unionpay,
-    mastercard,
-    credit,
     businessSignUpHero,
+    businessHero,
     businessSignUpBG,
     CongratulationApproval,
     CongratulationNoApproval,
-    driverSignUpBG,
+    credit,
+    deliveryIco,
+    diners,
+    discover,
     driverCongratulationApproval,
     driverCongratulationNoApproval,
+    driverSignUpBG,
     driverSignUpHero,
-    leftArrow,
-    rightArrow,
-    deliveryIco,
+    driverPng,
+    emptyActiveOrders,
+    emptyPastOrders,
+    homeHeroMobile,
+    homeHero,
+    jcb,
+    loyaltyLevel,
+    mastercard,
+    notFound404,
+    notFoundLighting,
+    notFound,
+    notNetwork,
     pickupIco,
-    eatinIco,
-    curbsideIco,
-    drivethruIco,
-    cateringIco,
-    driverPng
+    searchIcon,
+    unionpay,
+    visa
   },
   icons: {
     delivered,
