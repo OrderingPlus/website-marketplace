@@ -15,37 +15,37 @@ Please select the option that you like better.
 ## Option 1: Clone repository and run with yarn
 
 1. Open your terminal
-2. Clone repository writing: 
+2. Clone repository writing:
 ```
 git clone --recursive https://github.com/OrderingX/website-marketplace.git
 ```
-3. Enter the downloaded repository folder 
+3. Enter the downloaded repository folder
 ```
 cd website-marketplace
 ```
-4. To install dependencies run 
+4. To install dependencies run
 ```
 yarn install
 ```
-5. To start the development server run 
+5. To start the development server run
 ```
 yarn start
-``` 
+```
 
 ## Option 2: Clone repository and run with Docker
 > "You need to have Docker previously installed. You can install it from [here](https://docs.docker.com/engine/install/)"
 
 1. Ensure Docker is opened.
 2. Open your terminal.
-3. Clone repository writing: 
+3. Clone repository writing:
 ```
 git clone --recursive https://github.com/OrderingX/website-marketplace.git
 ```
-4. Enter the downloaded repository folder 
+4. Enter the downloaded repository folder
 ```
 cd website-marketplace
 ```
-5. Run 
+5. Run
 ```
 docker-compose up
 ```
