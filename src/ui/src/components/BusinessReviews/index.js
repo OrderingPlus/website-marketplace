@@ -41,7 +41,7 @@ export const BusinessReviewsUI = (props) => {
   const showRanking = !theme?.business_view?.components?.reviews?.components?.ranking?.hidden
   const showReviewDate = !theme?.business_view?.components?.reviews?.components?.review_date?.hidden
   const showCustomerComments = !theme?.business_view?.components?.reviews?.components?.customer_comments?.hidden
-  const showSearch = !theme?.business_view?.components?.review?.components?.search?.hidden
+  const showSearch = !theme?.business_view?.components?.reviews?.components?.search?.hidden
   const hideElement = !(!showReviewDate && !showCustomerComments)
 
   const reviewPoints = [1, 2, 3, 4, 5]

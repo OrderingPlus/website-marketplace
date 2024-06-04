@@ -52,7 +52,7 @@ export const BusinessInfoComponent = (props) => {
   const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
   const hideTime = theme?.business_view?.components?.header?.components?.business?.components?.time?.hidden
   const hideReviews = theme?.business_view?.components?.header?.components?.business?.components?.reviews?.hidden
-  const hideReviewsPopup = theme?.business_view?.components?.header?.components?.reviews?.hidden
+  const hideReviewsPopup = theme?.business_view?.components?.reviews?.hidden
   const hideDistance = theme?.business_view?.components?.header?.components?.business?.components?.distance?.hidden
   const hideCity = theme?.business_view?.components?.header?.components?.business?.components?.city?.hidden
   const layoutsWithOldSearch = ['starbucks', 'old', 'floating']

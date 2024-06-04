@@ -22,10 +22,10 @@ export const CardContainer = styled.div`
     justify-content: space-between;
     ${({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'
     ? css`
-      flex-direction: row-reverse;
+      flex-direction: row;
     `
     : css`
-      flex-direction: row;
+      flex-direction: row-reverse;
     `
   }
     align-items: center;
@@ -159,10 +159,10 @@ export const WrapLogo = styled.div`
   `}
   ${({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'
     ? css`
-    margin-left: 5px;
+    margin-right: 5px;
   `
     : css`
-    margin-right: 5px;
+    margin-left: 5px;
   `}
   ${props => props.theme?.rtl && css`
     margin-right: 5px;
