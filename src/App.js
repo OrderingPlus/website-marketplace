@@ -348,16 +348,17 @@ export const App = () => {
   }
 
   useEffect(() => {
-    const link = document.createElement('link')
-    const oldLink = document.getElementById('favicon')
     const hasThemeFavicon = themeUpdated?.general?.components?.favicon?.components.image
-    link.id = 'favicon'
-    link.rel = 'icon'
-    link.type = 'image/png'
-    link.href = hasThemeFavicon || null
-
-    oldLink && document.head.removeChild(oldLink)
-    hasThemeFavicon && document.head.appendChild(link)
+    if (hasThemeFavicon === undefined) return
+    const favicon = document.getElementById('favicon')
+    if (!favicon) {
+      const link = document.createElement('link')
+      link.id = 'favicon'
+      link.rel = 'icon'
+      link.type = 'image/png'
+      link.href = hasThemeFavicon || '/favicon.png'
+      document.head.appendChild(link)
+    }
 
     const fonts = Object.entries(themeUpdated?.general?.components?.fonts || {})
     fonts.forEach(([name, fontFamily]) => {

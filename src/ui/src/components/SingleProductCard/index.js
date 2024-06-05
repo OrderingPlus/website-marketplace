@@ -240,7 +240,7 @@ const SingleProductCardUI = React.memo((props) => {
                   : (
                   <Skeleton height={75} width={75} />
                     )}
-                {(isSoldOut || maxProductQuantity <= 0) && <SoldOut isBottom={product?.ribbon?.enabled}>{t('SOLD_OUT', 'SOLD OUT')}</SoldOut>}
+                {(isSoldOut || maxProductQuantity <= 0) && <SoldOut isBottom={product?.ribbon?.enabled}>{t('SOLD_OUT', 'Sold out')}</SoldOut>}
               </>
             )}
             {useCustomFunctionality && customText && (
@@ -278,7 +278,7 @@ const SingleProductCardUI = React.memo((props) => {
                   onClick={
                     (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
                   } href='#'
-                >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
+                >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset Password')}
                 </a>
               }
               useLoginByCellphone

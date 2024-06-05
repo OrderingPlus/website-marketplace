@@ -19,7 +19,7 @@ export const ScrollToTop = withRouter(({ history, children }) => {
     }
   }, [])
 
-  return <div style={{ minHeight: '100vh' }}>{children}</div>
+  return <div>{children}</div>
 })
 
 export default ScrollToTop
