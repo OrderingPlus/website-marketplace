@@ -522,7 +522,7 @@ const ServiceFormUI = (props) => {
                   color='primary'
                   disabled={isBusyTime(currentProfessional, dateSelected) || orderState?.loading}
                 >
-                  {orderState?.loading ? t('LOADING', theme?.defaultLanguages?.LOADING || 'Loading') : t('BOOK', 'Book')}
+                  {orderState?.loading ? t('LOADING', theme?.defaultLanguages?.LOADING || 'Loading...') : t('BOOK', 'Book')}
                 </Button>
               )}
               {(!auth || isSoldOut || maxProductQuantity <= 0) && (
