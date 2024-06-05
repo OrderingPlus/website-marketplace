@@ -270,7 +270,7 @@ const SignUpFormUI = (props) => {
         }
         setAlertState({
           open: true,
-          content: [t('CONFIG_DOESNOT_RECAPTCHA_KEY', 'the config doesn\'t have recaptcha site key')]
+          content: [t('CONFIG_DOESNOT_RECAPTCHA_KEY', 'The config doesn\'t have recaptcha site key')]
         })
         return
       }
