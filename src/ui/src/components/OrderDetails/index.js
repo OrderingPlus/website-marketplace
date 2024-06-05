@@ -525,7 +525,7 @@ const OrderDetailsUI = (props) => {
                                 (!isOrderReviewed || !isProductReviewed || (isService && !isProReviewed) || !isDriverReviewed)
                               }
                             >
-                              <span onClick={handleOpenReview}>{t('REVIEW_ORDER', theme?.defaultLanguages?.REVIEW_ORDER || 'Review your Order')}</span>
+                              <span onClick={handleOpenReview}>{t('REVIEW_ORDER', theme?.defaultLanguages?.REVIEW_ORDER || 'Review Order')}</span>
                             </ReviewOrderLink>
                           )}
                         </LinkWrapper>
