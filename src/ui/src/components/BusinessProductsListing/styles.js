@@ -173,7 +173,7 @@ export const HeaderContent = styled.div`
     }
   }
   .fixed-arrow-width{
-    width: 100vw;      
+    width: 100vw;
   }
 `
 export const OrderContextUIWrapper = styled.div`

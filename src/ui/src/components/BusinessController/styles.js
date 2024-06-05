@@ -183,12 +183,12 @@ export const BusinessTags = styled.div`
     `}
     &:last-child {
       ${props => props.theme?.rtl
-? css`
+      ? css`
         margin-left: 0px;
-    `
-: css`
+        `
+      : css`
         margin-right: 0px;
-    `}
+      `}
     }
   }
 `

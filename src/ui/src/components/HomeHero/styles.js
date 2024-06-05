@@ -32,12 +32,7 @@ export const HeroContainerStyled = styled.div`
 `
 
 export const HeroContainer = (props) => {
-  const style = {}
-  if (props.bgimage && !props.isClosed) {
-    style.backgroundImage = `url(${props.bgimage})`
-  } else {
-    style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${props.bgimage})`
-  }
+  const style = { backgroundImage: `url(${props.bgimage})` }
 
   return (
     <HeroContainerStyled {...props} style={style}>
@@ -52,7 +47,6 @@ export const ContentWrapper = styled.div`
     justify-content: space-around;
     height: 100%;
     padding: 0px 10vw 0px;
-    background-color: #0000004D;
 
     input {
       width: 90%;

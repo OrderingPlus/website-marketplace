@@ -36,6 +36,7 @@ export const MyOrders = (props) => {
   const [isEmptyBusinesses, setIsEmptyBusinesses] = useState(false)
   const [businessOrderIds, setBusinessOrderIds] = useState([])
 
+  const hidePreviousOrders = theme?.orders?.components?.past_orders?.hidden
   const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
   const hideBusinessTab = theme?.orders?.components?.business_tab?.hidden
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
@@ -127,25 +128,29 @@ export const MyOrders = (props) => {
                 )}
           </>
         )}
-        {notOrderOptions.includes(selectedOption) && (
-          <OrdersOption
-            {...props}
-            titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
-            hideOrders
-            horizontal
-            isBusiness={selectedOption === 'business'}
-            isProducts={selectedOption === 'products'}
-            isProfessionals={selectedOption === 'professionals'}
-            activeOrders
-            pastOrders
-            preOrders
-            businessesSearchList={businessesSearchList}
-            setIsEmptyBusinesses={setIsEmptyBusinesses}
-            businessOrderIds={businessOrderIds}
-            setBusinessOrderIds={setBusinessOrderIds}
-            onProductRedirect={onProductRedirect}
-          />
-        )}
+        {notOrderOptions.includes(selectedOption) && !hidePreviousOrders
+          ? (<OrdersOption
+              {...props}
+              titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
+              hideOrders
+              horizontal
+              isBusiness={selectedOption === 'business'}
+              isProducts={selectedOption === 'products'}
+              isProfessionals={selectedOption === 'professionals'}
+              activeOrders
+              pastOrders
+              preOrders
+              businessesSearchList={businessesSearchList}
+              setIsEmptyBusinesses={setIsEmptyBusinesses}
+              businessOrderIds={businessOrderIds}
+              setBusinessOrderIds={setBusinessOrderIds}
+              onProductRedirect={onProductRedirect}
+            />)
+          : selectedOption !== 'giftCards'
+            ? <NoOrdersWrapper>
+                <p>{t('NOTHING_TO_SHOW', 'Nothing to show')}</p>
+              </NoOrdersWrapper>
+            : null}
         {selectedOption === 'giftCards' && (
           <GiftCardOrdersList />
         )}

@@ -9,7 +9,6 @@ import {
   BusinessList,
   WrapperSearch,
   BusinessesTitle,
-  BusinessHeroImg,
   HightestRatedWrapper,
   Divider,
   SearchContainer,
@@ -287,15 +286,16 @@ const BusinessesListingUI = (props) => {
       />
 
       {(windowSize.width < 576 || (configs?.business_listing_hide_image?.value !== '1')) && (
-        <BusinessBanner>
+        <BusinessBanner
+          {...(!(configs?.business_listing_hide_image?.value !== '1') && !hideHero && !isCustomerMode)
+            ? {
+                bgimage: theme.images?.general?.businessHero,
+                height: theme?.business_listing_view?.components?.business_hero?.style?.height
+              }
+            : {}}
+        >
           {windowSize.width < 576 && (
             <OrderContextUI isBusinessList hideHero={(configs?.business_listing_hide_image?.value !== '1') && !hideHero} />
-          )}
-          {(configs?.business_listing_hide_image?.value !== '1') && !hideHero && !isCustomerMode && (
-            <BusinessHeroImg
-              bgimage={theme.images?.general?.businessHero}
-              height={theme?.business_listing_view?.components?.business_hero?.style?.height}
-            />
           )}
         </BusinessBanner>
       )}
