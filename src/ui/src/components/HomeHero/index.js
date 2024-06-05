@@ -118,12 +118,12 @@ export const HomeHero = (props) => {
           </LogoWrapper>
         )}
         <HeroContent>
-          <Title>{t('TITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'All We need is Food.')}</Title>
-          <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start to order food now')}</Slogan>
+          <Title>{t('SUBTITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'Welcome!')}</Title>
+          <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start your order now.')}</Slogan>
           <WrapInput onClick={handleAddressInput} $withIcon>
             <HiOutlineLocationMarker />
             <p>
-              {orderState?.options?.address?.address || t('WHERE_DO_WE_DELIVERY', theme?.defaultLanguages?.WHERE_DO_WE_DELIVERY || 'Where do we delivery?')}
+              {orderState?.options?.address?.address || t('WHERE_DO_WE_DELIVER', theme?.defaultLanguages?.WHERE_DO_WE_DELIVER || 'Enter address')}
             </p>
           </WrapInput>
 
@@ -132,7 +132,7 @@ export const HomeHero = (props) => {
             name='find-business'
             onClick={handleFindBusinesses}
           >
-            {t('FIND_BUSINESSES', theme?.defaultLanguages?.FIND_BUSINESSES || 'Find businesses')}
+            {t('FIND_BUSINESSES', theme?.defaultLanguages?.FIND_BUSINESSES || 'Start Order')}
           </Button>
         </HeroContent>
       </ContentWrapper>

@@ -671,7 +671,7 @@ const ProductOptionsUI = (props) => {
                   <SectionTitle>{t('COMMENTS', theme?.defaultLanguages?.SPECIAL_COMMENT || 'COMMENTS')}</SectionTitle>
                   <TextArea
                     rows={4}
-                    placeholder={t('SPECIAL_COMMENT', theme?.defaultLanguages?.SPECIAL_COMMENT || 'Special comment')}
+                    placeholder={t('SPECIAL_COMMENT', theme?.defaultLanguages?.SPECIAL_COMMENT || 'Special Comment')}
                     defaultValue={productCart.comment}
                     onChange={handleChangeCommentState}
                     disabled={!(productCart && !isSoldOut && maxProductQuantity)}
