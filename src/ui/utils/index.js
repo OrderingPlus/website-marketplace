@@ -120,8 +120,11 @@ export const getTraduction = key => {
     ERROR_INVALID_OFFER: 'The offer doesn\'t exist',
     ERROR_CASH_WALLET_FEATURE_DISABLED: 'Cash wallet feature is disabled'
   }
-
-  return keyList[key] ? t(key, keyList[key]) : t(key)
+  return keyList[key]
+    ? t(key, keyList[key])
+    : (/^[^\s]*_[^\s]*$/.test(key))
+        ? t(key, capitalize(key.replace(/_/g, ' ').toLowerCase()))
+        : t(key.replace(/ /g, '_').toUpperCase(), key)
 }
 /**
  * Function to transform bytes to kb
