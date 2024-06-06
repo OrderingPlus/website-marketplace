@@ -24,11 +24,12 @@ const PaymentOptionPaypalUI = (props) => {
                   PaypalButton && <PaypalButton {...paypalButtonProps} />
                 )
               : (
-          <div>
-            <Skeleton count={3} height={55} />
-          </div>
+                <div>
+                  <Skeleton count={3} height={55} />
+                </div>
                 )
-          )}
+          )
+      }
     </Container>
   )
 }
