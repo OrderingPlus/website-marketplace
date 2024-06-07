@@ -218,6 +218,10 @@ const CheckoutUI = (props) => {
     setIsUserDetailsEdit(true)
   }
 
+  const handleOpenGuestSignup = () => {
+    setOpenModal({ ...openModal, signup: true, isGuest: true })
+  }
+
   const handlePlaceOrderAsGuest = () => {
     setIsOpen(false)
     const body = {}
@@ -572,6 +576,7 @@ const CheckoutUI = (props) => {
                 openUserModal={setIsOpen}
                 paymethodClicked={paymethodClicked}
                 setPaymethodClicked={setPaymethodClicked}
+                handleOpenGuestSignup={handleOpenGuestSignup}
               />
             </PaymentMethodContainer>
           )}
