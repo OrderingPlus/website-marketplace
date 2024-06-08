@@ -19,7 +19,7 @@ export const SelectWrapper = styled.div`
     height: 44px;
     border: none;
     border-radius: 7.6px;
-    color: #909BA9 !important;
+    color: ${props => props.theme?.colors.darkGray} !important;
 
     > div:first-child {
       padding-top: 5px;
@@ -38,6 +38,6 @@ export const SelectWrapper = styled.div`
 
 export const Option = styled.div`
   white-space: nowrap;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   font-size: 13px;
 `

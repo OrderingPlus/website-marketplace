@@ -87,7 +87,7 @@ export const DriverTipContainer = styled.div`
   > p {
     margin: 0;
     font-size: 16px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 

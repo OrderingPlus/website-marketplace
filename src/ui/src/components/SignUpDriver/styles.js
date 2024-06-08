@@ -126,7 +126,7 @@ export const FormInput = styled.form`
 
 export const PhoneNumberWrapper = styled.div`
   .PhoneInput {
-    border: 1px solid #DEE2E6;
+    border: 1px solid ${props => props.theme?.colors.darkGray};
     box-sizing: border-box;
     border-radius: 7.6px;
     background: white;

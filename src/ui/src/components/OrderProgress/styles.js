@@ -188,7 +188,7 @@ export const StatusWrapper = styled.p`
 
 export const TimeWrapper = styled.div`
   font-size: 12px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;

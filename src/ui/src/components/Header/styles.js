@@ -161,7 +161,7 @@ export const Menu = styled.div`
     height: 44px;
 
     @media (min-width: 850px) {
-      border: 1px solid #DEE2E6;
+      border: 1px solid ${props => props.theme?.colors.darkGray};
       justify-content: space-between;
     }
 
@@ -189,8 +189,8 @@ export const Menu = styled.div`
   }
 
   .moment-popover {
-    border-left: 1px solid #DEE2E6;
-    border-right: 1px solid #DEE2E6;
+    border-left: 1px solid ${props => props.theme?.colors.darkGray};
+    border-right: 1px solid ${props => props.theme?.colors.darkGray};
     height: 100%;
     justify-content: center;
     width: 200px;
@@ -280,7 +280,7 @@ export const CustomerInfo = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: #909BA9;
+        color: ${props => props.theme?.colors.darkGray};
       }
       svg {
         color: #748194;
@@ -349,9 +349,9 @@ export const AddressMenu = styled.div`
 `
 
 export const MomentMenu = styled.div`
-  border-left: 1px solid #DEE2E6;
+  border-left: 1px solid ${props => props.theme?.colors.darkGray};
   ${({ $isFranchiseSlugOne }) => !$isFranchiseSlugOne && css`
-      border-right: 1px solid #DEE2E6;
+      border-right: 1px solid ${props => props.theme?.colors.darkGray};
   `}
   height: 100%;
   justify-content: center;
@@ -373,7 +373,7 @@ export const MomentMenu = styled.div`
   > div {
     cursor: pointer;
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     display: flex;
     align-items: center;
     text-align: center;
@@ -431,7 +431,7 @@ export const FarAwayMessage = styled.div`
 `
 
 export const Divider = styled.div`
-  border: 1px solid #DEE2E6;
+  border: 1px solid ${props => props.theme?.colors.darkGray};
   height: 100%;
 `
 export const AddressFormWrapper = styled.div`
