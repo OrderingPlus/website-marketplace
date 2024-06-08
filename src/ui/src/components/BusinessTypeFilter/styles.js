@@ -52,7 +52,7 @@ export const BusinessCategoryTitle = styled.p`
   z-index: 100;
   position: relative;
   font-size: 13px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   user-select: none;
   white-space: nowrap;
   padding-bottom: 13px;

@@ -237,7 +237,7 @@ export const BusinessInformation = styled.div`
       background: transparent;
       border: none;
       opacity: 1;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       width: 15px;
       min-width: 15px;
     }

@@ -174,7 +174,7 @@ export const BusinessTags = styled.div`
     font-size: 11px;
     padding: 3px 8px;
     color: #748194;
-    background: #DEE2E6;
+    background: ${props => props.theme?.colors.darkGray};
     border-radius: 50px;
     margin-right: 10px;
     ${props => props.theme?.rtl && css`
@@ -342,7 +342,7 @@ export const Medadata = styled.div`
   display: flex;
   font-weight: 300;
   font-size: 12px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   flex-wrap: wrap;
 
 
@@ -356,7 +356,7 @@ export const Medadata = styled.div`
     justify-content: center;
   `}
   p {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     svg {
       font-size: 7px;
       min-width: 6px;

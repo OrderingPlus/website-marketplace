@@ -201,7 +201,7 @@ export const HorizontalDetails = styled.div`
 
     &.discount {
       font-size: 10px;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       ${props => props.theme?.rtl
 ? css`
         margin-right: 5px;

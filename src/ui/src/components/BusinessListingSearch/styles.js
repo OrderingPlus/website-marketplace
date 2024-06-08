@@ -175,14 +175,14 @@ export const Metadata = styled.div`
   display: flex;
   font-weight: 300;
   font-size: 10px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   flex-wrap: wrap;
   ${({ isSkeleton }) => isSkeleton && css`
     display: flex;
     justify-content: space-between;
   `}
   p {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     svg {
       font-size: 7px;
       min-width: 6px;

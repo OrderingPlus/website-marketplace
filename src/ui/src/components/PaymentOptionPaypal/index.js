@@ -1,8 +1,7 @@
 import React from 'react'
-import Skeleton from 'react-loading-skeleton'
 
 import { Container } from './styles'
-import { useConfig, PaymentOptionPaypal as PaymentPaypalController } from '~components'
+import { useConfig, PaymentOptionPaypal as PaymentPaypalController, useLanguage } from '~components'
 
 const PaymentOptionPaypalUI = (props) => {
   const {
@@ -11,6 +10,8 @@ const PaymentOptionPaypalUI = (props) => {
     noAuthMessage,
     paypalButtonProps
   } = props
+
+  const [, t] = useLanguage()
 
   return (
     <Container>
@@ -24,11 +25,12 @@ const PaymentOptionPaypalUI = (props) => {
                   PaypalButton && <PaypalButton {...paypalButtonProps} />
                 )
               : (
-          <div>
-            <Skeleton count={3} height={55} />
-          </div>
+                <div>
+                  <p style={{ textAlign: 'center' }}>{t('CREDENTIALS_MISSING', 'Credentials Missing')}</p>
+                </div>
                 )
-          )}
+          )
+      }
     </Container>
   )
 }

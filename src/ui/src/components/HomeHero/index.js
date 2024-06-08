@@ -118,7 +118,7 @@ export const HomeHero = (props) => {
           </LogoWrapper>
         )}
         <HeroContent>
-          <Title>{t('SUBTITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'Welcome!')}</Title>
+          <Title>{t('TITLE_HOME', theme?.defaultLanguages?.TITLE_HOME || 'Welcome!')}</Title>
           <Slogan>{t('SUBTITLE_HOME', theme?.defaultLanguages?.SUBTITLE_HOME || 'Let\'s start your order now.')}</Slogan>
           <WrapInput onClick={handleAddressInput} $withIcon>
             <HiOutlineLocationMarker />

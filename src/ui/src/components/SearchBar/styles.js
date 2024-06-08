@@ -38,7 +38,7 @@ export const BusinessSearch = styled.div`
 
     ${({ starbucksStyle }) => starbucksStyle && css`
         background-color: #F8F9FA;
-        border: 1px solid #DEE2E6;
+        border: 1px solid ${props => props.theme?.colors.darkGray};
         font-size: 14px;
         color: #000;
         border-radius: 7.6px;

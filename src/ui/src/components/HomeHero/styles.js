@@ -125,7 +125,7 @@ export const WrapInput = styled.div`
   cursor: pointer;
   background: #FFFFFF;
   padding: 8px 16px;
-  border: 1px solid #DEE2E6;
+  border: 1px solid ${props => props.theme?.colors.darkGray};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 50px;

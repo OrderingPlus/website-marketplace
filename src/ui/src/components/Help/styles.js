@@ -20,7 +20,7 @@ export const BreadCrumbContainer = styled.div`
 
   svg {
     font-size: 13px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 0 7px;
 
     ${props => props.theme?.rtl && css`
@@ -33,7 +33,7 @@ export const BreadCrumbContainer = styled.div`
     color: #344050;
 
     &.deactive {
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       cursor: pointer;
     }
   }
