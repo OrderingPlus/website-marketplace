@@ -89,7 +89,7 @@ export const DriverTipContainer = styled(PaymentMethodContainer)`
   > p {
     margin: 0;
     font-size: 16px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 
@@ -228,7 +228,7 @@ export const DeliveryOptionsContainer = styled.div`
     height: 44px;
     border: none;
     border-radius: 7.6px;
-    color: #909BA9 !important;
+    color: ${props => props.theme?.colors.darkGray} !important;
 
     > div:first-child {
       padding-top: 5px;

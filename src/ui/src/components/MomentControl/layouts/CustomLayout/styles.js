@@ -24,7 +24,7 @@ export const CalendarWrapper = styled.div`
 
   input {
     padding: 10px;
-    border: 1px solid #DEE2E6;
+    border: 1px solid ${props => props.theme?.colors.darkGray};
     box-sizing: border-box;
     border-radius: 7.6px;
     outline: none;
@@ -60,7 +60,7 @@ export const CalendarWrapper = styled.div`
 
     .react-calendar__month-view__weekdays {
       font-size: 12px;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       font-weight: normal;
       text-transform: capitalize;
       abbr {

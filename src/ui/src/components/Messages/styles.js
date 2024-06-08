@@ -346,7 +346,7 @@ export const SendForm = styled.div`
   bottom: 0;
   width: 100%;
   box-sizing: border-box;
-  border-top: 1px solid #DEE2E6;
+  border-top: 1px solid ${props => props.theme?.colors.darkGray};
 
   @media (min-width: 480px){
     padding: 5px 20px;
@@ -543,8 +543,8 @@ export const ModalIcon = styled.span`
 
 export const MessagesLayoutWrapper = styled.div`
   display: flex;
-  border-left: 1px solid #DEE2E6;
-  border-right: 1px solid #DEE2E6;
+  border-left: 1px solid ${props => props.theme?.colors.darkGray};
+  border-right: 1px solid ${props => props.theme?.colors.darkGray};
   position: relative;
   flex-direction: column;
 
@@ -555,11 +555,11 @@ export const MessagesLayoutWrapper = styled.div`
 
 export const MessagesLeftLayout = styled.div`
   width: 100%;
-  border-right: 1px solid #DEE2E6;
+  border-right: 1px solid ${props => props.theme?.colors.darkGray};
   min-width: 250px;
 
   ${props => props.theme?.rtl && css`
-    border-left: 1px solid #DEE2E6;
+    border-left: 1px solid ${props => props.theme?.colors.darkGray};
     border-right: none;
   `}
 
@@ -570,7 +570,7 @@ export const MessagesLeftLayout = styled.div`
 
 export const MessagesRightLayout = styled.div`
   width: 100%;
-  border-top: 1px solid #DEE2E6;
+  border-top: 1px solid ${props => props.theme?.colors.darkGray};
   margin-top: 30px;
   ${({ profileMessages }) => profileMessages && css`
     margin-top: 0px;
@@ -589,7 +589,7 @@ export const MessagesRightLayout = styled.div`
 export const MessagesTitle = styled.div`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #DEE2E6;
+  border-bottom: 1px solid ${props => props.theme?.colors.darkGray};
   padding: 15px 20px;
   height: 70px;
   box-sizing: border-box;
@@ -649,7 +649,7 @@ export const NotSendMessage = styled(SendForm)`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   background: #F8F9FA;
 
   svg {
@@ -658,7 +658,7 @@ export const NotSendMessage = styled(SendForm)`
 
   p {
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 6px 0;
   }
 `

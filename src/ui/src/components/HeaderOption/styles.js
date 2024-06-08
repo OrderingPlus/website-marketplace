@@ -70,5 +70,5 @@ export const DeliveryType = styled.p`
   cursor: pointer;
   margin: 0;
   font-size: 14px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
 `

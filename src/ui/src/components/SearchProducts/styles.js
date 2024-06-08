@@ -75,7 +75,7 @@ export const SearchBarWrapper = styled.div`
     > div {
       background-color: ${props => props.theme.colors.gray200};
       border-radius: 20px;
-      border: 1px solid #DEE2E6;
+      border: 1px solid ${props => props.theme?.colors.darkGray};
     }
   }
   @media (min-width: 1024px) {

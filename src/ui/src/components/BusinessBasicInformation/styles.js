@@ -151,7 +151,7 @@ export const BusinessInfoItem = styled.div`
       &.dot {
         font-size: 12px;
         text-decoration: none;
-        color: #909BA9;
+        color: ${props => props.theme?.colors.darkGray};
       }
     }
   }
@@ -261,7 +261,7 @@ export const BusinessDetail = styled.div`
 
   h5 {
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 0 5px 0 0;
     font-weight: normal;
     ${props => props.theme?.rtl && css`
@@ -279,7 +279,7 @@ export const BusinessDetail = styled.div`
   }
 
   .review {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 0;
     display: flex;
     align-items: center;
@@ -301,7 +301,7 @@ export const BusinessDetail = styled.div`
   }
 
   .dot {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     font-size: 12px;
     margin-right: 5px;
     ${props => props.theme?.rtl && css`

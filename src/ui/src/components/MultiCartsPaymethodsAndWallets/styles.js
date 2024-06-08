@@ -25,7 +25,7 @@ export const PayCard = styled.div`
   > div {
     max-width: 88px;
     width: 100%;
-    border: 1px solid #DEE2E6;
+    border: 1px solid ${props => props.theme?.colors.darkGray};
     border-radius: 7.6px;
     padding: 15px;
     display: flex;
@@ -37,7 +37,7 @@ export const PayCard = styled.div`
     > svg {
       font-size: 25px;
       path {
-        fill: #DEE2E6;
+        fill: ${props => props.theme?.colors.darkGray};
       }
     }
   }
@@ -46,7 +46,7 @@ export const PayCard = styled.div`
     margin: 0px;
     font-size: 13px;
     text-align: center;
-    color: #DEE2E6;
+    color: ${props => props.theme?.colors.darkGray};
     white-space: nowrap;
   }
 

@@ -113,7 +113,7 @@ export const CardInfo = styled.div`
     margin: 3px;
   }
   p {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     text-align: left;
     font-size: 10px;
     ${props => props.theme?.rtl && css`
@@ -233,7 +233,7 @@ export const PriceWrapper = styled.div`
   }
   .off-price {
     font-size: 10px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin-left: 5px;
     text-decoration: line-through;
     ${({ isOffPrice }) => isOffPrice && css`

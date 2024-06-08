@@ -126,7 +126,7 @@ export const ReviewsMarkPoint = styled.span`
 
 export const ReviewTime = styled.p`
   font-size: 12px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   margin: 0;
 `
 
