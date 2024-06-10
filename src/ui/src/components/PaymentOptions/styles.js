@@ -12,6 +12,7 @@ export const PaymentMethodsList = styled.div`
   flex-wrap: wrap;
   width: calc(100% + 15px);
   margin-left: -15px;
+  align-items: flex-start;
 `
 
 export const Container = styled.div`
@@ -57,7 +58,6 @@ export const PayCard = styled.div`
     font-size: 13px;
     text-align: center;
     color: ${props => props.theme?.colors.darkGray};
-    white-space: nowrap;
   }
 
   @media (min-width: 351px) {
