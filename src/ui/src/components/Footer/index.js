@@ -56,7 +56,7 @@ export const Footer = ({ isFooterPage }) => {
       {enabledPoweredByOrdering && (
         <PoweredByOrdering>
           {t('POWERED_BY', 'Powered by')}
-          <a href='https://www.orderingplus'>
+          <a href='https://www.orderingplus.com'>
             {' '}{t('ORDERING_PLUS', 'Orderingplus')}
           </a>
         </PoweredByOrdering>
