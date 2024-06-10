@@ -97,6 +97,7 @@ const PaymentOptionsUI = (props) => {
     handleOrderRedirect,
     handlePaymethodClick,
     handlePaymethodDataChange,
+    handleOpenGuestSignup,
     isCustomerMode,
     isOpenMethod,
     onPaymentChange,
@@ -129,6 +130,8 @@ const PaymentOptionsUI = (props) => {
 
   const popupMethods = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal', 'square', 'google_pay', 'apple_pay']
 
+  const guestNotSupportedMethods = ['stripe', 'stripe_connect', 'stripe_redirect']
+
   const supportedMethods = list?.filter(p => !multiCheckoutMethods.includes(p.gateway))?.filter(p => useKioskApp ? includeKioskPaymethods.includes(p.gateway) : p)
 
   const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
@@ -152,6 +155,11 @@ const PaymentOptionsUI = (props) => {
         confirmed: false,
         paymethod
       })
+      return
+    }
+
+    if (handleOpenGuestSignup && guestNotSupportedMethods.includes(paymethod?.gateway)) {
+      handleOpenGuestSignup()
       return
     }
 
