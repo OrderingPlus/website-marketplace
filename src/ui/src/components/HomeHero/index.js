@@ -142,8 +142,8 @@ export const HomeHero = (props) => {
           {enabledPoweredByOrdering && (
             <PoweredByOrdering>
               {t('POWERED_BY', 'Powered by')}
-              <a href='https://www.orderingplus'>
-                {t('ORDERING_PLUS', 'Orderingplus')}
+              <a href='https://www.orderingplus.com'>
+                {t('ORDERING_PLUS', 'OrderingPlus')}
               </a>
             </PoweredByOrdering>
           )}
