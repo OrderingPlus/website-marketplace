@@ -122,7 +122,7 @@ export const getTraduction = key => {
   }
   return keyList[key]
     ? t(key, keyList[key])
-    : !isNaN(key)
+    : (typeof key === 'string')
         ? (/^[^\s]*_[^\s]*$/.test(key))
             ? t(key, capitalize(key.replace(/_/g, ' ').toLowerCase()))
             : t(key.replace(/ /g, '_').toUpperCase(), key)
