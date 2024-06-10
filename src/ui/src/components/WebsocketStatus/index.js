@@ -68,7 +68,7 @@ const SocketStatusUI = (props) => {
             : (
                 t('WEBSOCKET_STATUS_APP_INFO', 'Verify the server connection by date and time using the Connection status button. Press update to refresh your app and update the status as well. Need help? Contact our Customer support team here:')
               )}
-          {!isEnabledBtn && <a href='https://www.orderingplus/contact-ordering' target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>}
+          {!isEnabledBtn && <a href='https://www.orderingplus.com/contact-us' target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>}
         </InfoContent>
       </InfoWrapper>
       <ButtonWrapper>
