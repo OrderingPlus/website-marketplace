@@ -17,7 +17,7 @@ Please select the option that you like better.
 1. Open your terminal
 2. Clone repository writing:
 ```
-git clone --recursive https://github.com/OrderingX/website-marketplace.git
+git clone --recursive https://github.com/OrderingPlus/website-marketplace.git
 ```
 3. Enter the downloaded repository folder
 ```
