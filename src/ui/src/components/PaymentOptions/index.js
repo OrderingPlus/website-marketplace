@@ -158,7 +158,7 @@ const PaymentOptionsUI = (props) => {
       return
     }
 
-    if (handleOpenGuestSignup && guestNotSupportedMethods.includes(paymethod?.gateway)) {
+    if (handleOpenGuestSignup && guestNotSupportedMethods.includes(paymethod?.gateway) && user?.guest_id) {
       handleOpenGuestSignup()
       return
     }
