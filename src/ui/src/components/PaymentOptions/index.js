@@ -134,14 +134,11 @@ const PaymentOptionsUI = (props) => {
 
   const supportedMethods = list?.filter(p => !multiCheckoutMethods.includes(p.gateway))?.filter(p => useKioskApp ? includeKioskPaymethods.includes(p.gateway) : p)
 
-  const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
+  const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay', 'google_pay']
 
   const handlePaymentMethodClick = (paymethod) => {
     if (paymethodsFieldRequired.includes(paymethod?.gateway) &&
-      options.type === 1 &&
-      validationFields?.fields?.checkout?.driver_tip?.enabled &&
-      validationFields?.fields?.checkout?.driver_tip?.required &&
-      (Number(cart?.driver_tip) <= 0)
+    validateDriverTipField
     ) {
       setAlertState({
         open: true,
