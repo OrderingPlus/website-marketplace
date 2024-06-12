@@ -19,9 +19,7 @@ import {
 import {
   PaymentOptions as PaymentOptionsController,
   useLanguage,
-  useOrder,
-  useSession,
-  useValidationFields
+  useSession
 } from '~components'
 
 import {
@@ -109,13 +107,12 @@ const PaymentOptionsUI = (props) => {
     requiredFields,
     openUserModal,
     paymethodClicked,
-    setPaymethodClicked
+    setPaymethodClicked,
+    validateDriverTipField
   } = props
   const [, t] = useLanguage()
   const [{ token, user }] = useSession()
-  const [{ options }] = useOrder()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [validationFields] = useValidationFields()
   const paymethodSelected = props.paySelected || props.paymethodSelected
 
   const methodsPay = ['google_pay', 'apple_pay']
