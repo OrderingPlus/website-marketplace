@@ -577,6 +577,7 @@ const CheckoutUI = (props) => {
                 paymethodClicked={paymethodClicked}
                 setPaymethodClicked={setPaymethodClicked}
                 handleOpenGuestSignup={handleOpenGuestSignup}
+                validateDriverTipField={validateDriverTipField}
               />
             </PaymentMethodContainer>
           )}
