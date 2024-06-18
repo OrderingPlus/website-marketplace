@@ -866,3 +866,12 @@ export const PoweredByOrdering = styled.p`
     text-decoration: underline;
   }
 `
+
+export const OrderClonnedMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+`
