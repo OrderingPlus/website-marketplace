@@ -42,14 +42,14 @@ export const OrderTypeSelectorContentUI = (props) => {
           orderTypes && (configTypes ? orderTypes.filter(type => configTypes?.includes(type.value)) : orderTypes).map((item, i) => (
             <OrderTypeListItemContainer
               key={i}
-              bgimage={orderTypeImage(item?.text?.replace(' ', '_')?.toLowerCase()) || item?.image}
+              bgimage={orderTypeImage(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item?.image}
               onClick={() => handleClickOrderType(item.value)}
               active={orderStatus?.options?.type === item?.value}
             >
-              <OrderTypeTitle>{orderTypeTitle(item?.text?.replace(' ', '_')?.toLowerCase()) || item.text}</OrderTypeTitle>
-              <OrderTypeDescription>{orderTypeDescription(item?.text?.replace(' ', '_')?.toLowerCase()) || item.description}</OrderTypeDescription>
+              <OrderTypeTitle>{orderTypeTitle(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item.text}</OrderTypeTitle>
+              <OrderTypeDescription>{orderTypeDescription(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item.description}</OrderTypeDescription>
               <OrderStartWrapper>
-                <span>{orderTypeCallAction(item?.text?.replace(' ', '_')?.toLowerCase()) || t('START_MY_ORDER', 'start my order')}</span>
+                <span>{orderTypeCallAction(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || t('START_MY_ORDER', 'start my order')}</span>
                 <BsArrowRight />
               </OrderStartWrapper>
               <OrderTypeOverlay />
