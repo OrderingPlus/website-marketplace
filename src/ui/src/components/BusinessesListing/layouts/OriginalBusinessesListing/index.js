@@ -101,7 +101,6 @@ const BusinessesListingUI = (props) => {
   const hideCities = (theme?.business_listing_view?.components?.cities?.hidden || orderState?.options?.type !== 2 || allCitiesDisabled) ?? true
   const hideSearch = theme?.business_listing_view?.components?.search?.hidden
   const hideFilter = theme?.business_listing_view?.components?.filter?.hidden || hideSearch
-  const hideHero = theme?.business_listing_view?.components?.business_hero?.hidden
   const hidePreviousOrders = theme?.business_listing_view?.components?.previous_orders_block?.hidden
   const hideHighestBusiness = theme?.business_listing_view?.components?.highest_rated_business_block?.hidden
   const hideSearchSection = hideCities && hideSearch && hideFilter
@@ -285,18 +284,9 @@ const BusinessesListingUI = (props) => {
         isCustomerMode={isCustomerMode}
       />
 
-      {(windowSize.width < 576 || (configs?.business_listing_hide_image?.value !== '1')) && (
-        <BusinessBanner
-          {...(!(configs?.business_listing_hide_image?.value !== '1') && !hideHero && !isCustomerMode)
-            ? {
-                bgimage: theme.images?.general?.businessHero,
-                height: theme?.business_listing_view?.components?.business_hero?.style?.height
-              }
-            : {}}
-        >
-          {windowSize.width < 576 && (
-            <OrderContextUI isBusinessList hideHero={(configs?.business_listing_hide_image?.value !== '1') && !hideHero} />
-          )}
+      {windowSize.width < 576 && (
+        <BusinessBanner>
+          <OrderContextUI isBusinessList />
         </BusinessBanner>
       )}
       {(userCustomer && orderState?.options?.address?.address && isCustomerMode) && (
