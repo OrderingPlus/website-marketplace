@@ -27,7 +27,7 @@ export const OrderProgressContainer = styled.div`
 `
 
 export const OrderProgressWrapper = styled.div`
-  padding: '45px 20px';
+  padding: 45px 20px;
   margin: 0px;
   @media (min-width: 768px) {
       margin: 0 35px;

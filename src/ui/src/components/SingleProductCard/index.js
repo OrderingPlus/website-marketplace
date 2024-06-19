@@ -175,9 +175,15 @@ const SingleProductCardUI = React.memo((props) => {
                     <span>{productAddedToCartLength}</span>
                   </QuantityContainer>
                 )}
-                <CardInfo soldOut={isSoldOut || maxProductQuantity <= 0} isBgimage={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_86,c_limit')} oneLine={isPreviously}>
+                <CardInfo
+                  soldOut={isSoldOut || maxProductQuantity <= 0}
+                  isBgimage={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_86,c_limit')}
+                  oneLine={isPreviously}
+                >
                   <TitleWrapper>
-                    {!isSkeleton ? (<h1>{product?.name}</h1>) : (<Skeleton width={100} />)}
+                    {!isSkeleton
+                      ? <h1>{product?.name}</h1>
+                      : <Skeleton width={100} />}
                     {(!useKioskApp && !isPreviously && isCustomerMode && !hideFavoriteIcon) && (
                       !isSkeleton
                         ? (
@@ -189,26 +195,22 @@ const SingleProductCardUI = React.memo((props) => {
                     )}
                   </TitleWrapper>
                   {!isSkeleton
-                    ? (
-                    <PriceWrapper isOffPrice={product?.offer_price && product?.in_offer}>
-                      <span className='current-price'>{product?.price ? parsePrice(product?.price) : ''}</span>
-                      {!(isSoldOut || maxProductQuantity <= 0) && (
-                        <span className='off-price'>{product?.offer_price && product?.in_offer ? parsePrice(product?.offer_price) : ''}</span>
-                      )}
-                      {product?.tags && product?.tags.length > 0 && (
-                        <WrapTags>
-                          {product?.tags.map((tag, i) => (
-                            <div key={i}>
-                              <img src={tag.image ?? ''}></img>
-                            </div>
-                          ))}
-                        </WrapTags>
-                      )}
-                    </PriceWrapper>
-                      )
-                    : (
-                    <Skeleton width={100} />
-                      )}
+                    ? (<PriceWrapper isOffPrice={product?.offer_price && product?.in_offer}>
+                        <span className='current-price'>{product?.price ? parsePrice(product?.price) : ''}</span>
+                        {!(isSoldOut || maxProductQuantity <= 0) && (
+                          <span className='off-price'>{product?.offer_price && product?.in_offer ? parsePrice(product?.offer_price) : ''}</span>
+                        )}
+                        {product?.tags && product?.tags.length > 0 && (
+                          <WrapTags>
+                            {product?.tags.map((tag, i) => (
+                              <div key={i}>
+                                <img src={tag.image ?? ''}></img>
+                              </div>
+                            ))}
+                          </WrapTags>
+                        )}
+                      </PriceWrapper>)
+                    : <Skeleton width={100} />}
                   {!hideProductDescription && (
                     <>
                       {!isSkeleton ? (<p>{product?.description}</p>) : (<Skeleton width={100} />)}
@@ -217,30 +219,28 @@ const SingleProductCardUI = React.memo((props) => {
                   {isPreviously && (!isSkeleton ? (<LastOrder>{t('LAST_ORDERED_ON', 'Last ordered on')} {parseDate(product?.last_ordered_date, { outputFormat: 'MMM DD, YYYY' })}</LastOrder>) : (<Skeleton width={80} />))}
                 </CardInfo>
                 {!isSkeleton
-                  ? (
-                  <WrapLogo
-                    isBgimage={optimizeImage(!hideProductLogo ? product?.images || theme?.images?.dummies?.product : '', 'h_86,c_limit')}
-                  >
-                    {product?.ribbon?.enabled && (
-                      <RibbonBox
-                        bgColor={product?.ribbon?.color}
-                        isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
-                        isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
-                      >
-                        {product?.ribbon?.text}
-                      </RibbonBox>
-                    )}
-                    <CardLogo
-                      className='image'
-                      soldOut={isSoldOut || maxProductQuantity <= 0}
-                      bgimage={optimizeImage(product?.images || (!hideProductDummyLogo && theme?.images?.dummies?.product), 'h_86,c_limit')}
-                    />
-                  </WrapLogo>
-                    )
-                  : (
-                  <Skeleton height={75} width={75} />
-                    )}
-                {(isSoldOut || maxProductQuantity <= 0) && <SoldOut isBottom={product?.ribbon?.enabled}>{t('SOLD_OUT', 'Sold out')}</SoldOut>}
+                  ? (<WrapLogo
+                      isBgimage={optimizeImage(!hideProductLogo ? product?.images || theme?.images?.dummies?.product : '', 'h_86,c_limit')}
+                    >
+                      {product?.ribbon?.enabled && (
+                        <RibbonBox
+                          bgColor={product?.ribbon?.color}
+                          isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
+                          isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
+                        >
+                          {product?.ribbon?.text}
+                        </RibbonBox>
+                      )}
+                      <CardLogo
+                        className='image'
+                        soldOut={isSoldOut || maxProductQuantity <= 0}
+                        bgimage={optimizeImage(product?.images || (!hideProductDummyLogo && theme?.images?.dummies?.product), 'h_86,c_limit')}
+                      />
+                    </WrapLogo>)
+                  : <Skeleton height={75} width={75} />}
+                {(isSoldOut || maxProductQuantity <= 0) && (
+                  <SoldOut isBottom={product?.ribbon?.enabled}>{t('SOLD_OUT', 'Sold out')}</SoldOut>
+                )}
               </>
             )}
             {useCustomFunctionality && customText && (

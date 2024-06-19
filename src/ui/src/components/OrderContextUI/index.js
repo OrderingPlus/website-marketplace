@@ -108,7 +108,11 @@ export const OrderContextUI = (props) => {
         </AddressMenu>
         <FeatureItems>
           <ItemInline onClick={() => openModal('delivery')}>
-            <OrderTypeSelectorHeader configTypes={configTypes} autoCloseWhenScroll={windowSize.width < 576} />
+            <OrderTypeSelectorHeader
+              configTypes={configTypes}
+              autoCloseWhenScroll={windowSize.width < 576}
+              customView
+            />
           </ItemInline>
           {isPreOrderSetting && (
             <ItemInline onClick={() => openModal('moment')}>
@@ -117,6 +121,7 @@ export const OrderContextUI = (props) => {
                 onCustomClick={() => openModal('moment')}
                 onClick={() => handleTogglePopover('moment')}
                 onClose={() => handleClosePopover('moment')}
+                customView
                 isBanner
               />
             </ItemInline>

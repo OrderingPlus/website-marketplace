@@ -324,10 +324,12 @@ export const TitleWrapper = styled.div`
     font-weight: 500;
     text-align: left;
     color: ${props => props.theme.colors.headingColor};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     margin: 0px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    white-space: pre-wrap;
   }
 
   > span {
