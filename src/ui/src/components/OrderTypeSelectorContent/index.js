@@ -42,14 +42,14 @@ export const OrderTypeSelectorContentUI = (props) => {
           orderTypes && (configTypes ? orderTypes.filter(type => configTypes?.includes(type.value)) : orderTypes).map((item, i) => (
             <OrderTypeListItemContainer
               key={i}
-              bgimage={orderTypeImage(item?.text?.replace(' ', '_')?.toLowerCase()) || item?.image}
+              bgimage={orderTypeImage(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item?.image}
               onClick={() => handleClickOrderType(item.value)}
               active={orderStatus?.options?.type === item?.value}
             >
-              <OrderTypeTitle>{orderTypeTitle(item?.text?.replace(' ', '_')?.toLowerCase()) || item.text}</OrderTypeTitle>
-              <OrderTypeDescription>{orderTypeDescription(item?.text?.replace(' ', '_')?.toLowerCase()) || item.description}</OrderTypeDescription>
+              <OrderTypeTitle>{orderTypeTitle(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item.textDisplay}</OrderTypeTitle>
+              <OrderTypeDescription>{orderTypeDescription(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || item.description}</OrderTypeDescription>
               <OrderStartWrapper>
-                <span>{orderTypeCallAction(item?.text?.replace(' ', '_')?.toLowerCase()) || t('START_MY_ORDER', 'start my order')}</span>
+                <span>{orderTypeCallAction(item?.text?.replace(/[^A-Z0-9]+/ig, '_')?.toLowerCase()) || t('START_MY_ORDER', 'start my order')}</span>
                 <BsArrowRight />
               </OrderStartWrapper>
               <OrderTypeOverlay />
@@ -71,43 +71,50 @@ export const OrderTypeSelectorContent = (props) => {
     orderTypes: props.orderTypes || [
       {
         value: 1,
-        text: t('DELIVERY', 'Delivery'),
+        text: 'DELIVERY',
+        textDisplay: t('DELIVERY', 'Delivery'),
         description: t('ORDERTYPE_DESCRIPTION_DELIVERY', 'Delivery description'),
         image: theme.images?.deliveryTypes?.delivery
       },
       {
         value: 2,
-        text: t('PICKUP', 'Pickup'),
+        text: 'PICKUP',
+        textDisplay: t('PICKUP', 'Pickup'),
         description: t('ORDERTYPE_DESCRIPTION_PICKUP', 'Pickup description'),
         image: theme.images?.deliveryTypes?.pickUp
       },
       {
         value: 3,
-        text: t('EAT_IN', 'Eat in'),
+        text: 'EAT_IN',
+        textDisplay: t('EAT_IN', 'Eat in'),
         description: t('ORDERTYPE_DESCRIPTION_EATIN', 'Eat in description'),
         image: theme.images?.deliveryTypes?.eatIn
       },
       {
         value: 4,
-        text: t('CURBSIDE', 'Curbside'),
+        text: 'CURBSIDE',
+        textDisplay: t('CURBSIDE', 'Curbside'),
         description: t('ORDERTYPE_DESCRIPTION_CURBSIDE', 'Curbside description'),
         image: theme.images?.deliveryTypes?.curbside
       },
       {
         value: 5,
-        text: t('DRIVE_THRU', 'Drive thru'),
+        text: 'DRIVE_THRU',
+        textDisplay: t('DRIVE_THRU', 'Drive thru'),
         description: t('ORDERTYPE_DESCRIPTION_DRIVETHRU', 'Drive Thru description'),
         image: theme.images?.deliveryTypes?.driveThru
       },
       {
         value: 7,
-        text: t('CATERING_DELIVERY', 'Catering Delivery'),
+        text: 'CATERING_DELIVERY',
+        textDisplay: t('CATERING_DELIVERY', 'Catering Delivery'),
         description: t('ORDERTYPE_DESCRIPTION_CATERING_DELIVERY', 'Catering Delivery description'),
         image: theme.images?.deliveryTypes?.cateringDelivery
       },
       {
         value: 8,
-        text: t('CATERING_PICKUP', 'Catering Pickup'),
+        text: 'CATERING_PICKUP',
+        textDisplay: t('CATERING_PICKUP', 'Catering Pickup'),
         description: t('ORDERTYPE_DESCRIPTION_CATERING_PICKUP', 'Catering Pickup description'),
         image: theme.images?.deliveryTypes?.cateringPickup
       }
