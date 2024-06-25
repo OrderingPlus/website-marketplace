@@ -105,20 +105,27 @@ import drivethruIco from './assets/images/drivethru.svg'
 import cateringIco from './assets/images/catering.svg'
 import { SubdomainComponent } from './components/SubdomainComponent'
 
-const sentryDNS = settings.sentry_key
-Sentry.init({
-  environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
-  release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
-  dsn: sentryDNS,
-  integrations: [
-    Sentry.browserTracingIntegration()
-  ],
-  // We recommend adjusting this value in production, or using tracesSampler
-  // for finer control
-  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5,
-  // Release health
-  autoSessionTracking: true
-})
+const isAllowedDomain = () => {
+  const allowedDomain = 'orderingplus.com'
+  return window.location.hostname.endsWith(allowedDomain) && window?.location?.hostname !== 'localhost'
+}
+
+if (isAllowedDomain()) {
+  const sentryDNS = settings.sentry_key
+  Sentry.init({
+    environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
+    release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
+    dsn: sentryDNS,
+    integrations: [
+      Sentry.browserTracingIntegration()
+    ],
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5,
+    // Release health
+    autoSessionTracking: true
+  })
+}
 
 const logos = {
   logotype,
