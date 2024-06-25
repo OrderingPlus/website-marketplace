@@ -102,20 +102,27 @@ import searchIcon from './assets/images/search-icon.svg'
 import unionpay from './assets/images/unionpay.svg'
 import visa from './assets/images/visa.jpg'
 
-const sentryDNS = settings.sentry_key
-Sentry.init({
-  environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
-  release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
-  dsn: sentryDNS,
-  integrations: [
-    Sentry.browserTracingIntegration()
-  ],
-  // We recommend adjusting this value in production, or using tracesSampler
-  // for finer control
-  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5,
-  // Release health
-  autoSessionTracking: true
-})
+const isAllowedDomain = () => {
+  const allowedDomain = 'orderingplus.com'
+  return window.location.hostname.endsWith(allowedDomain) && window?.location?.hostname !== 'localhost'
+}
+
+if (isAllowedDomain()) {
+  const sentryDNS = settings.sentry_key
+  Sentry.init({
+    environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
+    release: process.env.npm_package_version ? 'react-ordering-website@' + process.env.npm_package_version : 'react-ordering-website@' + '1.0.1',
+    dsn: sentryDNS,
+    integrations: [
+      Sentry.browserTracingIntegration()
+    ],
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5,
+    // Release health
+    autoSessionTracking: true
+  })
+}
 
 const logos = {
   logotype,
