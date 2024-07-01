@@ -24,12 +24,8 @@ export const ActionWrapper = styled.div`
     height: 44px;
     &:first-child {
       ${props => props.theme?.rtl
-? css`
-        margin-left: 20px;
-      `
-: css`
-        margin-right: 20px;
-      `}
+        ? css`margin-left: 20px;`
+        : css`margin-right: 20px;`}
     }
     &.light {
       border: 1px solid ${props => props.theme.colors.primaryContrast};
@@ -38,6 +34,9 @@ export const ActionWrapper = styled.div`
       &:hover {
         background: ${props => props.theme.colors.primary};
       }
+    }
+    @media (max-width: 512px) {
+      font-size: 12px;
     }
   }
 `

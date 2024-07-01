@@ -43,12 +43,8 @@ export const CardLogo = (props) => {
 
 export const CardInfo = styled.div`
   ${props => props.theme?.rtl
-? css`
-    margin-right: 15px;
-  `
-: css`
-    margin-left: 15px;
-  `}
+    ? css`margin-right: 15px;`
+    : css`margin-left: 15px;`}
 
   flex: 1;
   > div {

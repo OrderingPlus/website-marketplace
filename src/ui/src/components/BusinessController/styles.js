@@ -8,7 +8,7 @@ export const ContainerCard = styled.div`
   max-height: 300px;
   height: ${({ isSkeleton }) => isSkeleton ? 'auto' : '320px'};
   border-radius: 10px;
-  margin: 30px 20px;
+  margin: ${({ m }) => m ?? '30px 20px'};
 
   ${({ isCustomerMode }) => isCustomerMode && css`
     max-height: 400px;

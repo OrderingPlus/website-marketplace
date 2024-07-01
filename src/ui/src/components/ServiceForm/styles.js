@@ -172,6 +172,12 @@ export const ButtonWrapper = styled.div`
       background-color: hsl(0, 0%, 72%);
     }
   }
+
+  @media (max-width: 512px) {
+    button {
+      max-width: 200px;
+    }
+  }
 `
 
 export const ProfessionalSelectWrapper = styled.div`

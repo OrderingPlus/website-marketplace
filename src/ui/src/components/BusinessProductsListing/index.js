@@ -355,7 +355,10 @@ const BusinessProductsListingUI = (props) => {
     <>
       <ProductsContainer>
         {!props.useKioskApp && (
-          <HeaderContent useFullWidth={fullWidthArrowThemes.includes(searchThemeType) || fullWidthArrowThemes.includes(headerThemeType)}>
+          <HeaderContent
+            useFullWidth={fullWidthArrowThemes.includes(searchThemeType) || fullWidthArrowThemes.includes(headerThemeType)}
+            switchFlex={windowSize?.width < 576}
+          >
             {!isCustomLayout && !location.pathname.includes('/marketplace') && !singleBusinessRedirect && (
               <div id='back-arrow'>
                 <ArrowLeft className='back-arrow' onClick={() => handleGoToBusinessList()} />

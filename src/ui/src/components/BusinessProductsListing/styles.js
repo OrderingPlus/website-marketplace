@@ -144,6 +144,12 @@ export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  ${props => props.switchFlex && css`
+    flex-direction: column;
+    align-items: flex-start;
+  `}
+
   .back-arrow {
     font-size: 24px;
     cursor: pointer;
@@ -158,13 +164,11 @@ export const HeaderContent = styled.div`
     height: 56px;
     display: flex;
     align-items: center;
+
     ${props => props.theme?.rtl
-? css`
-      padding-right: 10px;
-    `
-: css`
-      padding-left: 10px;
-    `}
+      ? css`padding-right: 10px;`
+      : css`padding-left: 10px;`}
+
     @media (min-width: 993px){
       width: 100px;
       ${({ useFullWidth }) => useFullWidth && css`

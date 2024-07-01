@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom'
 
 import {
   Container,
-  Divider,
   NoOrdersWrapper,
   MyOrdersMenuContainer
 } from './styles'
@@ -107,14 +106,12 @@ export const MyOrders = (props) => {
                   horizontal
                   setIsEmptyPreorder={setIsEmptyPreorder}
                 />
-                {!isEmptyPreorder && <Divider />}
                 <OrdersOption
                   {...props}
                   activeOrders
                   horizontal
                   setIsEmptyActive={setIsEmptyActive}
                 />
-                {!isEmptyActive && <Divider />}
                 <OrdersOption
                   {...props}
                   pastOrders
@@ -123,7 +120,6 @@ export const MyOrders = (props) => {
                     onRedirectPage && onRedirectPage({ page: 'checkout', params: { cartUuid: uuid } })
                   }}
                 />
-                {!isEmptyPast && <Divider />}
               </>
                 )}
           </>
