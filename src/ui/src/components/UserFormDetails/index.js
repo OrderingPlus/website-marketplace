@@ -83,7 +83,6 @@ export const UserFormDetailsUI = (props) => {
       : !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))
   })
 
-  const showCustomerCellphone = !theme?.profile?.components?.cellphone?.hidden
   const showCustomerPassword = !theme?.profile?.components?.password?.hidden
   const showCustomerPromotions = !theme?.profile?.components?.promotions?.hidden
   const showLangauges = !theme?.profile?.components?.languages?.hidden
@@ -134,7 +133,11 @@ export const UserFormDetailsUI = (props) => {
 
   const onSubmit = () => {
     const isPhoneNumberValid = userPhoneNumber && showInputPhoneNumber ? isValidPhoneNumber : true
-    const requiredPhone = (user?.guest_id && requiredFields?.includes?.('cellphone')) || (validationFields?.fields?.checkout?.cellphone?.enabled && validationFields?.fields?.checkout?.cellphone?.required && !user?.guest_id)
+    const isPhoneRequiredByOrderType = checkoutFields?.find(field => field?.validation_field?.code === 'mobile_phone')?.required
+    const requiredPhone = (user?.guest_id && requiredFields?.includes?.('cellphone')) ||
+    (!isOrderTypeValidationField && validationFields?.fields?.checkout?.cellphone?.enabled && validationFields?.fields?.checkout?.cellphone?.required && !user?.guest_id) ||
+    (isOrderTypeValidationField && isPhoneRequiredByOrderType)
+
     const content = []
     if (requiredFields?.includes?.('birthdate') && !birthdate) {
       content.push(t('VALIDATION_ERROR_BIRTHDATE_REQUIRED', 'Birthdate is required'))
@@ -386,7 +389,7 @@ export const UserFormDetailsUI = (props) => {
                 </InputPhoneNumberWrapper>
               )}
             {((!user?.guest_id && !!showInputPhoneNumber) || (isOrderTypeValidationField || user?.guest_id)) &&
-              showCustomerCellphone &&
+              showInputPhoneNumber &&
               ((requiredFields && requiredFields?.includes?.('cellphone')) || !requiredFields || !isCheckoutPlace) &&
               (
                 <InputPhoneNumberWrapper>
