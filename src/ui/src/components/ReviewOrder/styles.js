@@ -60,6 +60,11 @@ export const Send = styled.div`
       `}
     }
   }
+  @media (max-width: 512px) {
+    button {
+      width: 200px;
+    }
+  }
 `
 
 const BusinessLogoStyled = styled.div`

@@ -47,6 +47,21 @@ export const SingleOfferContainer = styled.div`
       font-size: 16px;
     }
   }
+
+  @media (max-width: 424px) {
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+
+    button,
+    #offer-wrap {
+      width: 100%;
+      max-width: 100%;
+    }
+    #offer-info {
+      width: calc(100% - 90px);
+    }
+  }
 `
 
 export const Description = styled.p`

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 
 export const Container = styled.footer`
   position: relative;
+  margin-top: 9vh;
 `
 
 export const FooterWrapper = styled.div`

@@ -14,18 +14,11 @@ import {
   SavedPlaces,
   UploadImageIcon,
   SkeletonWrapper,
-  WrapperForm,
-  ProfileOptionsList,
-  ListLink,
-  ListItem
+  WrapperForm
 } from './styles'
 
 import {
   UserFormDetails as UserProfileController,
-  LogoutAction as LogoutActionController,
-  useConfig,
-  useEvent,
-  useCustomer,
   useLanguage,
   useSession,
   DragAndDrop,
@@ -34,49 +27,13 @@ import {
 
 import {
   bytesConverter,
-  capitalize,
   Alert,
   useCountdownTimer,
-  useWindowSize,
   Modal,
   AddressList,
   VerifyCodeForm,
   UserFormDetailsUI
 } from '~ui'
-
-const LogoutActionUI = (props) => {
-  const [, t] = useLanguage()
-  const [, { deleteUserCustomer }] = useCustomer()
-
-  const handleClick = () => {
-    const GoogleAuth = window?.gapi?.auth2?.getAuthInstance()
-    if (GoogleAuth) {
-      const signedIn = GoogleAuth.isSignedIn.get()
-      if (signedIn) {
-        GoogleAuth.signOut().then(() => {
-          GoogleAuth.disconnect()
-        })
-      }
-    }
-
-    deleteUserCustomer(true)
-    props.handleLogoutClick()
-  }
-  return (
-    <ListItem onClick={handleClick}>
-      {t('LOGOUT', 'Logout')}
-    </ListItem>
-  )
-}
-
-const ListItemLogout = () => {
-  const logoutActionProps = {
-    UIComponent: LogoutActionUI
-  }
-  return (
-    <LogoutActionController {...logoutActionProps} />
-  )
-}
 
 const UserProfileFormUI = (props) => {
   const {
@@ -86,7 +43,6 @@ const UserProfileFormUI = (props) => {
     formState,
     cleanFormState,
     toggleIsEdit,
-    isCustomerMode,
     isHiddenAddress,
     handleSendVerifyCode,
     verifyPhoneState,
@@ -94,43 +50,16 @@ const UserProfileFormUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [events] = useEvent()
   const [{ user }] = useSession()
-  const [{ configs }] = useConfig()
   const theme = useTheme()
   const [willVerifyOtpState, setWillVerifyOtpState] = useState(false)
   const [otpLeftTime, , resetOtpLeftTime] = useCountdownTimer(
     600, willVerifyOtpState)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const inputRef = useRef(null)
-  const windowSize = useWindowSize()
 
   const showCustomerPicture = !theme?.profile?.components?.picture?.hidden
   const showAddressList = !theme?.profile?.components?.address_list?.hidden
-
-  const isPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
-  const isAddressListNewPage = theme?.profile?.components?.address_list?.components?.layout?.position === 'new_page'
-  const isWalletEnabled = configs?.cash_wallet?.value &&
-    configs?.wallet_enabled?.value === '1' &&
-    (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
-  const isProjectEnterpricePlan = configs?.plan_enterprise && configs?.plan_enterprise?.value
-
-  const hideWallet = theme?.bar_menu?.components?.wallet?.hidden
-  const hideMessages = theme?.bar_menu?.components?.messages?.hidden
-  const hideHelp = theme?.bar_menu?.components?.help?.hidden
-  const hideFavorites = theme?.bar_menu?.components?.favortes?.hidden
-  const hideSession = theme?.bar_menu?.components?.sessions?.hidden || !isProjectEnterpricePlan
-  const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
-
-  const profileOptions = [
-    { name: 'wallets', pathname: '/wallets', displayName: 'wallets', key: 'wallets', isActive: !hideWallet && isWalletEnabled && !isCustomerMode },
-    { name: 'promotions', pathname: '/promotions', displayName: 'promotions', key: 'promotions', isActive: !hidePromotions && isPromotionsEnabled },
-    { name: 'messages', pathname: '/messages', displayName: 'messages', key: 'messages', isActive: !hideMessages && !isCustomerMode },
-    { name: 'help', pathname: '/help', displayName: 'help', key: 'help', isActive: !hideHelp },
-    { name: 'sessions', pathname: '/sessions', displayName: 'sessions', key: 'sessions', isActive: !hideSession },
-    { name: 'favorite', pathname: '/favorite', displayName: 'favorites', key: 'favorites', isActive: !hideFavorites },
-    { name: 'addresses', pathname: '/profile/addresses', displayName: 'places', key: 'places', isActive: isAddressListNewPage }
-  ]
 
   const handleFiles = (files) => {
     if (files.length === 1) {
@@ -183,10 +112,6 @@ const UserProfileFormUI = (props) => {
         country_phone_code: countryPhoneCode
       })
     }
-  }
-
-  const handleGoToPage = (page) => {
-    events.emit('go_to_page', { page })
   }
 
   useEffect(() => {
@@ -267,20 +192,6 @@ const UserProfileFormUI = (props) => {
               </Image>
               <Camera><FiCamera /></Camera>
             </UserImage>
-          )}
-          {windowSize.width <= 576 && (
-            <ProfileOptionsList>
-              {profileOptions.map((option, i) => option.isActive && (
-                <ListLink
-                  key={i}
-                  active={window.location.pathname === option.pathname}
-                  onClick={() => handleGoToPage(option.name)}
-                >
-                  {t((option.key || option.name).toUpperCase(), capitalize(option.displayName || option.name))}
-                </ListLink>
-              ))}
-              <ListItemLogout />
-            </ProfileOptionsList>
           )}
           <SideForm className='user-form'>
             <WrapperForm>

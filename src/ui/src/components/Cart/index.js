@@ -9,7 +9,6 @@ import {
   CheckoutAction,
   CouponContainer,
   CartSticky,
-  Divider,
   Spinner,
   CommentContainer,
   IconContainer,
@@ -687,7 +686,6 @@ const CartUI = (props) => {
               </CheckoutAction>
             )}
           </BusinessItemAccordion>
-          {!isStore && <Divider />}
           <Confirm
             title={t('PRODUCT', 'Product')}
             content={confirm.content}

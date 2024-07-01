@@ -102,7 +102,8 @@ export const OrderTypeListTitle = styled.h1`
   margin: 0 0 30px;
 
   @media (max-width: 450px) {
-    padding-left: 30px;
+    padding-left: 0px;
+    font-size: 18px;
     ${props => props.theme.rtl && css`
       padding-right: 30px;
       padding-left: 0;

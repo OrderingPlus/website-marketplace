@@ -254,23 +254,28 @@ const BusinessesListingUI = (props) => {
         <BusinessLogosContainer>
           <AutoScroll scrollId='businessLogos'>
             {businessesList?.loading
-              ? (
-              <Skeleton count={12} height={75} width={75} />
-                )
-              : (
-              <>
-                {businessesList.businesses
-                  ?.filter(business => business?.open)
-                  ?.map(business => (
-                    <BusinessLogo
-                      key={business?.id}
-                      isActive={actualSlug === business?.slug}
-                      bgimage={business?.logo || theme.images?.dummies?.businessLogo}
-                      onClick={() => onBusinessClick(business)}
-                    />
-                  ))}
-              </>
-                )}
+              ? <>
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                </>
+              : <>
+                  {businessesList.businesses
+                    ?.filter(business => business?.open)
+                    ?.map(business => (
+                      <BusinessLogo
+                        key={business?.id}
+                        isActive={actualSlug === business?.slug}
+                        bgimage={business?.logo || theme.images?.dummies?.businessLogo}
+                        onClick={() => onBusinessClick(business)}
+                      />
+                    ))}
+                </>}
           </AutoScroll>
         </BusinessLogosContainer>
       </BusinessLogosWrapper>
