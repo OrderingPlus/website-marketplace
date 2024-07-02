@@ -469,6 +469,12 @@ const OrderDetailsUI = (props) => {
                         </p>
                       </>
                     )}
+                    {order?.reservation && order?.delivery_type === 9 && (
+                      <>
+                        <p className='date'>{t('RESERVATION_SCHEDULED_TO', 'Reservation scheduled to')}: {parseDate(order?.reserve_date)}</p>
+                        <p>{order?.reservation?.guests_reservation} {t('GUESTS', 'Guests')}</p>
+                      </>
+                    )}
                     {(acceptedStatus.includes(parseInt(order?.status, 10)) ||
                       !isOriginalLayout
                     ) && !isGiftCardOrder &&

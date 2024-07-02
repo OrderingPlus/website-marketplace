@@ -69,7 +69,8 @@ import {
   Cart,
   CartContent,
   PlaceSpot,
-  OrderContextUI
+  OrderContextUI,
+  BusinessReservation
 } from '~ui'
 
 const mapConfigs = {
@@ -157,6 +158,8 @@ const CheckoutUI = (props) => {
   const validateDriverTipField = options.type === 1 && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
   const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some(offer => offer?.type === 2)
   const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
+  const businessConfig = businessDetails?.business?.configs?.find(config => config?.key === 'reservation_setting')
+  const reservationSetting = businessConfig ? JSON.parse(businessConfig?.value || '{}') : JSON.parse(configs?.reservation_setting?.value || '{}')
 
   const isDisablePlaceOrderButton = !cart?.valid ||
     (!paymethodSelected && cart?.balance > 0) ||
@@ -171,7 +174,8 @@ const CheckoutUI = (props) => {
     validateCommentsCartField ||
     validateDriverTipField ||
     validateCouponField ||
-    validateZipcodeCard
+    validateZipcodeCard ||
+    (!cart?.reservation && options?.type === 9)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -396,125 +400,125 @@ const CheckoutUI = (props) => {
 
           {!useKioskApp
             ? (
-            <>
-              {cart?.business_id && !hideBusinessMap && (
-                <>
-                  {(businessDetails?.loading || cartState.loading)
-                    ? (
-                    <div style={{ width: '100%', marginBottom: '20px' }}>
-                      <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                      <Skeleton height={150} />
-                    </div>
-                      )
-                    : (
-                    <AddressDetails
-                      location={cart?.business?.location}
-                      businessLogo={businessDetails?.business?.logo || theme.images?.dummies?.businessLogo}
-                      isCartPending={cart?.status === 2}
-                      businessId={cart?.business_id}
-                      apiKey={configs?.google_maps_api_key?.value}
-                      mapConfigs={mapConfigs}
-                      isCustomerMode={isCustomerMode}
-                      cart={cart}
-                      primaryColor={hexTest.test(primaryColor || '') ? `0x${primaryColor}` : 'red'}
-                    />
-                      )}
-                </>
-              )}
-              {!hideCustomerDetails && (
-                <UserDetailsContainer>
-                  <WrapperUserDetails>
-                    {cartState.loading || (isCustomerMode && !customerState?.user?.id)
-                      ? (<div>
+              <>
+                {cart?.business_id && !hideBusinessMap && (
+                  <>
+                    {(businessDetails?.loading || cartState.loading)
+                      ? (
+                        <div style={{ width: '100%', marginBottom: '20px' }}>
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={150} />
+                        </div>
+                        )
+                      : (
+                        <AddressDetails
+                          location={cart?.business?.location}
+                          businessLogo={businessDetails?.business?.logo || theme.images?.dummies?.businessLogo}
+                          isCartPending={cart?.status === 2}
+                          businessId={cart?.business_id}
+                          apiKey={configs?.google_maps_api_key?.value}
+                          mapConfigs={mapConfigs}
+                          isCustomerMode={isCustomerMode}
+                          cart={cart}
+                          primaryColor={hexTest.test(primaryColor || '') ? `0x${primaryColor}` : 'red'}
+                        />
+                        )}
+                  </>
+                )}
+                {!hideCustomerDetails && (
+                  <UserDetailsContainer>
+                    <WrapperUserDetails>
+                      {cartState.loading || (isCustomerMode && !customerState?.user?.id)
+                        ? (<div>
                           <Skeleton height={35} style={{ marginBottom: '10px' }} />
                           <Skeleton height={35} style={{ marginBottom: '10px' }} />
                           <Skeleton height={35} style={{ marginBottom: '10px' }} />
                           <Skeleton height={35} style={{ marginBottom: '10px' }} />
                           <Skeleton height={35} style={{ marginBottom: '10px' }} />
                         </div>)
-                      : ((user?.guest_id && !allowedGuest)
-                          ? (<AuthButtonList>
-                              <h2>{t('CUSTOMER_DETAILS', 'Customer details')}</h2>
-                              <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
-                                {t('SIGN_UP', 'Sign up')}
-                              </Button>
-                              <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
-                                {t('LOGIN', 'Login')}
-                              </Button>
-                              <Button color='black' outline onClick={() => setAllowedGuest(true)}>
-                                {t('CONTINUE_AS_GUEST', 'Continue as guest')}
-                              </Button>
-                            </AuthButtonList>)
-                          : (<UserDetails
-                              isUserDetailsEdit={isUserDetailsEdit}
-                              cartStatus={cart?.status}
-                              businessId={cart?.business_id}
-                              useDefualtSessionManager
-                              useSessionUser={!isCustomerMode}
-                              isCustomerMode={isCustomerMode}
-                              userData={isCustomerMode && customerState.user}
-                              userId={isCustomerMode && customerState?.user?.id}
-                              isOrderTypeValidationField
-                              requiredFields={requiredFields}
-                              checkoutFields={checkoutFields}
-                              isSuccess={isSuccess}
-                              isCheckout
-                            />)
-                        )}
-                  </WrapperUserDetails>
-                </UserDetailsContainer>
-              )}
-              {cart?.business_id && !hideBusinessDetails && (
-                <BusinessDetailsContainer>
-                  {(businessDetails?.loading || cartState.loading) && !businessDetails?.error && (
-                    <div>
+                        : ((user?.guest_id && !allowedGuest)
+                            ? (<AuthButtonList>
+                            <h2>{t('CUSTOMER_DETAILS', 'Customer details')}</h2>
+                            <Button color='primary' onClick={() => setOpenModal({ ...openModal, signup: true })}>
+                              {t('SIGN_UP', 'Sign up')}
+                            </Button>
+                            <Button color='primary' outline onClick={() => setOpenModal({ ...openModal, login: true })}>
+                              {t('LOGIN', 'Login')}
+                            </Button>
+                            <Button color='black' outline onClick={() => setAllowedGuest(true)}>
+                              {t('CONTINUE_AS_GUEST', 'Continue as guest')}
+                            </Button>
+                          </AuthButtonList>)
+                            : (<UserDetails
+                            isUserDetailsEdit={isUserDetailsEdit}
+                            cartStatus={cart?.status}
+                            businessId={cart?.business_id}
+                            useDefualtSessionManager
+                            useSessionUser={!isCustomerMode}
+                            isCustomerMode={isCustomerMode}
+                            userData={isCustomerMode && customerState.user}
+                            userId={isCustomerMode && customerState?.user?.id}
+                            isOrderTypeValidationField
+                            requiredFields={requiredFields}
+                            checkoutFields={checkoutFields}
+                            isSuccess={isSuccess}
+                            isCheckout
+                          />)
+                          )}
+                    </WrapperUserDetails>
+                  </UserDetailsContainer>
+                )}
+                {cart?.business_id && !hideBusinessDetails && (
+                  <BusinessDetailsContainer>
+                    {(businessDetails?.loading || cartState.loading) && !businessDetails?.error && (
                       <div>
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
-                        <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                        <div>
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                          <Skeleton height={35} style={{ marginBottom: '10px' }} />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {!cartState.loading && businessDetails?.business && Object.values(businessDetails?.business)?.length > 0 && (
-                    <div>
-                      <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
+                    )}
+                    {!cartState.loading && businessDetails?.business && Object.values(businessDetails?.business)?.length > 0 && (
                       <div>
-                        {!hideBusinessAddress && (
-                          <p>{businessDetails?.business?.address}</p>
-                        )}
-                        <p>{businessDetails?.business?.name}</p>
-                        <p>{businessDetails?.business?.email}</p>
-                        <p>{businessDetails?.business?.cellphone}</p>
-                        {businessDetails?.business?.address_notes && <p>{businessDetails?.business?.address_notes}</p>}
+                        <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
+                        <div>
+                          {!hideBusinessAddress && (
+                            <p>{businessDetails?.business?.address}</p>
+                          )}
+                          <p>{businessDetails?.business?.name}</p>
+                          <p>{businessDetails?.business?.email}</p>
+                          <p>{businessDetails?.business?.cellphone}</p>
+                          {businessDetails?.business?.address_notes && <p>{businessDetails?.business?.address_notes}</p>}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {businessDetails?.error && businessDetails?.error?.length > 0 && (
-                    <div>
-                      <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
-                      <NotFoundSource
-                        content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
-                      />
-                    </div>
-                  )}
-                </BusinessDetailsContainer>
-              )}
-              <CheckOutDivider />
-            </>
+                    )}
+                    {businessDetails?.error && businessDetails?.error?.length > 0 && (
+                      <div>
+                        <h1>{t('BUSINESS_DETAILS', 'Business Details')}</h1>
+                        <NotFoundSource
+                          content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+                        />
+                      </div>
+                    )}
+                  </BusinessDetailsContainer>
+                )}
+                <CheckOutDivider />
+              </>
               )
             : (
-            <WrapperActionsInput>
-              <h1>
-                {t('WHATS_YOUR_NAME', "What's your name?")}
-              </h1>
-              <Input
-                placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
-                autoComplete='off'
-                onChange={(e) => setBehalfName(e?.target?.value)}
-              />
-            </WrapperActionsInput>
+              <WrapperActionsInput>
+                <h1>
+                  {t('WHATS_YOUR_NAME', "What's your name?")}
+                </h1>
+                <Input
+                  placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
+                  autoComplete='off'
+                  onChange={(e) => setBehalfName(e?.target?.value)}
+                />
+              </WrapperActionsInput>
               )}
 
           {cartState.loading && (
@@ -629,7 +633,18 @@ const CheckoutUI = (props) => {
             />
           </SelectSpotContainer>
         )}
-        {!cartState.loading && cart && (
+        {!cartState.loading && cart?.reservation && cart?.business_id && options?.type === 9 && (
+          <div>
+            <BusinessReservation
+              isCheckout
+              cart={cart}
+              business={cart?.business}
+              isCustomerMode={isCustomerMode}
+              scheduleList={cart?.business?.schedule}
+            />
+          </div>
+        )}
+        {!cartState.loading && cart && (reservationSetting?.allow_preorder_reservation || !cart?.reservation) && (
           <CartContainer>
             <CartHeader>
               <h1>{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}</h1>
@@ -666,11 +681,11 @@ const CheckoutUI = (props) => {
             >
               {!cart?.valid_maximum
                 ? (
-                `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                  `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                   )
                 : (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))
                     ? (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                       )
                     : placing ? t('PLACING_ORDER', 'Placing order') : t('PLACE_ORDER', 'Place Order')}
             </Button>
@@ -730,6 +745,12 @@ const CheckoutUI = (props) => {
             {t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
           </WarningText>
         )}
+
+        {!cart?.reservation && options?.type === 9 && (
+          <WarningText>
+            {t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
+          </WarningText>
+        )}
       </WrapperRightContainer>
       {windowSize.width < 576 && !cartState.loading && cart && cart?.status !== 2 && (
         <MobileWrapperPlaceOrderButton>
@@ -743,11 +764,11 @@ const CheckoutUI = (props) => {
           >
             {!cart?.valid_maximum
               ? (
-              `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                 )
               : (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))
                   ? (
-              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                  `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                     )
                   : placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')}
           </Button>
