@@ -83,7 +83,14 @@ const CartUI = (props) => {
     productLoading,
     setProductLoading,
     hideCommentsByValidationCheckout,
-    hideCouponByValidationCheckout
+    hideCouponByValidationCheckout,
+    forceHideCheckoutButton,
+    forceHideComments,
+    forceHideCoupon,
+    forceHideUpselling,
+    forceHideBusiness,
+    forcehideDriverTypes,
+    hasCartReservation
   } = props
 
   const theme = useTheme()
@@ -127,7 +134,7 @@ const CartUI = (props) => {
 
   const cateringValues = businessConfigs && getCateringValues(cateringTypeString, businessConfigs)
   const extraValueAdjustment = cart?.metafields?.find?.(meta => meta?.key === 'extra_value_adjustment_amount')
-
+  const hasNoReservation = !cart?.reservation && orderState?.options?.type === 9
   const walletName = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet')
@@ -315,6 +322,9 @@ const CartUI = (props) => {
             handleChangeStore={!useKioskApp && handleChangeStore}
             isMultiCheckout={isMultiCheckout}
             isGiftCart={!cart?.business_id}
+            forceHideBusiness={forceHideBusiness}
+            hasCartReservation={hasCartReservation}
+            cartReservation={cart?.reservation}
           >
             {cart?.products?.length > 0 && cart?.products.map(product => (
               <ProductItemAccordion
@@ -351,13 +361,13 @@ const CartUI = (props) => {
                       <tr>
                         {cart?.discount_type === 1
                           ? (
-                          <td>
-                            {t('DISCOUNT', 'Discount')}{' '}
-                            <span>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</span>
-                          </td>
+                            <td>
+                              {t('DISCOUNT', 'Discount')}{' '}
+                              <span>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</span>
+                            </td>
                             )
                           : (
-                          <td>{t('DISCOUNT', 'Discount')}</td>
+                            <td>{t('DISCOUNT', 'Discount')}</td>
                             )}
                         <td>- {parsePrice(cart?.discount || 0)}</td>
                       </tr>
@@ -393,10 +403,10 @@ const CartUI = (props) => {
                           <td>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</td>
                           {cart?.business?.tax_type === 1
                             ? (
-                            <td>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</td>
+                              <td>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</td>
                               )
                             : (
-                            <td>{parsePrice(cart?.subtotal_with_discount ?? 0)}</td>
+                              <td>{parsePrice(cart?.subtotal_with_discount ?? 0)}</td>
                               )}
                         </tr>
                       )
@@ -521,7 +531,7 @@ const CartUI = (props) => {
                     )}
                   </tbody>
                 </table>
-                {isCouponEnabled && !isCartPending &&
+                {!forceHideCoupon && isCouponEnabled && !isCartPending &&
                   ((isCheckout || isCartPopover || isMultiCheckout) &&
                     !(isCheckout && isCartPopover)) && !hideCartDiscount && !hideCouponInput &&
                   (
@@ -543,6 +553,7 @@ const CartUI = (props) => {
                   driverTipsOptions.length > 0 &&
                   !useKioskApp &&
                   !isCheckout &&
+                  !forcehideDriverTypes &&
                   (
                     <>
                       <DriverTipContainer>
@@ -577,7 +588,7 @@ const CartUI = (props) => {
                     )}
                   </tbody>
                 </table>
-                {cart?.status !== 2 && !hideCartComments && !hideCommentsByValidationCheckout && (
+                {!forceHideComments && cart?.status !== 2 && !hideCartComments && !hideCommentsByValidationCheckout && (
                   <table className='comments'>
                     <tbody>
                       <tr>
@@ -661,13 +672,13 @@ const CartUI = (props) => {
                 />
               </div>
             )}
-            {(onClickCheckout || isForceOpenCart) && !isCheckout && cart?.valid && (!isMultiCheckout || isStore || !cart?.business_id) && (
+            {!forceHideCheckoutButton && (onClickCheckout || isForceOpenCart) && !isCheckout && cart?.valid && (!isMultiCheckout || isStore || !cart?.business_id) && (
               <CheckoutAction>
                 <p>{cart?.total >= 1 && parsePrice(cart?.total)}</p>
                 <Button
-                  color={(!cart?.valid_maximum || subtotalWithTaxes < cart?.minimum || !cart?.valid_address) ? 'secundary' : 'primary'}
+                  color={(!cart?.valid_maximum || subtotalWithTaxes < cart?.minimum || !cart?.valid_address || hasNoReservation) ? 'secundary' : 'primary'}
                   onClick={() => checkOutBtnClick(cart?.uuid)}
-                  disabled={(openUpselling && !canOpenUpselling) || !cart?.valid_maximum || subtotalWithTaxes < cart?.minimum || !cart?.valid_address}
+                  disabled={(openUpselling && !canOpenUpselling) || !cart?.valid_maximum || subtotalWithTaxes < cart?.minimum || !cart?.valid_address || hasNoReservation}
                 >
                   {!cart?.valid_address
                     ? (
@@ -675,13 +686,15 @@ const CartUI = (props) => {
                       )
                     : !cart?.valid_maximum
                         ? (
-                    `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+                        `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
                           )
                         : subtotalWithTaxes < cart?.minimum
                           ? (
-                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                          `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                             )
-                          : !openUpselling ^ canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')}
+                          : hasNoReservation
+                            ? t('MISSING_RESERVATION', 'Missing reservation')
+                            : !openUpselling ^ canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')}
                 </Button>
               </CheckoutAction>
             )}
@@ -707,31 +720,31 @@ const CartUI = (props) => {
             >
               {!curProduct?.calendar_event
                 ? (
-                <ProductForm
-                  isCartProduct
-                  productCart={curProduct}
-                  businessSlug={cart?.business?.slug}
-                  businessId={cart?.business_id}
-                  categoryId={curProduct?.category_id}
-                  productId={curProduct?.id}
-                  onSave={handlerProductAction}
-                  viewString={viewString}
-                  setProductLoading={setProductLoading}
-                />
+                  <ProductForm
+                    isCartProduct
+                    productCart={curProduct}
+                    businessSlug={cart?.business?.slug}
+                    businessId={cart?.business_id}
+                    categoryId={curProduct?.category_id}
+                    productId={curProduct?.id}
+                    onSave={handlerProductAction}
+                    viewString={viewString}
+                    setProductLoading={setProductLoading}
+                  />
                   )
                 : (
-                <ServiceForm
-                  isCartProduct
-                  isService
-                  productCart={curProduct}
-                  businessSlug={cart?.business?.slug}
-                  businessId={cart?.business_id}
-                  categoryId={curProduct?.category_id}
-                  productId={curProduct?.id}
-                  onSave={handlerProductAction}
-                  professionalSelected={curProduct?.calendar_event?.professional}
-                  setProductLoading={setProductLoading}
-                />
+                  <ServiceForm
+                    isCartProduct
+                    isService
+                    productCart={curProduct}
+                    businessSlug={cart?.business?.slug}
+                    businessId={cart?.business_id}
+                    categoryId={curProduct?.category_id}
+                    productId={curProduct?.id}
+                    onSave={handlerProductAction}
+                    professionalSelected={curProduct?.calendar_event?.professional}
+                    setProductLoading={setProductLoading}
+                  />
                   )}
             </Modal>
           )}
@@ -754,7 +767,7 @@ const CartUI = (props) => {
               />
             </Modal>
           )}
-          {(openUpselling || isUpselling) && (
+          {!forceHideUpselling && (openUpselling || isUpselling) && (
             <UpsellingPage
               useKioskApp={useKioskApp}
               businessId={cart?.business_id}

@@ -117,6 +117,13 @@ export const OrderTypeSelectorContent = (props) => {
         textDisplay: t('CATERING_PICKUP', 'Catering Pickup'),
         description: t('ORDERTYPE_DESCRIPTION_CATERING_PICKUP', 'Catering Pickup description'),
         image: theme.images?.deliveryTypes?.cateringPickup
+      },
+      {
+        value: 9,
+        text: 'RESERVATION',
+        textDisplay: t('RESERVATION', 'Reservation'),
+        description: t('ORDERTYPE_DESCRIPTION_RESERVATION', 'Reservation description'),
+        image: theme.images?.deliveryTypes?.reservation
       }
     ]
   }

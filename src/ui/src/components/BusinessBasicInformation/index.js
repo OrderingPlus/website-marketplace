@@ -51,7 +51,9 @@ export const BusinessBasicInformation = (props) => {
     isCustomerMode,
     isCustomLayout,
     setCategoryClicked,
-    categoryClicked
+    categoryClicked,
+    handleAddReservation,
+    currentCart
   } = props
   const { business, loading } = businessState
 
@@ -83,7 +85,9 @@ export const BusinessBasicInformation = (props) => {
     handleChangeSortBy,
     sortByValue,
     sortByOptions,
-    isCustomLayout
+    isCustomLayout,
+    handleAddReservation,
+    currentCart
   }
 
   const getBusinessType = () => {
