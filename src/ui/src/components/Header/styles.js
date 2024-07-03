@@ -65,6 +65,7 @@ export const LogoHeader = styled.div`
     margin: 0;
     vertical-align: middle;
     margin-left: 10px;
+    object-fit: contain;
 
     ${props => props.theme?.rtl && css`
       margin-right: 10px;
