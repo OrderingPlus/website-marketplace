@@ -144,7 +144,7 @@ export const BusinessBasicInformation = (props) => {
         const classAdded = businessNameElement.classList.contains('fixed-name')
         !classAdded && businessNameElement.classList.add('fixed-name')
         const classAdded2 = backArrowElement?.classList?.contains?.('fixed-arrow')
-        !classAdded2 && backArrowElement.classList.add('fixed-arrow')
+        !classAdded2 && backArrowElement && backArrowElement.classList.add('fixed-arrow')
         if (businessNameFeedbackElement) businessNameFeedbackElement.style.display = 'block'
       } else {
         businessNameElement && businessNameElement.classList.remove('fixed-name')
