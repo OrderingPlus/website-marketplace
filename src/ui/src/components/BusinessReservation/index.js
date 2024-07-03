@@ -36,7 +36,6 @@ export const BusinessReservationUI = (props) => {
   const [customerState] = useCustomer()
   const [events] = useEvent()
   const [requiredFields, setRequiredFields] = useState([])
-  const [userErrors, setUserErrors] = useState([])
   const [personsList, setPersonsList] = useState([])
   const [selectDateList, setSelectDateList] = useState([])
   const [selectHourList, setSelectHourList] = useState([])
@@ -46,11 +45,8 @@ export const BusinessReservationUI = (props) => {
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
   const onPlaceReservation = async () => {
-    if (userErrors?.length > 0) {
-      return
-    }
     const result = await handleAddReservation(cart?.products)
-    setOpenReservations(false)
+    setOpenReservations?.(false)
     if (result?.uuid) {
       events.emit('go_to_page', { page: 'checkout', params: { cartUuid: result?.uuid } })
     }
@@ -86,7 +82,6 @@ export const BusinessReservationUI = (props) => {
   }
 
   const checkValidationFields = () => {
-    setUserErrors([])
     const errors = []
     const userSelected = isCustomerMode ? customerState.user : user
     const _requiredFields = []
@@ -124,8 +119,6 @@ export const BusinessReservationUI = (props) => {
         errors.push(t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid'))
       }
     }
-
-    setUserErrors(errors)
   }
 
   const handleSelectTime = (option) => {
@@ -267,7 +260,7 @@ export const BusinessReservationUI = (props) => {
                   label: hoursList?.find(hour => reserveDate?.time === hour?.value)?.text || t('HH:mm', 'HH:mm')
                 }}
                 options={selectHourList}
-                placeholder={t('HH:ss', 'HH:ss')}
+                placeholder={t('HH:mm', 'HH:mm')}
                 onChange={(option) => handleSelectTime(option)}
               />
             </div>
@@ -317,7 +310,7 @@ export const BusinessReservationUI = (props) => {
       )}
       {!hidePlaceReservationButton && (
         <Button
-          disabled={!reserveDate?.time || reservationState?.loading}
+          disabled={!reservationState?.changes?.guests_reservation || !reserveDate?.time || reservationState?.loading}
           onClick={onPlaceReservation}
           color='primary'
         >
