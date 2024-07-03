@@ -46,7 +46,7 @@ export const BusinessReservationUI = (props) => {
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
   const onPlaceReservation = async () => {
     const result = await handleAddReservation(cart?.products)
-    setOpenReservations(false)
+    setOpenReservations?.(false)
     if (result?.uuid) {
       events.emit('go_to_page', { page: 'checkout', params: { cartUuid: result?.uuid } })
     }
@@ -260,7 +260,7 @@ export const BusinessReservationUI = (props) => {
                   label: hoursList?.find(hour => reserveDate?.time === hour?.value)?.text || t('HH:mm', 'HH:mm')
                 }}
                 options={selectHourList}
-                placeholder={t('HH:ss', 'HH:ss')}
+                placeholder={t('HH:mm', 'HH:mm')}
                 onChange={(option) => handleSelectTime(option)}
               />
             </div>
