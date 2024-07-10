@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import IosRadioButtonOn from '@meronex/icons/ios/IosRadioButtonOn'
 import FaCcStripe from '@meronex/icons/fa/FaCcStripe'
 import FaStripeS from '@meronex/icons/fa/FaStripeS'

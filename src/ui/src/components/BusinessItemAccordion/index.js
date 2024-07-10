@@ -18,7 +18,7 @@ import {
 } from './styles'
 
 import { useOrder, useLanguage, useEvent, useUtils, useConfig } from '~components'
-import { Button, convertHoursToMinutes } from '~ui'
+import { Button, generalUtilities } from '~ui'
 
 export const BusinessItemAccordion = (props) => {
   const {
@@ -65,6 +65,8 @@ export const BusinessItemAccordion = (props) => {
   const businessStore = useRef(null)
   const businessDelete = useRef(null)
   const changeStore = useRef(null)
+
+  const { convertHoursToMinutes } = generalUtilities()
 
   const viewString = isStore ? 'business_view' : 'header'
   const hideBusinessLogo = isGiftCart || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden

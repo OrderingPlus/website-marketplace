@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import moment from 'moment'
 
 import {
@@ -24,7 +25,7 @@ import { useLanguage, useOrder, useEvent, OrderList } from '~components'
 import {
   useWindowSize,
   Alert,
-  getOrderStatus,
+  generalUtilities,
   BusinessController,
   HorizontalOrdersLayout,
   SingleProductCard,
@@ -80,6 +81,7 @@ const OrdersOptionUI = (props) => {
   const { width } = useWindowSize()
   const { loading, error, orders: values } = orderList
   const [refreshOrders, setRefreshOrders] = useState(false)
+  const { getOrderStatus } = generalUtilities()
 
   const _orders = customArray || values || []
   const uniqueOrders = []

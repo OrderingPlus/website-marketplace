@@ -1,6 +1,7 @@
 import React from 'react'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import {
   Container,
   PhotoWrapper,

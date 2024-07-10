@@ -1,5 +1,6 @@
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { WrapperLeftContainer, WrapperRightContainer, Container } from '../Checkout/styles'
 import { MultiCartCreate } from '~components'
 

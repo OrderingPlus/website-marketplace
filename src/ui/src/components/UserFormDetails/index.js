@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import { useForm } from 'react-hook-form'
 import parsePhoneNumber from 'libphonenumber-js'
@@ -372,9 +373,10 @@ export const UserFormDetailsUI = (props) => {
                 <InputPhoneNumberWrapper>
                   <p>{t('BIRTHDATE', 'Birthdate')}</p>
                   <Input
+                    name='birthdate'
                     borderBottom
                     className='form'
-                    value={birthdate ? moment(birthdate).format('YYYY/MM/DD') : ''}
+                    defaultValue={birthdate ? moment(birthdate).format('YYYY/MM/DD') : ''}
                     autoComplete='off'
                     onFocus={() => setOpenCalendar(true)}
                     ref={formMethods.register({
@@ -496,13 +498,11 @@ export const UserFormDetailsUI = (props) => {
             </ActionsForm>
           </>
             )
-          : (
-          <SkeletonForm>
-            {[...Array(6)].map((item, i) => (
-              <Skeleton key={i} />
-            ))}
-          </SkeletonForm>
-            )}
+          : <SkeletonForm>
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} />
+              ))}
+            </SkeletonForm>}
       </FormInput>
       <Alert
         title={t('PROFILE', 'Profile')}

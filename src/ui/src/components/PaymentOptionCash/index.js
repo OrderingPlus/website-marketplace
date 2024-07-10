@@ -11,6 +11,7 @@ import { useUtils, useLanguage } from '~components'
 import { Input } from '~ui'
 
 export const PaymentOptionCash = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     defaultValue,
     orderTotal,
@@ -78,6 +79,6 @@ export const PaymentOptionCash = (props) => {
   )
 }
 
-PaymentOptionCash.defaultProps = {
+const defaultProps = {
   defaultValue: null
 }

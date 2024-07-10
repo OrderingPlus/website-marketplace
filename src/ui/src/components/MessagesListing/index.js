@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 
 import {
@@ -31,7 +32,7 @@ import {
 } from './styles'
 
 import { useLanguage, useUtils, useEvent, OrderList as OrderListController, OrderDetails as OrderDetailsController } from '~components'
-import { Button, getOrderStatus, NotFoundSource, Messages } from '~ui'
+import { Button, generalUtilities, NotFoundSource, Messages } from '~ui'
 
 const OrdersListingUI = (props) => {
   const {
@@ -50,6 +51,8 @@ const OrdersListingUI = (props) => {
   const [events] = useEvent()
   const [{ parseDate, optimizeImage }] = useUtils()
   const deliveryTypes = [1, 7]
+
+  const { getOrderStatus } = generalUtilities()
 
   const handleOrderClick = (e, order) => {
     const isInvalid = e.target.closest('.view-details') || e.target.closest('.driver-selector')

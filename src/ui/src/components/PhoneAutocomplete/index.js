@@ -35,6 +35,7 @@ import {
 import MdcCellphoneAndroid from '@meronex/icons/mdc/MdcCellphoneAndroid'
 
 const PhoneAutocompleteUI = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     phone,
     customerState,
@@ -394,6 +395,6 @@ export const PhoneAutocomplete = (props) => {
   return <PhoneAutocompleteController {...phoneProps} />
 }
 
-PhoneAutocompleteUI.defaultProps = {
+const defaultProps = {
   limitPhoneLength: 10
 }

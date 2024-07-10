@@ -8,6 +8,7 @@ import MdcCloseOctagonOutline from '@meronex/icons/mdc/MdcCloseOctagonOutline'
 import { useForm } from 'react-hook-form'
 import IosSend from '@meronex/icons/ios/IosSend'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   MessagesContainer,
@@ -185,8 +186,7 @@ const MessagesUI = (props) => {
       return
     }
     buttonRef.current.focus()
-    reader.onerror = error => {
-      console.log(error)
+    reader.onerror = () => {
       setAlertState({
         open: true,
         content: t('ERROR_READ_FILE', 'Failed to read file')
