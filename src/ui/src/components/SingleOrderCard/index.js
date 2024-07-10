@@ -229,7 +229,7 @@ const SingleOrderCardUI = (props) => {
             {
               !pastOrders && (
                 <h2>
-                  {isSkeleton ? <Skeleton width={50} /> : parsePrice(order?.business?.length > 1 ? order?.total : order?.summary?.total || order?.total)}
+                  {isSkeleton ? <Skeleton width={50} /> : parsePrice(order?.summary?.total ?? order?.total)}
                 </h2>
               )
             }
