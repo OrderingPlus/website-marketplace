@@ -30,7 +30,7 @@ import {
 
 import {
   formatUrlVideo,
-  convertHoursToMinutes,
+  generalUtilities,
   Modal,
   ScheduleAccordion
 } from '~ui'
@@ -50,6 +50,8 @@ export const BusinessInformationUI = (props) => {
   const [modalImage, setModalImage] = useState(false)
   const [image, setImage] = useState('')
   const theme = useTheme()
+
+  const { convertHoursToMinutes } = generalUtilities()
 
   const hideLocation = theme?.business_view?.components?.information?.components?.location?.hidden
   const hideSchedule = theme?.business_view?.components?.information?.components?.schedule?.hidden

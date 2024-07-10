@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import BsDot from '@meronex/icons/bs/BsDot'
 
@@ -20,7 +21,7 @@ import { OrderEta } from '../OrderDetails/OrderEta'
 import { useLanguage, useUtils, useConfig, useOrder, SingleOrderCard as SingleOrderCardController } from '~components'
 
 import {
-  getOrderStatus,
+  generalUtilities,
   Button,
   Modal,
   Confirm,
@@ -56,6 +57,8 @@ const SingleOrderCardUI = (props) => {
   const [isOrderReviewed, setIsOrderReviewed] = useState(false)
   const [isProductReviewed, setIsProductReviewed] = useState(false)
   const [isDriverReviewed, setIsDriverReviewed] = useState(false)
+
+  const { getOrderStatus } = generalUtilities()
 
   const isGiftCardOrder = !order?.business_id
 

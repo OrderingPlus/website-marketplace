@@ -19,7 +19,7 @@ import {
   Button,
   Modal,
   checkSiteUrl,
-  getOrderStatus,
+  generalUtilities,
   AutoScroll,
   useWindowSize,
   BusinessController,
@@ -48,6 +48,8 @@ const FavoriteListUI = (props) => {
   const [events] = useEvent()
   const [{ site }] = useSite()
   const { width } = useWindowSize()
+
+  const { getOrderStatus } = generalUtilities()
 
   const businessUrlTemplate = checkSiteUrl(site?.business_url_template, '/store/:business_slug')
   const productUrlTemplate = checkSiteUrl(site?.product_url_template, '/store/:business_slug?category=:category_id&product=:product_id')

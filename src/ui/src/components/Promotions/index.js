@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   PromotionsContainer,
@@ -17,7 +18,8 @@ import {
   Code,
   BusinessInfo,
   OfferView,
-  OfferInfoWrapper
+  OfferInfoWrapper,
+  OfferViewList
 } from './styles'
 
 import { PromotionsController, useLanguage, useSite, useUtils, useEvent } from '~components'
@@ -161,11 +163,11 @@ const PromotionsUI = (props) => {
             <h2>
               {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}
             </h2>
-            <div>
+            <OfferViewList>
               {offerSelected?.businesses?.map(business => {
                 return (
                   <SingleBusinessOffer key={business.id}>
-                    <BusinessLogo bgimage={business?.logo} />
+                    <BusinessLogo bgimage={business?.logo ?? theme.images.dummies.businessLogo} />
                     <BusinessInfo>
                       <p>{business.name}</p>
                       <Button
@@ -178,7 +180,7 @@ const PromotionsUI = (props) => {
                   </SingleBusinessOffer>
                 )
               })}
-            </div>
+            </OfferViewList>
           </OfferView>
         </Modal>
       )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 
 import {
@@ -104,23 +105,21 @@ const PaymentOptionWalletUI = (props) => {
                 isBottomBorder={idx === walletsState.result?.length - 1}
               >
                 <SectionLeft>
-                  <Checkbox
-                    name={`payment_option_${wallet.type}`}
-                    id={`custom-checkbox-${idx}`}
-                    disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
-                    checked={checkedState[idx]}
-                    value={`payment_option_${wallet.type}`}
-                    onChange={() => handleOnChange(idx, wallet)}
-                  />
-                  <SectionLeftText>
-                    <label
-                      style={{
-                        color: (cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0 ? theme.colors.darkGray : 'black'
-                      }}
-                      htmlFor={`custom-checkbox-${idx}`}
-                    >
-                      {walletName[wallet.type]?.name}
-                    </label>
+                  <SectionLeftText
+                    htmlFor={`custom-checkbox-${idx}`}
+                    style={{
+                      color: (cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0
+                        ? theme.colors.darkGray
+                        : 'black'
+                    }}
+                  >
+                    <Checkbox
+                      id={`custom-checkbox-${idx}`}
+                      disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
+                      checked={checkedState[idx] ?? false}
+                      onChange={() => handleOnChange(idx, wallet)}
+                    />
+                    {walletName[wallet.type]?.name}
                   </SectionLeftText>
                 </SectionLeft>
                 <div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 
 import {
@@ -21,7 +22,7 @@ import { useLanguage, useUtils, MultiOrdersDetails as MultiOrdersDetailsControll
 
 import {
   NotFoundSource,
-  getOrderStatus,
+  generalUtilities,
   Image,
   Alert,
   SingleOrderCard
@@ -41,6 +42,9 @@ const MultiOrdersDetailsUI = (props) => {
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
+
+  const { getOrderStatus } = generalUtilities()
+
   const progressBarStyle = configs.multi_business_checkout_progress_bar_style?.value
   const showBarInOrder = ['group', 'both']
   const showBarInIndividual = ['individual', 'both']

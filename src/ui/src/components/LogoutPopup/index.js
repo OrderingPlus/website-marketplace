@@ -81,9 +81,7 @@ const LogoutUI = (props) => {
         handleLogoutClick()
         onClose()
       }
-    } catch (error) {
-      console.log(error)
-    }
+    } catch {}
   }
 
   return (

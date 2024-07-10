@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FcCancel from '@meronex/icons/fc/FcCancel'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { parsePhoneNumber } from 'libphonenumber-js'
 import MdClose from '@meronex/icons/md/MdClose'
 import PhoneInput from 'react-phone-number-input'

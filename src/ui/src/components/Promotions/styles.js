@@ -254,3 +254,13 @@ export const OfferView = styled.div`
     }
   }
 `
+
+export const OfferViewList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    font-size: 14px;
+  }
+`

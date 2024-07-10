@@ -6,6 +6,7 @@ import 'react-date-range/dist/theme/default.css'
 import { DateContainer } from './styles'
 
 export const DatePickerUI = props => {
+  props = { ...defaultProps, ...props }
   const { value, onChange, name } = props
 
   return (
@@ -20,6 +21,6 @@ export const DatePickerUI = props => {
   )
 }
 
-DatePickerUI.defaultProps = {
+const defaultProps = {
   name: 'date'
 }

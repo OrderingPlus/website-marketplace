@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaCcStripe from '@meronex/icons/fa/FaCcStripe'
 import FaStripeS from '@meronex/icons/fa/FaStripeS'
 import GrStripe from '@meronex/icons/gr/GrStripe'

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useHistory } from 'react-router-dom'
 
 import settings from '../../config'

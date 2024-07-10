@@ -57,7 +57,6 @@ import {
 export const Header = (props) => {
   const {
     location,
-    isShowOrderOptions,
     isHideSignup,
     isCustomerMode,
     searchValue,
@@ -246,7 +245,7 @@ export const Header = (props) => {
               <img alt='Isotype' width={'35px'} height={'45px'} src={(windowSize.width <= 768 ? theme?.images?.logos?.isotypeInvert : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.isotype)} loading='lazy' />
             </LogoHeader>
           </LeftHeader>
-          {isShowOrderOptions && windowSize.width >= 576 && (
+          {windowSize.width >= 576 && (
             <Menu id='center-side' className='left-header' isCustomerMode={isCustomerMode}>
               {windowSize.width > 850 && isFarAway && (
                 <FarAwayMessage>
@@ -377,13 +376,9 @@ export const Header = (props) => {
               {
                 auth && (
                   <>
-                    {isShowOrderOptions && (
-                      windowSize.width > 768
-                        ? (
-                        <>
-                          {!isMulticheckoutPage
-                            ? (
-                            <CartPopover
+                    {windowSize.width > 768
+                      ? !isMulticheckoutPage
+                          ? <CartPopover
                               open={openPopover.cart}
                               carts={carts}
                               onClick={() => handleTogglePopover('cart')}
@@ -393,18 +388,13 @@ export const Header = (props) => {
                               isCustomerMode={isCustomerMode}
                               setPreorderBusiness={setPreorderBusiness}
                             />
-                              )
-                            : null}
-                        </>
-                          )
-                        : (
-                        <HeaderOption
+                          : null
+                      : <HeaderOption
                           variant='cart'
                           totalCarts={carts?.length}
                           onClick={(variant) => openModal(variant)}
                         />
-                          )
-                    )}
+                    }
                     {windowSize.width > 768 && (
                       <UserPopover
                         withLogout
@@ -427,7 +417,7 @@ export const Header = (props) => {
           </RightHeader>
         )}
       </InnerHeader>
-      {onlineStatus && isShowOrderOptions && !props.isCustomLayout && !isCustomerMode && (
+      {onlineStatus && !props.isCustomLayout && !isCustomerMode && (
         windowSize.width > 768 && windowSize.width <= 820
           ? (
           <SubMenu>
@@ -663,10 +653,6 @@ export const Header = (props) => {
       )}
     </HeaderContainer>
   )
-}
-
-Header.defaultProps = {
-  isShowOrderOptions: true
 }
 
 export default Header

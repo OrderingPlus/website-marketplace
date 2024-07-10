@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import RiUser2Fill from '@meronex/icons/ri/RiUser2Fill'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
@@ -71,8 +72,6 @@ import { OrderHeaderInfoSection } from './OrderHeaderInfoSection'
 
 import {
   getGoogleMapImage,
-  getOrderStatuPickUp,
-  getOrderStatus,
   Button,
   NotFoundSource,
   Modal,
@@ -86,7 +85,8 @@ import {
   ProductItemAccordion,
   TaxInformation,
   Messages,
-  SendGiftCard
+  SendGiftCard,
+  generalUtilities
 } from '~ui'
 
 const OrderDetailsUI = (props) => {
@@ -130,6 +130,9 @@ const OrderDetailsUI = (props) => {
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
   const [isShowBusinessLogo, setIsShowBusinessLogo] = useState(true)
+
+  const { getStatusPrefix } = generalUtilities()
+
   const { order, loading, businessData, error } = props.order
   const yourSpotString = order?.delivery_type === 3 ? t('TABLE_NUMBER', 'Table number') : t('SPOT_NUMBER', 'Spot number')
   const acceptedStatus = [1, 2, 5, 6, 10, 11, 12, 15]
@@ -401,7 +404,7 @@ const OrderDetailsUI = (props) => {
   const disableLeftButton = [1, 2, 5, 15, 16, 17, 20, 21]
   const disableRightButton = [1, 2, 5, 15, 16, 17, 21]
 
-  const progressBarObjt = order?.delivery_type && order?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+  const isPickup = order?.delivery_type && order?.delivery_type === 2
 
   return (
     <Container>
@@ -518,9 +521,9 @@ const OrderDetailsUI = (props) => {
                   )}
                   {!hideDeliveryProgress && !isGiftCardOrder && (
                     <>
-                      <StatusBar percentage={progressBarObjt(order?.status)?.percentage} />
+                      <StatusBar percentage={getStatusPrefix({ status: order?.status, isPickup })?.percentage} />
                       <OrderStatusAndLinkContainer>
-                        <p className='order-status'>{progressBarObjt(order?.status)?.value}</p>
+                        <p className='order-status'>{getStatusPrefix({ status: order?.status, isPickup })?.value}</p>
                         <LinkWrapper>
                           <ReviewOrderLink
                             active
@@ -597,7 +600,7 @@ const OrderDetailsUI = (props) => {
                                 onClick={() => handleChangeOrderStatus(20)}
                                 disabled={disableLeftButton.includes(order?.status)}
                               >
-                                {progressBarObjt(20)?.value}
+                                {getStatusPrefix({ status: 20, isPickup })?.value}
                               </Button>
                             </div>
                             <div>
@@ -607,7 +610,7 @@ const OrderDetailsUI = (props) => {
                                 disabled={disableRightButton.includes(order?.status)}
                                 onClick={() => handleChangeOrderStatus(21)}
                               >
-                                {progressBarObjt(21)?.value}
+                                {getStatusPrefix({ status: 21, isPickup })?.value}
                               </Button>
                             </div>
                           </BtsOrderStatus>

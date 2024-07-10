@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import IosRadioButtonOff from '@meronex/icons/ios/IosRadioButtonOff'
 import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
 import MdClose from '@meronex/icons/md/MdClose'

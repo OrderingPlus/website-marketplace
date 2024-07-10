@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { PaymentRequestButtonElement, useStripe } from '@stripe/react-stripe-js'
 import { CardForm as CardFormController, useConfig, useLanguage } from '~components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Container } from './styles'
 export const StripeMethodFormUI = (props) => {
   const {

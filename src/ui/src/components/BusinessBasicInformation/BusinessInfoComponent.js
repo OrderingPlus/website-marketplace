@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { StarFill, Facebook, Tiktok, Pinterest, Whatsapp, Instagram, Snapchat } from 'react-bootstrap-icons'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 
 import {
@@ -24,10 +25,10 @@ import {
   BusinessReservation,
   Button,
   Modal,
-  convertHoursToMinutes,
   lightenDarkenColor,
   shape,
-  useWindowSize
+  useWindowSize,
+  generalUtilities
 } from '~ui'
 
 export const BusinessInfoComponent = (props) => {
@@ -55,6 +56,8 @@ export const BusinessInfoComponent = (props) => {
   const [, t] = useLanguage()
   const windowSize = useWindowSize()
   const [openReservations, setOpenReservations] = useState(false)
+  const { convertHoursToMinutes } = generalUtilities()
+
   const hideDeliveryFee = theme?.business_view?.components?.header?.components?.business?.components?.fee?.hidden
   const hideTime = theme?.business_view?.components?.header?.components?.business?.components?.time?.hidden
   const hideReviews = theme?.business_view?.components?.header?.components?.business?.components?.reviews?.hidden

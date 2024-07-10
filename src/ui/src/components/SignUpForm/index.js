@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import parsePhoneNumber from 'libphonenumber-js'
 import OtpInput from 'react-otp-input'
 import { formatPhoneNumber } from 'react-phone-number-input'
@@ -697,7 +698,6 @@ const SignUpFormUI = (props) => {
                   <GoogleLoginButton
                     initParams={initParams}
                     handleSuccessGoogleLogin={handleSuccessGoogle}
-                    onFailure={(data) => console.log('onFailure', data)}
                   />
                 )}
               </SocialButtons>

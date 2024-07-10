@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import parsePhoneNumber from 'libphonenumber-js'
 import { useTheme } from 'styled-components'
 import AiOutlineEye from '@meronex/icons/ai/AiOutlineEye'
