@@ -9,6 +9,7 @@ import 'swiper/css/navigation'
 
 import { nanoid } from 'nanoid'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 import BsCaretLeftFill from '@meronex/icons/bs/BsCaretLeftFill'
 import { ChevronLeft, ChevronRight, ChevronDown } from 'react-bootstrap-icons'

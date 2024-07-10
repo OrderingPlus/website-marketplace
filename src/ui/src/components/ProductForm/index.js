@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { nanoid } from 'nanoid'
 import { useTheme } from 'styled-components'
 import FiMinusCircle from '@meronex/icons/fi/FiMinusCircle'
@@ -77,6 +78,7 @@ import {
 } from '~ui'
 
 const ProductOptionsUI = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     businessSlug,
     editMode,
@@ -895,6 +897,6 @@ export const ProductForm = (props) => {
   )
 }
 
-ProductForm.defaultProps = {
+const defaultProps = {
   productAddedToCartLength: 0
 }

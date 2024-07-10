@@ -66,6 +66,7 @@ const RedeemGiftCardUI = (props) => {
             <Controller
               name='code'
               control={control}
+              defaultValue={codeRef.current ?? ''}
               render={({ onChange, value }) => (
                 <Input
                   placeholder='XXXX-XXXX-XXXX-XXXX'

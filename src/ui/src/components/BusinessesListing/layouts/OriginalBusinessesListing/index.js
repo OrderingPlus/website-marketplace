@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components'
 import FiMap from '@meronex/icons/fi/FiMap'
 import FiFilter from '@meronex/icons/fi/FiFilter'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   BusinessContainer,

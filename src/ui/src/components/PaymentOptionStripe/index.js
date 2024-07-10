@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import IosRadioButtonOn from '@meronex/icons/ios/IosRadioButtonOn'
 import IosRadioButtonOff from '@meronex/icons/ios/IosRadioButtonOff'
 import { Trash } from 'react-bootstrap-icons'

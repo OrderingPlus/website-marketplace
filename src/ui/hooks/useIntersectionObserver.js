@@ -13,9 +13,7 @@ export function useIntersectionObserver () {
     const loadPollyFill = async () => {
       try {
         await import('intersection-observer')
-      } catch (error) {
-        console.log(error)
-      }
+      } catch {}
     }
     if (!window.IntersectionObserver) loadPollyFill()
 

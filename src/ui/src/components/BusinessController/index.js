@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import BiCar from '@meronex/icons/bi/BiCar'
 import BiBasket from '@meronex/icons/bi/BiBasket'
@@ -37,7 +38,7 @@ import {
   LoginForm,
   SignUpForm,
   ForgotPasswordForm,
-  convertHoursToMinutes,
+  generalUtilities,
   lightenDarkenColor,
   shape
 } from '~ui'
@@ -79,6 +80,8 @@ const BusinessControllerUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalPageToShow, setModalPageToShow] = useState(null)
+
+  const { convertHoursToMinutes } = generalUtilities()
 
   const favoriteRef = useRef(null)
   const businessRows = theme?.business_listing_view?.components?.layout?.rows
