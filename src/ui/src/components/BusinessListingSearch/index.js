@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import { Check2, XLg as Close, Funnel } from 'react-bootstrap-icons'
 import GoPrimitiveDot from '@meronex/icons/go/GoPrimitiveDot'
@@ -46,7 +47,7 @@ import {
   AutoScroll,
   BusinessTypeFilter,
   MyOrders,
-  convertHoursToMinutes,
+  generalUtilities,
   Button,
   SingleProductCard,
   NotFoundSource,
@@ -86,8 +87,9 @@ export const BusinessListingSearchUI = (props) => {
   const [{ auth }] = useSession()
   const { width } = useWindowSize()
   const [{ configs }] = useConfig()
+  const { convertHoursToMinutes } = generalUtilities()
+
   const maxDeliveryFeeOptions = [15, 25, 35, 'default']
-  // const maxProductPriceOptions = [5, 10, 15, 'default']
   const currency = configs.format_number_currency?.value
   const maxDistanceOptions = configs?.distance_unit?.value === 'km' ? [1000, 2000, 5000, 'default'] : [1609, 3218, 8046, 'default']
   const maxTimeOptions = [5, 15, 30, 'default']

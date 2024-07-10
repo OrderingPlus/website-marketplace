@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import VscWarning from '@meronex/icons/vsc/VscWarning'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import parsePhoneNumber from 'libphonenumber-js'
 import { useHistory } from 'react-router-dom'

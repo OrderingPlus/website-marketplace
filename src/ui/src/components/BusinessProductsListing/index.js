@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { ArrowLeft, Cart3 } from 'react-bootstrap-icons'

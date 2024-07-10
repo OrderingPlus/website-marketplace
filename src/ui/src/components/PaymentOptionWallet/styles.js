@@ -17,10 +17,10 @@ export const SectionLeft = styled.div`
   align-items: center;
 `
 
-export const SectionLeftText = styled.div`
+export const SectionLeftText = styled.label`
   display: flex;
-  flex-direction: column;
-  margin-left: 10px;
+  align-items: center;
+  gap: 10px;
 `
 
 export const SectionWrapper = styled.div`

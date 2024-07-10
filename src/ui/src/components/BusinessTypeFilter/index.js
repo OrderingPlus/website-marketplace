@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { XLg as Close } from 'react-bootstrap-icons'
 import { useTheme } from 'styled-components'
 

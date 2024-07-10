@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import BsFillStarFill from '@meronex/icons/bs/BsFillStarFill'
 import { StarFill } from 'react-bootstrap-icons'
 

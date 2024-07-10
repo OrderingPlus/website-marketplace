@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components'
 import parsePhoneNumber from 'libphonenumber-js'
 import OtpInput from 'react-otp-input'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import {
   Envelope,
   Lock,

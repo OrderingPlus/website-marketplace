@@ -180,7 +180,6 @@ import {
   calendarLanguages,
   capitalize,
   checkSiteUrl,
-  convertHoursToMinutes,
   convertToRadian,
   fieldsToSort,
   findExitingCode,
@@ -194,8 +193,6 @@ import {
   getHourMin,
   getIconCard,
   getLocale,
-  getOrderStatus,
-  getOrderStatuPickUp,
   getStarWidth,
   getTimes,
   getTraduction,
@@ -208,7 +205,8 @@ import {
   scrollTo,
   shape,
   sortInputFields,
-  verifyDecimals
+  verifyDecimals,
+  generalUtilities
 } from './utils'
 
 export {
@@ -408,7 +406,6 @@ export {
   calendarLanguages,
   capitalize,
   checkSiteUrl,
-  convertHoursToMinutes,
   convertToRadian,
   fieldsToSort,
   findExitingCode,
@@ -422,8 +419,6 @@ export {
   getHourMin,
   getIconCard,
   getLocale,
-  getOrderStatus,
-  getOrderStatuPickUp,
   getStarWidth,
   getTimes,
   getTraduction,
@@ -436,5 +431,6 @@ export {
   scrollTo,
   shape,
   sortInputFields,
-  verifyDecimals
+  verifyDecimals,
+  generalUtilities
 }
