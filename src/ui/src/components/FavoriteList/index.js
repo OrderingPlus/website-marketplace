@@ -230,6 +230,7 @@ const FavoriteListUI = (props) => {
                       businessDistance={business?.distance}
                       handleUpdateBusinessList={handleUpdateFavoriteList}
                       firstCard={i === 0 && width > 681}
+                      m={'30px 10px'}
                     />
                   ))}
                   {favoriteList?.loading && (
@@ -271,20 +272,18 @@ const FavoriteListUI = (props) => {
               )}
               {isOrder && (
                 <>
-                  {
-                    !favoriteList?.loading && favoriteList?.favorites?.map((order, i) => (
-                      <SingleOrderCard
-                        key={`${order?.id}_${i}`}
-                        order={order}
-                        onRedirectPage={onRedirectPage}
-                        getOrderStatus={getOrderStatus}
-                        pastOrders={pastOrders.includes(order?.status)}
-                        handleReorder={handleReorder}
-                        handleUpdateOrderList={handleUpdateFavoriteList}
-                        isFavorite
-                      />
-                    ))
-                  }
+                  {!favoriteList?.loading && favoriteList?.favorites?.map((order, i) => (
+                    <SingleOrderCard
+                      key={`${order?.id}_${i}`}
+                      order={order}
+                      onRedirectPage={onRedirectPage}
+                      getOrderStatus={getOrderStatus}
+                      pastOrders={pastOrders.includes(order?.status)}
+                      handleReorder={handleReorder}
+                      handleUpdateOrderList={handleUpdateFavoriteList}
+                      mrOrders={0}
+                      isFavorite
+                    />))}
                   {favoriteList?.loading && (
                     [...Array(5).keys()].map(i => (
                       <SingleOrderCard

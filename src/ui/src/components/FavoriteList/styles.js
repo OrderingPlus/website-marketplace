@@ -39,9 +39,10 @@ export const FavoriteListing = styled.div`
   box-sizing: border-box;
   align-items: center;
   #favorite {
+    gap: 15px;
     > div {
-      width: calc(100vw - 40px);
-      min-width: calc(100vw - 40px);
+      width: calc(100vw - 50px);
+      min-width: calc(100vw - 50px);
 
       @media (min-width: 681px) {
         width: calc(50vw - 40px);

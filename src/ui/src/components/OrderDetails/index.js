@@ -45,7 +45,8 @@ import {
   ProfessionalBlock,
   PlaceSpotWrapper,
   PoweredByOrdering,
-  ValidationText
+  ValidationText,
+  OrderClonnedMessage
 } from './styles'
 
 import {
@@ -468,6 +469,12 @@ const OrderDetailsUI = (props) => {
                         </p>
                       </>
                     )}
+                    {order?.reservation && order?.delivery_type === 9 && (
+                      <>
+                        <p className='date'>{t('RESERVATION_SCHEDULED_TO', 'Reservation scheduled to')}: {parseDate(order?.reserve_date)}</p>
+                        <p>{order?.reservation?.guests_reservation} {t('GUESTS', 'Guests')}</p>
+                      </>
+                    )}
                     {(acceptedStatus.includes(parseInt(order?.status, 10)) ||
                       !isOriginalLayout
                     ) && !isGiftCardOrder &&
@@ -503,6 +510,11 @@ const OrderDetailsUI = (props) => {
                         <span>{order?.debug_payment_response?.message}</span>
                       </ValidationText>
                     </div>
+                  )}
+                  {!!order?.cloned_order_id && (
+                    <OrderClonnedMessage>
+                      <p>{t('ORDER_CLONNED_INFORMATION', 'Your orden has been cloned due a missing item, no extra charges will be made, for more information, please contact the store')}</p>
+                    </OrderClonnedMessage>
                   )}
                   {!hideDeliveryProgress && !isGiftCardOrder && (
                     <>

@@ -67,7 +67,6 @@ export const ContentInfo = styled.div`
         text-decoration: underline;
       }
     }
-
     .clear-cart {
       user-select: none;
       color: #d81212;
@@ -108,6 +107,10 @@ export const ContentInfo = styled.div`
 
   span {
     cursor: pointer;
+  }
+
+  span.danger{
+    color: ${({ theme }) => theme?.colors?.danger500};
   }
 
   h2, span {

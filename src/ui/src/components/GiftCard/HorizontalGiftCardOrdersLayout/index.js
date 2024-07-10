@@ -37,24 +37,10 @@ const HorizontalGiftCardOrdersLayoutUI = (props) => {
                 <ProductsList>
                   <AutoScroll scrollId={scrollId}>
                     {giftCards.loading
-                      ? (
-                          [...Array(10).keys()].map(i => (
-                        <SingleGiftCard
-                          isSkeleton
-                          key={i}
-                        />
-                          ))
-                        )
-                      : (
-                      <>
-                        {giftCards.list.map(card => (
-                          <SingleGiftCard
-                            key={card.id}
-                            card={card}
-                          />
-                        ))}
-                      </>
-                        )}
+                      ? [...Array(10).keys()].map(i => (
+                          <SingleGiftCard isSkeleton key={i} />))
+                      : giftCards.list.map(card => (
+                          <SingleGiftCard key={card.id} card={card} />))}
                   </AutoScroll>
                 </ProductsList>
               </ProductsListContainer>

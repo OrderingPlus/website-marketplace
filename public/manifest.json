@@ -4,8 +4,8 @@
   "description": "Food ordering app by ordering.inc",
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "16x16",
+      "src": "/favicon.png",
+      "sizes": "200x200",
       "type": "image/x-icon"
     },
     {
@@ -30,82 +30,19 @@
     },
     {
       "src": "icon-192x192.png",
-      "sizes": "196x196",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/splashscreens/apple_splash_1170.png",
-      "type": "image/png",
-      "sizes": "1170x2532"
-    },
-    {
-      "src": "/splashscreens/apple_splash_750_new.png",
-      "type": "image/png",
-      "sizes": "750x1334"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1125_new.png",
-      "type": "image/png",
-      "sizes": "1125x2436"
-    },
-    {
-      "src": "/splashscreens/apple_splash_828_new.png",
-      "type": "image/png",
-      "sizes": "828x1792"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1290_new.png",
-      "type": "image/png",
-      "sizes": "1290x2796"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1179_new.png",
-      "type": "image/png",
-      "sizes": "1179x2556"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1284_new.png",
-      "type": "image/png",
-      "sizes": "1284x2777"
-    },
-    {
-      "src": "/splashscreens/apple_splash_2048_new.png",
-      "type": "image/png",
-      "sizes": "2048x2729"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1668_new_2.png",
-      "type": "image/png",
-      "sizes": "1668x2388"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1640_new.png",
-      "type": "image/png",
-      "sizes": "1640x2360"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1668_new.png",
-      "type": "image/png",
-      "sizes": "1668x2222"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1620_new.png",
-      "type": "image/png",
-      "sizes": "1620x2160"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1536_new.png",
-      "type": "image/png",
-      "sizes": "1536x2048"
-    },
-    {
-      "src": "/splashscreens/apple_splash_1488_new.png",
-      "type": "image/png",
-      "sizes": "1487x2266"
-    }
+      "src": "/splashscreens/icon-384x384.png",
+      "sizes": "384x384",
+       "type": "image/png",
+       "form_factor": "wide",
+       "label": "Application"
+     }
   ],
   "start_url": "/",
   "display": "standalone",

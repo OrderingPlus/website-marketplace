@@ -304,8 +304,8 @@ export const shape = {
  * @param {*} schedule = schedule list
  * @param {*} is12Hours = variable for time format
  */
-export const getTimes = (selectedDate, schedule, is12Hours) => {
-  const date = new Date()
+export const getTimes = (selectedDate, schedule, is12Hours, options) => {
+  const date = options?.preorderLeadTime ? new Date(new Date().getTime() + options?.preorderLeadTime * 60000) : new Date()
   const times = []
   for (let k = 0; k < schedule[selectedDate.getDay()].lapses.length; k++) {
     const open = {

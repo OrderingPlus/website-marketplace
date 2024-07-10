@@ -13,24 +13,14 @@ export const Container = styled.div`
   border-radius: 8px;
 
   ${props => props.theme.rtl
-? css`
-    margin-left: 15px;
-  `
-: css`
-    margin-right: 15px;
-  `}
+    ? css`margin-left: 15px;`
+    : css`margin-right: ${({ mr }) => mr ?? 15}px;`}
 
   > span {
     display: flex;
   }
 
-  ${({ isCustomerMode }) => isCustomerMode
-? css`
-    min-width: 300px;
-    width: 300px;
-    display: inline-block;
-  `
-: css`
+  ${(props) => !props.disabledWidthConfig && css`
     min-width: ${({ w }) => w ?? 380}px;
     width: ${({ w }) => w ?? 380}px;
     height: ${({ isBusinessesPage }) => isBusinessesPage && '300px'};
@@ -98,7 +88,7 @@ export const Content = styled.div`
 `
 
 export const Price = styled.div`
-  width: 35%;
+  width: 40%;
 
   ${({ isCustomerMode }) => isCustomerMode
 ? css`

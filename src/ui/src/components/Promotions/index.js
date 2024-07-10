@@ -102,9 +102,9 @@ const PromotionsUI = (props) => {
       )}
       {!offersState?.loading && offersState.offers?.length > 0 && filteredOffers?.map(offer => (
         <SingleOfferContainer key={offer.id}>
-          <OfferInfoWrapper>
+          <OfferInfoWrapper id='offer-wrap'>
             <BusinessLogo bgimage={offer?.image || theme.images?.dummies?.businessLogo} />
-            <OfferInformation>
+            <OfferInformation id='offer-info'>
               <h2>{offer?.name}</h2>
               <Description>{offer?.description}</Description>
               <ExpiresAt>

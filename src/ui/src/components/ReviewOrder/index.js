@@ -126,18 +126,14 @@ const ReviewOrderUI = (props) => {
       <LogoAndReviewWrapper>
         <WrapperBusinessLogo isMulti={order?.business?.length > 1}>
           {order?.business?.length > 1
-            ? (
-            <MultiLogosContainer>
-              {order?.business?.map((business, i) => (
-                <React.Fragment key={business?.id}>
-                  <BusinessLogo isMulti bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
-                </React.Fragment>
-              ))}
-            </MultiLogosContainer>
-              )
-            : (
-            <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
-              )}
+            ? <MultiLogosContainer>
+                {order?.business?.map((business, i) => (
+                  <React.Fragment key={business?.id}>
+                    <BusinessLogo isMulti bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
+                  </React.Fragment>
+                ))}
+              </MultiLogosContainer>
+            : <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />}
         </WrapperBusinessLogo>
         <ReviewsProgressWrapper>
           <p>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</p>
@@ -173,9 +169,7 @@ const ReviewOrderUI = (props) => {
                 initialIcon
               >
                 {commentItem.content}
-                {
-                  isSelectedComment(commentItem?.key) && <MdClose />
-                }
+                {isSelectedComment(commentItem?.key) && <MdClose />}
               </CommentButton>
             ))
           }
@@ -200,9 +194,7 @@ const ReviewOrderUI = (props) => {
             className='review-sent'
           >
             {!formState.loading
-              ? (
-              <ContinueContainer><p>{t('CONTINUE', 'Continue')}</p><BsArrowRight /></ContinueContainer>
-                )
+              ? <ContinueContainer><p>{t('CONTINUE', 'Continue')}</p><BsArrowRight /></ContinueContainer>
               : t('LOADING', 'Loading')}
           </Button>
         </Send>

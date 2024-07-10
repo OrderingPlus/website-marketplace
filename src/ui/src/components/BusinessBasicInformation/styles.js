@@ -324,13 +324,13 @@ export const BusinessDetail = styled.div`
 
 export const BusinessMoreDetail = styled.div`
   ${({ position }) => position
-? css`
+    ? css`
     width: 100% !important;
     justify-content: flex-end !important;
     top: 0px;
     right: 0px;
   `
-: css`
+    : css`
     top: 30px;
     right: 30px;
   `}
@@ -375,31 +375,31 @@ export const TitleWrapper = styled.div`
       padding: 10px 0;
       font-size: 18px;
       ${({ isCustomLayout }) => !isCustomLayout
-? css`
+    ? css`
         width: calc(100vw - 230px);
         ${props => props.theme?.rtl
-? css`
+        ? css`
         right: 50px;
         `
-: css`
+        : css`
         left: 50px;
         `}
       `
-: css`
+    : css`
       ${props => props.theme?.rtl
-? css`
+        ? css`
           right: 10px;
           `
-: css`
+        : css`
           left: 10px;
         `}
       `}
       ${({ disableLeftSpace }) => disableLeftSpace && css`
       ${props => props.theme?.rtl
-? css`
+      ? css`
           right: 48px;
           `
-: css`
+      : css`
           left: 48px;
         `}
       `}
@@ -582,5 +582,14 @@ export const BackButton = styled.div`
     svg {
       margin-right: 10px;
     }
+  }
+`
+
+export const SearchContainer = styled.div`
+  > button {
+    margin-top: 10px;
+    color: ${({ theme }) => theme?.colors?.primary};
+    background: ${({ theme }) => theme?.colors?.backgroundInfo};
+    min-width: 200px;
   }
 `
