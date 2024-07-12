@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const Container = styled.div`
   margin-top: 50px;
@@ -20,23 +20,26 @@ export const TitleWrapper = styled.div`
 `
 export const ActionWrapper = styled.div`
   display: flex;
+  gap: 10px;
   > button {
     height: 44px;
-    &:first-child {
-      ${props => props.theme?.rtl
-        ? css`margin-left: 20px;`
-        : css`margin-right: 20px;`}
-    }
+
     &.light {
       border: 1px solid ${props => props.theme.colors.primaryContrast};
       background: ${props => props.theme.colors.primaryContrast};
-      margin: 0 20px;
       &:hover {
         background: ${props => props.theme.colors.primary};
       }
     }
-    @media (max-width: 512px) {
+    @media (max-width: 853px) {
       font-size: 12px;
     }
+  }
+
+  @media (min-width: 768px) {
+    justify-content: space-between;
+  }
+  @media (max-width: 400px) {
+    justify-content: space-between;
   }
 `
