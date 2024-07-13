@@ -14,7 +14,8 @@ import {
   IconContainer,
   NoValidProductMessage,
   DriverTipContainer,
-  SpinnerCart
+  SpinnerCart,
+  ReservationAlert
 } from './styles'
 
 import {
@@ -89,8 +90,7 @@ const CartUI = (props) => {
     forceHideCoupon,
     forceHideUpselling,
     forceHideBusiness,
-    forcehideDriverTypes,
-    hasCartReservation
+    forcehideDriverTypes
   } = props
 
   const theme = useTheme()
@@ -323,7 +323,6 @@ const CartUI = (props) => {
             isMultiCheckout={isMultiCheckout}
             isGiftCart={!cart?.business_id}
             forceHideBusiness={forceHideBusiness}
-            hasCartReservation={hasCartReservation}
             cartReservation={cart?.reservation}
           >
             {cart?.products?.length > 0 && cart?.products.map(product => (
@@ -671,6 +670,11 @@ const CartUI = (props) => {
                   {...cateringValues}
                 />
               </div>
+            )}
+            {hasNoReservation && (
+              <ReservationAlert>
+                <p>{t('MISSING_RESERVATION', 'Missing reservation')}: {t('MISSING_RESERVATION_ALERT', 'Please press the reservation button and configure your reservation before to continue')}</p>
+              </ReservationAlert>
             )}
             {!forceHideCheckoutButton && (onClickCheckout || isForceOpenCart) && !isCheckout && cart?.valid && (!isMultiCheckout || isStore || !cart?.business_id) && (
               <CheckoutAction>

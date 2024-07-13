@@ -191,10 +191,10 @@ export const SavedContainer = styled.span`
 
 export const SpotSelect = styled.select`
   ${({ isCheckout }) => isCheckout
-? css`
+    ? css`
     background: ${props => props.theme?.colors.backgroundPage};
   `
-: css`
+    : css`
     background: ${props => props.theme?.colors.grayDividerColor};
   `}
   border-radius: 7.6px;
@@ -251,4 +251,10 @@ export const WarningText = styled.p`
   margin: 10px auto;
   text-align: center;
   color: ${props => props.theme.colors.primary};
+`
+
+export const ReservationAlert = styled.div`
+  p{
+    color: ${props => props.theme?.colors?.danger500};
+  }
 `

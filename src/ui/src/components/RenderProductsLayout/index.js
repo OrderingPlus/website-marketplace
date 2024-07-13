@@ -21,7 +21,7 @@ import {
   BackButton
 } from './styles'
 
-import { useLanguage, useConfig, useUtils } from '~components'
+import { useLanguage, useConfig, useUtils, useOrder } from '~components'
 import { SpinnerCart } from '../Cart/styles'
 import { SearchIconWrapper } from '../BusinessBasicInformation/styles'
 
@@ -96,6 +96,7 @@ export const RenderProductsLayout = (props) => {
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
+  const [orderState] = useOrder()
   const windowSize = useWindowSize()
   const [isCartModal, setisCartModal] = useState(false)
   const [openSearchProducts, setOpenSearchProducts] = useState(false)
@@ -318,7 +319,7 @@ export const RenderProductsLayout = (props) => {
                 {(windowSize.width >= 1000 && windowSize.height >= 600) && showCartOnProductList && (
                   <BusinessCartContainer isProfessional={business?.professionals?.length > 0 && !useKioskApp}>
                     <BusinessCartContent maxHeight={window.innerHeight - 100}>
-                      {currentCart?.products?.length > 0
+                      {currentCart?.products?.length > 0 || (currentCart?.reservation && orderState?.options?.type === 9)
                         ? (
                           <>
                             <Title>{t('YOUR_CART', 'Your cart')}</Title>
@@ -326,6 +327,7 @@ export const RenderProductsLayout = (props) => {
                               isStore
                               isCustomMode
                               isForceOpenCart
+                              forceHideCheckoutButton
                               useKioskApp={useKioskApp}
                               cart={currentCart}
                               isCartPending={currentCart?.status === 2}

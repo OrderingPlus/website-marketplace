@@ -44,7 +44,6 @@ export const BusinessItemAccordion = (props) => {
     isMultiCheckout,
     isGiftCart,
     forceHideBusiness,
-    hasCartReservation,
     cartReservation
   } = props
 
@@ -71,7 +70,7 @@ export const BusinessItemAccordion = (props) => {
   const viewString = isStore ? 'business_view' : 'header'
   const hideBusinessLogo = isGiftCart || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
   const hideBusinessTime = theme?.[viewString]?.components?.cart?.components?.business?.components?.time?.hidden
-  const isValidReservation = !cartReservation || momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD HH:mm:ss') > momentjs().format('YYYY-MM-DD HH:mm:ss')
+  const isValidReservation = cartReservation && momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD HH:mm:ss') > momentjs().format('YYYY-MM-DD HH:mm:ss')
   const toggleAccordion = (e) => {
     const isActionsClick = businessStore.current?.contains(e?.target) || businessDelete.current?.contains(e?.target) || changeStore.current?.contains(e?.target)
     if (isClosed || !isProducts || isActionsClick) return
@@ -80,6 +79,9 @@ export const BusinessItemAccordion = (props) => {
       setActive === 'active' ? 'accordion__icon' : 'accordion__icon rotate'
     )
   }
+  const showButton = orderState?.options?.type !== 9
+    ? setActive === 'active' && !!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled
+    : isValidReservation
 
   const activeAccordion = (value) => {
     setActiveState(value ? 'active' : '')
@@ -201,7 +203,7 @@ export const BusinessItemAccordion = (props) => {
                           {t('GO_TO_STORE', 'Go to store')}
                         </span>
                       )}
-                      {!isClosed && !!isProducts && !isCartPending && (
+                      {!isClosed && (!!isProducts || (cartReservation && orderState?.options?.type === 9)) && !isCartPending && (
                         <>
                           {!isStore && !isGiftCart && <span>•</span>}
                           <span
@@ -214,7 +216,7 @@ export const BusinessItemAccordion = (props) => {
                         </>
                       )}
                     </div>
-                    {isBusinessChangeEnabled && handleChangeStore && !isGiftCart && (
+                    {!cartReservation && isBusinessChangeEnabled && handleChangeStore && !isGiftCart && (
                       <span
                       ref={changeStore}
                         onClick={handleChangeStore}
@@ -251,7 +253,7 @@ export const BusinessItemAccordion = (props) => {
             ref={content}
             style={{ minHeight: `${setHeight}`, maxHeight: !setActive && '0px' }}
             >
-            {isBusinessChangeEnabled && isCheckout && handleChangeStore && (
+            {!cartReservation && isBusinessChangeEnabled && isCheckout && handleChangeStore && (
               <BusinessInfo>
                 <ContentInfo className='info'>
                   <span
@@ -266,7 +268,7 @@ export const BusinessItemAccordion = (props) => {
             )}
             {props.children}
           </AccordionContent>
-          {setActive === 'active' && !isClosed && ((!!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled) || (hasCartReservation && isValidReservation)) && (
+          {!isClosed && !isCheckout && showButton && (
             <PriceContainer>
               <h4>{parsePrice(total)}</h4>
               <Button onClick={() => handleClickCheckout(uuid)} color='primary'>{t('CHECKOUT', 'Checkout')}</Button>
