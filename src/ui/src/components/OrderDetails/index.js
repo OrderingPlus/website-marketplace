@@ -405,6 +405,7 @@ const OrderDetailsUI = (props) => {
   const disableRightButton = [1, 2, 5, 15, 16, 17, 21]
 
   const isPickup = order?.delivery_type && order?.delivery_type === 2
+  const isReservation = order?.delivery_type === 9
 
   return (
     <Container>
@@ -415,7 +416,13 @@ const OrderDetailsUI = (props) => {
               <>
                 <OrderInfo>
                   <TitleContainer>
-                    <OrderIdSec>{isService ? t('APPOINTMENT', 'Appointment') : t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} {(changeIdToExternalId && order?.external_id) || `#${order?.id}`}</OrderIdSec>
+                    <OrderIdSec>{
+                      isReservation
+                        ? t('RESERVATION', 'Reservation')
+                        : isService
+                          ? t('APPOINTMENT', 'Appointment')
+                          : t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} {(changeIdToExternalId && order?.external_id) || `#${order?.id}`}
+                    </OrderIdSec>
                     {enabledPoweredByOrdering && (
                       <PoweredByOrdering>
                         {t('POWERED_BY', 'Powered by')}
@@ -462,9 +469,9 @@ const OrderDetailsUI = (props) => {
                         <p className='date'>
                           {activeStatus.includes(order?.status)
                             ? (
-                            <>
-                              {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`} />
-                            </>
+                              <>
+                                {cateringTypes.includes(order?.delivery_type) ? `${t('PLACED_TO', 'Placed to')}:` : ''} <OrderEta order={order} outputFormat={`YYYY-MM-DD ${configs?.general_hour_format?.value}`} />
+                              </>
                               )
                             : (
                                 parseDate(order?.reporting_data?.at[`status:${order.status}`], { outputFormat: `YYYY-MM-DD ${configs?.general_hour_format?.value}` })
@@ -716,10 +723,10 @@ const OrderDetailsUI = (props) => {
                       <div className='photo'>
                         {order?.driver?.photo
                           ? (
-                          <PhotoBlock src={order?.driver?.photo} />
+                            <PhotoBlock src={order?.driver?.photo} />
                             )
                           : (
-                          <RiUser2Fill />
+                            <RiUser2Fill />
                             )}
                       </div>
                     )}
@@ -772,24 +779,24 @@ const OrderDetailsUI = (props) => {
               <HeaderTitle>
                 {!showStarbucksHeader
                   ? (
-                  <>
-                    <OrderHeaderInfoSection isService={isService} />
-                    <OrderActionsSection
-                      userCustomerId={userCustomerId}
-                      isService={isService}
-                      handleGoToPage={handleGoToPage}
-                    />
-                  </>
+                    <>
+                      <OrderHeaderInfoSection isService={isService} />
+                      <OrderActionsSection
+                        userCustomerId={userCustomerId}
+                        isService={isService}
+                        handleGoToPage={handleGoToPage}
+                      />
+                    </>
                     )
                   : (
-                  <div
-                    style={{ display: 'flex', flexDirection: 'column' }}
-                  >
-                    <OrderPreferencesSection
-                      order={order}
-                      placeSpotTypes={placeSpotTypes}
-                    />
-                  </div>
+                    <div
+                      style={{ display: 'flex', flexDirection: 'column' }}
+                    >
+                      <OrderPreferencesSection
+                        order={order}
+                        placeSpotTypes={placeSpotTypes}
+                      />
+                    </div>
                     )}
               </HeaderTitle>
               {!showStarbucksHeader && sortedProductList}
@@ -855,16 +862,16 @@ const OrderDetailsUI = (props) => {
       {!loading && error && (
         error.includes('ERROR_ACCESS_EXPIRED')
           ? (
-          <NotFoundSource
-            content={t(error[0], 'Sorry, the order has expired.')}
-          />
+            <NotFoundSource
+              content={t(error[0], 'Sorry, the order has expired.')}
+            />
             )
           : (
-          <NotFoundSource
-            content={t('NOT_FOUND_ORDER', theme?.defaultLanguages?.NOT_FOUND_ORDER || 'Sorry, we couldn\'t find the requested order.')}
-            btnTitle={t('ORDERS_REDIRECT', theme?.defaultLanguages?.ORDERS_REDIRECT || 'Go to Orders')}
-            onClickButton={handleOrderRedirect}
-          />
+            <NotFoundSource
+              content={t('NOT_FOUND_ORDER', theme?.defaultLanguages?.NOT_FOUND_ORDER || 'Sorry, we couldn\'t find the requested order.')}
+              btnTitle={t('ORDERS_REDIRECT', theme?.defaultLanguages?.ORDERS_REDIRECT || 'Go to Orders')}
+              onClickButton={handleOrderRedirect}
+            />
             )
       )}
       {
@@ -886,29 +893,29 @@ const OrderDetailsUI = (props) => {
               {
                 reviewStatus?.order
                   ? (
-                  <ReviewOrder
-                    order={order}
-                    hashKey={props.hashKey}
-                    closeReviewOrder={closeReviewOrder}
-                    setIsReviewed={setIsOrderReviewed}
-                  />)
-                  : (reviewStatus?.product
-                      ? (
-                    <ReviewProduct
+                    <ReviewOrder
                       order={order}
                       hashKey={props.hashKey}
-                      closeReviewProduct={closeReviewProduct}
-                      setIsProductReviewed={setIsProductReviewed}
+                      closeReviewOrder={closeReviewOrder}
+                      setIsReviewed={setIsOrderReviewed}
                     />)
-                      : (reviewStatus?.professional
-                          ? (
-                      <ReviewProfessional
+                  : (reviewStatus?.product
+                      ? (
+                      <ReviewProduct
                         order={order}
                         hashKey={props.hashKey}
-                        closeReviewProfessional={handleCloseReivew}
-                        setIsProfessionalReviewed={setIsProReviewed}
-                        isProfessional
+                        closeReviewProduct={closeReviewProduct}
+                        setIsProductReviewed={setIsProductReviewed}
                       />)
+                      : (reviewStatus?.professional
+                          ? (
+                        <ReviewProfessional
+                          order={order}
+                          hashKey={props.hashKey}
+                          closeReviewProfessional={handleCloseReivew}
+                          setIsProfessionalReviewed={setIsProReviewed}
+                          isProfessional
+                        />)
                           : (
                         <ReviewDriver
                           order={order}

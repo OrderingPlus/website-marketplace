@@ -98,10 +98,10 @@ export const CartContent = (props) => {
           <>
             {carts.map(cart => (
               <React.Fragment key={cart.uuid}>
-                {cart.products.length > 0 && (
+                {(cart.products.length > 0 || (cart?.reservation && orderState?.options?.type === 9)) && (
                   <Cart
+                    forceHideCheckoutButton
                     cart={cart}
-                    hasCartReservation={hasCartReservation}
                     isCartPending={cart?.status === 2}
                     isOpenCart={isOpenCart}
                     isCartPopover={isCartPopover}

@@ -639,7 +639,10 @@ const CheckoutUI = (props) => {
             <BusinessReservation
               isCheckout
               cart={cart}
-              business={cart?.business}
+              business={{
+                ...cart?.business,
+                id: cart?.business_id
+              }}
               isCustomerMode={isCustomerMode}
               scheduleList={cart?.business?.schedule}
             />
@@ -649,7 +652,7 @@ const CheckoutUI = (props) => {
           <CartContainer>
             <CartHeader>
               <h1>{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}</h1>
-              {cart?.business?.slug && (
+              {(cart?.reservation ? cart?.products?.length > 0 : cart?.business?.slug) && (
                 <span onClick={() => cart?.business?.slug && handleStoreRedirect && handleStoreRedirect(cart?.business?.slug)}>{t('ADD_PRODUCTS', 'Add products')}</span>
               )}
             </CartHeader>
@@ -669,6 +672,7 @@ const CheckoutUI = (props) => {
               hideCouponByValidationCheckout={!guestCheckoutCoupon?.enabled}
               productLoading={productLoading}
               setProductLoading={setProductLoading}
+              forceHideCheckoutButton
             />
           </CartContainer>
         )}

@@ -39,15 +39,16 @@ export const BusinessReservationUI = (props) => {
   const [personsList, setPersonsList] = useState([])
   const [selectDateList, setSelectDateList] = useState([])
   const [selectHourList, setSelectHourList] = useState([])
-  const hidePlaceReservationButton = isCheckout &&
-    (reservationState?.changes?.guests_reservation === cart?.reservation?.guest_cellphone ||
-    reservationState?.changes?.reserve_date === cart?.reservation?.reserve_date)
+  const hidePlaceReservationButton =
+    !((reservationState?.changes?.guests_reservation !== cart?.reservation?.guests_reservation) ||
+    (reservationState?.changes?.reserve_date !== cart?.reservation?.reserve_date))
+
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
   const onPlaceReservation = async () => {
     const result = await handleAddReservation(cart?.products)
     setOpenReservations?.(false)
-    if (result?.uuid) {
+    if (result?.uuid && orderingMethod === 1) {
       events.emit('go_to_page', { page: 'checkout', params: { cartUuid: result?.uuid } })
     }
   }
@@ -199,7 +200,7 @@ export const BusinessReservationUI = (props) => {
       )}
       <Block>
         <h2>{t('ORDERING_METHOD', 'Ordering Method')}</h2>
-        {cart?.products?.length === 0 && (
+        {!cart?.products?.length && (
           <RadioButtonContainer onClick={() => setOrderingMethod(1)}>
             {orderingMethod === 1 ? <RiRadioButtonFill /> : <MdRadioButtonUnchecked disabled />} <p>{t('TABLE_RESERVATION', 'Table reservation')}</p>
           </RadioButtonContainer>
