@@ -1,13 +1,12 @@
 import { cloneElement, useEffect, useState } from 'react'
 import settings from '../../config'
+const orderingSubdomains = ['tryordering.com', 'ordering.co', 'orderingplus.com']
 
 export const SubdomainComponent = (props) => {
-  const isOrderingSubdomain = window.location.hostname.includes('tryordering.com') ||
-  window.location.hostname.includes('ordering.co') ||
-  window.location.hostname.includes('orderingplus.com')
+  const isOrderingSubdomain = orderingSubdomains.includes(window.location.hostname)
   const _language = window.localStorage.getItem('language') && JSON.parse(window.localStorage.getItem('language'))
 
-  const [project, setProject] = useState(settings?.use_project_domain ? null : window.localStorage.getItem('project') ?? settings.project ?? null)
+  const [project, setProject] = useState(settings?.use_project_domain ? null : (window.localStorage.getItem('project') ?? settings.project ?? null))
   const [localLanguage] = useState(settings?.use_project_domain ? _language?.code : settings.api.language)
 
   useEffect(() => {
