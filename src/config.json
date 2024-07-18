@@ -12,6 +12,7 @@
   "socket": {
     "url": "https://sockets.orderingplus.com"
   },
+  "project_error_redirect_url": "https://www.orderingplus.com",
   "use_marketplace": false,
   "use_project_domain": false,
   "use_project_subdomain": false,
