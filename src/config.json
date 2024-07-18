@@ -13,6 +13,7 @@
     "url": "https://sockets.orderingplus.com"
   },
   "sentry_key": "https://fbefa227f674598dcc13b50162cfe69a@o460529.ingest.us.sentry.io/4507052293292032",
+  "project_error_redirect_url": "https://www.orderingplus.com",
   "use_marketplace": false,
   "use_project_domain": false,
   "use_project_subdomain": false,
