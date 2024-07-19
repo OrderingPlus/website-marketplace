@@ -149,10 +149,11 @@ const OrderDetailsUI = (props) => {
 
   const hideOrderActions = deliveryTypes?.includes(order?.delivery_type)
   const isGiftCardOrder = !order?.business_id
+  const isReservation = order?.delivery_type === 9
 
   const isOriginalLayout = theme?.confirmation?.components?.layout?.type === 'original'
   const hideDeliveryType = theme?.confirmation?.components?.order?.components?.delivery_type?.hidden
-  const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden
+  const hideDeliveryDate = theme?.confirmation?.components?.order?.components?.date?.hidden || isReservation
   const hideDeliveryProgress = theme?.confirmation?.components?.order?.components?.progress?.hidden
   const hideBusinessPhone = theme?.confirmation?.components?.business?.components?.phone?.hidden
   const hideBusinessMessages = theme?.confirmation?.components?.business?.components?.messages?.hidden
@@ -405,7 +406,6 @@ const OrderDetailsUI = (props) => {
   const disableRightButton = [1, 2, 5, 15, 16, 17, 21]
 
   const isPickup = order?.delivery_type && order?.delivery_type === 2
-  const isReservation = order?.delivery_type === 9
 
   return (
     <Container>
