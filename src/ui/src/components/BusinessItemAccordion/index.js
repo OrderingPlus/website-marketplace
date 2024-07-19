@@ -235,7 +235,7 @@ export const BusinessItemAccordion = (props) => {
 
                 {!isClosed && !isProducts && !isStore && (
                   <BusinessTotal>
-                    <p>{isValidReservation ? t('ONLY_TABLE', 'Only table') : t('NO_PRODUCTS', 'No products')}</p>
+                    <p>{cartReservation && orderState?.options?.type === 9 ? t('ONLY_TABLE', 'Only table') : t('NO_PRODUCTS', 'No products')}</p>
                   </BusinessTotal>
                 )}
 
