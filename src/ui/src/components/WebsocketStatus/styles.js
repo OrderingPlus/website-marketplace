@@ -182,9 +182,7 @@ export const ButtonsContainer = styled.div`
 export const ButtonWrapper = styled.div`
   button{
     height: 41px;
-      width: 175px;
-      width: 175px;
-    width: 175px;
+    min-width: 175px;
   }
 
 `
