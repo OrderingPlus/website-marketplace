@@ -123,6 +123,7 @@ export const OrderContextUI = (props) => {
                 onClose={() => handleClosePopover('moment')}
                 customView
                 isBanner
+                noWidth={windowSize.width < 576}
               />
             </ItemInline>
           )}
