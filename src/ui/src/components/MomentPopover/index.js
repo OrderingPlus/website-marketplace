@@ -9,7 +9,7 @@ import { useOrder, useLanguage, useUtils, useConfig } from '~components'
 import { MomentContent } from '~ui'
 
 export const MomentPopover = (props) => {
-  const { open, isBanner, customView } = props
+  const { open, isBanner, customView, noWidth } = props
   const [{ configs }] = useConfig()
   const [orderStatus] = useOrder()
   const [, t] = useLanguage()
@@ -71,7 +71,7 @@ export const MomentPopover = (props) => {
   const popStyle = {
     ...styles.popper,
     visibility: open ? 'visible' : 'hidden',
-    width: `${isBanner ? '80vw' : '450px'} `,
+    width: `${noWidth ? '0px' : isBanner ? '80vw' : '450px'} `,
     maxHeight: '70vh',
     overflowY: 'auto',
     transform: `${isBanner ? 'translateX(-5vw)' : ''}`
