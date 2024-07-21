@@ -949,7 +949,7 @@ export const App = () => {
                 <PWAPrompt promptOnVisit={1} timesToShow={100} copyClosePrompt='Close' permanentlyHideOnDismiss={false} />
               )}
               {(!isFooterPage || enabledPoweredByOrdering) && (
-                <Footer isFooterPage={isFooterPage} />
+                <Footer isFooterPage={isFooterPage} isHome={isHome} />
               )}
               {auth && (
                 <WebsocketStatus useReconnectByLogin />
