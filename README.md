@@ -19,7 +19,7 @@ Please select the option that you like better.
 ```
 git clone --recursive https://github.com/OrderingPlus/website-marketplace.git
 ```
-3. Enter the downloaded repository folder
+3. Enter the downloaded repository folder.
 ```
 cd website-marketplace
 ```
