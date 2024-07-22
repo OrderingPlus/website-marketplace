@@ -93,20 +93,22 @@ const BusinessTypeFilterUI = (props) => {
         </SearchTypeContainer>
       )}
       {(!isSearchMode && !isAppoint) && (
-        <TypeContainer id='container'>
+        <>
           {loading && (
-            <Tabs variant='primary'>
-              <AutoScroll>
-                <Tab className='category' style={styles.wrapperSkeleton}>
-                  {[...Array(4)].map((_, i) => (
-                    <Skeleton id='skeleton' key={i} height={40} width={120} />
-                  ))}
-                </Tab>
-              </AutoScroll>
-            </Tabs>
+            <TypeContainer id='container'>
+              <Tabs variant='primary'>
+                <AutoScroll>
+                  <Tab className='category' style={styles.wrapperSkeleton}>
+                    {[...Array(4)].map((_, i) => (
+                      <Skeleton id='skeleton' key={i} height={40} width={120} />
+                    ))}
+                  </Tab>
+                </AutoScroll>
+              </Tabs>
+            </TypeContainer>
           )}
           {!loading && !error && types && types.length > 0 && (
-            <>
+            <TypeContainer id='container'>
               <Tabs variant='primary'>
                 <AutoScroll>
                   {types.map((type, i) => (isCategoriesHidden ? type.enabled && type.name !== 'All' : type.enabled) && (
@@ -127,9 +129,9 @@ const BusinessTypeFilterUI = (props) => {
                 </AutoScroll>
               </Tabs>
               <Divider />
-            </>
+            </TypeContainer>
           )}
-        </TypeContainer>
+        </>
       )}
     </>
   )
