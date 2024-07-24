@@ -3,7 +3,7 @@ import settings from '../../config'
 const orderingSubdomains = ['tryordering.com', 'ordering.co', 'orderingplus.com']
 
 export const SubdomainComponent = (props) => {
-  const isOrderingSubdomain = orderingSubdomains.includes(window.location.hostname)
+  const isOrderingSubdomain = orderingSubdomains.some(subdomain => window.location.hostname.includes(subdomain))
   const _language = window.localStorage.getItem('language') && JSON.parse(window.localStorage.getItem('language'))
 
   const [project, setProject] = useState(settings?.use_project_domain ? null : (window.localStorage.getItem('project') ?? settings.project ?? null))
