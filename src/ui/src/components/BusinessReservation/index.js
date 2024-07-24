@@ -184,6 +184,7 @@ export const BusinessReservationUI = (props) => {
       {!isCheckout && (
         <Block>
           <UserDetails
+            useDefualtSessionManager
             cartStatus={cart?.status}
             businessId={cart?.business_id}
             useSessionUser={!isCustomerMode}
