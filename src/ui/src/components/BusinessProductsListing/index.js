@@ -495,6 +495,7 @@ const BusinessProductsListingUI = (props) => {
                   isStore
                   isCustomMode
                   isForceOpenCart
+                  forceHideCheckoutButton
                   cart={currentCart}
                   isCartPending={currentCart?.status === 2}
                   isProducts={currentCart.products.length}
