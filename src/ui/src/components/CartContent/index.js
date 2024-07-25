@@ -27,7 +27,8 @@ export const CartContent = (props) => {
   const [currentCartUuid, setCurrentCartUuid] = useState(null)
   const [productLoading, setProductLoading] = useState(false)
 
-  const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
+  const hasCartReservation = carts?.some(cart => cart?.reservation)
+  const checkoutMultiBusinessEnabled = orderState?.options?.type !== 9 && !hasCartReservation && configs?.checkout_multi_business_enabled?.value === '1'
 
   const totalCartsPrice = carts?.length && carts.reduce((total, cart) => { return total + cart?.total }, 0)
   const totalCartsFee = carts?.length && carts
@@ -100,6 +101,7 @@ export const CartContent = (props) => {
                 {cart.products.length > 0 && (
                   <Cart
                     cart={cart}
+                    hasCartReservation={hasCartReservation}
                     isCartPending={cart?.status === 2}
                     isOpenCart={isOpenCart}
                     isCartPopover={isCartPopover}

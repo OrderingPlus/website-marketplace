@@ -22,6 +22,7 @@ import { BusinessProductsCategories as CategoriesLayoutGroceries } from './src/c
 import { BusinessProductsList } from './src/components/BusinessProductsList'
 import { BusinessProductsList as ProductListLayoutGroceries } from './src/components/BusinessProductsList/layouts/groceries'
 import { BusinessProductsListing } from './src/components/BusinessProductsListing'
+import { BusinessReservation } from './src/components/BusinessReservation'
 import { BusinessReviews } from './src/components/BusinessReviews'
 import { BusinessTypeFilter } from './src/components/BusinessTypeFilter'
 import { CancellationComponent } from './src/components/CancellationComponent'
@@ -232,6 +233,7 @@ export {
   BusinessProductsList,
   ProductListLayoutGroceries,
   BusinessProductsListing,
+  BusinessReservation,
   BusinessReviews,
   BusinessTypeFilter,
   BusinessesListing,

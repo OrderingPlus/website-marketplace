@@ -89,7 +89,8 @@ const BusinessProductsListingUI = (props) => {
     isCustomLayout,
     notFound,
     setNotFound,
-    loadedFirstTime
+    loadedFirstTime,
+    handleAddReservation
   } = props
 
   const { business, loading, error } = businessState
@@ -416,6 +417,7 @@ const BusinessProductsListingUI = (props) => {
           handleUpdateProfessionals={handleUpdateProfessionals}
           isCustomerMode={isCustomerMode}
           handleCustomProductBannerClick={handleCustomProductBannerClick}
+          handleAddReservation={handleAddReservation}
         />
 
         {

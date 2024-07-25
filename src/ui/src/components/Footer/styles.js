@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-export const Container = styled.div`
+export const Container = styled.footer`
   position: relative;
   ${props => !props.$isHome && css`
     margin-top: 9vh;

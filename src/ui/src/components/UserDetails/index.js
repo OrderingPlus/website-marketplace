@@ -54,7 +54,8 @@ const UserDetailsUI = (props) => {
     requiredFields,
     setFormState,
     setIsSuccess,
-    isCheckoutPlace
+    isCheckoutPlace,
+    CustomerDetailsTitleComponent
   } = props
 
   const [, t] = useLanguage()
@@ -176,7 +177,9 @@ const UserDetailsUI = (props) => {
           {!isCheckoutPlace && (
             <Header className='user-form'>
               {!isModal && (
-                <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>
+                <>
+                  {CustomerDetailsTitleComponent ? <CustomerDetailsTitleComponent /> : <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>}
+                </>
               )}
               {cartStatus !== 2 && isEdit && <FcCancel className='cancel' onClick={() => toggleEditState()} />}
             </Header>

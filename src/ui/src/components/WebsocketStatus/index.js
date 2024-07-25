@@ -78,7 +78,7 @@ const SocketStatusUI = (props) => {
           onClick={() => setOpenModal(true)}
         >
           <StatusContainer>
-            <span>{t('CONNECTION_STATUS', 'Connection status')}</span>
+            <p>{t('CONNECTION_STATUS', 'Connection status')}</p>
             <WebsocketStatusDot
               status={socketStatus}
             />
