@@ -10,7 +10,7 @@ Please select the option that you like better.
 
 If you just want to try out the Website, use our cloud-hosted version at [orderingplus.com](https://orderingplus.com).
 
-To create your own project and add it to the source code (src/config.json), start for free at [partners.orderingplus.com](https://partners.orderingplus.com). Here, you can add your stores, products, and more to customize your marketplace.
+To create your own project and add it to the source code (src/config.json), start for free (no credit card required) at [partners.orderingplus.com](https://partners.orderingplus.com). Here, you can add your stores, products, and more to customize your marketplace.
 
 If you want to demo this Website Marketplace open-source project, click here for [⚡️Gitpod Online Demo](https://gitpod.io/#https://github.com/OrderingPlus/website-marketplace).
 
