@@ -1,4 +1,4 @@
-# OrderingX - Website Marketplace
+# OrderingPlus - Website Marketplace
 
 ## Description
 
