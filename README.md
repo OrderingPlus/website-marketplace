@@ -1,4 +1,4 @@
-# OrderingX - Website Marketplace
+# OrderingPlus - Website Marketplace
 
 ## Description
 
@@ -6,11 +6,21 @@ This repository is a template marketplace using functional components. It includ
 
 Please select the option that you like better.
 
+## ✨ Quick Start
+
+If you just want to try out the Website, use our cloud-hosted version at [orderingplus.com](https://orderingplus.com).
+
+To create your own project and add it to the source code (src/config.json), start for free (no credit card required) at [partners.orderingplus.com](https://partners.orderingplus.com). Here, you can add your stores, products, and more to customize your marketplace.
+
+If you want to demo this Website Marketplace open-source project, click here for [⚡️Gitpod Online Demo](https://gitpod.io/#https://github.com/OrderingPlus/website-marketplace).
+
+Questions? Join [Discord](https://discord.gg/v4kWYAKjBu).
+
 ## Getting started
 > Having installed:
-> 1. node js
-> 2. Git
-> 3. Yarn 1.22.19
+> 1. Node.js (version 18 or higher)
+> 2. Git (version 2.30 or higher)
+> 3. Yarn (version 1.22.19 or higher)
 
 ## Option 1: Clone repository and run with yarn
 
