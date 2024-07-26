@@ -204,63 +204,49 @@ const ReviewProductUI = (props) => {
   }, [errors])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <ReviewProductContainer onSubmit={handleSubmit(onSubmit)}>
-        {order?.products && order.products.length > 0 && order?.products.map(productsOrder => (
-          productsOrder?.length
-            ? productsOrder?.map((product, i) => !product?.deleted && (
-             <SingleProductReview
-              {...props}
-              key={i}
-              product={product}
-            />
-            ))
-            : !productsOrder?.deleted && (
+    <ReviewProductContainer onSubmit={handleSubmit(onSubmit)}>
+      {order?.products && order.products.length > 0 && order?.products.map(productsOrder => (
+        productsOrder?.length
+          ? productsOrder?.map((product, i) => !product?.deleted && (
             <SingleProductReview
-              {...props}
-              key={productsOrder?.id}
-              product={productsOrder}
-            />
+            {...props}
+            key={i}
+            product={product}
+          />
+          ))
+          : !productsOrder?.deleted && (
+          <SingleProductReview
+            {...props}
+            key={productsOrder?.id}
+            product={productsOrder}
+          />
+            )
+      ))}
+      <ActionBlock>
+        <span onClick={closeReviewProduct}>{t('SKIP', 'Skip')}</span>
+        <Button
+          color={!formState.loading ? 'primary' : 'secondary'}
+          type='submit'
+          disabled={formState.loading || formState?.changes?.length === 0}
+          className='review-sent'
+        >
+          {!formState.loading
+            ? (
+            <>{t('CONTINUE', 'Continue')}<BsArrowRight /></>
               )
-        ))}
-        <ActionBlock>
-          <span onClick={closeReviewProduct}>{t('SKIP', 'Skip')}</span>
-          <Button
-            color={!formState.loading ? 'primary' : 'secondary'}
-            type='submit'
-            disabled={formState.loading || formState?.changes?.length === 0}
-            className='review-sent'
-          >
-            {!formState.loading
-              ? (
-              <>{t('CONTINUE', 'Continue')}<BsArrowRight /></>
-                )
-              : t('LOADING', 'Loading')}
-          </Button>
-        </ActionBlock>
-        <Alert
-          title={t('PRODUCT_REVIEW', 'Product Review')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
-        />
-      </ReviewProductContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+            : t('LOADING', 'Loading')}
+        </Button>
+      </ActionBlock>
+      <Alert
+        title={t('PRODUCT_REVIEW', 'Product Review')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </ReviewProductContainer>
   )
 }
 

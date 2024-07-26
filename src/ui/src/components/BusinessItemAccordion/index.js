@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useTheme } from 'styled-components'
 import TiArrowSortedUp from '@meronex/icons/ti/TiArrowSortedUp'
 import FiClock from '@meronex/icons/fi/FiClock'
-
+import momentjs from 'moment'
 import {
   AccordionSection,
   Accordion,
@@ -18,7 +18,7 @@ import {
 } from './styles'
 
 import { useOrder, useLanguage, useEvent, useUtils, useConfig } from '~components'
-import { Button, convertHoursToMinutes } from '~ui'
+import { Button, generalUtilities } from '~ui'
 
 export const BusinessItemAccordion = (props) => {
   const {
@@ -42,7 +42,10 @@ export const BusinessItemAccordion = (props) => {
     setPreorderBusiness,
     handleChangeStore,
     isMultiCheckout,
-    isGiftCart
+    isGiftCart,
+    forceHideBusiness,
+    hasCartReservation,
+    cartReservation
   } = props
 
   const [orderState] = useOrder()
@@ -57,16 +60,18 @@ export const BusinessItemAccordion = (props) => {
   const [cartProductUpdated, setCartProductUpdated] = useState(null)
   const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
   const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
-
+  const is12hours = configs?.general_hour_format?.value?.includes('hh:mm')
   const content = useRef(null)
   const businessStore = useRef(null)
   const businessDelete = useRef(null)
   const changeStore = useRef(null)
 
-  const viewString = isStore ? 'business_view' : 'header'
-  const hideBusinessLogo = theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
-  const hideBusinessTime = theme?.[viewString]?.components?.cart?.components?.business?.components?.time?.hidden
+  const { convertHoursToMinutes } = generalUtilities()
 
+  const viewString = isStore ? 'business_view' : 'header'
+  const hideBusinessLogo = isGiftCart || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
+  const hideBusinessTime = theme?.[viewString]?.components?.cart?.components?.business?.components?.time?.hidden
+  const isValidReservation = !cartReservation || momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD HH:mm:ss') > momentjs().format('YYYY-MM-DD HH:mm:ss')
   const toggleAccordion = (e) => {
     const isActionsClick = businessStore.current?.contains(e?.target) || businessDelete.current?.contains(e?.target) || changeStore.current?.contains(e?.target)
     if (isClosed || !isProducts || isActionsClick) return
@@ -132,135 +137,144 @@ export const BusinessItemAccordion = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <AccordionSection isClosed={isClosed} isCartOnProductsList={isCartOnProductsList}>
-        {
-          !isCheckout && (
-            <Accordion
+    {
+      forceHideBusiness
+        ? props.children
+        : (
+        <AccordionSection isClosed={isClosed} isCartOnProductsList={isCartOnProductsList}>
+          {
+            !isCheckout && (
+              <Accordion
               isClosed={isClosed}
               className={`accordion ${setActive}`}
-              onClick={(e) => toggleAccordion(e)}
-            >
-              <BusinessInfo isOtherInfo={(isClosed && !isStore) || (!isClosed && !isProducts && !isStore)}>
-                {!hideBusinessLogo && (
-                  <WrapperBusinessLogo>
-                    <BusinessLogo
-                      bgimage={!isGiftCart ? (business?.logo || theme.images?.dummies?.businessLogo) : theme.images?.logos?.isotype}
-                    />
-                  </WrapperBusinessLogo>
-                )}
-                <ContentInfo className='info' isStore={isStore} isLogo={!hideBusinessLogo}>
-                  <h2>{business?.name}</h2>
-                  {!hideBusinessTime && (
-                    <TimeContainer>
-                      {orderState?.options?.type === 1
-                        ? (
-                        <span>
-                          <FiClock />
-                          {convertHoursToMinutes(business?.delivery_time)}
-                        </span>
-                          )
-                        : (
-                        <span>
-                          <FiClock />
-                          {convertHoursToMinutes(business?.pickup_time)}
-                        </span>
-                          )}
-                    </TimeContainer>
+                onClick={(e) => toggleAccordion(e)}
+                >
+                <BusinessInfo isOtherInfo={(isClosed && !isStore) || (!isClosed && !isProducts && !isStore)}>
+                  {!hideBusinessLogo && (
+                    <WrapperBusinessLogo>
+                      <BusinessLogo
+                        bgimage={!isGiftCart ? (business?.logo || theme.images?.dummies?.businessLogo) : theme.images?.logos?.isotype}
+                      />
+                    </WrapperBusinessLogo>
                   )}
-                  <div>
-                    {handleStoreRedirect && !isCartOnProductsList && !isStore && !isGiftCart && (
+                  <ContentInfo className='info' isStore={isStore} isLogo={!hideBusinessLogo}>
+                    {isGiftCart && (
+                      <h2>{t('GIFT_CARD_CHECKOUT', 'Gift card checkout')}</h2>
+                    )}
+                    {!!business?.name && (
+                      <h2>{business?.name}</h2>
+                    )}
+                    {!hideBusinessTime && (
+                      <TimeContainer>
+                        {orderState?.options?.type === 1
+                          ? (
+                            <span>
+                              <FiClock />
+                              {convertHoursToMinutes(business?.delivery_time)}
+                            </span>
+                            )
+                          : (
+                            <span>
+                              <FiClock />
+                              {convertHoursToMinutes(business?.pickup_time)}
+                            </span>
+                            )}
+                      </TimeContainer>
+                    )}
+                    {cartReservation && orderState?.options?.type === 9 && (
+                      <div>
+                        <span
+                          className={!isValidReservation ? 'danger' : ''}
+                        >
+                          {t('RESERVATION', 'Reservation')} • {is12hours ? momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD hh:ss a') : cartReservation?.reserve_date} • {cartReservation?.guests_reservation} {t('GUESTS', 'Guests')}
+                        </span>
+                      </div>
+                    )
+                    }
+                    <div>
+                      {handleStoreRedirect && !isCartOnProductsList && !isStore && !isGiftCart && (
+                        <span
+                          ref={businessStore}
+                          onClick={() => isClosed ? handleOpenBusinessMenu(business) : handleStoreRedirect(business?.slug)}
+                          className='go-store'
+                        >
+                          {t('GO_TO_STORE', 'Go to store')}
+                        </span>
+                      )}
+                      {!isClosed && !!isProducts && !isCartPending && (
+                        <>
+                          {!isStore && !isGiftCart && <span>•</span>}
+                          <span
+                            ref={businessDelete}
+                            onClick={() => handleClearProducts()}
+                            className='clear-cart'
+                          >
+                            {t('CLEAR_CART', 'Clear cart')}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {isBusinessChangeEnabled && handleChangeStore && !isGiftCart && (
                       <span
-                        ref={businessStore}
-                        onClick={() => isClosed ? handleOpenBusinessMenu(business) : handleStoreRedirect(business?.slug)}
-                        className='go-store'
-                      >
-                        {t('GO_TO_STORE', 'Go to store')}
+                      ref={changeStore}
+                        onClick={handleChangeStore}
+                        className='change-store'
+                        >
+                        {t('CHANGE_STORE', 'Change store')}
                       </span>
                     )}
-                    {!isClosed && !!isProducts && !isCartPending && (
-                      <>
-                        {!isStore && !isGiftCart && <span>•</span>}
-                        <span
-                          ref={businessDelete}
-                          onClick={() => handleClearProducts()}
-                          className='clear-cart'
-                        >
-                          {t('CLEAR_CART', 'Clear cart')}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  {isBusinessChangeEnabled && handleChangeStore && !isGiftCart && (
-                    <span
-                      ref={changeStore}
-                      onClick={handleChangeStore}
-                      className='change-store'
-                    >
-                      {t('CHANGE_STORE', 'Change store')}
+                  </ContentInfo>
+                </BusinessInfo>
+                {isClosed && !isStore && (
+                  <BusinessTotal className='closed'>
+                    <p>{t('CLOSED', 'Closed')} {moment}</p>
+                  </BusinessTotal>
+                )}
+
+                {!isClosed && !isProducts && !isStore && (
+                  <BusinessTotal>
+                    <p>{t('NO_PRODUCTS', 'No products')}</p>
+                  </BusinessTotal>
+                )}
+
+                <BusinessActions>
+                  {!isClosed && !!isProducts && (
+                    <span>
+                      <TiArrowSortedUp className={`${setRotate}`} />
                     </span>
                   )}
+                </BusinessActions>
+              </Accordion>
+            )
+          }
+          <AccordionContent
+            ref={content}
+            style={{ minHeight: `${setHeight}`, maxHeight: !setActive && '0px' }}
+            >
+            {isBusinessChangeEnabled && isCheckout && handleChangeStore && (
+              <BusinessInfo>
+                <ContentInfo className='info'>
+                  <span
+                    ref={changeStore}
+                    onClick={handleChangeStore}
+                    className='change-store'
+                    >
+                    {t('CHANGE_STORE', 'Change store')}
+                  </span>
                 </ContentInfo>
               </BusinessInfo>
-              {isClosed && !isStore && (
-                <BusinessTotal className='closed'>
-                  <p>{t('CLOSED', 'Closed')} {moment}</p>
-                </BusinessTotal>
-              )}
-
-              {!isClosed && !isProducts && !isStore && (
-                <BusinessTotal>
-                  <p>{t('NO_PRODUCTS', 'No products')}</p>
-                </BusinessTotal>
-              )}
-
-              <BusinessActions>
-                {!isClosed && !!isProducts && (
-                  <span>
-                    <TiArrowSortedUp className={`${setRotate}`} />
-                  </span>
-                )}
-              </BusinessActions>
-            </Accordion>
-          )
-        }
-        <AccordionContent
-          ref={content}
-          style={{ minHeight: `${setHeight}`, maxHeight: !setActive && '0px' }}
-        >
-          {isBusinessChangeEnabled && isCheckout && handleChangeStore && (
-            <BusinessInfo>
-              <ContentInfo className='info'>
-                <span
-                  ref={changeStore}
-                  onClick={handleChangeStore}
-                  className='change-store'
-                >
-                  {t('CHANGE_STORE', 'Change store')}
-                </span>
-              </ContentInfo>
-            </BusinessInfo>
+            )}
+            {props.children}
+          </AccordionContent>
+          {setActive === 'active' && !isClosed && ((!!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled) || (hasCartReservation && isValidReservation)) && (
+            <PriceContainer>
+              <h4>{parsePrice(total)}</h4>
+              <Button onClick={() => handleClickCheckout(uuid)} color='primary'>{t('CHECKOUT', 'Checkout')}</Button>
+            </PriceContainer>
           )}
-          {props.children}
-        </AccordionContent>
-        {!setActive && !isClosed && !!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled && (
-          <PriceContainer>
-            <h4>{parsePrice(total)}</h4>
-            <Button onClick={() => handleClickCheckout(uuid)} color='primary'>{t('CHECKOUT', 'Checkout')}</Button>
-          </PriceContainer>
-        )}
-      </AccordionSection>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+        </AccordionSection>
+          )
+    }
     </>
   )
 }

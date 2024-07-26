@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom'
 
 import {
   Container,
-  Divider,
   NoOrdersWrapper,
   MyOrdersMenuContainer
 } from './styles'
@@ -36,6 +35,7 @@ export const MyOrders = (props) => {
   const [isEmptyBusinesses, setIsEmptyBusinesses] = useState(false)
   const [businessOrderIds, setBusinessOrderIds] = useState([])
 
+  const hidePreviousOrders = theme?.orders?.components?.past_orders?.hidden
   const hideProductsTab = theme?.orders?.components?.products_tab?.hidden
   const hideBusinessTab = theme?.orders?.components?.business_tab?.hidden
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
@@ -52,12 +52,6 @@ export const MyOrders = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {hideOrders && !allEmpty && (
         <h2>{t('PREVIOUSLY_ORDERED', 'Previously ordered')}</h2>
       )}
@@ -112,14 +106,12 @@ export const MyOrders = (props) => {
                   horizontal
                   setIsEmptyPreorder={setIsEmptyPreorder}
                 />
-                {!isEmptyPreorder && <Divider />}
                 <OrdersOption
                   {...props}
                   activeOrders
                   horizontal
                   setIsEmptyActive={setIsEmptyActive}
                 />
-                {!isEmptyActive && <Divider />}
                 <OrdersOption
                   {...props}
                   pastOrders
@@ -128,40 +120,37 @@ export const MyOrders = (props) => {
                     onRedirectPage && onRedirectPage({ page: 'checkout', params: { cartUuid: uuid } })
                   }}
                 />
-                {!isEmptyPast && <Divider />}
               </>
                 )}
           </>
         )}
-        {notOrderOptions.includes(selectedOption) && (
-          <OrdersOption
-            {...props}
-            titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
-            hideOrders
-            horizontal
-            isBusiness={selectedOption === 'business'}
-            isProducts={selectedOption === 'products'}
-            isProfessionals={selectedOption === 'professionals'}
-            activeOrders
-            pastOrders
-            preOrders
-            businessesSearchList={businessesSearchList}
-            setIsEmptyBusinesses={setIsEmptyBusinesses}
-            businessOrderIds={businessOrderIds}
-            setBusinessOrderIds={setBusinessOrderIds}
-            onProductRedirect={onProductRedirect}
-          />
-        )}
+        {notOrderOptions.includes(selectedOption) && !hidePreviousOrders
+          ? (<OrdersOption
+              {...props}
+              titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
+              hideOrders
+              horizontal
+              isBusiness={selectedOption === 'business'}
+              isProducts={selectedOption === 'products'}
+              isProfessionals={selectedOption === 'professionals'}
+              activeOrders
+              pastOrders
+              preOrders
+              businessesSearchList={businessesSearchList}
+              setIsEmptyBusinesses={setIsEmptyBusinesses}
+              businessOrderIds={businessOrderIds}
+              setBusinessOrderIds={setBusinessOrderIds}
+              onProductRedirect={onProductRedirect}
+            />)
+          : selectedOption !== 'giftCards'
+            ? <NoOrdersWrapper>
+                <p>{t('NOTHING_TO_SHOW', 'Nothing to show')}</p>
+              </NoOrdersWrapper>
+            : null}
         {selectedOption === 'giftCards' && (
           <GiftCardOrdersList />
         )}
       </Container>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import moment from 'moment'
 
 import {
@@ -24,7 +25,7 @@ import { useLanguage, useOrder, useEvent, OrderList } from '~components'
 import {
   useWindowSize,
   Alert,
-  getOrderStatus,
+  generalUtilities,
   BusinessController,
   HorizontalOrdersLayout,
   SingleProductCard,
@@ -80,6 +81,7 @@ const OrdersOptionUI = (props) => {
   const { width } = useWindowSize()
   const { loading, error, orders: values } = orderList
   const [refreshOrders, setRefreshOrders] = useState(false)
+  const { getOrderStatus } = generalUtilities()
 
   const _orders = customArray || values || []
   const uniqueOrders = []
@@ -191,12 +193,6 @@ const OrdersOptionUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {(isCustomLayout ? ((isShowTitles || !isBusinessesPage) && !loading && !isBusinessesLoading) : ((isShowTitles || !isBusinessesPage) && !hideOrders)) && (
         <>
           {orders.length > 0 && (
@@ -345,6 +341,7 @@ const OrdersOptionUI = (props) => {
             reorderLoading={reorderState?.loading}
             orders={orders.filter(order => orderStatus.includes(order.status)).sort((a, b) => moment(a?.delivery_datetime_utc).valueOf() - moment(b?.delivery_datetime_utc).valueOf())}
             pagination={pagination}
+            pastOrders={pastOrders}
             customArray={customArray}
             loadMoreOrders={loadMoreOrders}
             onRedirectPage={onRedirectPage}
@@ -352,6 +349,7 @@ const OrdersOptionUI = (props) => {
             handleReorder={handleReorder}
             handleUpdateOrderList={handleUpdateOrderList}
             setRefreshOrders={setRefreshOrders}
+            mrOrders={0}
           />
             )
       )}
@@ -364,12 +362,6 @@ const OrdersOptionUI = (props) => {
         onAccept={() => setAlertState({ open: false, content: [] })}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

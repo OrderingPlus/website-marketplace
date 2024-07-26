@@ -72,7 +72,7 @@ export const CategoryDescription = styled.div`
     align-items: flex-end;
     p {
       margin: 0;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       white-space: pre;
       max-width: ${({ maxWidth }) => maxWidth ? `${maxWidth - 200}px` : 'initial'};
       overflow: hidden;

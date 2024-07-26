@@ -28,7 +28,7 @@ import {
 
 import { useSession, useLanguage, useOrder, useEvent, useConfig, useCustomer, useUtils, useBusiness } from '~components'
 import {
-  LanguageSelectorOld as LanguageSelector,
+  LanguageSelector,
   useWindowSize,
   useOnlineStatus,
   getDistance,
@@ -57,7 +57,6 @@ import {
 export const Header = (props) => {
   const {
     location,
-    isShowOrderOptions,
     isHideSignup,
     isCustomerMode,
     searchValue,
@@ -94,7 +93,7 @@ export const Header = (props) => {
 
   const isMulticheckoutPage = window.location.pathname?.includes('/multi-checkout')
 
-  const cartsWithProducts = (orderState?.carts && Object.values(orderState?.carts).filter(cart => cart.products && cart.products?.length > 0)) || null
+  const cartsWithProducts = (orderState?.carts && Object.values(orderState?.carts).filter(cart => (cart.products && cart.products?.length > 0) || cart?.reservation)) || null
   const carts = businessSlug
     ? cartsWithProducts.filter((cart) => cart?.business?.slug === businessSlug || businessSlug === cart?.business_id)
     : cartsWithProducts
@@ -104,10 +103,9 @@ export const Header = (props) => {
 
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
 
-  const orderTypeList = [t('DELIVERY', 'Delivery'), t('PICKUP', 'Pickup'), t('EAT_IN', 'Eat in'), t('CURBSIDE', 'Curbside'), t('DRIVE_THRU', 'Drive thru'), '', t('CATERING_DELIVERY', 'Catering Delivery'), t('CATERING_PICKUP', 'Catering pickup')]
+  const orderTypeList = [t('DELIVERY', 'Delivery'), t('PICKUP', 'Pickup'), t('EAT_IN', 'Eat in'), t('CURBSIDE', 'Curbside'), t('DRIVE_THRU', 'Drive thru'), '', t('CATERING_DELIVERY', 'Catering Delivery'), t('CATERING_PICKUP', 'Catering pickup'), t('RESERVATION', 'Reservation')]
   const configTypes = configState?.configs?.order_types_allowed?.value.split('|').map(value => Number(value)) || []
   const isPreOrderSetting = configState?.configs?.preorder_status_enabled?.value === '1'
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const isHideLanguages = theme?.header?.components?.language_selector?.hidden
   const cateringTypeString = orderState?.options?.type === 7
     ? 'catering_delivery'
@@ -229,7 +227,7 @@ export const Header = (props) => {
   }, [orderState?.options?.address?.location, pathname])
 
   return (
-    <HeaderContainer isChew={isChew}>
+    <HeaderContainer>
       <InnerHeader>
         <LeftSide>
           <LeftHeader id='left-side'>
@@ -242,14 +240,13 @@ export const Header = (props) => {
             />
             <LogoHeader
               onClick={() => handleGoToPage({ page: orderState?.options?.address?.location && !isCustomerMode ? 'search' : 'home' })}
-              isChew={isChew}
             >
-              <img alt='Logotype' width='170px' height={isChew ? '35px' : '45px'} src={isChew ? theme?.images?.logos?.chewLogo : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.logotype} loading='lazy' />
-              <img alt='Isotype' width={isChew ? '70px' : '35px'} height={isChew ? '20px' : '45px'} src={isChew ? theme?.images?.logos?.chewLogo : (windowSize.width <= 768 ? theme?.images?.logos?.isotypeInvert : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.isotype)} loading='lazy' />
+              <img alt='Logotype' width='170px' height={'45px'} src={theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.logotype} loading='lazy' />
+              <img alt='Isotype' width={'35px'} height={'45px'} src={(windowSize.width <= 768 ? theme?.images?.logos?.isotypeInvert : theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.isotype)} loading='lazy' />
             </LogoHeader>
           </LeftHeader>
-          {isShowOrderOptions && windowSize.width >= 576 && (
-            <Menu id='center-side' className='left-header' isCustomerMode={isCustomerMode} isChew={isChew}>
+          {windowSize.width >= 576 && (
+            <Menu id='center-side' className='left-header' isCustomerMode={isCustomerMode}>
               {windowSize.width > 850 && isFarAway && (
                 <FarAwayMessage>
                   <TiWarningOutline />
@@ -301,7 +298,7 @@ export const Header = (props) => {
                   )}
                   {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
                     <MomentMenu
-                      isFranchiseSlugOne={franchiseLayout === 'franchise_1'}
+                      $isFranchiseSlugOne={franchiseLayout === 'franchise_1'}
                       onClick={configState?.configs?.max_days_preorder?.value === -1 || configState?.configs?.max_days_preorder?.value === 0
                         ? null
                         : () => openModal('moment')}
@@ -358,7 +355,6 @@ export const Header = (props) => {
                   <>
                     <MenuLink
                       name='signin'
-                      highlight={isChew && 1}
                       style={{ whiteSpace: 'nowrap' }}
                       onClick={() => handleOpenLoginSignUp('login')}
                     >
@@ -380,13 +376,9 @@ export const Header = (props) => {
               {
                 auth && (
                   <>
-                    {isShowOrderOptions && (
-                      windowSize.width > 768
-                        ? (
-                        <>
-                          {!isMulticheckoutPage
-                            ? (
-                            <CartPopover
+                    {windowSize.width > 768
+                      ? !isMulticheckoutPage
+                          ? <CartPopover
                               open={openPopover.cart}
                               carts={carts}
                               onClick={() => handleTogglePopover('cart')}
@@ -396,18 +388,13 @@ export const Header = (props) => {
                               isCustomerMode={isCustomerMode}
                               setPreorderBusiness={setPreorderBusiness}
                             />
-                              )
-                            : null}
-                        </>
-                          )
-                        : (
-                        <HeaderOption
+                          : null
+                      : <HeaderOption
                           variant='cart'
                           totalCarts={carts?.length}
                           onClick={(variant) => openModal(variant)}
                         />
-                          )
-                    )}
+                    }
                     {windowSize.width > 768 && (
                       <UserPopover
                         withLogout
@@ -430,7 +417,7 @@ export const Header = (props) => {
           </RightHeader>
         )}
       </InnerHeader>
-      {onlineStatus && isShowOrderOptions && !props.isCustomLayout && !isCustomerMode && (
+      {onlineStatus && !props.isCustomLayout && !isCustomerMode && (
         windowSize.width > 768 && windowSize.width <= 820
           ? (
           <SubMenu>
@@ -440,10 +427,7 @@ export const Header = (props) => {
                 <span>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</span>
               </FarAwayMessage>
             )}
-            <AddressMenu
-              isChew={isChew}
-              onClick={() => openModal('address')}
-            >
+            <AddressMenu onClick={() => openModal('address')}>
               <GeoAlt /> {orderState.options?.address?.address || t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
             </AddressMenu>
             {!isCustomerMode && (isPreOrderSetting || configState?.configs?.preorder_status_enabled?.value === undefined) && (
@@ -654,23 +638,21 @@ export const Header = (props) => {
         onAccept={confirm.handleOnAccept}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={!!preorderBusiness}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-        />
-      </Modal>
+      {!!preorderBusiness && (
+        <Modal
+          open={!!preorderBusiness}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+          />
+        </Modal>
+      )}
     </HeaderContainer>
   )
-}
-
-Header.defaultProps = {
-  isShowOrderOptions: true
 }
 
 export default Header

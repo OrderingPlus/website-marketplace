@@ -21,20 +21,12 @@ export const BusinessContainer = styled.div`
     background-color: #cccccc;
   `}
 
-  ${props => props.bgimage && props.isChew && css`
-    height: 180px;
-  `}
-
-  ${props => props.bgimage && (!props.isClosed && !props.isChew) && css`
+  ${props => props.bgimage && !props.isClosed && css`
     background-image: url(${props.bgimage});
   `}
 
-  ${props => props.bgimage && (props.isClosed && !props.isChew) && css`
+  ${props => props.bgimage && props.isClosed && css`
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${props.bgimage});
-  `}
-
-  ${props => props.bgimage && props.isChew && css`
-    background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url(${props.bgimage});
   `}
 
   h1 {
@@ -159,7 +151,7 @@ export const BusinessInfoItem = styled.div`
       &.dot {
         font-size: 12px;
         text-decoration: none;
-        color: #909BA9;
+        color: ${props => props.theme?.colors.darkGray};
       }
     }
   }
@@ -173,7 +165,6 @@ export const BusinessInfoItem = styled.div`
 `
 
 export const BusinessInfoContainer = styled.div`
-  width: ${props => props.isChew && '100%'};
   padding-top: 40px;
   padding-left: 5px;
   padding-right: 5px;
@@ -182,13 +173,6 @@ export const BusinessInfoContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   align-items: ${props => props.isFlexEnd ? 'flex-end' : 'space-between'};
-
-  #business_name {
-    ${({ isChew }) => isChew && css`
-        background: none;
-      `
-  }
-  }
 
   @media (min-width: 576px) {
     padding-top: 0px;
@@ -200,7 +184,6 @@ export const BusinessInfoContainer = styled.div`
   @media (min-width: 768px) {
     flex-direction: row;
     margin-bottom: 25px;
-    margin-left: ${props => props.isChew && '25px'};
   }
 `
 
@@ -278,7 +261,7 @@ export const BusinessDetail = styled.div`
 
   h5 {
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 0 5px 0 0;
     font-weight: normal;
     ${props => props.theme?.rtl && css`
@@ -296,7 +279,7 @@ export const BusinessDetail = styled.div`
   }
 
   .review {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 0;
     display: flex;
     align-items: center;
@@ -318,7 +301,7 @@ export const BusinessDetail = styled.div`
   }
 
   .dot {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     font-size: 12px;
     margin-right: 5px;
     ${props => props.theme?.rtl && css`
@@ -341,13 +324,13 @@ export const BusinessDetail = styled.div`
 
 export const BusinessMoreDetail = styled.div`
   ${({ position }) => position
-? css`
+    ? css`
     width: 100% !important;
     justify-content: flex-end !important;
     top: 0px;
     right: 0px;
   `
-: css`
+    : css`
     top: 30px;
     right: 30px;
   `}
@@ -370,7 +353,11 @@ export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-
+  span {
+    height: 70px;
+    width: 1px;
+    display: none;
+  }
   h2 {
     font-size: 24px;
     line-height: 36px;
@@ -388,31 +375,31 @@ export const TitleWrapper = styled.div`
       padding: 10px 0;
       font-size: 18px;
       ${({ isCustomLayout }) => !isCustomLayout
-? css`
+    ? css`
         width: calc(100vw - 230px);
         ${props => props.theme?.rtl
-? css`
+        ? css`
         right: 50px;
         `
-: css`
+        : css`
         left: 50px;
         `}
       `
-: css`
+    : css`
       ${props => props.theme?.rtl
-? css`
+        ? css`
           right: 10px;
           `
-: css`
+        : css`
           left: 10px;
         `}
       `}
       ${({ disableLeftSpace }) => disableLeftSpace && css`
       ${props => props.theme?.rtl
-? css`
+      ? css`
           right: 48px;
           `
-: css`
+      : css`
           left: 48px;
         `}
       `}
@@ -595,5 +582,14 @@ export const BackButton = styled.div`
     svg {
       margin-right: 10px;
     }
+  }
+`
+
+export const SearchContainer = styled.div`
+  > button {
+    margin-top: 10px;
+    color: ${({ theme }) => theme?.colors?.primary};
+    background: ${({ theme }) => theme?.colors?.backgroundInfo};
+    min-width: 200px;
   }
 `

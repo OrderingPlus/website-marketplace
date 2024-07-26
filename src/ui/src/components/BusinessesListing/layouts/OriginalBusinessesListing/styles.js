@@ -13,6 +13,25 @@ export const BusinessBanner = styled.div`
   align-items: center;
   margin-bottom: 30px;
   position: relative;
+
+  ${({ bgimage }) => bgimage && css`
+    width: 100%;
+    height: calc(65vh - 98px);
+    background-image: url(${bgimage});
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    object-fit: cover;
+    background-position: center;
+
+    @media (min-width: 450px) {
+      height: 370px;
+    }
+
+    @media (min-width: 821px) {
+      height: ${({ height, theme }) => theme?.business_listing_view?.components?.business_hero?.components?.styles?.height || height || '650px'};
+    }
+  `}
+
   @media (max-width: 576px) {
     margin-bottom: 0px;
   }
@@ -112,37 +131,6 @@ export const BusinessesTitle = styled.h1`
     margin: 42px 20px 5px 20px;
   `}
 `
-
-export const BusinessHeroImgStyled = styled.div`
-  margin-bottom: 30px;
-  width: 100%;
-  height: calc(65vh - 98px);
-
-  ${({ bgimage }) => bgimage && css`
-    background-repeat: no-repeat, repeat;
-    background-size: cover;
-    object-fit: cover;
-    background-position: center;
-  `}
-  @media (min-width: 450px) {
-    height: 370px;
-  }
-
-  @media (min-width: 821px) {
-    height: ${({ height, theme }) => theme?.business_listing_view?.components?.business_hero?.components?.styles?.height || height || '650px'};
-  }
-`
-
-export const BusinessHeroImg = (props) => {
-  const style = {}
-  style.backgroundImage = `url(${props.bgimage})`
-
-  return (
-    <BusinessHeroImgStyled {...props} style={style}>
-      {props.children}
-    </BusinessHeroImgStyled>
-  )
-}
 
 export const HightestRatedWrapper = styled.div`
   padding: 50px 0 30px 0;
@@ -269,7 +257,7 @@ export const Title = styled.h2`
   font-weight: 600;
   font-size: 24px;
   color: ${props => props.theme?.colors.headingColor};
-  margin: 0px 20px 5px 20px;
+  margin: 20px 20px 5px 20px;
 `
 
 export const TypesWrapper = styled.div`

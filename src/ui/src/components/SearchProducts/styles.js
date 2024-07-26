@@ -24,25 +24,22 @@ export const SearchContainer = styled.div`
 export const SearchHeader = styled.div`
   display: flex;
   align-items: center;
-
-  @media (min-width: 768px) {
-    width: 98%;
-    margin: 0px auto;
-    padding: 21px 0;
-  }
+  width: 98%;
+  margin: 0px auto;
+  padding: 21px 0;
 `
 export const SearchBarWrapper = styled.div`
   flex: 1;
   > div {
     ${props => props.theme?.rtl
-? css`
-      padding-right: 15px;
-      border-left: 1px solid ${props => props.theme.colors.darkGray};
-    `
-: css`
-      padding-left: 15px;
-      border-right: 1px solid ${props => props.theme.colors.darkGray};
-    `}
+      ? css`
+          padding-right: 15px;
+          border-left: 1px solid ${props => props.theme.colors.darkGray};
+        `
+      : css`
+          padding-left: 15px;
+          border-right: 1px solid ${props => props.theme.colors.darkGray};
+        `}
     width: 100%;
     justify-content: flex-start;
     box-sizing: border-box;
@@ -62,21 +59,18 @@ export const SearchBarWrapper = styled.div`
 
     > span {
       ${props => props.theme?.rtl
-? css`
-        left: 0px;
-      `
-: css`
-        right: 0px;
-      `}
+        ? css`left: 0px;`
+        : css`right: 0px;`}
     }
+  }
+
+  > div {
+    background-color: ${props => props.theme.colors.gray200};
+    border-radius: 20px;
+    border: 1px solid ${props => props.theme?.colors.darkGray};
   }
   @media (min-width: 768px) {
     margin: 0 15px;
-    > div {
-      background-color: ${props => props.theme.colors.gray200};
-      border-radius: 20px;
-      border: 1px solid #DEE2E6;
-    }
   }
   @media (min-width: 1024px) {
     margin: 0 70px;
@@ -88,14 +82,17 @@ export const SearchBarWrapper = styled.div`
     margin: 0 130px;
   }
 `
+
 export const CancelButton = styled.div`
   padding: 0 15px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
 `
+
 export const LogoHeader = styled.div`
   display: none;
+
   @media (min-width: 768px) {
     cursor: pointer;
     display: flex;
@@ -103,9 +100,10 @@ export const LogoHeader = styled.div`
 `
 export const BusinessProductsListContainer = styled.div`
   background-color: ${props => props.theme.colors.backgroundPage};
-  max-height: calc(100vh - 88px);
+  max-height: calc(90vh - 110px);
   overflow: auto;
 `
+
 export const BusinessProductsListWrapper = styled.div`
   width: 95%;
   margin: 0px auto;

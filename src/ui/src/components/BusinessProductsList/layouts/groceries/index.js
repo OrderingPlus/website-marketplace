@@ -15,12 +15,13 @@ import {
 } from './styles'
 
 import { ProductsList, useLanguage, useConfig } from '~components'
+
 import {
-  Button,
   SingleProductCard,
   NotFoundSource,
   Modal,
-  shape
+  shape,
+  Button
 } from '~ui'
 
 const BusinessProductsListUI = (props) => {

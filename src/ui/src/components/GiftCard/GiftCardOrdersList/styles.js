@@ -20,6 +20,7 @@ export const NoOrdersWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 50px 0px;
+  position: absolute;
   box-sizing: border-box;
   min-height: calc(100% - 120px);
   width: 100%;

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import BsArrowRight from '@meronex/icons/bs/BsArrowRight'
 import {
@@ -25,64 +26,40 @@ import {
 } from '~components'
 
 import { OrderEta } from '../OrderDetails/OrderEta'
-import {
-  Button,
-  getOrderStatuPickUp,
-  getOrderStatus
-} from '~ui'
+import { Button, generalUtilities } from '~ui'
 
 const OrderProgressUI = (props) => {
-  const {
-    orderList,
-    isCustomerMode
-  } = props
+  const { orderList } = props
+
   const [, t] = useLanguage()
   const [{ optimizeImage, parseTime, parseDate }] = useUtils()
   const [{ configs }] = useConfig()
   const theme = useTheme()
   const [events] = useEvent()
-  const [lastOrder, setLastOrder] = useState(null)
+  const { getStatusPrefix } = generalUtilities()
   const statusToShow = [0, 3, 4, 7, 8, 9, 13, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
   const deliveryTypes = [1, 7]
 
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const lastOrder = orderList.orders?.length ? orderList.orders?.find(order => !!order.business_id) : null
+  const isPickup = lastOrder?.delivery_type && lastOrder?.delivery_type === 2
 
-  const handleGoToPage = (index) => {
-    events.emit('go_to_page', { page: index, params: { orderId: lastOrder?.uuid } })
-  }
-
-  useEffect(() => {
-    if (orderList?.orders.length > 0) {
-      const sortedOrders = orderList.orders.filter(order => !!order?.business).sort((a, b) => a.id > b.id ? -1 : 1)
-      const orderInProgress = sortedOrders.find(({ status }) => (statusToShow.includes(status)))
-
-      let _lastOrder = null
-      if (orderInProgress) {
-        _lastOrder = orderInProgress
-      } else {
-        _lastOrder = sortedOrders[0]
-      }
-      setLastOrder(_lastOrder)
-    }
-  }, [orderList?.orders])
-
-  const progressBarObjt = lastOrder?.delivery_type && lastOrder?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+  const handleGoToPage = (index) => events.emit('go_to_page', { page: index })
 
   return (
     <>
       {orderList?.loading && (
-        <OrderProgressWrapper isChew={props.isChew}>
+        <OrderProgressWrapper>
           <Skeleton height={150} />
         </OrderProgressWrapper>
       )}
-      {!orderList?.loading && orderList?.orders?.length > 0 && lastOrder && (
-        <OrderProgressWrapper isChew={props.isChew}>
+      {!orderList?.loading && lastOrder && (
+        <OrderProgressWrapper>
           <OrderProgressContainer>
             <OrderInfoWrapper>
               <ProgressLogo
                 bgimage={orderList?.orders.length === 1
                   ? optimizeImage(lastOrder?.business?.logo || theme.images?.dummies?.businessLogo, 'h_91,c_limit')
-                  : isChew ? theme.images.logos.chewLogoReverse : theme.images.logos.logotype}
+                  : theme.images.logos.logotype}
               />
               <ProgressDescriptionWrapper>
                 <h2>{statusToShow.includes(lastOrder?.status) ? t('ORDER_IN_PROGRESS', 'Order in progress') : t('ORDER', 'Order')}</h2>
@@ -92,29 +69,25 @@ const OrderProgressUI = (props) => {
                 <Button
                   color='primaryContrast'
                   naked
-                  onClick={() => handleGoToPage(isCustomerMode ? 'order_detail' : 'orders')}
+                  onClick={() => handleGoToPage('orders')}
                 >
-                  {isCustomerMode
-                    ? (
-                    <>
-                      {t('GO_TO_THE_ORDER', 'Go to the order')}
-                    </>
-                      )
-                    : (
-                    <>
-                      {t('GO_TO_MY_ORDERS', 'Go to my orders')}
-                    </>
-                      )}
+                  {t('GO_TO_MY_ORDERS', 'Go to my orders')}
                   <BsArrowRight />
                 </Button>
               </ProgressDescriptionWrapper>
             </OrderInfoWrapper>
             <ProgressBarWrapper>
               <ProgressContentWrapper>
-                <ProgressBar style={{ width: progressBarObjt(lastOrder.status)?.percentage ? `${progressBarObjt(lastOrder.status).percentage}%` : '0%' }} />
+                <ProgressBar
+                  style={{
+                    width: getStatusPrefix({ status: lastOrder.status, isPickup })?.percentage
+                      ? `${getStatusPrefix({ status: lastOrder.status, isPickup }).percentage}%`
+                      : 0
+                  }}
+                />
               </ProgressContentWrapper>
               <ProgressTextWrapper>
-                <StatusWrapper>{progressBarObjt(lastOrder?.status)?.value}</StatusWrapper>
+                <StatusWrapper>{getStatusPrefix({ status: lastOrder?.status, isPickup })?.value}</StatusWrapper>
                 <TimeWrapper>
                   <span>{deliveryTypes?.includes(lastOrder?.delivery_type) ? t('ESTIMATED_DELIVERY', 'Estimated delivery') : t('ESTIMATED_TIME', 'Estimated time')}:&nbsp;</span>
                   <span>
@@ -123,12 +96,8 @@ const OrderProgressUI = (props) => {
                       : parseTime(lastOrder?.delivery_datetime, { utc: false })}
                     &nbsp;-&nbsp;
                     {statusToShow.includes(lastOrder?.status)
-                      ? (
-                      <OrderEta order={lastOrder} outputFormat={configs?.general_hour_format?.value || 'HH:mm'} />
-                        )
-                      : (
-                          parseDate(lastOrder?.reporting_data?.at[`status:${lastOrder.status}`], { outputFormat: configs?.general_hour_format?.value })
-                        )}
+                      ? <OrderEta order={lastOrder} outputFormat={configs?.general_hour_format?.value || 'HH:mm'} />
+                      : parseDate(lastOrder?.reporting_data?.at[`status:${lastOrder.status}`], { outputFormat: configs?.general_hour_format?.value })}
                   </span>
                 </TimeWrapper>
               </ProgressTextWrapper>

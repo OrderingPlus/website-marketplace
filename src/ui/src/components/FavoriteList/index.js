@@ -5,7 +5,12 @@ import {
   ErrorMessage,
   FavoriteListWrapper,
   ReadMoreCard,
-  FavoriteListing
+  FavoriteListing,
+  SingleBusinessOffer,
+  BusinessLogo,
+  BusinessInfo,
+  FavPopupView,
+  Image
 } from './styles'
 
 import { useLanguage, useOrder, useSite, useEvent, FavoriteList as FavoriteListController } from '~components'
@@ -14,7 +19,7 @@ import {
   Button,
   Modal,
   checkSiteUrl,
-  getOrderStatus,
+  generalUtilities,
   AutoScroll,
   useWindowSize,
   BusinessController,
@@ -44,11 +49,15 @@ const FavoriteListUI = (props) => {
   const [{ site }] = useSite()
   const { width } = useWindowSize()
 
+  const { getOrderStatus } = generalUtilities()
+
   const businessUrlTemplate = checkSiteUrl(site?.business_url_template, '/store/:business_slug')
   const productUrlTemplate = checkSiteUrl(site?.product_url_template, '/store/:business_slug?category=:category_id&product=:product_id')
 
   const [isPreorder, setIsPreorder] = useState(false)
   const [preorderBusiness, setPreorderBusiness] = useState(null)
+  const [openModal, setOpenModal] = useState(false)
+  const [favProduct, setFavProduct] = useState(null)
 
   const pastOrders = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
 
@@ -77,10 +86,10 @@ const FavoriteListUI = (props) => {
     events.emit('go_to_page', data)
   }
 
-  const onProductClick = (product) => {
-    const slug = product?.category?.business?.slug
-    const categoryId = product?.category?.id
-    const productId = product?.id
+  const handleOpenProduct = (business) => {
+    const slug = business.slug
+    const categoryId = favProduct?.category?.id
+    const productId = favProduct?.id
 
     if (!categoryId && !productId) {
       if (businessUrlTemplate === '/store/:business_slug' || businessUrlTemplate === '/:business_slug') {
@@ -137,6 +146,11 @@ const FavoriteListUI = (props) => {
     }
   }
 
+  const onProductClick = (product) => {
+    setOpenModal(true)
+    setFavProduct(product)
+  }
+
   const closeOrderModal = (e) => {
     const outsideModal = !window.document.getElementById('app-modals') ||
       !window.document.getElementById('app-modals').contains(e.target)
@@ -178,12 +192,6 @@ const FavoriteListUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <Container>
         {
           !favoriteList?.loading && favoriteList?.favorites.length === 0 && (
@@ -224,6 +232,7 @@ const FavoriteListUI = (props) => {
                       businessDistance={business?.distance}
                       handleUpdateBusinessList={handleUpdateFavoriteList}
                       firstCard={i === 0 && width > 681}
+                      m={'30px 10px'}
                     />
                   ))}
                   {favoriteList?.loading && (
@@ -265,20 +274,18 @@ const FavoriteListUI = (props) => {
               )}
               {isOrder && (
                 <>
-                  {
-                    !favoriteList?.loading && favoriteList?.favorites?.map((order, i) => (
-                      <SingleOrderCard
-                        key={`${order?.id}_${i}`}
-                        order={order}
-                        onRedirectPage={onRedirectPage}
-                        getOrderStatus={getOrderStatus}
-                        pastOrders={pastOrders.includes(order?.status)}
-                        handleReorder={handleReorder}
-                        handleUpdateOrderList={handleUpdateFavoriteList}
-                        isFavorite
-                      />
-                    ))
-                  }
+                  {!favoriteList?.loading && favoriteList?.favorites?.map((order, i) => (
+                    <SingleOrderCard
+                      key={`${order?.id}_${i}`}
+                      order={order}
+                      onRedirectPage={onRedirectPage}
+                      getOrderStatus={getOrderStatus}
+                      pastOrders={pastOrders.includes(order?.status)}
+                      handleReorder={handleReorder}
+                      handleUpdateOrderList={handleUpdateFavoriteList}
+                      mrOrders={0}
+                      isFavorite
+                    />))}
                   {favoriteList?.loading && (
                     [...Array(5).keys()].map(i => (
                       <SingleOrderCard
@@ -335,23 +342,62 @@ const FavoriteListUI = (props) => {
           ))
         )}
       </Container>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleClickBusiness}
-          showButton
-        />
-      </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleClickBusiness}
+            showButton
+          />
+        </Modal>
+      )}
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+        >
+          <FavPopupView>
+            {(favProduct?.images) && (
+              <Image>
+              <img src={favProduct.images} alt={`product-${favProduct?.name}`} width='150px' height='150px' loading='lazy' />
+              </Image>
+            )}
+              <h2>
+              {favProduct?.name}
+              </h2>
+              <h2>
+              { favProduct?.businesses && favProduct?.businesses?.length > 1
+                ? t('AVAILABLE_BUSINESSES_FOR_PRODUCT', 'Available businesses for this product')
+                : favProduct?.businesses && favProduct?.businesses?.length === 1
+                  ? t('AVAILABLE_BUSINESSE_FOR_PRODUCT', 'Available business for this product')
+                  : t('NOT_AVAILABLE_BUSINESSE', 'Business is not available for this product')
+              }
+            </h2>
+            <div>
+              {favProduct?.businesses?.map(business => {
+                return (
+                  <SingleBusinessOffer key={business.id}>
+                    <BusinessLogo bgimage={business?.logo} />
+                    <BusinessInfo>
+                      <p>{business.name}</p>
+                      <Button
+                        onClick={() => handleOpenProduct(business)}
+                        color='primary'
+                      >
+                        {t('GO_TO_BUSINESSS', 'Go to business')}
+                      </Button>
+                    </BusinessInfo>
+                  </SingleBusinessOffer>
+                )
+              })}
+            </div>
+          </FavPopupView>
+        </Modal>
+      )}
     </>
   )
 }

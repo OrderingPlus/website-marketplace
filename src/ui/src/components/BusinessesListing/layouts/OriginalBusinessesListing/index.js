@@ -3,13 +3,13 @@ import { useTheme } from 'styled-components'
 import FiMap from '@meronex/icons/fi/FiMap'
 import FiFilter from '@meronex/icons/fi/FiFilter'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   BusinessContainer,
   BusinessList,
   WrapperSearch,
   BusinessesTitle,
-  BusinessHeroImg,
   HightestRatedWrapper,
   Divider,
   SearchContainer,
@@ -102,14 +102,12 @@ const BusinessesListingUI = (props) => {
   const hideCities = (theme?.business_listing_view?.components?.cities?.hidden || orderState?.options?.type !== 2 || allCitiesDisabled) ?? true
   const hideSearch = theme?.business_listing_view?.components?.search?.hidden
   const hideFilter = theme?.business_listing_view?.components?.filter?.hidden || hideSearch
-  const hideHero = theme?.business_listing_view?.components?.business_hero?.hidden
   const hidePreviousOrders = theme?.business_listing_view?.components?.previous_orders_block?.hidden
   const hideHighestBusiness = theme?.business_listing_view?.components?.highest_rated_business_block?.hidden
   const hideSearchSection = hideCities && hideSearch && hideFilter
   const isAllCategoriesHidden = theme?.business_listing_view?.components?.categories?.hidden || props?.franchiseId
   const businessesIds = businessesList.businesses &&
     businessesList.businesses?.map(business => business.id)
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
   const cateringTypeString = orderState?.options?.type === 7
     ? 'catering_delivery'
     : orderState?.options?.type === 8
@@ -224,6 +222,7 @@ const BusinessesListingUI = (props) => {
     if (!citiesState?.cities?.length || !orderState?.options?.city_id) return
     const selectedCity = citiesState?.cities?.find(city => city?.id === orderState?.options?.city_id)
     if (!selectedCity || !selectedCity?.enabled) changeCityFilter(null)
+    setHasHighRatedBusiness(true)
   }, [citiesState, orderState?.options?.city_id])
 
   useEffect(() => {
@@ -256,23 +255,28 @@ const BusinessesListingUI = (props) => {
         <BusinessLogosContainer>
           <AutoScroll scrollId='businessLogos'>
             {businessesList?.loading
-              ? (
-              <Skeleton count={12} height={75} width={75} />
-                )
-              : (
-              <>
-                {businessesList.businesses
-                  ?.filter(business => business?.open)
-                  ?.map(business => (
-                    <BusinessLogo
-                      key={business?.id}
-                      isActive={actualSlug === business?.slug}
-                      bgimage={business?.logo || theme.images?.dummies?.businessLogo}
-                      onClick={() => onBusinessClick(business)}
-                    />
-                  ))}
-              </>
-                )}
+              ? <>
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                </>
+              : <>
+                  {businessesList.businesses
+                    ?.filter(business => business?.open)
+                    ?.map(business => (
+                      <BusinessLogo
+                        key={business?.id}
+                        isActive={actualSlug === business?.slug}
+                        bgimage={business?.logo || theme.images?.dummies?.businessLogo}
+                        onClick={() => onBusinessClick(business)}
+                      />
+                    ))}
+                </>}
           </AutoScroll>
         </BusinessLogosContainer>
       </BusinessLogosWrapper>
@@ -286,17 +290,9 @@ const BusinessesListingUI = (props) => {
         isCustomerMode={isCustomerMode}
       />
 
-      {(windowSize.width < 576 || (configs?.business_listing_hide_image?.value !== '1' && !isChew)) && (
+      {windowSize.width < 576 && (
         <BusinessBanner>
-          {windowSize.width < 576 && (
-            <OrderContextUI isBusinessList hideHero={(configs?.business_listing_hide_image?.value !== '1' && !isChew) && !hideHero} />
-          )}
-          {(configs?.business_listing_hide_image?.value !== '1' && !isChew) && !hideHero && !isCustomerMode && (
-            <BusinessHeroImg
-              bgimage={theme.images?.general?.businessHero}
-              height={theme?.business_listing_view?.components?.business_hero?.style?.height}
-            />
-          )}
+          <OrderContextUI isBusinessList />
         </BusinessBanner>
       )}
       {(userCustomer && orderState?.options?.address?.address && isCustomerMode) && (
@@ -346,17 +342,10 @@ const BusinessesListingUI = (props) => {
       )}
       {!isCustomerMode && (
         <OrderProgress
-          isChew={isChew}
           franchiseId={props.franchiseId}
           userCustomerId={userCustomer?.id}
           asDashboard={isCustomerMode}
           isCustomerMode={isCustomerMode}
-        />
-      )}
-      {(configs?.business_listing_hide_image?.value !== '1' && isChew) && (
-        <BusinessHeroImg
-          bgimage={theme.images?.general?.businessHero}
-          height={theme?.business_listing_view?.components?.business_hero?.style?.height}
         />
       )}
       {isCustomerMode && !hidePreviousOrders && !businessesList.loading && (
@@ -404,7 +393,7 @@ const BusinessesListingUI = (props) => {
           )}
         </>
       )}
-      {!isChew && hasHighRatedBusiness && !props.franchiseId && !hideHighestBusiness && (
+      {hasHighRatedBusiness && !props.franchiseId && !hideHighestBusiness && (
         <HightestRatedWrapper>
           <Divider />
           <HighestRated
@@ -421,7 +410,7 @@ const BusinessesListingUI = (props) => {
         </HightestRatedWrapper>
       )}
 
-      {(((configs && configs?.business_listing_categories !== false) || !isCustomLayout) && !isAllCategoriesHidden) && (
+      {(((configs && configs?.business_listing_categories !== false) || !isCustomLayout) && !isAllCategoriesHidden && !isCustomerMode) && (
         <BusinessTypeFilter
           images={props.images}
           businessTypes={props.businessTypes}
@@ -433,7 +422,7 @@ const BusinessesListingUI = (props) => {
         <SearchContainer>
           {isCustomLayout && (
             <BusinessesTitle isCustomerMode={isCustomerMode}>
-              {t('BUSINESSES', 'Businesses')}
+              {isCustomerMode ? t('SELECT_THE_BUSINESS', 'Select the business') : t('BUSINESSES', 'businesses')}
             </BusinessesTitle>
           )}
           <WrapperSearch isCustomLayout={isCustomLayout} isCustomerMode={isCustomerMode}>
@@ -466,7 +455,7 @@ const BusinessesListingUI = (props) => {
         />
       )}
       <>
-        {((!isCustomLayout && isCustomerMode && businessesList?.businesses?.length > 0) || isChew) && (
+        {(!isCustomLayout && isCustomerMode && businessesList?.businesses?.length > 0) && (
           <BusinessesTitle>
             {t('BUSINESSES', 'Businesses')}
           </BusinessesTitle>
@@ -529,60 +518,66 @@ const BusinessesListingUI = (props) => {
           )}
         </BusinessList>
       </>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-          cateringPreorder={!!cateringTypeString}
-          {...cateringValues}
-        />
-      </Modal>
-      <Modal
-        title={t('SELECT_A_STORE', 'Select a store')}
-        open={modals.citiesOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, citiesOpen: false })}
-      >
-        <CitiesControl
-          cities={citiesState?.cities}
-          handleChangeCity={handleChangeCity}
-          onClose={() => setModals({ ...modals, citiesOpen: false })}
-        />
-      </Modal>
-
-      <Modal
-        {...(!auth && { title: t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?') })}
-        open={modals.formOpen || modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, formOpen: false, listOpen: false })}
-      >
-        {modals.listOpen
-          ? (
-          <AddressList
-            isModal
-            changeOrderAddressWithDefault
-            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-            onCancel={() => setModals({ ...modals, listOpen: false })}
-            isCustomerMode={isCustomerMode}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+            cateringPreorder={!!cateringTypeString}
+            {...cateringValues}
           />
-            )
-          : (
-          <AddressFormWrapper>
-            <AddressForm
-              useValidationFileds
-              address={orderState?.options?.address || {}}
-              onCancel={() => setModals({ ...modals, formOpen: false })}
-              onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+        </Modal>
+      )}
+      {modals.citiesOpen && (
+        <Modal
+          open={modals.citiesOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, citiesOpen: false })}
+          padding='0px'
+          hideCloseDefault
+        >
+          <CitiesControl
+            cities={citiesState?.cities}
+            handleChangeCity={handleChangeCity}
+            onClose={() => setModals({ ...modals, citiesOpen: false })}
+          />
+        </Modal>
+      )}
+      {(modals.formOpen || modals.listOpen) && (
+        <Modal
+          {...(!auth && { title: t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?') })}
+          open={modals.formOpen || modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, formOpen: false, listOpen: false })}
+        >
+          {modals.listOpen
+            ? (
+            <AddressList
+              isModal
+              changeOrderAddressWithDefault
+              userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+              onCancel={() => setModals({ ...modals, listOpen: false })}
               isCustomerMode={isCustomerMode}
             />
-          </AddressFormWrapper>
-            )}
-      </Modal>
+              )
+            : (
+            <AddressFormWrapper>
+              <AddressForm
+                useValidationFileds
+                address={orderState?.options?.address || {}}
+                onCancel={() => setModals({ ...modals, formOpen: false })}
+                onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+                isCustomerMode={isCustomerMode}
+              />
+            </AddressFormWrapper>
+              )}
+        </Modal>
+      )}
 
       <Alert
         title={!mapErrors ? t('SEARCH', 'Search') : t('BUSINESSES_MAP', 'Businesses Map')}

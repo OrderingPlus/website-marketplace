@@ -87,95 +87,65 @@ const ForgotPasswordUI = (props) => {
   }, [formState])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <ForgotPasswordContainer isPopup={isPopup}>
-        <h1>{t('TITLE_FORGOT_PASSWORD', 'Forgot your password?')}</h1>
-        <FormSide isPopup={isPopup}>
-          <img src={theme?.images?.logos?.logotype} alt='Logo' width='200' height='66' loading='lazy' />
-          <FormInput
-            noValidate
-            isPopup={isPopup}
-            onSubmit={formMethods.handleSubmit(onSubmit)}
-          >
-            {props.beforeMidElements?.map((BeforeMidElements, i) => (
-              <React.Fragment key={i}>
-                {BeforeMidElements}
-              </React.Fragment>))}
-            {props.beforeMidComponents?.map((BeforeMidComponents, i) => (
-              <BeforeMidComponents key={i} {...props} />))}
-            {formMethods?.errors?.email && (
-              <ValidationText>
-                {formMethods.errors?.email?.message} {formMethods?.errors?.email?.type === 'required' && '*'}
-              </ValidationText>
-            )}
-            <Input
-              type='email'
-              name='email'
-              aria-label='email'
-              placeholder={t('EMAIL', 'Email')}
-              ref={formMethods.register({
-                required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-                }
-              })}
-              onChange={handleChangeInputEmail}
-              autoComplete='off'
-            />
-            {props.isRecaptchaEnable && enableReCaptcha && (
-              <ReCaptchaWrapper>
-                <ReCaptcha handleReCaptcha={handleReCaptcha} />
-              </ReCaptchaWrapper>
-            )}
-            {
-              props.afterMidElements?.map((MidElement, i) => (
-                <React.Fragment key={i}>
-                  {MidElement}
-                </React.Fragment>))
-            }
-            {
-              props.afterMidComponents?.map((MidComponent, i) => (
-                <MidComponent key={i} {...props} />))
-            }
-            <Button color={formState.loading || alertState.success ? 'secondary' : 'primary'} type='submit' disabled={formState.loading || alertState.success}>
-              {formState.loading
-                ? t('LOADING', 'Loading...')
-                : alertState.success && formState.result.result
-                  ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent')
-                  : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
-            </Button>
-          </FormInput>
-          {elementLinkToLogin && (
-            <RedirectLink register isPopup={isPopup}>
-              <span>{t('SIGN_IN_MESSAGE', 'Do you want to sign in?')}</span>
-              {elementLinkToLogin}
-            </RedirectLink>
+    <ForgotPasswordContainer isPopup={isPopup}>
+      <h1>{t('TITLE_FORGOT_PASSWORD', 'Forgot your password?')}</h1>
+      <FormSide isPopup={isPopup}>
+        <img src={theme?.images?.logos?.logotype} alt='Logo' width='200' height='66' loading='lazy' />
+        <FormInput
+          noValidate
+          isPopup={isPopup}
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+        >
+          {formMethods?.errors?.email && (
+            <ValidationText>
+              {formMethods.errors?.email?.message} {formMethods?.errors?.email?.type === 'required' && '*'}
+            </ValidationText>
           )}
-        </FormSide>
-        <Alert
-          title={alertState?.title || t('TITLE_FORGOT_PASSWORD', 'Forgot your password?')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
-        />
-      </ForgotPasswordContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+          <Input
+            type='email'
+            name='email'
+            aria-label='email'
+            placeholder={t('EMAIL', 'Email')}
+            ref={formMethods.register({
+              required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+              }
+            })}
+            onChange={handleChangeInputEmail}
+            autoComplete='off'
+          />
+          {props.isRecaptchaEnable && enableReCaptcha && (
+            <ReCaptchaWrapper>
+              <ReCaptcha handleReCaptcha={handleReCaptcha} />
+            </ReCaptchaWrapper>
+          )}
+          <Button color={formState.loading || alertState.success ? 'secondary' : 'primary'} type='submit' disabled={formState.loading || alertState.success}>
+            {formState.loading
+              ? t('LOADING', 'Loading...')
+              : alertState.success && formState.result.result
+                ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent')
+                : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
+          </Button>
+        </FormInput>
+        {elementLinkToLogin && (
+          <RedirectLink register isPopup={isPopup}>
+            <span>{t('SIGN_IN_MESSAGE', 'Do you want to sign in?')}</span>
+            {elementLinkToLogin}
+          </RedirectLink>
+        )}
+      </FormSide>
+      <Alert
+        title={alertState?.title || t('TITLE_FORGOT_PASSWORD', 'Forgot your password?')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </ForgotPasswordContainer>
   )
 }
 

@@ -123,123 +123,91 @@ const ReviewOrderUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <>
-        <LogoAndReviewWrapper>
-          <WrapperBusinessLogo isMulti={order?.business?.length > 1}>
-            {order?.business?.length > 1
-              ? (
-              <MultiLogosContainer>
+      <LogoAndReviewWrapper>
+        <WrapperBusinessLogo isMulti={order?.business?.length > 1}>
+          {order?.business?.length > 1
+            ? <MultiLogosContainer>
                 {order?.business?.map((business, i) => (
                   <React.Fragment key={business?.id}>
                     <BusinessLogo isMulti bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
                   </React.Fragment>
                 ))}
               </MultiLogosContainer>
-                )
-              : (
-              <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
-                )}
-          </WrapperBusinessLogo>
-          <ReviewsProgressWrapper>
-            <p>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</p>
-            <ReviewsProgressContent>
-              <ReviewsProgressBar style={{ width: `${(stars?.quality === 0 ? 0 : (stars?.quality - 1) / 4) * 100}%` }} />
-              {
-                qualificationList?.map(qualification => (
-                  <ReviewsMarkPoint
-                    key={qualification?.key}
-                    style={{
-                      left: theme?.rtl ? (qualification?.middleNode ? 'initial' : qualification?.right) : qualification?.left,
-                      right: theme?.rtl ? qualification?.left : (qualification?.middleNode ? 'initial' : qualification?.right)
-                    }}
-                    active={stars?.quality === qualification?.key}
-                    pass={stars?.quality >= qualification?.key}
-                    className={qualification?.middleNode ? 'mark-point' : ''}
-                    onClick={() => handleChangeStars(qualification?.key)}
-                  >
-                    <span>{qualification?.text}<span /></span>
-                  </ReviewsMarkPoint>
-                ))
-              }
-            </ReviewsProgressContent>
-          </ReviewsProgressWrapper>
-          <CommentsList>
-            <p>{commentsList[stars?.quality || 1]?.title}</p>
+            : <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />}
+        </WrapperBusinessLogo>
+        <ReviewsProgressWrapper>
+          <p>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</p>
+          <ReviewsProgressContent>
+            <ReviewsProgressBar style={{ width: `${(stars?.quality === 0 ? 0 : (stars?.quality - 1) / 4) * 100}%` }} />
             {
-              commentsList[stars?.quality || 1]?.list?.map((commentItem, i) => (
-                <CommentButton
-                  key={i}
-                  active={isSelectedComment(commentItem?.key)}
-                  onClick={() => handleChangeComment(commentItem)}
-                  initialIcon
+              qualificationList?.map(qualification => (
+                <ReviewsMarkPoint
+                  key={qualification?.key}
+                  style={{
+                    left: theme?.rtl ? (qualification?.middleNode ? 'initial' : qualification?.right) : qualification?.left,
+                    right: theme?.rtl ? qualification?.left : (qualification?.middleNode ? 'initial' : qualification?.right)
+                  }}
+                  active={stars?.quality === qualification?.key}
+                  pass={stars?.quality >= qualification?.key}
+                  className={qualification?.middleNode ? 'mark-point' : ''}
+                  onClick={() => handleChangeStars(qualification?.key)}
                 >
-                  {commentItem.content}
-                  {
-                    isSelectedComment(commentItem?.key) && <MdClose />
-                  }
-                </CommentButton>
+                  <span>{qualification?.text}<span /></span>
+                </ReviewsMarkPoint>
               ))
             }
-          </CommentsList>
-        </LogoAndReviewWrapper>
-        <ReviewOrderContainer onSubmit={handleSubmit(onSubmit)}>
-          <Comments>
-            <p>{t('DO_YOU_WANT_TO_ADD_SOMETHING', 'Do you want to add something?')}</p>
-            <TextArea
-              name='comments'
-              value={extraComment}
-              onChange={(e) => setExtraComment(e.target.value)}
-              autoComplete='off'
-            />
-          </Comments>
+          </ReviewsProgressContent>
+        </ReviewsProgressWrapper>
+        <CommentsList>
+          <p>{commentsList[stars?.quality || 1]?.title}</p>
           {
-            props.afterMidElements?.map((MidElement, i) => (
-              <React.Fragment key={i}>
-                {MidElement}
-              </React.Fragment>))
+            commentsList[stars?.quality || 1]?.list?.map((commentItem, i) => (
+              <CommentButton
+                key={i}
+                active={isSelectedComment(commentItem?.key)}
+                onClick={() => handleChangeComment(commentItem)}
+                initialIcon
+              >
+                {commentItem.content}
+                {isSelectedComment(commentItem?.key) && <MdClose />}
+              </CommentButton>
+            ))
           }
-          {
-            props.afterMidComponents?.map((MidComponent, i) => (
-              <MidComponent key={i} {...props} />))
-          }
-          <Send>
-            <span onClick={closeReviewOrder}>{t('SKIP', 'Skip')}</span>
-            <Button
-              color={!formState.loading ? 'primary' : 'secondary'}
-              type='submit'
-              disabled={formState.loading}
-              className='review-sent'
-            >
-              {!formState.loading
-                ? (
-                <ContinueContainer><p>{t('CONTINUE', 'Continue')}</p><BsArrowRight /></ContinueContainer>
-                  )
-                : t('LOADING', 'Loading')}
-            </Button>
-          </Send>
-          <Alert
-            title={t('ORDER_REVIEW', 'Order Review')}
-            content={alertState.content}
-            acceptText={t('ACCEPT', 'Accept')}
-            open={alertState.open}
-            onClose={() => closeAlert()}
-            onAccept={() => closeAlert()}
-            closeOnBackdrop={false}
+        </CommentsList>
+      </LogoAndReviewWrapper>
+      <ReviewOrderContainer onSubmit={handleSubmit(onSubmit)}>
+        <Comments>
+          <p>{t('DO_YOU_WANT_TO_ADD_SOMETHING', 'Do you want to add something?')}</p>
+          <TextArea
+            name='comments'
+            value={extraComment}
+            onChange={(e) => setExtraComment(e.target.value)}
+            autoComplete='off'
           />
-        </ReviewOrderContainer>
-      </>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+        </Comments>
+        <Send>
+          <span onClick={closeReviewOrder}>{t('SKIP', 'Skip')}</span>
+          <Button
+            color={!formState.loading ? 'primary' : 'secondary'}
+            type='submit'
+            disabled={formState.loading}
+            className='review-sent'
+          >
+            {!formState.loading
+              ? <ContinueContainer><p>{t('CONTINUE', 'Continue')}</p><BsArrowRight /></ContinueContainer>
+              : t('LOADING', 'Loading')}
+          </Button>
+        </Send>
+        <Alert
+          title={t('ORDER_REVIEW', 'Order Review')}
+          content={alertState.content}
+          acceptText={t('ACCEPT', 'Accept')}
+          open={alertState.open}
+          onClose={() => closeAlert()}
+          onAccept={() => closeAlert()}
+          closeOnBackdrop={false}
+        />
+      </ReviewOrderContainer>
     </>
   )
 }

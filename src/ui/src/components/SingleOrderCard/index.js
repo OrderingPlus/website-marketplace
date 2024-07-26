@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import BsDot from '@meronex/icons/bs/BsDot'
 
@@ -10,8 +11,6 @@ import {
   Price,
   BusinessLogoWrapper,
   ButtonWrapper,
-  Logo,
-  TitleContainer,
   FavoriteWrapper,
   ReviewWrapper,
   MultiLogosContainer
@@ -22,7 +21,7 @@ import { OrderEta } from '../OrderDetails/OrderEta'
 import { useLanguage, useUtils, useConfig, useOrder, SingleOrderCard as SingleOrderCardController } from '~components'
 
 import {
-  getOrderStatus,
+  generalUtilities,
   Button,
   Modal,
   Confirm,
@@ -39,7 +38,6 @@ const SingleOrderCardUI = (props) => {
     customArray,
     onRedirectPage,
     pastOrders,
-    isCustomerMode,
     handleFavoriteOrder,
     isSkeleton,
     isFavorite,
@@ -59,6 +57,8 @@ const SingleOrderCardUI = (props) => {
   const [isOrderReviewed, setIsOrderReviewed] = useState(false)
   const [isProductReviewed, setIsProductReviewed] = useState(false)
   const [isDriverReviewed, setIsDriverReviewed] = useState(false)
+
+  const { getOrderStatus } = generalUtilities()
 
   const isGiftCardOrder = !order?.business_id
 
@@ -143,132 +143,103 @@ const SingleOrderCardUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <Container
         id='order-card'
         w={screen.width - (screen.width < 411 ? -60 : 60)}
+        mr={props.mrOrders}
+        disabledWidthConfig
         isBusinessesPage={isBusinessesPage}
-        isCustomerMode={isCustomerMode}
         onClick={(e) => handleClickCard(e, order)}
       >
-        <Content isCustomerMode={isCustomerMode}>
+        <Content>
           {isSkeleton
-            ? (
-            <Skeleton width={60} height={60} />
-              )
-            : (
-            <>
-              {!isCustomerMode && !hideBusinessLogo && (
+            ? <Skeleton width={60} height={60} />
+            : !hideBusinessLogo && (
                 <>
                   {order?.business?.length > 1
-                    ? (
-                    <MultiLogosContainer>
-                      {order?.business?.map((business, i) => i < 2 && (
-                        <BusinessLogoWrapper
-                          key={business?.id}
-                          bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')}
-                          isMulti
-                        />
-                      ))}
-                      {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
-                        <p>
-                          + {order?.business?.length - 2}
-                        </p>
-                      )}
-                    </MultiLogosContainer>
-                      )
-                    : (
-                    <BusinessLogoWrapper bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')} />
-                      )}
+                    ? <MultiLogosContainer>
+                        {order?.business?.map((business, i) => i < 2 && (
+                          <BusinessLogoWrapper
+                            key={business?.id}
+                            bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')}
+                            isMulti
+                          />
+                        ))}
+                        {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
+                          <p>
+                            + {order?.business?.length - 2}
+                          </p>
+                        )}
+                      </MultiLogosContainer>
+                    : <BusinessLogoWrapper bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')} />}
                 </>
-              )}
-              {isCustomerMode && !hideBusinessLogo && (
-                <>
-                  {(order.business?.logo || theme.images?.dummies?.businessLogo) && (
-                    <Logo>
-                      <img src={order.business?.logo || theme.images?.dummies?.businessLogo} alt='business-logo' width='75px' height='75px' />
-                    </Logo>
-                  )}
-                </>
-              )}
-            </>
               )}
 
           <BusinessInformation activeOrders isMultiCart={order?.business?.length > 1}>
             {!hideBusinessName && (
-              <>
-                {isCustomerMode
-                  ? (
-                  <TitleContainer>
-                    <h2>{isSkeleton ? <Skeleton width={120} /> : order.business?.name}</h2>
-                    <Price isBusinessesPage={isBusinessesPage} isCustomerMode={isCustomerMode}>
-                      <h2>
-                        {isSkeleton ? <Skeleton width={50} /> : parsePrice(order?.summary?.total || order?.total)}
-                      </h2>
-                    </Price>
-                  </TitleContainer>
-                    )
-                  : (
-                  <h2>{isSkeleton ? <Skeleton width={120} /> : order?.business?.length > 1 ? `${t('GROUP_ORDER', 'Group Order')} ${t('No', 'No')}. ${order?.cart_group_id}` : order.business?.name}</h2>
-                    )}
-              </>
+              <h2>{isSkeleton
+                ? <Skeleton width={120} />
+                : order?.business?.length > 1
+                  ? `${t('GROUP_ORDER', 'Group Order')} ${t('No', 'No')}. ${order?.cart_group_id}`
+                  : order.business?.name}</h2>
             )}
             {
               isSkeleton
-                ? (
-                <div className='orders-detail'>
-                  <Skeleton width={150} />
-                </div>
-                  )
-                : (
-                <div className='orders-detail'>
-                  {(order?.id || (changeIdToExternalId && order?.external_id)) && !hideOrderNumber && (
-                    <>
-                      <BsDot />
-                      <p name='order_number'>{order?.business?.length > 1 ? `${order?.business?.length} ${t('ORDERS', 'orders')}` : (changeIdToExternalId && order?.external_id) || (`${t('ORDER_NUM', 'Order No.')} ${order.id}`)}</p>
-                    </>
-                  )}
-                  {!hideDate && (
-                    <>
-                      <BsDot />
-                      <p>
-                        {
-                          pastOrders
-                            ? order?.delivery_datetime_utc
-                              ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
-                              : parseDate(order?.delivery_datetime, { utc: false })
-                            : <OrderEta order={order} />
-                        }
-                      </p>
-                    </>
-
-                  )}
-                </div>
-                  )
+                ? <div className='orders-detail'>
+                    <Skeleton width={150} />
+                  </div>
+                : <div className='orders-detail'>
+                    {(order?.id || (changeIdToExternalId && order?.external_id)) && !hideOrderNumber && (
+                      <>
+                        <BsDot />
+                        <p name='order_number'>{order?.business?.length > 1 ? `${order?.business?.length} ${t('ORDERS', 'orders')}` : (changeIdToExternalId && order?.external_id) || (`${t('ORDER_NUM', 'Order No.')} ${order.id}`)}</p>
+                      </>
+                    )}
+                    {!hideDate && screen.width > 512 && (
+                      <>
+                        <BsDot />
+                        <p>
+                          {
+                            pastOrders
+                              ? order?.delivery_datetime_utc
+                                ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
+                                : parseDate(order?.delivery_datetime, { utc: false })
+                              : <OrderEta order={order} />
+                          }
+                        </p>
+                      </>
+                    )}
+                  </div>
             }
+            {!hideDate && screen.width <= 512 && (
+              <div className='orders-detail'>
+                <BsDot />
+                <p>
+                  {pastOrders
+                    ? order?.delivery_datetime_utc
+                      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
+                      : parseDate(order?.delivery_datetime, { utc: false })
+                    : <OrderEta order={order} />
+                  }
+                </p>
+              </div>
+            )}
             {!hideOrderStatus && (
               <p className='order-status'>{isSkeleton ? <Skeleton width={80} /> : getOrderStatus(order.status)?.value}</p>
             )}
           </BusinessInformation>
-          {!isCustomerMode && (
-            <Price isBusinessesPage={isBusinessesPage}>
-              {
-                !pastOrders && (
-                  <h2>
-                    {isSkeleton ? <Skeleton width={50} /> : parsePrice(order?.business?.length > 1 ? order?.total : order?.summary?.total || order?.total)}
-                  </h2>
-                )
-              }
-            </Price>
-          )}
+          <Price isBusinessesPage={isBusinessesPage}>
+            {
+              !pastOrders && (
+                <h2>
+                  {isSkeleton ? <Skeleton width={50} /> : parsePrice(order?.business?.length > 1 ? order?.total : order?.summary?.total || order?.total)}
+                </h2>
+              )
+            }
+          </Price>
           {pastOrders && !isGiftCardOrder && (
-            <ButtonWrapper isCustomerMode={isCustomerMode}>
-              {!isOrderReviewed && !isFavorite && (!order?.review || (order.driver && !order?.user_review)) && !hideReviewOrderButton && !isCustomerMode && (
+            <ButtonWrapper>
+              {!isOrderReviewed && !isFavorite && (!order?.review || (order.driver && !order?.user_review)) && !hideReviewOrderButton && (
                 <Button
                   outline
                   color='primary'
@@ -291,15 +262,11 @@ const SingleOrderCardUI = (props) => {
               )}
             </ButtonWrapper>
           )}
-          {!order?.business?.length && !hideFavorite && !isCustomerMode && (
+          {!order?.business?.length && !hideFavorite && (
             <FavoriteWrapper onClick={() => handleChangeFavorite(order)} className='favorite'>
               {isSkeleton
                 ? <Skeleton width={20} height={20} />
-                : (
-                <>
-                  {order?.favorite ? <Like /> : <DisLike />}
-                </>
-                  )}
+                : order?.favorite ? <Like /> : <DisLike />}
             </FavoriteWrapper>
           )}
         </Content>
@@ -338,12 +305,6 @@ const SingleOrderCardUI = (props) => {
         onAccept={confirm.handleOnAccept}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

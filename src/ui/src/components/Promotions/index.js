@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   PromotionsContainer,
@@ -17,7 +18,8 @@ import {
   Code,
   BusinessInfo,
   OfferView,
-  OfferInfoWrapper
+  OfferInfoWrapper,
+  OfferViewList
 } from './styles'
 
 import { PromotionsController, useLanguage, useSite, useUtils, useEvent } from '~components'
@@ -72,12 +74,14 @@ const PromotionsUI = (props) => {
       <PromotionTitle>
         {t('PROMOTIONS', 'Promotions')}
       </PromotionTitle>
-      <SearchBarContainer>
-        <SearchBar
-          placeholder={t('SEARCH_PROMOTION', 'Search promotion')}
-          onSearch={handleSearchValue}
-        />
-      </SearchBarContainer>
+      {!offersState?.loading && offersState.offers?.length > 0 && (
+        <SearchBarContainer>
+          <SearchBar
+            placeholder={t('SEARCH_PROMOTION', 'Search promotion')}
+            onSearch={handleSearchValue}
+          />
+        </SearchBarContainer>
+      )}
 
       {offersState?.loading && (
         <>
@@ -100,9 +104,9 @@ const PromotionsUI = (props) => {
       )}
       {!offersState?.loading && offersState.offers?.length > 0 && filteredOffers?.map(offer => (
         <SingleOfferContainer key={offer.id}>
-          <OfferInfoWrapper>
+          <OfferInfoWrapper id='offer-wrap'>
             <BusinessLogo bgimage={offer?.image || theme.images?.dummies?.businessLogo} />
-            <OfferInformation>
+            <OfferInformation id='offer-info'>
               <h2>{offer?.name}</h2>
               <Description>{offer?.description}</Description>
               <ExpiresAt>
@@ -126,58 +130,60 @@ const PromotionsUI = (props) => {
           </Button>
         </SingleOfferContainer>
       ))}
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      >
-        <OfferView>
-          <h2>
-            {`${offerSelected?.name} / ${t('VALUE_OF_OFFER', 'Value of offer')}: ${offerSelected?.rate_type === 1 ? `${offerSelected?.rate}%` : `${parsePrice(offerSelected?.rate)}`}`}
-          </h2>
-          <OfferData>
-            {offerSelected?.type === 2 && (
-              <Code>
-                <p>{t('YOUR_CODE', 'Your code')}</p>
-                <span>{offerSelected.coupon}</span>
-              </Code>
-            )}
-            <p>{t('APPLIES_TO', 'Applies to')}: {targetString}</p>
-            {offerSelected?.auto && (
-              <p>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</p>
-            )}
-            {offerSelected?.minimum && (
-              <p>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purshase for use this offer')}: {parsePrice(offerSelected?.minimum)}</p>
-            )}
-            {offerSelected?.max_discount && (
-              <p>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</p>
-            )}
-            {offerSelected?.description && (
-              <p>{offerSelected?.description}</p>
-            )}
-          </OfferData>
-          <h2>
-            {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}
-          </h2>
-          <div>
-            {offerSelected?.businesses?.map(business => {
-              return (
-                <SingleBusinessOffer key={business.id}>
-                  <BusinessLogo bgimage={business?.logo} />
-                  <BusinessInfo>
-                    <p>{business.name}</p>
-                    <Button
-                      onClick={() => handleBusinessClick(business)}
-                      color='primary'
-                    >
-                      {t('GO_TO_BUSINESSS', 'Go to business')}
-                    </Button>
-                  </BusinessInfo>
-                </SingleBusinessOffer>
-              )
-            })}
-          </div>
-        </OfferView>
-      </Modal>
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+        >
+          <OfferView>
+            <h2>
+              {`${offerSelected?.name} / ${t('VALUE_OF_OFFER', 'Value of offer')}: ${offerSelected?.rate_type === 1 ? `${offerSelected?.rate}%` : `${parsePrice(offerSelected?.rate)}`}`}
+            </h2>
+            <OfferData>
+              {offerSelected?.type === 2 && (
+                <Code>
+                  <p>{t('YOUR_CODE', 'Your code')}</p>
+                  <span>{offerSelected.coupon}</span>
+                </Code>
+              )}
+              <p>{t('APPLIES_TO', 'Applies to')}: {targetString}</p>
+              {offerSelected?.auto && (
+                <p>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</p>
+              )}
+              {offerSelected?.minimum && (
+                <p>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purshase for use this offer')}: {parsePrice(offerSelected?.minimum)}</p>
+              )}
+              {offerSelected?.max_discount && (
+                <p>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</p>
+              )}
+              {offerSelected?.description && (
+                <p>{offerSelected?.description}</p>
+              )}
+            </OfferData>
+            <h2>
+              {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}
+            </h2>
+            <OfferViewList>
+              {offerSelected?.businesses?.map(business => {
+                return (
+                  <SingleBusinessOffer key={business.id}>
+                    <BusinessLogo bgimage={business?.logo ?? theme.images.dummies.businessLogo} />
+                    <BusinessInfo>
+                      <p>{business.name}</p>
+                      <Button
+                        onClick={() => handleBusinessClick(business)}
+                        color='primary'
+                      >
+                        {t('GO_TO_BUSINESSS', 'Go to business')}
+                      </Button>
+                    </BusinessInfo>
+                  </SingleBusinessOffer>
+                )
+              })}
+            </OfferViewList>
+          </OfferView>
+        </Modal>
+      )}
     </PromotionsContainer>
   )
 }

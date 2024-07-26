@@ -14,7 +14,6 @@ import {
   BusinessCartContent,
   EmptyCart,
   EmptyBtnWrapper,
-  WrapperSearch,
   ProfessionalFilterWrapper,
   WrapperSearchAbsolute,
   NearBusiness,
@@ -25,15 +24,6 @@ import {
 import { useLanguage, useConfig, useUtils } from '~components'
 import { SpinnerCart } from '../Cart/styles'
 import { SearchIconWrapper } from '../BusinessBasicInformation/styles'
-
-import { BusinessBasicInformation as BusinessBasicInformationOld } from '../BusinessBasicInformation/layouts/old'
-import { BusinessInformation as BusinessBasicInformationStarbucks } from '../BusinessBasicInformation/layouts/six'
-import { BusinessBasicInformation as BusinessBasicInformationRed } from '../BusinessBasicInformation/layouts/seven'
-
-import { BusinessProductsCategories as CategoriesLayoutGroceries } from '../BusinessProductsCategories/layouts/groceries'
-import { BusinessProductsList as ProductListLayoutGroceries } from '../BusinessProductsList/layouts/groceries'
-import { SearchProducts as SearchProductsOld } from '../SearchProducts/layouts/old'
-import { SearchProducts as SearchProductsStarbucks } from '../SearchProducts/layouts/six'
 
 import {
   useWindowSize,
@@ -50,7 +40,9 @@ import {
   BusinessBasicInformation,
   BusinessProductsCategories,
   BusinessProductsList,
-  SearchProducts as SearchProductsOriginal
+  SearchProducts as SearchProductsOriginal,
+  CategoriesLayoutGroceries,
+  ProductListLayoutGroceries
 } from '~ui'
 
 const layoutOne = 'groceries'
@@ -109,21 +101,6 @@ export const RenderProductsLayout = (props) => {
   const [openSearchProducts, setOpenSearchProducts] = useState(false)
   const [categoryClicked, setCategoryClicked] = useState(false)
   const isUseParentCategory = (configs?.use_parent_category?.value === 'true' || configs?.use_parent_category?.value === '1') && !useKioskApp
-  const BusinessBasicInformationComponent =
-    theme?.business_view?.components?.header?.components?.layout?.type === 'red'
-      ? BusinessBasicInformationRed
-      : theme?.business_view?.components?.header?.components?.layout?.type === 'starbucks'
-        ? BusinessBasicInformationStarbucks
-        : theme?.business_view?.components?.header?.components?.layout?.type === 'old'
-          ? BusinessBasicInformationOld
-          : BusinessBasicInformation
-
-  const SearchProductsComponent =
-    theme?.business_view?.components?.product_search?.components?.layout?.type === 'old'
-      ? SearchProductsOld
-      : theme?.business_view?.components?.product_search?.components?.layout?.type === 'starbucks'
-        ? SearchProductsStarbucks
-        : null
 
   const frontLayout = business?.front_layout
   const businessLayout = {
@@ -183,7 +160,7 @@ export const RenderProductsLayout = (props) => {
           )}
           <div className='bp-list'>
             {!useKioskApp && (
-              <BusinessBasicInformationComponent
+              <BusinessBasicInformation
                 {...props}
                 businessState={businessState}
                 setOpenBusinessInformation={setOpenBusinessInformation}
@@ -213,20 +190,6 @@ export const RenderProductsLayout = (props) => {
               </PageBannerWrapper>
             )}
 
-            {!errorQuantityProducts && SearchProductsComponent && !useKioskApp && (
-              <>
-                <WrapperSearch>
-                  <SearchProductsComponent
-                    handleChangeSearch={handleChangeSearch}
-                    searchValue={searchValue}
-                    sortByOptions={sortByOptions}
-                    sortByValue={sortByValue}
-                    onChange={(val) => handleChangeSortBy && handleChangeSortBy(val)}
-                    businessState={businessState}
-                  />
-                </WrapperSearch>
-              </>
-            )}
             {!business?.loading && business?.previously_products?.length > 0 && !hidePreviousOrdered && windowSize.width < 993 && !categoryClicked && (
               <OrderItAgain
                 onProductClick={onProductClick}
@@ -357,23 +320,23 @@ export const RenderProductsLayout = (props) => {
                     <BusinessCartContent maxHeight={window.innerHeight - 100}>
                       {currentCart?.products?.length > 0
                         ? (
-                        <>
-                          <Title>{t('YOUR_CART', 'Your cart')}</Title>
-                          <Cart
-                            isStore
-                            isCustomMode
-                            isForceOpenCart
-                            useKioskApp={useKioskApp}
-                            cart={currentCart}
-                            isCartPending={currentCart?.status === 2}
-                            isProducts={currentCart.products.length}
-                            isCartOnProductsList={isCartOnProductsList}
-                            handleCartOpen={handleCartOpen}
-                            businessConfigs={business?.configs}
-                            productLoading={productLoading}
-                            setProductLoading={setProductLoading}
-                          />
-                        </>
+                          <>
+                            <Title>{t('YOUR_CART', 'Your cart')}</Title>
+                            <Cart
+                              isStore
+                              isCustomMode
+                              isForceOpenCart
+                              useKioskApp={useKioskApp}
+                              cart={currentCart}
+                              isCartPending={currentCart?.status === 2}
+                              isProducts={currentCart.products.length}
+                              isCartOnProductsList={isCartOnProductsList}
+                              handleCartOpen={handleCartOpen}
+                              businessConfigs={business?.configs}
+                              productLoading={productLoading}
+                              setProductLoading={setProductLoading}
+                            />
+                          </>
                           )
                         : (
                         <EmptyCart>
@@ -488,7 +451,7 @@ export const RenderProductsLayout = (props) => {
       {isLoading && !isError && (
         <>
           {!isCustomLayout && !useKioskApp && (
-            <BusinessBasicInformationComponent
+            <BusinessBasicInformation
               isSkeleton
               handler={handler}
               businessState={{ business: {}, loading: true }}
@@ -522,47 +485,49 @@ export const RenderProductsLayout = (props) => {
           )}
         </>
       )}
-      <Modal
-        width='40%'
-        open={isCartModal}
-        onClose={() => setisCartModal(false)}
-        padding='0'
-      >
-        <BusinessCartContent isModal>
-          <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
-          {currentCart?.products?.length > 0
-            ? (
-            <>
-              <Cart
-                isStore
-                isCustomMode
-                isForceOpenCart
-                cart={currentCart}
-                useKioskApp={useKioskApp}
-                isCartPending={currentCart?.status === 2}
-                isProducts={currentCart.products.length}
-                isCartOnProductsList={isCartOnProductsList}
-                handleCartOpen={handleCartOpen}
-                businessConfigs={business?.configs}
-                productLoading={productLoading}
-                setProductLoading={setProductLoading}
-              />
-            </>
-              )
-            : (
-            <EmptyCart>
-              <div className='empty-content'>
-                <Cart3 />
-                <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
-              </div>
-              <EmptyBtnWrapper>
-                <span>{parsePrice(0)}</span>
-                <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
-              </EmptyBtnWrapper>
-            </EmptyCart>
-              )}
-        </BusinessCartContent>
-      </Modal>
+      {isCartModal && (
+        <Modal
+          width='40%'
+          open={isCartModal}
+          onClose={() => setisCartModal(false)}
+          padding='0'
+        >
+          <BusinessCartContent isModal>
+            <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
+            {currentCart?.products?.length > 0
+              ? (
+              <>
+                <Cart
+                  isStore
+                  isCustomMode
+                  isForceOpenCart
+                  cart={currentCart}
+                  useKioskApp={useKioskApp}
+                  isCartPending={currentCart?.status === 2}
+                  isProducts={currentCart.products.length}
+                  isCartOnProductsList={isCartOnProductsList}
+                  handleCartOpen={handleCartOpen}
+                  businessConfigs={business?.configs}
+                  productLoading={productLoading}
+                  setProductLoading={setProductLoading}
+                />
+              </>
+                )
+              : (
+              <EmptyCart>
+                <div className='empty-content'>
+                  <Cart3 />
+                  <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                </div>
+                <EmptyBtnWrapper>
+                  <span>{parsePrice(0)}</span>
+                  <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
+                </EmptyBtnWrapper>
+              </EmptyCart>
+                )}
+          </BusinessCartContent>
+        </Modal>
+      )}
     </>
   )
 }

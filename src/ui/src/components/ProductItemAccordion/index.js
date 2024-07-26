@@ -27,10 +27,17 @@ import {
   ScheduleInfo
 } from './styles'
 
-import { useUtils, useLanguage, useOrder, useConfig } from '~components'
+import {
+  ProductItemAccordion as ProductItemAccordionController,
+  useUtils,
+  useLanguage,
+  useOrder,
+  useConfig
+} from '~components'
+
 import { useWindowSize } from '~ui'
 
-export const ProductItemAccordion = (props) => {
+const ProductItemAccordionUI = (props) => {
   const {
     isDisabledEdit,
     isCartPending,
@@ -44,7 +51,8 @@ export const ProductItemAccordion = (props) => {
     isCheckout,
     isStore,
     isConfirmationPage,
-    toppingsRemoved
+    toppingsRemoved,
+    productInfo
   } = props
   const theme = useTheme()
   const [, t] = useLanguage()
@@ -65,25 +73,7 @@ export const ProductItemAccordion = (props) => {
   const showProductImage = !theme?.[viewString]?.components?.cart?.components?.products?.components?.image?.hidden
   const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
 
-  const productInfo = () => {
-    if (isCartProduct) {
-      const ingredients = JSON.parse(JSON.stringify(Object.values(product.ingredients ?? {})))
-      let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
-
-      options = options.map(option => {
-        option.suboptions = Object.values(option.suboptions ?? {})
-        return option
-      })
-      return {
-        ...productInfo,
-        ingredients,
-        options
-      }
-    }
-    return product
-  }
-
-  const showArrowIcon = props.showArrowIcon && (productInfo()?.ingredients?.length > 0 || productInfo()?.options?.length > 0 || product?.comment)
+  const showArrowIcon = props.showArrowIcon && (productInfo?.ingredients?.length > 0 || productInfo?.options?.length > 0 || product?.comment)
 
   const toggleAccordion = (e) => {
     const isActionsClick = productSelect.current?.contains(e.target) || productActionsEdit.current?.contains(e.target) || productActionsDelete.current?.contains(e.target)
@@ -120,12 +110,7 @@ export const ProductItemAccordion = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
+
       <AccordionSection isCheckout={isCheckout}>
         <Accordion
           className={`product accordion ${setActive}`}
@@ -223,7 +208,7 @@ export const ProductItemAccordion = (props) => {
                     <span>
                       {parsePrice(product.total || product.price)}
                     </span>
-                    {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+                    {(productInfo.ingredients.length > 0 || productInfo.options.length > 0 || product.comment) && (
                       <p>
                         <IosArrowDown className={`${setRotate}`} />
                       </p>
@@ -308,23 +293,23 @@ export const ProductItemAccordion = (props) => {
           ref={content}
           style={{ maxHeight: `${setHeight}` }}
         >
-          {productInfo().ingredients.length > 0 && productInfo().ingredients.some(ingredient => !ingredient.selected) && (
+          {productInfo.ingredients.length > 0 && productInfo.ingredients.some(ingredient => !ingredient.selected) && (
             <ProductOptionsList>
               <p>{t('INGREDIENTS', 'Ingredients')}</p>
-              {productInfo().ingredients.map(ingredient => !ingredient.selected && (
+              {productInfo.ingredients.map(ingredient => !ingredient.selected && (
                 <li className='ingredient' key={ingredient.id}>
                   <span>{t('NO', 'No')} {ingredient.name}</span>
                 </li>
               ))}
             </ProductOptionsList>
           )}
-          {productInfo().options.length > 0 && (
+          {productInfo.options.length > 0 && (
             <ProductOptionsList>
-              {productInfo().options.sort((a, b) => a.rank - b.rank).map(option => (
+              {productInfo.options.map(option => (
                 <li key={option.id}>
                   <p>{option.name}</p>
                   <ProductOptionsList className='suboption'>
-                    {option.suboptions.map(suboption => (
+                    {option?.suboptions?.sort((a, b) => a.rank - b.rank).map(suboption => (
                       <li key={suboption.id}>
                         <span>
                           {getFormattedSubOptionName({
@@ -363,16 +348,16 @@ export const ProductItemAccordion = (props) => {
           )}
         </AccordionContent>
       </AccordionSection>
-      {
-        props.afterComponents?.map((AfterComponent, i) => (
-          <AfterComponent key={i} {...props} />))
-      }
-      {
-        props.afterElements?.map((AfterElement, i) => (
-          <React.Fragment key={i}>
-            {AfterElement}
-          </React.Fragment>))
-      }
     </>
+  )
+}
+
+export const ProductItemAccordion = (props) => {
+  const productItemAccordion = {
+    ...props,
+    UIComponent: ProductItemAccordionUI
+  }
+  return (
+    <ProductItemAccordionController {...productItemAccordion} />
   )
 }

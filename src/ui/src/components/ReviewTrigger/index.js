@@ -28,60 +28,36 @@ export const ReviewTrigger = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <>
-        <LogoAndReviewWrapper>
-          <WrapperBusinessLogo>
-            {(order?.business?.logo || theme.images?.dummies?.businessLogo) && (
-              <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
+      <LogoAndReviewWrapper>
+        <WrapperBusinessLogo>
+          {(order?.business?.logo || theme.images?.dummies?.businessLogo) && (
+            <BusinessLogo bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_200,c_limit')} />
+          )}
+        </WrapperBusinessLogo>
+        {order?.business?.name && <BusinessName>{order?.business?.name}</BusinessName>}
+        <ReviewsProgressWrapper>
+          <StarWrapper>
+            {[...Array(5).keys()].map((index) => (
+              index <= (star - 1))
+              ? <StarFill size={40} key={`star-symbol-${index}`} onClick={() => setStar(index + 1)} color={theme?.colors?.primary} />
+              : <Star size={40} key={`star-symbol-${index}`} onClick={() => setStar(index + 1)} />
             )}
-          </WrapperBusinessLogo>
-          {order?.business?.name && <BusinessName>{order?.business?.name}</BusinessName>}
-          <ReviewsProgressWrapper>
-            <StarWrapper>
-              {[...Array(5).keys()].map((index) => (
-                index <= (star - 1))
-                ? <StarFill size={40} key={`star-symbol-${index}`} onClick={() => setStar(index + 1)} color={theme?.colors?.primary} />
-                : <Star size={40} key={`star-symbol-${index}`} onClick={() => setStar(index + 1)} />
-              )}
-            </StarWrapper>
-          </ReviewsProgressWrapper>
-          <PlacedDate>{t('DONOT_FORGET_RATE_YOUR_ORDER', 'Do not forget to rate your order placed on ')} <strong>{placedOnDate}</strong></PlacedDate>
-        </LogoAndReviewWrapper>
-        <ReviewOrderContainer>
-          {
-            props.afterMidElements?.map((MidElement, i) => (
-              <React.Fragment key={i}>
-                {MidElement}
-              </React.Fragment>))
-          }
-          {
-            props.afterMidComponents?.map((MidComponent, i) => (
-              <MidComponent key={i} {...props} />))
-          }
-          <Send>
-            <Button
-              color='primary'
-              type='button'
-              className='review-sent'
-              onClick={() => handleOpenOrderReview(star)}
-            >
-              <ContinueContainer><p>{t('GOTO_REVIEW', 'Go to review')}</p><BsArrowRight /></ContinueContainer>
-            </Button>
-          </Send>
-        </ReviewOrderContainer>
-      </>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+          </StarWrapper>
+        </ReviewsProgressWrapper>
+        <PlacedDate>{t('DONOT_FORGET_RATE_YOUR_ORDER', 'Do not forget to rate your order placed on ')} <strong>{placedOnDate}</strong></PlacedDate>
+      </LogoAndReviewWrapper>
+      <ReviewOrderContainer>
+        <Send>
+          <Button
+            color='primary'
+            type='button'
+            className='review-sent'
+            onClick={() => handleOpenOrderReview(star)}
+          >
+            <ContinueContainer><p>{t('GOTO_REVIEW', 'Go to review')}</p><BsArrowRight /></ContinueContainer>
+          </Button>
+        </Send>
+      </ReviewOrderContainer>
     </>
   )
 }

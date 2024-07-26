@@ -12,6 +12,7 @@ export const PaymentMethodsList = styled.div`
   flex-wrap: wrap;
   width: calc(100% + 15px);
   margin-left: -15px;
+  align-items: flex-start;
 `
 
 export const Container = styled.div`
@@ -35,7 +36,7 @@ export const PayCard = styled.div`
   > div {
     max-width: 88px;
     width: 100%;
-    border: 1px solid #DEE2E6;
+    border: 1px solid ${props => props.theme?.colors.darkGray};
     border-radius: 7.6px;
     padding: 15px;
     display: flex;
@@ -47,7 +48,7 @@ export const PayCard = styled.div`
     > svg {
       font-size: 25px;
       path {
-        fill: #DEE2E6;
+        fill: ${props => props.theme?.colors.darkGray};
       }
     }
   }
@@ -56,8 +57,7 @@ export const PayCard = styled.div`
     margin: 0px;
     font-size: 13px;
     text-align: center;
-    color: #DEE2E6;
-    white-space: nowrap;
+    color: ${props => props.theme?.colors.darkGray};
   }
 
   @media (min-width: 351px) {

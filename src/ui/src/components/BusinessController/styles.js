@@ -8,7 +8,7 @@ export const ContainerCard = styled.div`
   max-height: 300px;
   height: ${({ isSkeleton }) => isSkeleton ? 'auto' : '320px'};
   border-radius: 10px;
-  margin: 30px 20px;
+  margin: ${({ m }) => m ?? '30px 20px'};
 
   ${({ isCustomerMode }) => isCustomerMode && css`
     max-height: 400px;
@@ -174,7 +174,7 @@ export const BusinessTags = styled.div`
     font-size: 11px;
     padding: 3px 8px;
     color: #748194;
-    background: #DEE2E6;
+    background: ${props => props.theme?.colors.darkGray};
     border-radius: 50px;
     margin-right: 10px;
     ${props => props.theme?.rtl && css`
@@ -183,12 +183,12 @@ export const BusinessTags = styled.div`
     `}
     &:last-child {
       ${props => props.theme?.rtl
-? css`
+      ? css`
         margin-left: 0px;
-    `
-: css`
+        `
+      : css`
         margin-right: 0px;
-    `}
+      `}
     }
   }
 `
@@ -342,7 +342,7 @@ export const Medadata = styled.div`
   display: flex;
   font-weight: 300;
   font-size: 12px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   flex-wrap: wrap;
 
 
@@ -356,7 +356,7 @@ export const Medadata = styled.div`
     justify-content: center;
   `}
   p {
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     svg {
       font-size: 7px;
       min-width: 6px;

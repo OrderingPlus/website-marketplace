@@ -1,12 +1,11 @@
 import styled, { css } from 'styled-components'
-import { darken } from 'polished'
 
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: ${props => (props.isChew && props.theme.colors.primary) || props.theme?.header?.components?.style?.backgroundColor};
-  border-bottom: ${props => !props.isChew && css`1px solid #E9ECEF`};
+  background-color: ${props => props.theme?.header?.components?.style?.backgroundColor};
+  border-bottom: 1px solid #E9ECEF;
 `
 
 export const InnerHeader = styled.div`
@@ -61,11 +60,12 @@ export const LogoHeader = styled.div`
   cursor: pointer;
 
   img {
-    width: ${props => props.isChew ? '70px' : props.imgW ?? '35px'};
-    height: ${props => props.isChew ? '20px' : props.imgH ?? '45px'};
+    width: ${props => props.imgW ?? '35px'};
+    height: ${props => props.imgH ?? '45px'};
     margin: 0;
     vertical-align: middle;
     margin-left: 10px;
+    object-fit: contain;
 
     ${props => props.theme?.rtl && css`
       margin-right: 10px;
@@ -78,7 +78,6 @@ export const LogoHeader = styled.div`
         margin-right: 30px;
       `};
       width: ${props => props.imgW ?? '150px'};
-      height: ${props => props.isChew && '35px'};
     }
   }
 
@@ -152,7 +151,7 @@ export const Menu = styled.div`
     background: #F8F9FA;
     border: none;
     box-sizing: border-box;
-    border-radius: ${props => props.isChew ? '8px' : '50px'};
+    border-radius: 50px;
     margin: 0 15px;
     flex-grow: 1;
     padding: 0 10px;
@@ -163,7 +162,7 @@ export const Menu = styled.div`
     height: 44px;
 
     @media (min-width: 850px) {
-      border: 1px solid #DEE2E6;
+      border: 1px solid ${props => props.theme?.colors.darkGray};
       justify-content: space-between;
     }
 
@@ -191,8 +190,8 @@ export const Menu = styled.div`
   }
 
   .moment-popover {
-    border-left: 1px solid #DEE2E6;
-    border-right: 1px solid #DEE2E6;
+    border-left: 1px solid ${props => props.theme?.colors.darkGray};
+    border-right: 1px solid ${props => props.theme?.colors.darkGray};
     height: 100%;
     justify-content: center;
     width: 200px;
@@ -248,18 +247,6 @@ export const MenuLink = styled.a`
   padding: 10px;
   color: #333;
   cursor: pointer;
-
-  ${({ highlight }) => highlight && css`
-    background-color: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.primaryContrast};
-    border-radius: 7.6px;
-    padding: 11px 15px;
-
-    &:hover {
-      background: ${props => darken(0.07, props.theme.colors.primary)};
-      color: #FFF;
-    }
-  `}
 `
 
 export const SubMenu = styled(InnerHeader)`
@@ -294,7 +281,7 @@ export const CustomerInfo = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: #909BA9;
+        color: ${props => props.theme?.colors.darkGray};
       }
       svg {
         color: #748194;
@@ -317,7 +304,7 @@ export const AddressMenu = styled.div`
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.isChew ? props.theme.colors?.backgroundPage : props.theme.colors?.headingColor};
+  color: ${props => props.theme.colors?.headingColor};
   display: flex;
   align-items: center;
   position: relative;
@@ -363,9 +350,9 @@ export const AddressMenu = styled.div`
 `
 
 export const MomentMenu = styled.div`
-  border-left: 1px solid #DEE2E6;
-  ${({ isFranchiseSlugOne }) => !isFranchiseSlugOne && css`
-      border-right: 1px solid #DEE2E6;
+  border-left: 1px solid ${props => props.theme?.colors.darkGray};
+  ${({ $isFranchiseSlugOne }) => !$isFranchiseSlugOne && css`
+      border-right: 1px solid ${props => props.theme?.colors.darkGray};
   `}
   height: 100%;
   justify-content: center;
@@ -387,7 +374,7 @@ export const MomentMenu = styled.div`
   > div {
     cursor: pointer;
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     display: flex;
     align-items: center;
     text-align: center;
@@ -445,7 +432,7 @@ export const FarAwayMessage = styled.div`
 `
 
 export const Divider = styled.div`
-  border: 1px solid #DEE2E6;
+  border: 1px solid ${props => props.theme?.colors.darkGray};
   height: 100%;
 `
 export const AddressFormWrapper = styled.div`

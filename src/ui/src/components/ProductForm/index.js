@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { nanoid } from 'nanoid'
 import { useTheme } from 'styled-components'
 import FiMinusCircle from '@meronex/icons/fi/FiMinusCircle'
@@ -7,9 +8,9 @@ import FiPlusCircle from '@meronex/icons/fi/FiPlusCircle'
 import MdcPlayCircleOutline from '@meronex/icons/mdc/MdcPlayCircleOutline'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, { Navigation, Thumbs } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation, Thumbs } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import {
   ProductContainer,
@@ -76,9 +77,8 @@ import {
   NotFoundSource
 } from '~ui'
 
-SwiperCore.use([Navigation, Thumbs])
-
 const ProductOptionsUI = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     businessSlug,
     editMode,
@@ -100,8 +100,7 @@ const ProductOptionsUI = (props) => {
     handleFavoriteProduct,
     handleCreateGuestUser,
     actionStatus,
-    isCustomerMode,
-    isAlsea
+    isCustomerMode
   } = props
 
   const { product, loading, error } = productObject
@@ -129,7 +128,6 @@ const ProductOptionsUI = (props) => {
     pieces: true
   })
   const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
-  const [alseaIngredientsValidation, setAlseaIngredientsValidation] = useState(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
   const galleryLength = gallery?.length + videoGallery?.length
@@ -140,7 +138,7 @@ const ProductOptionsUI = (props) => {
   const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
   const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
   const hideProductDummyLogo = theme?.business_view?.components?.products?.components?.product?.components?.dummy?.hidden
-  const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.components?.hidden
+  const hideFavoriteIcon = theme?.business_view?.components?.products?.components?.product?.components?.favorite?.hidden
 
   const closeModal = () => {
     setModalIsOpen(false)
@@ -155,7 +153,7 @@ const ProductOptionsUI = (props) => {
 
   const handleChangeFavorite = () => {
     if (auth) {
-      handleFavoriteProduct && handleFavoriteProduct(product, !product?.favorite)
+      handleFavoriteProduct && handleFavoriteProduct(product, !productCart?.favorite)
     } else {
       setModalPageToShow('login')
       setModalIsOpen(true)
@@ -387,17 +385,6 @@ const ProductOptionsUI = (props) => {
     setUrlToShare(_urlToShare)
   }, [])
 
-  useEffect(() => {
-    if (!isAlsea) return
-    const keywords = ['1 ingrediente', 'ingredientes']
-    if (keywords?.some(word => product.name?.toLowerCase()?.includes(word))) {
-      const arrayWord = product?.name?.toLowerCase()?.split(' ')
-      const index = arrayWord.findIndex(word => word === 'ingredientes' || word === 'ingrediente')
-      const maxValidation = parseInt(arrayWord[index - 1].split('-').pop())
-      setAlseaIngredientsValidation(maxValidation)
-    }
-  }, [product?.name])
-
   return (
     <ProductContainer
       className='product-container'
@@ -429,6 +416,7 @@ const ProductOptionsUI = (props) => {
               <Swiper
                 spaceBetween={10}
                 navigation
+                modules={[Navigation, Thumbs]}
                 watchOverflow
                 observer
                 observeParents
@@ -457,6 +445,7 @@ const ProductOptionsUI = (props) => {
               <Swiper
                 onSwiper={setThumbsSwiper}
                 spaceBetween={20}
+                modules={[Navigation, Thumbs]}
                 slidesPerView={5}
                 breakpoints={{
                   0: {
@@ -527,21 +516,17 @@ const ProductOptionsUI = (props) => {
                 </ProductName>
                 {!isCustomerMode && !hideFavoriteIcon && (
                   <span className='favorite' onClick={() => handleChangeFavorite()}>
-                    {product?.favorite ? <Like /> : <DisLike />}
+                    {productCart?.favorite ? <Like /> : <DisLike />}
                   </span>
                 )}
               </TitleWrapper>
               <Properties>
                 {isHaveWeight
-                  ? (
-                  <PriceContent>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</PriceContent>
-                    )
-                  : (
-                  <PriceContent>
-                    <p>{product?.price ? parsePrice(product?.price) : ''}</p>
-                    {product?.in_offer && (<span className='offer-price'>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</span>)}
-                  </PriceContent>
-                    )}
+                  ? <PriceContent>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</PriceContent>
+                  : <PriceContent>
+                      <p>{product?.price ? parsePrice(product?.price) : ''}</p>
+                      {product?.in_offer && (<span className='offer-price'>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</span>)}
+                    </PriceContent>}
                 <ProductMeta>
                   {product?.calories && (
                     <>
@@ -653,8 +638,6 @@ const ProductOptionsUI = (props) => {
                             option={option}
                             currentState={currentState}
                             error={errors[`id:${option?.id}`]}
-                            alseaIngredientsValidation={alseaIngredientsValidation}
-                            isAlsea={isAlsea}
                           >
                             <WrapperSubOption className={isError(option?.id)}>
                               {
@@ -674,7 +657,6 @@ const ProductOptionsUI = (props) => {
                                       setIsScrollAvailable={setIsScrollAvailable}
                                       pizzaState={pizzaState}
                                       productCart={productCart}
-                                      isAlsea={isAlsea}
                                     />
                                   )
                                 })
@@ -691,23 +673,13 @@ const ProductOptionsUI = (props) => {
                   <SectionTitle>{t('COMMENTS', theme?.defaultLanguages?.SPECIAL_COMMENT || 'COMMENTS')}</SectionTitle>
                   <TextArea
                     rows={4}
-                    placeholder={t('SPECIAL_COMMENT', theme?.defaultLanguages?.SPECIAL_COMMENT || 'Special comment')}
+                    placeholder={t('SPECIAL_COMMENT', theme?.defaultLanguages?.SPECIAL_COMMENT || 'Special Comment')}
                     defaultValue={productCart.comment}
                     onChange={handleChangeCommentState}
                     disabled={!(productCart && !isSoldOut && maxProductQuantity)}
                   />
                 </ProductComment>
               )}
-              {
-                props.afterMidElements?.map((MidElement, i) => (
-                  <React.Fragment key={i}>
-                    {MidElement}
-                  </React.Fragment>))
-              }
-              {
-                props.afterMidComponents?.map((MidComponent, i) => (
-                  <MidComponent key={i} {...props} />))
-              }
             </ProductEdition>
             <ProductActions isColumn={(auth && !(orderState.options?.address_id || unaddressedTypes.includes(orderState?.options?.type)))}>
               {(actionStatus?.loading || orderState.loading)
@@ -925,6 +897,6 @@ export const ProductForm = (props) => {
   )
 }
 
-ProductForm.defaultProps = {
+const defaultProps = {
   productAddedToCartLength: 0
 }

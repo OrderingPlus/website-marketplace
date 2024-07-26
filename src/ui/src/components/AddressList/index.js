@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import IosRadioButtonOff from '@meronex/icons/ios/IosRadioButtonOff'
 import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
 import MdClose from '@meronex/icons/md/MdClose'
@@ -181,6 +182,7 @@ const AddressListUI = (props) => {
   const handleCloseAddressForm = () => {
     setAddressOpen(false)
     setIsAddressFormOpen && setIsAddressFormOpen(false)
+    onCancel && onCancel()
   }
 
   /**
@@ -362,60 +364,42 @@ const AddressListUI = (props) => {
   }
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <AddressListContainer id='address_control' isLoading={actionStatus?.loading || orderState?.loading} isCompletedLayout={isCompletedLayout}>
-        {!isCompletedLayout
-          ? (
-          <AddressListCallcenterLayout>
+    <AddressListContainer id='address_control' isLoading={actionStatus?.loading || orderState?.loading} isCompletedLayout={isCompletedLayout}>
+      {!isCompletedLayout
+        ? <AddressListCallcenterLayout>
             <AddressListContent />
           </AddressListCallcenterLayout>
-            )
-          : (
-          <AddressListContent />
-            )}
-        {
-          !isPopover && addressOpen && (
-            <Modal
-              title={t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
-              open={!isPopover && addressOpen && isCompletedLayout}
-              onClose={() => handleCloseAddressForm()}
-            >
-              <AddressForm
-                userId={userId}
-                addressesList={addressList?.addresses}
-                useValidationFileds
-                address={curAddress}
-                onSaveAddress={handleSaveAddress}
-                userCustomerSetup={userCustomerSetup}
-                onCancel={() => handleCloseAddressForm()}
-              />
-            </Modal>
-          )
-        }
-        <Confirm
-          title={t('SEARCH', 'Search')}
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
-        />
-      </AddressListContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+        : <AddressListContent />}
+      {
+        !isPopover && addressOpen && isCompletedLayout && (
+          <Modal
+            title={t('WHAT_IS_YOUR_ADDRESS', 'What\'s your address?')}
+            open={!isPopover && addressOpen && isCompletedLayout}
+            onClose={() => handleCloseAddressForm()}
+          >
+            <AddressForm
+              userId={userId}
+              addressesList={addressList?.addresses}
+              useValidationFileds
+              address={curAddress}
+              onSaveAddress={handleSaveAddress}
+              userCustomerSetup={userCustomerSetup}
+              onCancel={() => handleCloseAddressForm()}
+            />
+          </Modal>
+        )
+      }
+      <Confirm
+        title={t('SEARCH', 'Search')}
+        content={confirm.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={confirm.open}
+        onClose={() => setConfirm({ ...confirm, open: false })}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+        onAccept={confirm.handleOnAccept}
+        closeOnBackdrop={false}
+      />
+    </AddressListContainer>
   )
 }
 

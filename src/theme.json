@@ -2,11 +2,18 @@
   "fonts": {
     "primary": {
       "name": "Poppins",
-      "weights": [300, 400, 500, 600]
+      "weights": [
+        300,
+        400,
+        500,
+        600
+      ]
     },
     "special": {
       "name": "Lobster",
-      "weights": [400]
+      "weights": [
+        400
+      ]
     }
   },
   "colors": {
@@ -20,7 +27,7 @@
     "colorPage": "#344050",
     "colorTextSignForm": "#FFFFFF",
     "headingColor": "#344050",
-    "darkGray": "#909BA9",
+    "darkGray": "#616161",
     "darkTextColor": "#344050",
     "lightGray": "#B1BCCC",
     "darkPrimaryColor": "#03459E",
@@ -43,15 +50,13 @@
     "SIGN_IN": "Sign in",
     "SIGN_UP": "Sign up",
     "ACCEPT": "Accept",
-
-    "TITLE_HOME": "All We need is Food",
-    "SUBTITLE_HOME": "Let's start to order food now",
-    "TYPE_AN_ADDRESS": "Type an addres",
-    "FIND_BUSINESSES": "Find businesse",
+    "TITLE_HOME": "Welcome!",
+    "SUBTITLE_HOME": "Let's start your order now.",
+    "TYPE_AN_ADDRESS": "Type an address",
+    "FIND_BUSINESSES": "Start Order",
     "ADDRESS": "Address",
     "ADDRESSES": "Addresses",
-    "WHERE_DO_WE_DELIVERY": "Where do we delivery?",
-
+    "WHERE_DO_WE_DELIVER": "Enter address",
     "SORT_BY": "Sort By",
     "RANK": "Rank",
     "A_to_Z": "A-Z",
@@ -65,7 +70,6 @@
     "NOT_FOUND_BUSINESS_PRODUCTS": "No products to show at this business, please try with other business",
     "SEARCH_REDIRECT": "Go to Businesses",
     "ERROR_NOT_FOUND_STORE": "Sorry, an error has occurred with business selected",
-
     "SKU": "Sku",
     "INGREDIENTS": "Ingredients",
     "SPECIAL_COMMENT": "Special comment",
@@ -75,7 +79,6 @@
     "RESET_PASSWORD": "Reset password",
     "LOGIN": "Login",
     "LOGIN_SIGNUP": "Login / Sign Up",
-
     "PENDING": "Pending",
     "COMPLETED": "Completed",
     "REJECTED": "Rejected",
@@ -89,11 +92,11 @@
     "PICK_UP_FAILED_BY_DRIVER": "Pick up Failed by driver",
     "DELIVERY_COMPLETED_BY_DRIVER": "Delivery completed by driver",
     "DELIVERY_FAILED_BY_DRIVER": "Delivery Failed by driver",
-    "PREORDER": "PreOrder",
+    "PREORDER": "Preorder",
     "ORDER_NOT_READY": "Order not ready",
-    "ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER": "Order picked up completed by customer",
-    "ORDER_STATUS_CANCELLED_BY_CUSTOMER": "Order cancelled by customer",
-    "ORDER_NOT_PICKEDUP_BY_CUSTOMER": "Order not picked up by customer",
+    "ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER": "Pickup completed by customer",
+    "ORDER_STATUS_CANCELLED_BY_CUSTOMER": "Cancelled by customer",
+    "ORDER_NOT_PICKEDUP_BY_CUSTOMER": "Not picked by customer",
     "ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS": "Driver almost arrived to business",
     "ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER": "Driver almost arrived to customer",
     "ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS": "Customer almost arrived to business",
@@ -116,7 +119,7 @@
     "DRIVER_TIP": "Driver tip",
     "SERVICE_FEE": "Service Fee",
     "TOTAL": "Total",
-    "REVIEW_ORDER": "Review your Order",
+    "REVIEW_ORDER": "Review Order",
     "MY_ORDERS": "My Orders",
     "YOUR_ORDERS": "Your Orders",
     "NOT_FOUND_ORDER": "Sorry, we couldn't find the requested order.",
@@ -335,7 +338,7 @@
         "cities": {
           "hidden": false
         },
-        "search": { 
+        "search": {
           "hidden": false
         },
         "filter": {
@@ -773,7 +776,7 @@
         },
         "promotions": {
           "hidden": false
-        } 
+        }
       }
     },
     "third_party_code": {

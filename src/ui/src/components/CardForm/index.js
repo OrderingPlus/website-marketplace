@@ -54,84 +54,70 @@ const CardFormUI = (props) => {
   const zipCodeRequired = validationFields?.fields?.card?.zipcode?.required
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <FormStripe onSubmit={handleSubmit}>
-        <FormRow>
-          {!isSplitForm
-            ? <>
-              <CardElement
+    <FormStripe onSubmit={handleSubmit}>
+      <FormRow>
+        {!isSplitForm
+          ? <>
+            <CardElement
+              options={CARD_ELEMENT_OPTIONS}
+              onChange={handleChange}
+            />
+            <ErrorMessage>{error}</ErrorMessage>
+          </>
+          : <>
+            <CardNumberField>
+              <label>{t('CARD_NUMBER', 'Card number')}</label>
+              <CardNumberElement
                 options={CARD_ELEMENT_OPTIONS}
                 onChange={handleChange}
               />
               <ErrorMessage>{error}</ErrorMessage>
-            </>
-            : <>
-              <CardNumberField>
-                <label>{t('CARD_NUMBER', 'Card number')}</label>
-                <CardNumberElement
+            </CardNumberField>
+            <CardExpiryCvcField>
+              <CardExpiryField>
+                <label>{t('EXPIRE_DATE', 'Expire date')}</label>
+                <CardExpiryElement
+                  options={CARD_ELEMENT_OPTIONS}
+                  onChange={handleChangeExpiry}
+                />
+                <ErrorMessage>{errorExpiry}</ErrorMessage>
+              </CardExpiryField>
+              <CardCvcField>
+                <label>{t('CVC', 'CVC')}</label>
+                <CardCvcElement
+                  options={CARD_ELEMENT_OPTIONS}
+                  onChange={handleChangeCvc}
+                />
+                <ErrorMessage>{errorCvc}</ErrorMessage>
+              </CardCvcField>
+            </CardExpiryCvcField>
+            {zipCodeEnabled && (
+              <CardZipcodeField>
+                <label>{t('ZIPCODE', 'Zipcode')}</label>
+                <ZipcodeField
+                  name='zipcode'
+                  placeholder={`${t('ZIPCODE', 'Zipcode')}${zipCodeRequired ? '*' : ''}`}
                   options={CARD_ELEMENT_OPTIONS}
                   onChange={handleChange}
                 />
-                <ErrorMessage>{error}</ErrorMessage>
-              </CardNumberField>
-              <CardExpiryCvcField>
-                <CardExpiryField>
-                  <label>{t('EXPIRE_DATE', 'Expire date')}</label>
-                  <CardExpiryElement
-                    options={CARD_ELEMENT_OPTIONS}
-                    onChange={handleChangeExpiry}
-                  />
-                  <ErrorMessage>{errorExpiry}</ErrorMessage>
-                </CardExpiryField>
-                <CardCvcField>
-                  <label>{t('CVC', 'CVC')}</label>
-                  <CardCvcElement
-                    options={CARD_ELEMENT_OPTIONS}
-                    onChange={handleChangeCvc}
-                  />
-                  <ErrorMessage>{errorCvc}</ErrorMessage>
-                </CardCvcField>
-              </CardExpiryCvcField>
-              {zipCodeEnabled && (
-                <CardZipcodeField>
-                  <label>{t('ZIPCODE', 'Zipcode')}</label>
-                  <ZipcodeField
-                    name='zipcode'
-                    placeholder={`${t('ZIPCODE', 'Zipcode')}${zipCodeRequired ? '*' : ''}`}
-                    options={CARD_ELEMENT_OPTIONS}
-                    onChange={handleChange}
-                  />
-                  {errorZipcode && (
-                    <ErrorMessage>{t('ZIPCODE_IS_INCOMPLETED', 'The zipcode is incompleted.')}</ErrorMessage>
-                  )}
-                </CardZipcodeField>
-              )}
-            </>
-          }
-        </FormRow>
-        <FormActions>
-          <Button
-            color='primary'
-            type='submit'
-            disabled={loading}
-          >
-            {loading ? t('LOADING', 'Loading...') : t('ADD_CARD', 'Add card')}
-          </Button>
-        </FormActions>
-      </FormStripe>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+                {errorZipcode && (
+                  <ErrorMessage>{t('ZIPCODE_IS_INCOMPLETED', 'The zipcode is incompleted.')}</ErrorMessage>
+                )}
+              </CardZipcodeField>
+            )}
+          </>
+        }
+      </FormRow>
+      <FormActions>
+        <Button
+          color='primary'
+          type='submit'
+          disabled={loading}
+        >
+          {loading ? t('LOADING', 'Loading...') : t('ADD_CARD', 'Add card')}
+        </Button>
+      </FormActions>
+    </FormStripe>
   )
 }
 

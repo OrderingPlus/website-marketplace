@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import MdClose from '@meronex/icons/md/MdClose'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   SessionsListContainer,

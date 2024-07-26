@@ -9,8 +9,6 @@ import {
   ItemInline
 } from './styles'
 
-import { MomentPopover } from '../MomentPopover/layouts/pwa'
-
 import { useLanguage, useOrder, useConfig, useSession, useBusiness } from '~components'
 import {
   useWindowSize,
@@ -20,6 +18,7 @@ import {
   AddressList,
   Alert,
   MomentContent,
+  MomentPopover,
   OrderTypeSelectorContent,
   OrderTypeSelectorHeader
 } from '~ui'
@@ -109,7 +108,11 @@ export const OrderContextUI = (props) => {
         </AddressMenu>
         <FeatureItems>
           <ItemInline onClick={() => openModal('delivery')}>
-            <OrderTypeSelectorHeader configTypes={configTypes} autoCloseWhenScroll={windowSize.width < 576} />
+            <OrderTypeSelectorHeader
+              configTypes={configTypes}
+              autoCloseWhenScroll={windowSize.width < 576}
+              customView
+            />
           </ItemInline>
           {isPreOrderSetting && (
             <ItemInline onClick={() => openModal('moment')}>
@@ -118,7 +121,9 @@ export const OrderContextUI = (props) => {
                 onCustomClick={() => openModal('moment')}
                 onClick={() => handleTogglePopover('moment')}
                 onClose={() => handleClosePopover('moment')}
+                customView
                 isBanner
+                noWidth={windowSize.width < 576}
               />
             </ItemInline>
           )}
@@ -148,36 +153,39 @@ export const OrderContextUI = (props) => {
           )}
         </Modal>
       )}
-      <Modal
-        title={t('ADDRESS_FORM', 'Address Form')}
-        open={modals.formOpen}
-        onClose={() => setModals({ ...modals, formOpen: false })}
-      >
-        <AddressForm
-          useValidationFileds
-          address={orderState?.options?.address || {}}
+      {modals.formOpen && (
+        <Modal
+          title={t('ADDRESS_FORM', 'Address Form')}
+          open={modals.formOpen}
           onClose={() => setModals({ ...modals, formOpen: false })}
-          onCancel={() => setModals({ ...modals, formOpen: false })}
-          onSaveAddress={() => setModals({ ...modals, formOpen: false })}
-        />
-      </Modal>
-
-      <Modal
-        title={t('ADDRESSES', 'Address List')}
-        open={modals.listOpen}
-        width='70%'
-        onClose={() => setModals({ ...modals, listOpen: false })}
-      >
-        <AddressList
-          isModal
-          changeOrderAddressWithDefault
-          userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-          onCancel={() => setModals({ ...modals, listOpen: false })}
-          onAccept={() => handleFindBusinesses()}
-          isCustomerMode={isCustomerMode}
-          isMobile
-        />
-      </Modal>
+        >
+          <AddressForm
+            useValidationFileds
+            address={orderState?.options?.address || {}}
+            onClose={() => setModals({ ...modals, formOpen: false })}
+            onCancel={() => setModals({ ...modals, formOpen: false })}
+            onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+          />
+        </Modal>
+      )}
+      {modals.listOpen && (
+        <Modal
+          title={t('ADDRESSES', 'Address List')}
+          open={modals.listOpen}
+          width='70%'
+          onClose={() => setModals({ ...modals, listOpen: false })}
+        >
+          <AddressList
+            isModal
+            changeOrderAddressWithDefault
+            userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+            onCancel={() => setModals({ ...modals, listOpen: false })}
+            onAccept={() => handleFindBusinesses()}
+            isCustomerMode={isCustomerMode}
+            isMobile
+          />
+        </Modal>
+      )}
       <Alert
         title={t('ORDERING', 'Ordering')}
         content={alertState.content}

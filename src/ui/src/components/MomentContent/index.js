@@ -29,48 +29,34 @@ export const MomentContent = (props) => {
   const momentControl = document?.getElementById('moment_control')?.getBoundingClientRect()
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <Container isLoading={orderState?.loading}>
-        {((!props.cateringPreorder) || (!loading)) && (
-          <MomentControl
-            {...momentProps}
-            onClose={props.onClose}
-            cateringPreorder={props.cateringPreorder}
-            isCart={props.isCart}
-            preorderSlotInterval={props.preorderSlotInterval}
-            preorderLeadTime={props.preorderLeadTime}
-            preorderTimeRange={props.preorderTimeRange}
-            preorderMaximumDays={props.preorderMaximumDays}
-            preorderMinimumDays={props.preorderMinimumDays}
-            business={props.business}
-          />
-        )}
-        {orderState?.loading && !props.isHeader && (
-          <Layer height={momentControl?.height && `${momentControl?.height}px`}>
-            {(window.location.pathname !== '/search' || orderState?.options?.address?.location) && (
-              <SpinnerLoader
-                style={{
-                  top: width <= 768 ? '50%' : '40%',
-                  position: width <= 768 ? 'absolute' : 'sticky',
-                  height: 'auto'
-                }}
-              />
-            )}
-          </Layer>
-        )}
-      </Container>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+    <Container isLoading={orderState?.loading}>
+      {((!props.cateringPreorder) || (!loading)) && (
+        <MomentControl
+          {...momentProps}
+          onClose={props.onClose}
+          cateringPreorder={props.cateringPreorder}
+          isCart={props.isCart}
+          preorderSlotInterval={props.preorderSlotInterval}
+          preorderLeadTime={props.preorderLeadTime}
+          preorderTimeRange={props.preorderTimeRange}
+          preorderMaximumDays={props.preorderMaximumDays}
+          preorderMinimumDays={props.preorderMinimumDays}
+          business={props.business}
+        />
+      )}
+      {orderState?.loading && !props.isHeader && (
+        <Layer height={momentControl?.height && `${momentControl?.height}px`}>
+          {(window.location.pathname !== '/search' || orderState?.options?.address?.location) && (
+            <SpinnerLoader
+              style={{
+                top: width <= 768 ? '50%' : '40%',
+                position: width <= 768 ? 'absolute' : 'sticky',
+                height: 'auto'
+              }}
+            />
+          )}
+        </Layer>
+      )}
+    </Container>
   )
 }

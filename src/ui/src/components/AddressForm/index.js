@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import CgSearchLoading from '@meronex/icons/cg/CgSearchLoading'
 import {
   Heart,
@@ -38,6 +39,7 @@ import {
   TextArea,
   GoogleGpsButton
 } from '~ui'
+import { AddressMapBoxList } from './AddressMapBoxList'
 
 const inputNames = [
   { name: 'address', code: 'Address' },
@@ -59,7 +61,10 @@ const AddressFormUI = (props) => {
     handleChangeInput,
     saveAddress,
     setIsEdit,
-    userCustomerSetup
+    userCustomerSetup,
+    getSuggestedResult,
+    mapBoxSuggests,
+    retrieveSuggestResult
   } = props
 
   const [configState] = useConfig()
@@ -72,10 +77,11 @@ const AddressFormUI = (props) => {
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [addressValue, setAddressValue] = useState(formState.changes?.address ?? addressState.address?.address ?? '')
+  const [inputFocused, setInputFocused] = useState(false)
   const googleInputRef = useRef()
+  const mapBoxContainerRef = useRef()
   const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: null })
   const isEditing = !!addressState.address?.id
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const [locationChange, setLocationChange] = useState(
     isEditing
@@ -90,7 +96,7 @@ const AddressFormUI = (props) => {
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
-
+  const useAlternativeMap = configState?.configs?.use_alternative_to_google_maps?.value === '1'
   const mapErrors = {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
@@ -240,15 +246,18 @@ const AddressFormUI = (props) => {
     })
   }
 
-  const handleChangeAddress = (address) => {
+  const handleChangeAddress = (address, forceUpdate) => {
     setState({
       ...state,
       selectedFromAutocomplete: true
     })
     updateChanges({
       ...address,
-      address: googleInputRef?.current?.value || address?.address
+      address: forceUpdate ? address?.address : (googleInputRef?.current?.value || address?.address)
     })
+    if (forceUpdate && googleInputRef.current) {
+      googleInputRef.current.value = address?.address
+    }
   }
 
   const setMapErrors = (errKey) => {
@@ -366,14 +375,21 @@ const AddressFormUI = (props) => {
     })
   }, [formMethods])
 
+  const handleClickOutside = (e) => {
+    const outsideContainer = !mapBoxContainerRef.current?.contains(e.target)
+    if (outsideContainer) {
+      setInputFocused(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!useAlternativeMap) return
+    window.addEventListener('mouseup', handleClickOutside)
+    return () => window.removeEventListener('mouseup', handleClickOutside)
+  }, [useAlternativeMap])
+
   return (
     <div className='address-form'>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {(configState.loading || addressState.loading) && (
         <WrapperSkeleton>
           <Skeleton height={50} count={5} style={{ marginBottom: '10px' }} />
@@ -386,110 +402,135 @@ const AddressFormUI = (props) => {
           onKeyDown={(e) => checkKeyDown(e)}
           autoComplete='off'
         >
-          {
-            props.beforeMidElements?.map((BeforeMidElements, i) => (
-              <React.Fragment key={i}>
-                {BeforeMidElements}
-              </React.Fragment>))
-          }
-          {
-            props.beforeMidComponents?.map((BeforeMidComponents, i) => (
-              <BeforeMidComponents key={i} {...props} />))
-          }
-
           {inputNames.map(field => showField && showField(field.name) && (
             field.name === 'address'
               ? (
-              <React.Fragment key={field.name}>
-                <AddressWrap className='google-control'>
-                  <WrapAddressInput>
-                    <GoogleAutocompleteInput
-                      className='input-autocomplete'
-                      apiKey={googleMapsApiKey}
-                      placeholder={t('ADDRESS', 'Address')}
-                      onChangeAddress={(e) => {
-                        formMethods.setValue('address', e.address)
-                        handleChangeAddress(e)
-                      }}
-                      onChange={(e) => {
-                        handleChangeInput({ target: { name: 'address', value: e.target.value } })
-                        setAddressValue(e.target.value)
-                      }}
-                      childRef={(ref) => {
-                        googleInputRef.current = ref
-                      }}
-                      defaultValue={
-                        formState?.result?.result
-                          ? formState?.result?.result?.address
-                          : formState?.changes?.address ?? addressValue
-                      }
-                      autoComplete='new-password'
-                      countryCode={configState?.configs?.country_autocomplete?.value || '*'}
-                    />
-                  </WrapAddressInput>
-                  <GoogleGpsButton
-                    className='gps-button'
-                    apiKey={googleMapsApiKey}
-                    onAddress={(e) => {
-                      formMethods.setValue('address', e.address)
-                      handleChangeAddress(e)
-                    }}
-                    onError={setMapErrors}
-                    IconButton={GeoAlt}
-                    IconLoadingButton={CgSearchLoading}
-                  />
-                </AddressWrap>
+                <React.Fragment key={field.name}>
+                  <AddressWrap className='google-control'>
+                    {!useAlternativeMap && (
+                      <>
+                        <WrapAddressInput>
+                          <GoogleAutocompleteInput
+                            className='input-autocomplete'
+                            apiKey={googleMapsApiKey}
+                            placeholder={t('ADDRESS', 'Address')}
+                            onChangeAddress={(e) => {
+                              formMethods.setValue('address', e.address)
+                              handleChangeAddress(e)
+                            }}
+                            onChange={(e) => {
+                              handleChangeInput({ target: { name: 'address', value: e.target.value } })
+                              setAddressValue(e.target.value)
+                            }}
+                            childRef={(ref) => {
+                              googleInputRef.current = ref
+                            }}
+                            defaultValue={
+                              formState?.result?.result
+                                ? formState?.result?.result?.address
+                                : formState?.changes?.address ?? addressValue
+                            }
+                            autoComplete='new-password'
+                            countryCode={configState?.configs?.country_autocomplete?.value || '*'}
+                          />
+                        </WrapAddressInput>
+                        <GoogleGpsButton
+                          className='gps-button'
+                          apiKey={googleMapsApiKey}
+                          onAddress={(e) => {
+                            formMethods.setValue('address', e.address)
+                            handleChangeAddress(e, true)
+                          }}
+                          onError={setMapErrors}
+                          IconButton={GeoAlt}
+                          IconLoadingButton={CgSearchLoading}
+                        />
+                      </>
+                    )}
+                    {useAlternativeMap && (
+                      <WrapAddressInput ref={mapBoxContainerRef}>
+                        <input
+                          className='input-autocomplete'
+                          placeholder={t('ADDRESS', 'Address')}
+                          onChange={(e) => {
+                            handleChangeInput({ target: { name: 'address', value: e.target.value } })
+                            setAddressValue(e.target.value)
+                            getSuggestedResult(e.target.value)
+                          }}
+                          onFocus={() => setInputFocused(true)}
+                          defaultValue={
+                            formState?.result?.result
+                              ? formState?.result?.result?.address
+                              : formState?.changes?.address ?? addressValue
+                          }
+                          autoComplete='new-field'
+                          disabled={configState?.loading}
+                          ref={googleInputRef}
+                        />
+                        {inputFocused && googleInputRef?.current?.value?.length > 0 && (
+                          <AddressMapBoxList
+                            mapBoxSuggests={mapBoxSuggests}
+                            retrieveSuggestResult={retrieveSuggestResult}
+                            handleChangeAddress={handleChangeAddress}
+                            onBlurInput={() => setInputFocused(false)}
+                            setAddressValue={setAddressValue}
+                            handleChangeInput={handleChangeInput}
+                            forwardRef={googleInputRef}
+                          />
+                        )}
+                      </WrapAddressInput>
+                    )}
+                  </AddressWrap>
 
-                {!isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
-                  <WrapperMap>
-                    <GoogleMapsMap
-                      apiKey={googleMapsApiKey}
-                      location={locationChange}
-                      fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
-                      mapControls={googleMapsControls}
-                      handleChangeAddressMap={handleChangeAddress}
-                      setErrors={setMapErrors}
-                      maxLimitLocation={parseInt(maxLimitLocation, 10)}
-                      isSetInputs={isChew}
-                    />
-                  </WrapperMap>
-                )}
-              </React.Fragment>
+                  {!useAlternativeMap && !isHideMap && locationChange && (addressState?.address?.location || formState?.changes?.location) && (
+                    <WrapperMap>
+                      <GoogleMapsMap
+                        apiKey={googleMapsApiKey}
+                        location={locationChange}
+                        fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
+                        mapControls={googleMapsControls}
+                        handleChangeAddressMap={handleChangeAddress}
+                        setErrors={setMapErrors}
+                        maxLimitLocation={parseInt(maxLimitLocation, 10)}
+                      />
+                    </WrapperMap>
+                  )}
+                </React.Fragment>
                 )
               : (
-              <React.Fragment key={field.name}>
-                {(isRequiredField(field.name) || showFieldWithTheme(field.name)) && (
-                  <>
-                    {field.name !== 'address_notes'
-                      ? (
-                      <Input
-                        className={field.name}
-                        placeholder={t(field.name.toUpperCase(), field.code)}
-                        value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
-                        onChange={(e) => {
-                          formMethods.setValue(field.name, e.target.value)
-                          handleChangeInput({ target: { name: field.name, value: e.target.value } })
-                        }}
-                        autoComplete='new-field'
-                        maxLength={30}
-                      />
-                        )
-                      : (
-                      <TextArea
-                        rows={3}
-                        placeholder={t('ADDRESS_NOTES', 'Address Notes')}
-                        value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
-                        onChange={(e) => {
-                          formMethods.setValue('address_notes', e.target.value)
-                          handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
-                        }}
-                        autoComplete='new-field'
-                        maxLength={250}
-                      />
-                        )}
-                  </>
-                )}
-              </React.Fragment>
+                <React.Fragment key={field.name}>
+                  {(isRequiredField(field.name) || showFieldWithTheme(field.name)) && (
+                    <>
+                      {field.name !== 'address_notes'
+                        ? (
+                          <Input
+                            className={field.name}
+                            placeholder={t(field.name.toUpperCase(), field.code)}
+                            value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
+                            onChange={(e) => {
+                              formMethods.setValue(field.name, e.target.value)
+                              handleChangeInput({ target: { name: field.name, value: e.target.value } })
+                            }}
+                            autoComplete='new-field'
+                            maxLength={30}
+                          />
+                          )
+                        : (
+                          <TextArea
+                            rows={3}
+                            placeholder={t('ADDRESS_NOTES', 'Address Notes')}
+                            value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
+                            onChange={(e) => {
+                              formMethods.setValue('address_notes', e.target.value)
+                              handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
+                            }}
+                            autoComplete='new-field'
+                            maxLength={250}
+                          />
+                          )}
+                    </>
+                  )}
+                </React.Fragment>
                 )
           ))}
 
@@ -510,16 +551,6 @@ const AddressFormUI = (props) => {
               </Button>
             </AddressTagSection>
           )}
-          {
-            props.afterMidElements?.map((MidElement, i) => (
-              <React.Fragment key={i}>
-                {MidElement}
-              </React.Fragment>))
-          }
-          {
-            props.afterMidComponents?.map((MidComponent, i) => (
-              <MidComponent key={i} {...props} />))
-          }
           <FormActions>
             {
               Object.keys(formState?.changes).length === 0 && (
@@ -543,13 +574,13 @@ const AddressFormUI = (props) => {
               >
                 {!formState.loading
                   ? (
-                  <>
-                    {
-                      isEditing || (!auth && orderState.options?.address?.address)
-                        ? t('UPDATE', 'Update')
-                        : t('ADD_ADDRESS', 'Add address')
-                    }
-                  </>
+                    <>
+                      {
+                        isEditing || (!auth && orderState.options?.address?.address)
+                          ? t('UPDATE', 'Update')
+                          : t('ADD_ADDRESS', 'Add address')
+                      }
+                    </>
                     )
                   : (
                       t('LOADING', 'Loading')
@@ -569,12 +600,6 @@ const AddressFormUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

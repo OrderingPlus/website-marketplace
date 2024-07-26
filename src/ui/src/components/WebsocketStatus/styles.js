@@ -16,15 +16,17 @@ export const StatusContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
-  > span:first-child {
+  font-size: 12px;
+
+  > p:first-child {
+    margin: 0;
     ${props => props.theme?.rtl
-? css`
-      margin-left: 6px;
-    `
-: css`
-      margin-right: 6px;
-    `}
+      ? css`
+        margin-left: 6px;
+        `
+      : css`
+          margin-right: 6px;
+        `}
   }
 `
 
@@ -182,9 +184,7 @@ export const ButtonsContainer = styled.div`
 export const ButtonWrapper = styled.div`
   button{
     height: 41px;
-      width: 175px;
-      width: 175px;
-    width: 175px;
+    min-width: 175px;
   }
 
 `

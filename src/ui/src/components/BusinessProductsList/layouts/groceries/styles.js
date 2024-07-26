@@ -43,7 +43,7 @@ export const WrapAllCategories = styled.div`
     display: flex;
     p {
       margin: 0;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       white-space: pre;
     }
     span {
@@ -144,7 +144,7 @@ export const CategoryDescripion = styled.div`
     align-items: flex-end;
     p {
       margin: 0;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       max-width: ${({ maxWidth }) => maxWidth ? `${maxWidth - 200}px` : 'initial'};
       overflow: hidden;
       text-overflow: ellipsis;

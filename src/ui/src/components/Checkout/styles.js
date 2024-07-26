@@ -89,12 +89,13 @@ export const DriverTipContainer = styled(PaymentMethodContainer)`
   > p {
     margin: 0;
     font-size: 16px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 
 export const CartContainer = styled(PaymentMethodContainer)`
   margin-bottom: 20px;
+  position: relative;
 `
 
 export const WalletPaymentOptionContainer = styled(PaymentMethodContainer)`
@@ -227,7 +228,7 @@ export const DeliveryOptionsContainer = styled.div`
     height: 44px;
     border: none;
     border-radius: 7.6px;
-    color: #909BA9 !important;
+    color: ${props => props.theme?.colors.darkGray} !important;
 
     > div:first-child {
       padding-top: 5px;
@@ -377,4 +378,11 @@ export const OrderDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px 30px 20px;
+`
+
+export const SpinnerContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: -100%;
 `

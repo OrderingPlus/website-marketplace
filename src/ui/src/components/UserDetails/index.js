@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import FcCancel from '@meronex/icons/fc/FcCancel'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { parsePhoneNumber } from 'libphonenumber-js'
 import MdClose from '@meronex/icons/md/MdClose'
 import PhoneInput from 'react-phone-number-input'
@@ -15,7 +16,8 @@ import {
   TitleContainer,
   CountryFlag,
   PhoneContainer,
-  SkeletonsContainer
+  SkeletonsContainer,
+  ChangeCustomerText
 } from './styles'
 
 import {
@@ -52,7 +54,8 @@ const UserDetailsUI = (props) => {
     requiredFields,
     setFormState,
     setIsSuccess,
-    isCheckoutPlace
+    isCheckoutPlace,
+    CustomerDetailsTitleComponent
   } = props
 
   const [, t] = useLanguage()
@@ -145,12 +148,6 @@ const UserDetailsUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {((validationFields.loading || formState.loading || userState.loading || loading)) && (
         <SkeletonsContainer>
           <UserData>
@@ -180,17 +177,11 @@ const UserDetailsUI = (props) => {
           {!isCheckoutPlace && (
             <Header className='user-form'>
               {!isModal && (
-                <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>
+                <>
+                  {CustomerDetailsTitleComponent ? <CustomerDetailsTitleComponent /> : <h1>{t('CUSTOMER_DETAILS', 'Customer Details')}</h1>}
+                </>
               )}
-              {cartStatus !== 2 && (
-                !isEdit
-                  ? (
-                  <span onClick={() => toggleIsEdit()}>{t('CHANGE_USER_DETAILS', 'Change customer details')}</span>
-                    )
-                  : (
-                  <FcCancel className='cancel' onClick={() => toggleEditState()} />
-                    )
-              )}
+              {cartStatus !== 2 && isEdit && <FcCancel className='cancel' onClick={() => toggleEditState()} />}
             </Header>
           )}
 
@@ -202,23 +193,28 @@ const UserDetailsUI = (props) => {
                   {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
                 </UserName>
               )}
-              {userData?.email && (
-                <p>{userData?.email}</p>
+              {(userData?.email ?? userData?.guest_email) && (
+                <p>{userData?.guest_id ? userData?.guest_email : userData?.email}</p>
               )}
-              {(userData?.cellphone || user?.cellphone) && (
+              {((userData?.cellphone ?? userData?.guest_cellphone) || (user?.cellphone ?? user?.guest_cellphone)) && (
                 <PhoneContainer>
                   <CountryFlag>
                     {
-                      userData?.country_phone_code && userData?.cellphone && (
-                        <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.cellphone?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
+                      userData?.country_phone_code && (userData?.cellphone ?? userData?.guest_cellphone) && (
+                        <PhoneInput onChange={() => { }} defaultCountry={parsePhoneNumber(`+${(userData?.country_phone_code?.replace('+', ''))} ${userData?.[userData?.guest_id ? 'guest_cellphone' : 'cellphone']?.replace(`+${userData?.country_phone_code}`, '')}`)?.country} />
                       )
                     }
                   </CountryFlag>
                   <p>
-                    {userData?.cellphone}
+                    {userData?.guest_id ? userData?.guest_cellphone : userData?.cellphone}
                   </p>
                 </PhoneContainer>
               )}
+              <ChangeCustomerText>
+                {cartStatus !== 2 && (
+                  <span onClick={() => toggleIsEdit()}>{t('CHANGE_USER_DETAILS', 'Change customer details')}</span>
+                )}
+              </ChangeCustomerText>
             </UserData>
               )
             : (
@@ -242,28 +238,24 @@ const UserDetailsUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
-        open={willVerifyOtpState}
-        width='700px'
-        height='420px'
-        onClose={() => setWillVerifyOtpState(false)}
-      >
-        <VerifyCodeForm
-          otpLeftTime={otpLeftTime}
-          credentials={formState?.changes}
-          handleSendOtp={handleSendOtp}
-          handleCheckPhoneCode={handleSendPhoneCode}
-          email={(userData?.email || user?.email)}
-          isPhone
-        />
-      </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+      {willVerifyOtpState && (
+        <Modal
+          title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+          open={willVerifyOtpState}
+          width='700px'
+          height='420px'
+          onClose={() => setWillVerifyOtpState(false)}
+        >
+          <VerifyCodeForm
+            otpLeftTime={otpLeftTime}
+            credentials={formState?.changes}
+            handleSendOtp={handleSendOtp}
+            handleCheckPhoneCode={handleSendPhoneCode}
+            email={(userData?.email || user?.email)}
+            isPhone
+          />
+        </Modal>
+      )}
     </>
   )
 }

@@ -5,7 +5,7 @@ import FaMapMarkerAlt from '@meronex/icons/fa/FaMapMarkerAlt'
 import { HeaderItem, PopoverBody, PopoverArrow, Container, Title } from './styles'
 
 import { useOrder, useLanguage, useEvent } from '~components'
-import { AddressListOld as AddressList, AddressFormOld as AddressForm } from '~ui'
+import { AddressList, AddressForm } from '~ui'
 
 export const AddressesPopover = (props) => {
   const {
@@ -85,13 +85,7 @@ export const AddressesPopover = (props) => {
 
   return (
     <div className='address-popover' style={{ overflow: 'hidden' }}>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <HeaderItem ref={referenceElement} onClick={props.onClick} isHome={props.isHome}>
+      <HeaderItem ref={referenceElement} onClick={props.onClick} $isHome={props.isHome}>
         <FaMapMarkerAlt /> {orderState.options?.address?.address?.split(',')?.[0] || t('SELECT_AN_ADDRESS', 'Select an address')}
       </HeaderItem>
       <PopoverBody className='form_edit' ref={popperElement} style={popStyle} {...attributes.popper}>
@@ -123,12 +117,6 @@ export const AddressesPopover = (props) => {
         )}
         <PopoverArrow key='arrow' ref={arrowElement} style={styles.arrow} />
       </PopoverBody>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

@@ -1,0 +1,13 @@
+services:
+  website-marketplace-dev:
+    container_name: website_marketplace_c
+    image: website_marketplace_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/website-marketplace
+      - /website-marketplace/node_modules
+    command: npm run start

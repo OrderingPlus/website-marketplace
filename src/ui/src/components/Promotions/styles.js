@@ -37,7 +37,7 @@ export const SingleOfferContainer = styled.div`
     font-weight: 400;
   }
 
-  button{ 
+  button{
     height: 45px;
     font-size: 14px;
   }
@@ -47,15 +47,30 @@ export const SingleOfferContainer = styled.div`
       font-size: 16px;
     }
   }
+
+  @media (max-width: 424px) {
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+
+    button,
+    #offer-wrap {
+      width: 100%;
+      max-width: 100%;
+    }
+    #offer-info {
+      width: calc(100% - 90px);
+    }
+  }
 `
 
 export const Description = styled.p`
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2; 
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 
 `
@@ -176,7 +191,7 @@ export const OfferData = styled.div`
   align-items: center;
   flex-direction: column;
   p{
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     margin: 3px;
     font-size: 14px;
   }
@@ -237,5 +252,15 @@ export const OfferView = styled.div`
     h2 {
       font-size: 20px;
     }
+  }
+`
+
+export const OfferViewList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    font-size: 14px;
   }
 `

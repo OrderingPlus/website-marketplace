@@ -16,27 +16,31 @@ import {
 
 import { useLanguage, useSession, useUtils } from '~components'
 
+import {
+  capitalize
+} from '~ui'
+
 export const MapMessages = (props) => {
   const {
     order,
     filterSpecialStatus,
+    hideAttributeStatus,
     handleModalImage,
-    hideLogBookMessages,
     getLevel,
     business,
     driver,
     getLogisticTagStatus,
     getStatus
   } = props
-  const [, t] = useLanguage()
+  const [{ dictionary }, t] = useLanguage()
   const [{ parseDate, parseTime }] = useUtils()
   const [{ user }] = useSession()
 
-  const [messages, setMessages] = useState(props.messages)
+  const [, setMessages] = useState(props.messages)
   const [messagesToShow, setMessagesToShow] = useState(props.messagesToShow)
 
   useEffect(() => {
-    if ((!props.messages?.messages?.length && !props.messagesToShow?.messages?.length) || !hideLogBookMessages) return
+    if (!props.messages?.messages?.length && !props.messagesToShow?.messages?.length) return
     const messages_ = {
       ...props.messages,
       messages: props.messages?.messages?.filter(msg => msg.type !== 1 && msg.type !== 0)
@@ -52,69 +56,73 @@ export const MapMessages = (props) => {
 
   return (
     <>
-      {messages?.messages.map((message) => (
+      {props?.messages?.messages.map((message) => (
         <React.Fragment key={message.id}>
           {message.type === 1 && message?.change?.attribute !== 'driver_group_id' && (
             <MessageContentWrapper key={message.id}>
               {message.change?.attribute !== 'driver_id'
                 ? (
-                <>
-                  <MessageCreatedDate>
-                    <span>{parseDate(message.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
-                  </MessageCreatedDate>
-                  <MessageConsole>
-                    <BubbleConsole>
-                      {t('ORDER', 'Order')} {' '}
-                      <strong>{t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))}</strong> {' '}
-                      {t('CHANGED_FROM', 'Changed from')} {' '}
-                      {filterSpecialStatus.includes(message.change.attribute)
-                        ? (
-                        <>
-                          {message.change.old === null
-                            ? <strong>0</strong>
-                            : (
-                            <>
-                              <strong>{message.change.old}</strong> {' '}
-                            </>
-                              )}
-                          <> {t('TO', 'to')} {' '} <strong>{message.change.new}</strong> {t('MINUTES', 'Minutes')}</>
-                        </>
-                          )
-                        : (
-                        <>
-                          {message.change.old !== null && (
-                            <>
-                              <strong>{message.change?.attribute === 'logistic_status' ? getLogisticTagStatus(parseInt(message.change.old, 10)) : t(getStatus(parseInt(message.change.old, 10)))}</strong> {' '}
-                            </>
-                          )}
-                          <> {t('TO', 'to')} {' '} <strong>{message.change?.attribute === 'logistic_status' ? getLogisticTagStatus(parseInt(message.change.new, 10)) : t(getStatus(parseInt(message.change.new, 10)))}</strong> </>
-                        </>
-                          )}
-                      <TimeofSent>{parseTime(message.created_at)}</TimeofSent>
-                    </BubbleConsole>
-                  </MessageConsole>
-                </>
+                  <>
+                    {!hideAttributeStatus?.includes(message.change.attribute) && (
+                      <>
+                        <MessageCreatedDate>
+                          <span>{parseDate(message.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
+                        </MessageCreatedDate>
+                        <MessageConsole>
+                          <BubbleConsole>
+                            {t('ORDER', 'Order')} {' '}
+                            <strong>{t(message.change.attribute.toUpperCase(), capitalize(message.change.attribute.replace(/_/g, ' ')))}</strong> {' '}
+                            {(message.change?.attribute !== 'manual_driver_assignment_comment' && message.change.old === null)
+                              ? (<>{t('CHANGED_FROM', 'Changed from')} {' '}</>)
+                              : (<>{t('CHANGED', 'Changed')} {' '}</>)
+                            }
+                            {filterSpecialStatus.includes(message.change.attribute)
+                              ? (
+                                <>
+                                  {message.change.old === null
+                                    ? <strong>0</strong>
+                                    : (<><strong>{message.change.old}</strong> {' '}</>)
+                                  }
+                                  <>{t('TO', 'to')} {' '} <strong>{message.change.new}</strong> {t('MINUTES', 'Minutes')}</>
+                                </>
+                                )
+                              : (
+                                <>
+                                  {message.change.old !== null && (
+                                    <>
+                                      <strong>{message.change?.attribute === 'logistic_status' ? getLogisticTagStatus(parseInt(message.change.old, 10)) : getStatus(parseInt(message.change.old, 10), dictionary)}</strong> {' '}
+                                    </>
+                                  )}
+                                  <> {t('TO', 'to')} {' '} <strong>{message.change?.attribute === 'logistic_status' ? getLogisticTagStatus(parseInt(message.change.new, 10)) : message.change?.attribute === 'manual_driver_assignment_comment' ? message.change.new : getStatus(parseInt(message.change.new, 10), dictionary)}</strong> </>
+                                </>
+                                )}
+                            <TimeofSent>{parseTime(message.created_at)}</TimeofSent>
+                          </BubbleConsole>
+                        </MessageConsole>
+                      </>
+                    )}
+                  </>
                   )
                 : (
-                <>
-                  <MessageCreatedDate>
-                    <span>{parseDate(message.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
-                  </MessageCreatedDate>
-                  <MessageConsole>
-                    <BubbleConsole>
-                      {message.change.new
-                        ? (
-                        <>
-                          <strong>{message.driver?.name} {' '} {message.driver?.lastname && message.driver.lastname} </strong>
-                          {t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')}
-                          {message.comment && (<><br /> {message.comment.length}</>)}
-                        </>
-                          )
-                        : <>{t('DRIVER_UNASSIGNED', 'Driver unassigned')}</>}
-                      <TimeofSent>{parseTime(message.created_at)}</TimeofSent>
-                    </BubbleConsole>
-                  </MessageConsole>
-                </>
+                  <>
+                    <MessageCreatedDate>
+                      <span>{parseDate(message.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
+                    </MessageCreatedDate>
+                    <MessageConsole>
+                      <BubbleConsole>
+                        {message.change.new
+                          ? (
+                          <>
+                            <strong>{message.driver?.name} {' '} {message.driver?.lastname && message.driver.lastname} </strong>
+                            {t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')}
+                            {message.comment && (<><br /> {message.comment.length}</>)}
+                          </>
+                            )
+                          : <>{t('DRIVER_UNASSIGNED', 'Driver unassigned')}</>}
+                        <TimeofSent>{parseTime(message.created_at)}</TimeofSent>
+                      </BubbleConsole>
+                    </MessageConsole>
+                  </>
                   )}
             </MessageContentWrapper>
 

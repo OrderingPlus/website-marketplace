@@ -49,7 +49,7 @@ export const OtpWrapper = styled.div`
     .otp-input {
       width: 50px !important;
       height: 55px;
-      border: 1px solid #DEE2E6;
+      border: 1px solid ${props => props.theme?.colors.darkGray};
       border-radius: 7.6px;
       background-color: #FFF;
       outline: none;
@@ -57,7 +57,7 @@ export const OtpWrapper = styled.div`
       font-weight: bold;
 
       &:focus{
-        border-color: ${() => darken(0.07, '#DEE2E6')} !important;
+        border-color: ${(props) => darken(0.07, props.theme?.colors.darkGray)} !important;
       }
 
       &::placeholder,

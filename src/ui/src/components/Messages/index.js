@@ -8,6 +8,7 @@ import MdcCloseOctagonOutline from '@meronex/icons/mdc/MdcCloseOctagonOutline'
 import { useForm } from 'react-hook-form'
 import IosSend from '@meronex/icons/ios/IosSend'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import {
   MessagesContainer,
@@ -50,23 +51,23 @@ import {
   Messages as MessagesController,
   useUtils,
   useLanguage,
-  useEvent,
-  useConfig
+  useEvent
 } from '~components'
 
 import {
   Input,
   Button,
   bytesConverter,
-  getTraduction,
   Alert,
   Modal,
-  Image as ImageWithFallback
+  Image as ImageWithFallback,
+  getOrderStatusPrefix as getStatus
 } from '~ui'
 
 import { MapMessages } from './MapMessages'
 
 const filterSpecialStatus = ['prepared_in', 'delivered_in', 'delivery_datetime']
+const hideAttributeStatus = ['manual_driver_assignment_author_id']
 
 const MessagesUI = (props) => {
   const {
@@ -89,7 +90,6 @@ const MessagesUI = (props) => {
   } = props
 
   const theme = useTheme()
-  const [{ configs }] = useConfig()
   const [, t] = useLanguage()
   const { handleSubmit, register, errors, setValue } = useForm()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
@@ -100,8 +100,6 @@ const MessagesUI = (props) => {
   const imageRef = useRef(null)
   const previousStatus = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
   const chatDisabled = previousStatus.includes(order?.status)
-
-  const hideLogBookMessages = configs?.order_logbook_enabled?.value === '0'
 
   const quickMessageList = [
     { key: 'message_1', text: t('CUSTOMER_MESSAGE_1', 'Lorem ipsum 1') },
@@ -188,8 +186,7 @@ const MessagesUI = (props) => {
       return
     }
     buttonRef.current.focus()
-    reader.onerror = error => {
-      console.log(error)
+    reader.onerror = () => {
       setAlertState({
         open: true,
         content: t('ERROR_READ_FILE', 'Failed to read file')
@@ -211,68 +208,6 @@ const MessagesUI = (props) => {
         return t('RESOLVED', 'Resolved')
       default:
         return status
-    }
-  }
-
-  const getStatus = (s) => {
-    const status = parseInt(s)
-    switch (status) {
-      case 0:
-        return 'ORDER_STATUS_PENDING'
-      case 1:
-        return 'ORDERS_COMPLETED'
-      case 2:
-        return 'ORDER_REJECTED'
-      case 3:
-        return 'ORDER_STATUS_IN_BUSINESS'
-      case 4:
-        return 'ORDER_READY'
-      case 5:
-        return 'ORDER_REJECTED_RESTAURANT'
-      case 6:
-        return 'ORDER_STATUS_CANCELLEDBYDRIVER'
-      case 7:
-        return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT'
-      case 8:
-        return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER'
-      case 9:
-        return 'ORDER_PICKUP_COMPLETED_BY_DRIVER'
-      case 10:
-        return 'ORDER_PICKUP_FAILED_BY_DRIVER'
-      case 11:
-        return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER'
-      case 12:
-        return 'ORDER_DELIVERY_FAILED_BY_DRIVER'
-      case 13:
-        return 'PREORDER'
-      case 14:
-        return 'ORDER_NOT_READY'
-      case 15:
-        return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER'
-      case 16:
-        return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER'
-      case 17:
-        return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER'
-      case 18:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS'
-      case 19:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER'
-      case 20:
-        return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'
-      case 21:
-        return 'ORDER_CUSTOMER_ARRIVED_BUSINESS'
-      case 22:
-        return 'ORDER_LOOKING_FOR_DRIVER'
-      case 23:
-        return 'ORDER_DRIVER_ON_WAY'
-      case 24:
-        return 'ORDER_DRIVER_WAITING_FOR_ORDER'
-      case 25:
-        return 'ORDER_ACCEPTED_BY_DRIVER_COMPANY'
-      case 26:
-        return 'ORDER_DRIVER_ARRIVED_CUSTOMER'
-      default:
-        return getTraduction(status)
     }
   }
 
@@ -488,30 +423,28 @@ const MessagesUI = (props) => {
             {
               !messages?.loading && order && (
                 <MessageContentWrapper>
-                  {!hideLogBookMessages && (
-                    <>
-                      <MessageCreatedDate>
-                        <span>{parseDate(order.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
-                      </MessageCreatedDate>
-                      <MessageConsole>
-                        <BubbleConsole>
-                          {t('ORDER_PLACED_FOR', 'Order placed for')} {' '}
-                          <strong>{parseDate(order.created_at)}</strong> {' '}
-                          {t('VIA', 'Via')}{' '}
-                          <strong>
-                            {order.app_id ? t(order.app_id.toUpperCase(), order.app_id) : t('OTHER', 'Other')}
-                          </strong>{' '}
-                          <TimeofSent>{parseTime(order.created_at)}</TimeofSent>
-                        </BubbleConsole>
-                      </MessageConsole>
-                    </>
-                  )}
+                  <>
+                    <MessageCreatedDate>
+                      <span>{parseDate(order.created_at, { outputFormat: 'MMM DD, YYYY' })}</span>
+                    </MessageCreatedDate>
+                    <MessageConsole>
+                      <BubbleConsole>
+                        {t('ORDER_PLACED_FOR', 'Order placed for')} {' '}
+                        <strong>{parseDate(order.created_at)}</strong> {' '}
+                        {t('VIA', 'Via')}{' '}
+                        <strong>
+                          {order.app_id ? t(order.app_id.toUpperCase(), order.app_id) : t('OTHER', 'Other')}
+                        </strong>{' '}
+                        <TimeofSent>{parseTime(order.created_at)}</TimeofSent>
+                      </BubbleConsole>
+                    </MessageConsole>
+                  </>
                   <MapMessages
                     messages={messagesToShow?.messages?.length ? messagesToShow : messages}
                     messagesToShow={messagesToShow}
-                    hideLogBookMessages={hideLogBookMessages}
                     order={order}
                     filterSpecialStatus={filterSpecialStatus}
+                    hideAttributeStatus={hideAttributeStatus}
                     handleModalImage={handleModalImage}
                     getLevel={getLevel}
                     business={business}
@@ -618,21 +551,23 @@ const MessagesUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      <Modal
-        onClose={() => setModalImage({ ...modalImage, open: false })}
-        open={modalImage.open}
-        padding='0'
-        hideCloseDefault
-        isTransparent
-        height='auto'
-      >
-        <ImageContainer>
-          <ModalIcon>
-            <MdClose onClick={() => setModalImage({ ...modalImage, open: false })} />
-          </ModalIcon>
-          <img src={modalImage.src} width='320px' height='180px' loading='lazy' />
-        </ImageContainer>
-      </Modal>
+      {modalImage.open && (
+        <Modal
+          onClose={() => setModalImage({ ...modalImage, open: false })}
+          open={modalImage.open}
+          padding='0'
+          hideCloseDefault
+          isTransparent
+          height='auto'
+        >
+          <ImageContainer>
+            <ModalIcon>
+              <MdClose onClick={() => setModalImage({ ...modalImage, open: false })} />
+            </ModalIcon>
+            <img src={modalImage.src} width='320px' height='180px' loading='lazy' />
+          </ImageContainer>
+        </Modal>
+      )}
     </MessagesContainer>
   )
 }

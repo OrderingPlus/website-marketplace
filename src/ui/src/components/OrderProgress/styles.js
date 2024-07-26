@@ -27,7 +27,7 @@ export const OrderProgressContainer = styled.div`
 `
 
 export const OrderProgressWrapper = styled.div`
-  padding: ${props => props.isChew ? '110px 20px 45px' : '45px 20px'};
+  padding: 45px 20px;
   margin: 0px;
   @media (min-width: 768px) {
       margin: 0 35px;
@@ -188,7 +188,7 @@ export const StatusWrapper = styled.p`
 
 export const TimeWrapper = styled.div`
   font-size: 12px;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;

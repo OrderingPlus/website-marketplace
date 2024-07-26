@@ -41,7 +41,7 @@ export const UserPopover = (props) => {
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
   const isPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
   const isAddressListNewPage = theme?.profile?.components?.address_list?.components?.layout?.position === 'new_page'
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
+  const isProjectEnterpricePlan = configs?.plan_enterprise && configs?.plan_enterprise?.value
 
   const hideBrowse = theme?.bar_menu?.components?.browse?.hidden
   const hideOrders = theme?.bar_menu?.components?.orders?.hidden
@@ -50,7 +50,7 @@ export const UserPopover = (props) => {
   const hideMessages = theme?.bar_menu?.components?.messages?.hidden
   const hideHelp = theme?.bar_menu?.components?.help?.hidden
   const hideFavorites = theme?.bar_menu?.components?.favorites?.hidden
-  const hideSession = theme?.bar_menu?.components?.sessions?.hidden
+  const hideSession = theme?.bar_menu?.components?.sessions?.hidden || !isProjectEnterpricePlan
   const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 
   const optionsDefault = [
@@ -133,16 +133,9 @@ export const UserPopover = (props) => {
   }
   return (
     <div style={{ overflow: 'hidden' }}>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <HeaderItem
         isPhoto={sessionState?.user?.photo}
-        isHome={isHome}
-        isChew={isChew}
+        $isHome={isHome}
         ref={referenceElement}
         isOpen={open}
         onClick={props.onClick}
@@ -193,12 +186,6 @@ export const UserPopover = (props) => {
           </ExtraOptions>
         </PopoverList>
       </PopoverBody>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </div>
   )
 }

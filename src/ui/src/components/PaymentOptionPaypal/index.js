@@ -1,8 +1,7 @@
 import React from 'react'
-import Skeleton from 'react-loading-skeleton'
 
 import { Container } from './styles'
-import { useConfig, PaymentOptionPaypal as PaymentPaypalController } from '~components'
+import { useConfig, PaymentOptionPaypal as PaymentPaypalController, useLanguage } from '~components'
 
 const PaymentOptionPaypalUI = (props) => {
   const {
@@ -12,42 +11,27 @@ const PaymentOptionPaypalUI = (props) => {
     paypalButtonProps
   } = props
 
+  const [, t] = useLanguage()
+
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))
+    <Container>
+      {noAuthMessage
+        ? (
+        <p>{noAuthMessage}</p>
+          )
+        : (
+            isSdkReady
+              ? (
+                  PaypalButton && <PaypalButton {...paypalButtonProps} />
+                )
+              : (
+                <div>
+                  <p style={{ textAlign: 'center' }}>{t('CREDENTIALS_MISSING', 'Credentials Missing')}</p>
+                </div>
+                )
+          )
       }
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))
-      }
-      <Container>
-        {noAuthMessage
-          ? (
-          <p>{noAuthMessage}</p>
-            )
-          : (
-              isSdkReady
-                ? (
-                    PaypalButton && <PaypalButton {...paypalButtonProps} />
-                  )
-                : (
-            <div>
-              <Skeleton count={3} height={55} />
-            </div>
-                  )
-            )}
-      </Container>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))
-      }
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))
-      }
-    </>
+    </Container>
   )
 }
 

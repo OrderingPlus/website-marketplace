@@ -98,7 +98,7 @@ export const SwiperWrapper = styled.div`
 
   .swiper {
     width: 100%;
-    height: 500px;
+    max-height: 500px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -298,7 +298,7 @@ export const ProductActions = styled.div`
   }
 
   div.incdec-control {
-    width: 130px;
+    width: 180px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -510,7 +510,7 @@ export const ProductName = styled.h1`
   .calories {
     font-size: 16px;
     font-weight: 100;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
     white-space: nowrap;
     display: flex;
     align-items: flex-end;
@@ -530,7 +530,7 @@ export const Properties = styled.div`
 export const ProductDescription = styled.p`
   margin-top: 0px;
   white-space: pre-wrap;
-  color: #909BA9;
+  color: ${props => props.theme?.colors.darkGray};
 `
 export const PriceContent = styled.div`
   display: flex;
@@ -545,7 +545,7 @@ export const PriceContent = styled.div`
   .offer-price {
     text-decoration: line-through;
     font-size: 16px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 export const ProductMeta = styled.div`
@@ -554,7 +554,7 @@ export const ProductMeta = styled.div`
   span {
     font-size: 16px;
     line-height: 24px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 export const EstimatedPersons = styled.div`

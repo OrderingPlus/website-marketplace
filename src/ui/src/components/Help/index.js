@@ -26,60 +26,46 @@ export const Help = (props) => {
   ]
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <HelpContainer>
-        {selectedPage && (
+    <HelpContainer>
+      {selectedPage && (
+        <>
+          <BreadCrumbContainer>
+            <span
+              className='deactive'
+              onClick={() => setSelectedPage(null)}
+            >
+              {t('HELP', 'Help')}
+            </span>
+            <HiOutlineChevronRight />
+            <span>{selectedPage?.title}</span>
+          </BreadCrumbContainer>
+          <SubTitle>{selectedPage?.title}</SubTitle>
+        </>
+      )}
+      {
+        !selectedPage && (
           <>
-            <BreadCrumbContainer>
-              <span
-                className='deactive'
-                onClick={() => setSelectedPage(null)}
-              >
-                {t('HELP', 'Help')}
-              </span>
-              <HiOutlineChevronRight />
-              <span>{selectedPage?.title}</span>
-            </BreadCrumbContainer>
-            <SubTitle>{selectedPage?.title}</SubTitle>
+            <Title>{t('HELP', 'Help')}</Title>
+            <HelpContentWrapper>
+              <SubPageList>
+                {
+                  menuList && menuList.map((page, i) => (
+                    <SubPage key={i}>
+                      <span onClick={() => setSelectedPage(page)}>{page?.title}</span>
+                    </SubPage>
+                  ))
+                }
+              </SubPageList>
+              <LastOrdersListWrapper>
+                <LastOrders {...props} />
+              </LastOrdersListWrapper>
+            </HelpContentWrapper>
           </>
-        )}
-        {
-          !selectedPage && (
-            <>
-              <Title>{t('HELP', 'Help')}</Title>
-              <HelpContentWrapper>
-                <SubPageList>
-                  {
-                    menuList && menuList.map((page, i) => (
-                      <SubPage key={i}>
-                        <span onClick={() => setSelectedPage(page)}>{page?.title}</span>
-                      </SubPage>
-                    ))
-                  }
-                </SubPageList>
-                <LastOrdersListWrapper>
-                  <LastOrders {...props} />
-                </LastOrdersListWrapper>
-              </HelpContentWrapper>
-            </>
-          )
-        }
-        {selectedPage?.id === 1 && <HelpStaticPage slug='helpOrder' />}
-        {selectedPage?.id === 2 && <HelpStaticPage slug='helpAccountAndPayment' />}
-        {selectedPage?.id === 3 && <HelpStaticPage slug='helpOrderingGuide' />}
-      </HelpContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+        )
+      }
+      {selectedPage?.id === 1 && <HelpStaticPage slug='helpOrder' />}
+      {selectedPage?.id === 2 && <HelpStaticPage slug='helpAccountAndPayment' />}
+      {selectedPage?.id === 3 && <HelpStaticPage slug='helpOrderingGuide' />}
+    </HelpContainer>
   )
 }

@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 import { useTheme } from 'styled-components'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, { Navigation } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+
 import { nanoid } from 'nanoid'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 import BsCaretLeftFill from '@meronex/icons/bs/BsCaretLeftFill'
 import { ChevronLeft, ChevronRight, ChevronDown } from 'react-bootstrap-icons'
@@ -56,8 +59,6 @@ import {
   orderTypeList,
   ForgotPasswordForm
 } from '~ui'
-
-SwiperCore.use([Navigation])
 
 const maxDate = 40
 
@@ -299,6 +300,7 @@ const ServiceFormUI = (props) => {
                   slidesPerView={1}
                   watchSlidesProgress
                   className='mySwiper2'
+                  modules={[Navigation]}
                   preventClicksPropagation={false}
                   navigation={{
                     nextEl: '.button-next',
@@ -434,6 +436,7 @@ const ServiceFormUI = (props) => {
                       <Swiper
                         spaceBetween={0}
                         navigation
+                        modules={[Navigation]}
                         breakpoints={{
                           0: {
                             slidesPerView: 4,
@@ -520,7 +523,7 @@ const ServiceFormUI = (props) => {
                   color='primary'
                   disabled={isBusyTime(currentProfessional, dateSelected) || orderState?.loading}
                 >
-                  {orderState?.loading ? t('LOADING', theme?.defaultLanguages?.LOADING || 'Loading') : t('BOOK', 'Book')}
+                  {orderState?.loading ? t('LOADING', theme?.defaultLanguages?.LOADING || 'Loading...') : t('BOOK', 'Book')}
                 </Button>
               )}
               {(!auth || isSoldOut || maxProductQuantity <= 0) && (

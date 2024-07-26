@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { InfoCircle, Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
 
 import {
@@ -75,16 +76,18 @@ const SingleProfessionalCardUI = (props) => {
           </ActionWrapper>
         </InfoWrapper>
       </Container>
-      <Modal
-        open={open}
-        width='760px'
-        padding='0'
-        onClose={() => setOpen(false)}
-      >
-        <ProfessionalInfo
-          userId={professional?.id}
-        />
-      </Modal>
+      {open && (
+        <Modal
+          open={open}
+          width='760px'
+          padding='0'
+          onClose={() => setOpen(false)}
+        >
+          <ProfessionalInfo
+            userId={professional?.id}
+          />
+        </Modal>
+      )}
     </>
   )
 }

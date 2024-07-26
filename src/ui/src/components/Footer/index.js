@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components'
 import { Container, PoweredByOrdering } from './styles'
 import { useApi, useConfig, useLanguage } from '~components'
 
-export const Footer = ({ isFooterPage }) => {
+export const Footer = ({ isFooterPage, isHome }) => {
   const [footerState, setfooterState] = useState({ body: null, loading: false, error: null })
   const [ordering] = useApi()
   const theme = useTheme()
@@ -42,7 +42,7 @@ export const Footer = ({ isFooterPage }) => {
   }, [])
 
   return (
-    <Container>
+    <Container $isHome={isHome}>
       {
         ((footerContent || footerState.body) && !isFooterPage) && (
           <div
@@ -56,8 +56,8 @@ export const Footer = ({ isFooterPage }) => {
       {enabledPoweredByOrdering && (
         <PoweredByOrdering>
           {t('POWERED_BY', 'Powered by')}
-          <a href='https://www.ordering.co'>
-            {' '}{t('ORDERING_CO', 'Ordering.co')}
+          <a href='https://www.orderingplus.com'>
+            {' '}{t('ORDERING_PLUS', 'Orderingplus')}
           </a>
         </PoweredByOrdering>
       )}

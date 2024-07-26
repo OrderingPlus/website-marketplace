@@ -18,7 +18,8 @@ export const OrderBillSection = (props) => {
   const {
     order,
     setOpenTaxModal,
-    showOnlyTotals
+    showOnlyTotals,
+    isGiftCardOrder
   } = props
 
   const [, t] = useLanguage()
@@ -184,9 +185,9 @@ export const OrderBillSection = (props) => {
                   </tr>
                 ))
               }
-              {typeof order?.summary?.delivery_price === 'number' && !isPickup && (
+              {typeof order?.summary?.delivery_price === 'number' && !isPickup && !isGiftCardOrder && (
                 <tr>
-                  <td>{t('DELIVERY_FEE', theme?.defaultLanguages?.DELIVERY_FEE || 'Delivery Fee')}</td>
+                  <td>{t('DELIVERY_FEE', theme?.defaultLanguages?.DELIVERY_FEE || 'Delivery fee')}</td>
                   <td>{parsePrice(order?.summary?.delivery_price + getIncludedTaxes(true))}</td>
                 </tr>
               )}

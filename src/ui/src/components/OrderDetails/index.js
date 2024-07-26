@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import RiUser2Fill from '@meronex/icons/ri/RiUser2Fill'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
@@ -45,7 +46,8 @@ import {
   ProfessionalBlock,
   PlaceSpotWrapper,
   PoweredByOrdering,
-  ValidationText
+  ValidationText,
+  OrderClonnedMessage
 } from './styles'
 
 import {
@@ -70,8 +72,6 @@ import { OrderHeaderInfoSection } from './OrderHeaderInfoSection'
 
 import {
   getGoogleMapImage,
-  getOrderStatuPickUp,
-  getOrderStatus,
   Button,
   NotFoundSource,
   Modal,
@@ -85,10 +85,9 @@ import {
   ProductItemAccordion,
   TaxInformation,
   Messages,
-  SendGiftCard
+  SendGiftCard,
+  generalUtilities
 } from '~ui'
-
-import { HeaderContent as HeaderContentTwo } from './layouts/Starbucks'
 
 const OrderDetailsUI = (props) => {
   const {
@@ -106,7 +105,8 @@ const OrderDetailsUI = (props) => {
     reorderState,
     handleReorder,
     orderTypes,
-    handleRemoveCart
+    handleRemoveCart,
+    hideStaticMap
   } = props
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
@@ -130,6 +130,9 @@ const OrderDetailsUI = (props) => {
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
   const [isShowBusinessLogo, setIsShowBusinessLogo] = useState(true)
+
+  const { getStatusPrefix } = generalUtilities()
+
   const { order, loading, businessData, error } = props.order
   const yourSpotString = order?.delivery_type === 3 ? t('TABLE_NUMBER', 'Table number') : t('SPOT_NUMBER', 'Spot number')
   const acceptedStatus = [1, 2, 5, 6, 10, 11, 12, 15]
@@ -189,8 +192,8 @@ const OrderDetailsUI = (props) => {
       }
       try {
         const image = new Image()
+        image.onload = resolve
         image.src = src
-        image.complete ? resolve(true) : resolve(false)
       } catch (err) {
         resolve(false)
       }
@@ -401,7 +404,7 @@ const OrderDetailsUI = (props) => {
   const disableLeftButton = [1, 2, 5, 15, 16, 17, 20, 21]
   const disableRightButton = [1, 2, 5, 15, 16, 17, 21]
 
-  const progressBarObjt = order?.delivery_type && order?.delivery_type === 2 ? getOrderStatuPickUp : getOrderStatus
+  const isPickup = order?.delivery_type && order?.delivery_type === 2
 
   return (
     <Container>
@@ -416,8 +419,8 @@ const OrderDetailsUI = (props) => {
                     {enabledPoweredByOrdering && (
                       <PoweredByOrdering>
                         {t('POWERED_BY', 'Powered by')}
-                        <a href='https://www.ordering.co'>
-                          {t('ORDERING_CO', 'Ordering.co')}
+                        <a href='https://www.orderingplus.com'>
+                          {t('ORDERING_PLUS', 'Orderingplus')}
                         </a>
                       </PoweredByOrdering>
                     )}
@@ -438,6 +441,9 @@ const OrderDetailsUI = (props) => {
                     )}
                     {!!order?.integration_id && (
                       <h1>{t('TICKET', 'Ticket')}: {order?.integration_id}</h1>
+                    )}
+                    {!!order?.integration_id_date && (
+                      <h1>{t('N_ORDER', 'N. Orden')}: {order?.integration_id_date}</h1>
                     )}
                     {!hideDeliveryType && (
                       <p className='types'>
@@ -464,6 +470,12 @@ const OrderDetailsUI = (props) => {
                                 parseDate(order?.reporting_data?.at[`status:${order.status}`], { outputFormat: `YYYY-MM-DD ${configs?.general_hour_format?.value}` })
                               )}
                         </p>
+                      </>
+                    )}
+                    {order?.reservation && order?.delivery_type === 9 && (
+                      <>
+                        <p className='date'>{t('RESERVATION_SCHEDULED_TO', 'Reservation scheduled to')}: {parseDate(order?.reserve_date)}</p>
+                        <p>{order?.reservation?.guests_reservation} {t('GUESTS', 'Guests')}</p>
                       </>
                     )}
                     {(acceptedStatus.includes(parseInt(order?.status, 10)) ||
@@ -502,11 +514,16 @@ const OrderDetailsUI = (props) => {
                       </ValidationText>
                     </div>
                   )}
+                  {!!order?.cloned_order_id && (
+                    <OrderClonnedMessage>
+                      <p>{t('ORDER_CLONNED_INFORMATION', 'Your orden has been cloned due a missing item, no extra charges will be made, for more information, please contact the store')}</p>
+                    </OrderClonnedMessage>
+                  )}
                   {!hideDeliveryProgress && !isGiftCardOrder && (
                     <>
-                      <StatusBar percentage={progressBarObjt(order?.status)?.percentage} />
+                      <StatusBar percentage={getStatusPrefix({ status: order?.status, isPickup })?.percentage} />
                       <OrderStatusAndLinkContainer>
-                        <p className='order-status'>{progressBarObjt(order?.status)?.value}</p>
+                        <p className='order-status'>{getStatusPrefix({ status: order?.status, isPickup })?.value}</p>
                         <LinkWrapper>
                           <ReviewOrderLink
                             active
@@ -523,7 +540,7 @@ const OrderDetailsUI = (props) => {
                                 (!isOrderReviewed || !isProductReviewed || (isService && !isProReviewed) || !isDriverReviewed)
                               }
                             >
-                              <span onClick={handleOpenReview}>{t('REVIEW_ORDER', theme?.defaultLanguages?.REVIEW_ORDER || 'Review your Order')}</span>
+                              <span onClick={handleOpenReview}>{t('REVIEW_ORDER', theme?.defaultLanguages?.REVIEW_ORDER || 'Review Order')}</span>
                             </ReviewOrderLink>
                           )}
                         </LinkWrapper>
@@ -531,7 +548,7 @@ const OrderDetailsUI = (props) => {
                     </>
                   )}
                 </OrderInfo>
-                {!isGiftCardOrder && (
+                {!isGiftCardOrder && !hideStaticMap && (
                   <OrderBusiness>
                     <BusinessExternalWrapper>
                       <BusinessWrapper
@@ -583,7 +600,7 @@ const OrderDetailsUI = (props) => {
                                 onClick={() => handleChangeOrderStatus(20)}
                                 disabled={disableLeftButton.includes(order?.status)}
                               >
-                                {progressBarObjt(20)?.value}
+                                {getStatusPrefix({ status: 20, isPickup })?.value}
                               </Button>
                             </div>
                             <div>
@@ -593,7 +610,7 @@ const OrderDetailsUI = (props) => {
                                 disabled={disableRightButton.includes(order?.status)}
                                 onClick={() => handleChangeOrderStatus(21)}
                               >
-                                {progressBarObjt(21)?.value}
+                                {getStatusPrefix({ status: 21, isPickup })?.value}
                               </Button>
                             </div>
                           </BtsOrderStatus>
@@ -629,26 +646,39 @@ const OrderDetailsUI = (props) => {
                 )}
               </>
             )}
-            {showStarbucksHeader && (
-              <HeaderContentTwo
-                order={order}
-                hashKey={props.hashKey}
-                googleMapsUrl={
-                  googleMapsApiKey &&
-                  !validTrackingStatus.includes(parseInt(order?.status)) &&
-                  getGoogleMapImage(order?.business?.location, googleMapsApiKey, mapConfigs)
-                }
-                changeIdToExternalId={changeIdToExternalId}
-                enabledPoweredByOrdering={enabledPoweredByOrdering}
-                orderStatus={progressBarObjt(order?.status)?.value}
-                percentage={progressBarObjt(order?.status)?.percentage}
-                orderId={{ id: order?.id, external: order?.external_id }}
-                showReview={
-                  [...acceptedStatus, 16].includes(parseInt(order?.status, 10)) &&
-                  (!order?.review || (order.driver && !order?.user_review)) &&
-                  (!isOrderReviewed || !isDriverReviewed)
-                }
-              />
+            {hideStaticMap && (
+              <OrderCustomer>
+                <WrapperDriver>
+                  {isShowBusinessLogo && order?.business?.logo && (
+                    <PhotoBlock src={order?.business?.logo} />
+                  )}
+                  <div>
+                    <p>{order?.business?.name}</p>
+                    <ActionsSection
+                      {...ActionsSectionProps}
+                      actionType='business'
+                      showPhone={!hideBusinessPhone}
+                      showMessages={!hideBusinessMessages}
+                    />
+                    {!hideBusinessEmail && (
+                      <p>{order?.business?.email}</p>
+                    )}
+                    {!hideBusinessPhone && (
+                      <p>{order?.business?.cellphone}</p>
+                    )}
+                    {!hideBusinessAddress && (
+                      <p>{order?.business?.address}</p>
+                    )}
+                    {order?.place?.name && (
+                      <PlaceSpotSection>
+                        <p>
+                          {yourSpotString}: {order?.place?.name}
+                        </p>
+                      </PlaceSpotSection>
+                    )}
+                  </div>
+                </WrapperDriver>
+              </OrderCustomer>
             )}
             <OrderCustomer>
               <WrapperDriver>
@@ -658,10 +688,10 @@ const OrderDetailsUI = (props) => {
                 <div>
                   <p>{order?.customer?.name} {order?.customer?.lastname}</p>
                   {!hideCustomerEmail && (
-                    <p>{order?.customer?.email}</p>
+                    <p>{order?.customer?.guest_id ? order?.customer?.guest_email : order?.customer?.email}</p>
                   )}
                   {!hideCustomerPhone && (
-                    <p>{order?.customer?.cellphone || order?.customer?.phone}</p>
+                    <p>{order?.customer?.guest_id ? order?.customer?.guest_cellphone : (order?.customer?.cellphone || order?.customer?.phone)}</p>
                   )}
                   {!hideCustomerAddress && (
                     <p>{order?.customer?.address}</p>
@@ -767,6 +797,7 @@ const OrderDetailsUI = (props) => {
                 order={order}
                 setOpenTaxModal={setOpenTaxModal}
                 showOnlyTotals={showStarbucksHeader}
+                isGiftCardOrder={isGiftCardOrder}
               />
             </OrderProducts>
           </WrapperRightContainer>
@@ -892,50 +923,53 @@ const OrderDetailsUI = (props) => {
           </Modal>
         )
       }
-      <Modal
-        width='70%'
-        open={openTaxModal.open}
-        padding='20px'
-        closeOnBackdrop
-        title={`${openTaxModal.data?.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2
-          ? `(${typeof openTaxModal.data?.rate === 'number'
-            ? `${openTaxModal.data?.rate}%`
-            : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})`
-          : ''}
-          `}
-        onClose={() => setOpenTaxModal({ open: false, tax: null, type: '' })}
-        modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
-      >
-        <TaxInformation
-          type={openTaxModal.type}
-          data={openTaxModal.data}
-          products={order?.products}
-        />
-      </Modal>
-      <Modal
-        open={isOrderHistory}
-        width='760px'
-        onClose={() => setIsOrderHistory(false)}
-        title={t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', (changeIdToExternalId && order?.external_id) || `# ${order?.id}`)}
-      >
-        <OrderHistory
-          messages={messages}
-          order={order}
-          handleOpenReview={handleOpenReview}
+      {openTaxModal.open && (
+        <Modal
+          width='70%'
+          open={openTaxModal.open}
+          padding='20px'
+          closeOnBackdrop
+          title={`${openTaxModal.data?.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2
+            ? `(${typeof openTaxModal.data?.rate === 'number'
+              ? `${openTaxModal.data?.rate}%`
+              : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})`
+            : ''}
+            `}
+          onClose={() => setOpenTaxModal({ open: false, tax: null, type: '' })}
+          modalTitleStyle={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <TaxInformation
+            type={openTaxModal.type}
+            data={openTaxModal.data}
+            products={order?.products}
+          />
+        </Modal>
+      )}
+      {isOrderHistory && (
+        <Modal
+          open={isOrderHistory}
+          width='760px'
           onClose={() => setIsOrderHistory(false)}
-          enableReview={
-            acceptedStatus.includes(parseInt(order?.status, 10)) &&
-            (!order?.review || (order.driver && !order?.user_review)) &&
-            (!isOrderReviewed || !isProductReviewed || !isDriverReviewed)
-          }
-        />
-      </Modal>
+          title={t('DETAILS_OF_ORDER', 'Details of Order_NUMBER_').replace('_NUMBER_', (changeIdToExternalId && order?.external_id) || `# ${order?.id}`)}
+        >
+          <OrderHistory
+            messages={messages}
+            order={order}
+            handleOpenReview={handleOpenReview}
+            onClose={() => setIsOrderHistory(false)}
+            enableReview={
+              acceptedStatus.includes(parseInt(order?.status, 10)) &&
+              (!order?.review || (order.driver && !order?.user_review)) &&
+              (!isOrderReviewed || !isProductReviewed || !isDriverReviewed)
+            }
+          />
+        </Modal>
+      )}
       <Confirm
         title={t('ORDER', 'Order')}
         content={confirm.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={confirm.open}
-        hideViaText={props.hideViaText}
         onClose={() => handleOriginalReorder()}
         onCancel={() => handleOriginalReorder()}
         onAccept={confirm.handleOnAccept}

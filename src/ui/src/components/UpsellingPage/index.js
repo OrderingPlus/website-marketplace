@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useTheme } from 'styled-components'
 import MdClose from '@meronex/icons/md/MdClose'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import {
   Container,
   UpsellingContainer,
@@ -76,58 +77,44 @@ const UpsellingPageUI = (props) => {
 
   const UpsellingLayout = () => {
     return (
-      <>
-        {props.beforeElements?.map((BeforeElement, i) => (
-          <React.Fragment key={i}>
-            {BeforeElement}
-          </React.Fragment>))}
-        {props.beforeComponents?.map((BeforeComponent, i) => (
-          <BeforeComponent key={i} {...props} />))}
-        <Container>
-          <UpsellingContainer>
-            {
-              !upsellingProducts.loading
-                ? (
-                <>
-                  {
-                    (!upsellingProducts.error && upsellingProducts.products?.length > 0)
-                      ? upsellingProducts.products.map((product, i) => (
-                      <Item key={product.id} name={product.name}>
-                        <Image>
-                          <img src={product.images} alt={`product-${i}`} width='150px' height='150px' loading='lazy' />
-                        </Image>
-                        <Details>
-                          <div>
-                            <h3 title={product.name}>{product.name}</h3>
-                          </div>
-                          <p>{parsePrice(product.price)}</p>
-                          <Button color='primary' onClick={() => handleFormProduct(product)}>{t('ADD', 'Add')}</Button>
-                        </Details>
-                      </Item>
-                      ))
-                      : (
-                      <div>
-                        {upsellingProducts.message || t('NO_UPSELLING_PRODUCTS', 'There are no upselling products')}
-                      </div>
-                        )
-                  }
-                </>
-                  )
-                : [...Array(8)].map((item, i) => (
-                <SkeletonContainer key={i}>
-                  <Skeleton width={150} height={250} />
-                </SkeletonContainer>
-                  ))
-            }
-          </UpsellingContainer>
-        </Container>
-        {props.afterComponents?.map((AfterComponent, i) => (
-          <AfterComponent key={i} {...props} />))}
-        {props.afterElements?.map((AfterElement, i) => (
-          <React.Fragment key={i}>
-            {AfterElement}
-          </React.Fragment>))}
-      </>
+      <Container>
+        <UpsellingContainer>
+          {
+            !upsellingProducts.loading
+              ? (
+              <>
+                {
+                  (!upsellingProducts.error && upsellingProducts.products?.length > 0)
+                    ? upsellingProducts.products.map((product, i) => (
+                    <Item key={product.id} name={product.name}>
+                      <Image>
+                        <img src={product.images} alt={`product-${i}`} width='150px' height='150px' loading='lazy' />
+                      </Image>
+                      <Details>
+                        <div>
+                          <h3 title={product.name}>{product.name}</h3>
+                        </div>
+                        <p>{parsePrice(product.price)}</p>
+                        <Button color='primary' onClick={() => handleFormProduct(product)}>{t('ADD', 'Add')}</Button>
+                      </Details>
+                    </Item>
+                    ))
+                    : (
+                    <div>
+                      {upsellingProducts.message || t('NO_UPSELLING_PRODUCTS', 'There are no upselling products')}
+                    </div>
+                      )
+                }
+              </>
+                )
+              : [...Array(8)].map((item, i) => (
+              <SkeletonContainer key={i}>
+                <Skeleton width={150} height={250} />
+              </SkeletonContainer>
+                ))
+          }
+        </UpsellingContainer>
+      </Container>
     )
   }
 
@@ -187,53 +174,55 @@ const UpsellingPageUI = (props) => {
             </WrapAutoScroll>
           </>
                 )
-              : (
-          <></>
-                )
+              : null
           )
         : (
         <>
-          {!canOpenUpselling || upsellingProducts?.products?.length === 0
-            ? ''
-            : (
-            <Modal
-              title={t('UPSELLING_QUESTION', 'Do you want something else?')}
-              open={openUpselling}
-              onClose={() => handleUpsellingPage()}
-              width='70%'
-            >
-              <UpsellingLayout />
-              <CloseUpselling>
-                <Button
-                  color='secondary'
-                  outline
-                  onClick={() => handleUpsellingPage(false)}
-                >
-                  {t('NO_THANKS', 'No, Thanks')}
-                </Button>
-              </CloseUpselling>
-            </Modal>
-              )}
+          {!(!canOpenUpselling || upsellingProducts?.products?.length === 0)
+            ? openUpselling
+              ? (
+              <Modal
+                title={t('UPSELLING_QUESTION', 'Do you want something else?')}
+                open={openUpselling}
+                onClose={() => handleUpsellingPage()}
+                width='70%'
+              >
+                <UpsellingLayout />
+                <CloseUpselling>
+                  <Button
+                    color='secondary'
+                    outline
+                    onClick={() => handleUpsellingPage(false)}
+                  >
+                    {t('NO_THANKS', 'No, Thanks')}
+                  </Button>
+                </CloseUpselling>
+              </Modal>
+                )
+              : null
+            : null}
         </>
           )}
-      <Modal
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        width='700px'
-        padding='0'
-        closeOnBackdrop
-        disableOverflowX
-      >
-        {actualProduct && (
-          <ProductForm
-            useKioskApp={props.useKioskApp}
-            product={actualProduct}
-            businessId={actualProduct.api.businessId}
-            businessSlug={business.slug}
-            onSave={() => handleSaveProduct()}
-          />
-        )}
-      </Modal>
+      {modalIsOpen && (
+        <Modal
+          open={modalIsOpen}
+          onClose={() => setModalIsOpen(false)}
+          width='700px'
+          padding='0'
+          closeOnBackdrop
+          disableOverflowX
+        >
+          {actualProduct && (
+            <ProductForm
+              useKioskApp={props.useKioskApp}
+              product={actualProduct}
+              businessId={actualProduct.api.businessId}
+              businessSlug={business.slug}
+              onSave={() => handleSaveProduct()}
+            />
+          )}
+        </Modal>
+      )}
     </>
   )
 }

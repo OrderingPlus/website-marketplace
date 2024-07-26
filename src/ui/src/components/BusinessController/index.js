@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Heart as DisLike, HeartFill as Like } from 'react-bootstrap-icons'
 import BiCar from '@meronex/icons/bi/BiCar'
 import BiBasket from '@meronex/icons/bi/BiBasket'
@@ -37,7 +38,7 @@ import {
   LoginForm,
   SignUpForm,
   ForgotPasswordForm,
-  convertHoursToMinutes,
+  generalUtilities,
   lightenDarkenColor,
   shape
 } from '~ui'
@@ -79,6 +80,8 @@ const BusinessControllerUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalPageToShow, setModalPageToShow] = useState(null)
+
+  const { convertHoursToMinutes } = generalUtilities()
 
   const favoriteRef = useRef(null)
   const businessRows = theme?.business_listing_view?.components?.layout?.rows
@@ -153,6 +156,7 @@ const BusinessControllerUI = (props) => {
         minWidthEnabled={minWidthEnabled}
         businessRows={businessRows}
         disabled={business?.enabled === false}
+        m={props.m}
       >
         <WrapperBusinessCard disabled={business?.enabled === false} isSkeleton={isSkeleton} onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}>
           {business?.ribbon?.enabled && (
@@ -181,7 +185,7 @@ const BusinessControllerUI = (props) => {
                   {!hideBusinessOffer && !isCustomLayout && (configState?.configs?.preorder_status_enabled?.value === '1') && (
                     <div>
                       {!!getBusinessOffer((businessOffers ?? business?.offers)) && <span>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((businessOffers ?? business?.offers))}</span>}
-                      {!isBusinessOpen && <span>{t('PREORDER', 'PreOrder')}</span>}
+                      {!isBusinessOpen && <span>{t('PREORDER', 'Preorder')}</span>}
                     </div>
                   )}
                 </BusinessTags>
@@ -335,67 +339,69 @@ const BusinessControllerUI = (props) => {
         onAccept={() => setAlertState({ open: false, content: [] })}
         closeOnBackdrop={false}
       />
-      <Modal
-        open={isModalOpen}
-        onRemove={() => closeAuthModal()}
-        onClose={() => closeAuthModal()}
-        width='50%'
-        authModal
-      >
-        {modalPageToShow === 'login' && (
-          <LoginForm
-            handleSuccessLogin={handleSuccessLogin}
-            elementLinkToSignup={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'signup' })
-                } href='#'
-              >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
-              </a>
-            }
-            elementLinkToForgotPassword={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
-                } href='#'
-              >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
-              </a>
-            }
-            useLoginByCellphone
-            isPopup
-          />
-        )}
-        {modalPageToShow === 'signup' && (
-          <SignUpForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            useLoginByCellphone
-            useChekoutFileds
-            handleSuccessSignup={handleSuccessSignup}
-            isPopup
-            closeModal={() => closeAuthModal()}
-          />
-        )}
-        {modalPageToShow === 'forgotpassword' && (
-          <ForgotPasswordForm
-            elementLinkToLogin={
-              <a
-                onClick={
-                  (e) => handleCustomModalClick(e, { page: 'login' })
-                } href='#'
-              >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
-              </a>
-            }
-            isPopup
-          />
-        )}
-      </Modal>
+      {isModalOpen && (
+        <Modal
+          open={isModalOpen}
+          onRemove={() => closeAuthModal()}
+          onClose={() => closeAuthModal()}
+          width='50%'
+          authModal
+        >
+          {modalPageToShow === 'login' && (
+            <LoginForm
+              handleSuccessLogin={handleSuccessLogin}
+              elementLinkToSignup={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'signup' })
+                  } href='#'
+                >{t('CREATE_ACCOUNT', theme?.defaultLanguages?.CREATE_ACCOUNT || 'Create account')}
+                </a>
+              }
+              elementLinkToForgotPassword={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'forgotpassword' })
+                  } href='#'
+                >{t('RESET_PASSWORD', theme?.defaultLanguages?.RESET_PASSWORD || 'Reset password')}
+                </a>
+              }
+              useLoginByCellphone
+              isPopup
+            />
+          )}
+          {modalPageToShow === 'signup' && (
+            <SignUpForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              useLoginByCellphone
+              useChekoutFileds
+              handleSuccessSignup={handleSuccessSignup}
+              isPopup
+              closeModal={() => closeAuthModal()}
+            />
+          )}
+          {modalPageToShow === 'forgotpassword' && (
+            <ForgotPasswordForm
+              elementLinkToLogin={
+                <a
+                  onClick={
+                    (e) => handleCustomModalClick(e, { page: 'login' })
+                  } href='#'
+                >{t('LOGIN', theme?.defaultLanguages?.LOGIN || 'Login')}
+                </a>
+              }
+              isPopup
+            />
+          )}
+        </Modal>
+      )}
     </>
   )
 }

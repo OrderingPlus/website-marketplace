@@ -35,6 +35,7 @@ import {
 import MdcCellphoneAndroid from '@meronex/icons/mdc/MdcCellphoneAndroid'
 
 const PhoneAutocompleteUI = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     phone,
     customerState,
@@ -290,58 +291,62 @@ const PhoneAutocompleteUI = (props) => {
         </ContentWrapper>
         <ImageWrapper bgimage={theme?.images?.general?.phoneHero} />
       </PhoneContainer>
-      <Modal
-        open={openModal.signup}
-        width='80%'
-        onClose={() => setOpenModal({ ...openModal, signup: false })}
-      >
-        <SignUpForm
-          externalPhoneNumber={`${localPhoneCode || countryCallingCode} ${optSelected?.value || phone}`}
-          saveCustomerUser={saveCustomerUser}
-          fieldsNotValid={props.fieldsNotValid}
-          useChekoutFileds
-          isCustomerMode
-          isPopup
-        />
-      </Modal>
-      <Modal
-        open={openModal.customer}
-        width='80%'
-        onClose={() => handleCloseAddressList()}
-        hideCloseDefault
-        padding='20px'
-      >
-        <UserEdit>
-          {!customerState?.loading && (
-            <>
-              <UserDetails
-                isAddressFormOpen={isAddressFormOpen}
-                isOpenUserData={isOpenUserData}
-                userId={customerState?.result?.id}
-                isCustomerMode
-                isModal
-                setIsOpenUserData={setIsOpenUserData}
-                onClose={() => handleCloseAddressList()}
-              />
-              <AddressList
-                isModal
-                userId={customerState?.result?.id}
-                changeOrderAddressWithDefault
-                userCustomerSetup={{
-                  ...customerState?.result,
-                  phone,
-                  urlPhone
-                }}
-                isEnableContinueButton
-                isCustomerMode
-                isOpenUserData={isOpenUserData}
-                setIsOpenUserData={setIsOpenUserData}
-                setIsAddressFormOpen={setIsAddressFormOpen}
-              />
-            </>
-          )}
-        </UserEdit>
-      </Modal>
+      {openModal.signup && (
+        <Modal
+          open={openModal.signup}
+          width='80%'
+          onClose={() => setOpenModal({ ...openModal, signup: false })}
+        >
+          <SignUpForm
+            externalPhoneNumber={`${localPhoneCode || countryCallingCode} ${optSelected?.value || phone}`}
+            saveCustomerUser={saveCustomerUser}
+            fieldsNotValid={props.fieldsNotValid}
+            useChekoutFileds
+            isCustomerMode
+            isPopup
+          />
+        </Modal>
+      )}
+      {openModal.customer && (
+        <Modal
+          open={openModal.customer}
+          width='80%'
+          onClose={() => handleCloseAddressList()}
+          hideCloseDefault
+          padding='20px'
+        >
+          <UserEdit>
+            {!customerState?.loading && (
+              <>
+                <UserDetails
+                  isAddressFormOpen={isAddressFormOpen}
+                  isOpenUserData={isOpenUserData}
+                  userId={customerState?.result?.id}
+                  isCustomerMode
+                  isModal
+                  setIsOpenUserData={setIsOpenUserData}
+                  onClose={() => handleCloseAddressList()}
+                />
+                <AddressList
+                  isModal
+                  userId={customerState?.result?.id}
+                  changeOrderAddressWithDefault
+                  userCustomerSetup={{
+                    ...customerState?.result,
+                    phone,
+                    urlPhone
+                  }}
+                  isEnableContinueButton
+                  isCustomerMode
+                  isOpenUserData={isOpenUserData}
+                  setIsOpenUserData={setIsOpenUserData}
+                  setIsAddressFormOpen={setIsAddressFormOpen}
+                />
+              </>
+            )}
+          </UserEdit>
+        </Modal>
+      )}
       <Alert
         title={t('ERROR', 'Error')}
         open={alertState.open}
@@ -390,6 +395,6 @@ export const PhoneAutocomplete = (props) => {
   return <PhoneAutocompleteController {...phoneProps} />
 }
 
-PhoneAutocompleteUI.defaultProps = {
+const defaultProps = {
   limitPhoneLength: 10
 }

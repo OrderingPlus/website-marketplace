@@ -5,12 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css'
 import BsCaretLeftFill from '@meronex/icons/bs/BsCaretLeftFill'
 import { ArrowRight } from 'react-bootstrap-icons'
 import CgRadioCheck from '@meronex/icons/cg/CgRadioCheck'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore, {
-  Navigation
-} from 'swiper'
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { Navigation } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import {
   Title,
@@ -43,9 +43,7 @@ import {
   getTimes as getTimesUtils
 } from '~ui'
 
-import { CustomLayout } from './layouts/customLayout'
-
-SwiperCore.use([Navigation])
+import { CustomLayout } from './layouts/CustomLayout'
 
 const MomentControlUI = (props) => {
   const {
@@ -266,7 +264,7 @@ const MomentControlUI = (props) => {
               isLoading={orderState?.loading}
             >
               {isASP ? <CheckedIcon /> : <CgRadioCheck />}
-              <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format('LLLL')} + {t('DELIVERY_TIME', 'delivery time')})</span>
+              <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format(`dddd, MMMM DD, YYYY ${configs?.general_hour_format?.value}`)} + {t('DELIVERY_TIME', 'delivery time')})</span>
             </CheckBoxWrapper>
           )}
           <CheckBoxWrapper
@@ -298,6 +296,7 @@ const MomentControlUI = (props) => {
                   <Swiper
                     spaceBetween={0}
                     navigation
+                    modules={[Navigation]}
                     breakpoints={{
                       0: {
                         slidesPerView: 4,
@@ -358,7 +357,7 @@ const MomentControlUI = (props) => {
                               {timeSelected === time.value ? <CheckedIcon ref={scheduleItemRef} cateringPreorder={cateringPreorder} /> : <CgRadioCheck />}
                             </CheckIcon>
                           )}
-                          <p>
+                          <p id='time'>
                             {time.text} {cateringPreorder && `- ${time.endText}`}
                           </p>
                         </span>

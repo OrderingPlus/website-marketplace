@@ -37,7 +37,7 @@ export const SwiperWrapper = styled.div`
 
   .swiper {
     width: 100%;
-    height: 500px;
+    max-height: 500px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -170,6 +170,12 @@ export const ButtonWrapper = styled.div`
     &.soldout {
       pointer-events: none;
       background-color: hsl(0, 0%, 72%);
+    }
+  }
+
+  @media (max-width: 512px) {
+    button {
+      max-width: 200px;
     }
   }
 `

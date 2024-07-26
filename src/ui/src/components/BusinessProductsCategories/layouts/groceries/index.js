@@ -1,6 +1,6 @@
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
-
+import 'react-loading-skeleton/dist/skeleton.css'
 import { BusinessProductsCategories as ProductsCategories } from '~components'
 import { AccordionDropdown } from '~ui'
 
@@ -25,7 +25,6 @@ const BusinessProductsCategoriesUI = (props) => {
   const {
     isSkeleton,
     categories,
-    category,
     handlerClickCategory,
     categorySelected,
     featured,
@@ -92,19 +91,6 @@ const BusinessProductsCategoriesUI = (props) => {
                 )}
           </IterateCategoriesContainer>
         ))}
-
-        {list && list?.length === 0 && isSub && (
-          <CategoryTab
-            active={categorySelected?.id === category.id}
-            className={`${category.id === 'featured' ? 'special' : ''}`}
-            categorySpace={categorySpace[category?.level ?? 1]}
-            onClick={() => handleClickItem(category, true)}
-          >
-            <span>
-              {currentCat.name}
-            </span>
-          </CategoryTab>
-        )}
       </>
     )
   }

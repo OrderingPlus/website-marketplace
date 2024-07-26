@@ -51,8 +51,7 @@ const ProductOptionSubOptionUI = React.memo((props) => {
     setIsScrollAvailable,
     usePizzaValidation,
     pizzaState,
-    changeQuantity,
-    isAlsea
+    changeQuantity
   } = props
 
   const disableIncrement =
@@ -117,33 +116,16 @@ const ProductOptionSubOptionUI = React.memo((props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <Container onClick={(e) => option?.name?.toLowerCase() === 'queso y salsa' && isAlsea ? handleChangeQuantity(e, state.quantity === 0 ? 1 : 0) : handleSuboptionClick()}>
+      <Container onClick={() => handleSuboptionClick()}>
         <LeftOptionContainer>
           <IconControl>
             {((option?.min === 0 && option?.max === 1) || option?.max > 1)
-              ? (
-                  state?.selected && !(option?.name?.toLowerCase() === 'queso y salsa' && isAlsea && state.quantity === 0)
-                    ? (
-                <MdCheckBox />
-                      )
-                    : (
-                <MdCheckBoxOutlineBlank disabled />
-                      )
-                )
-              : (
-                  state?.selected
-                    ? (
-                <RiRadioButtonFill />
-                      )
-                    : (
-                <MdRadioButtonUnchecked disabled />
-                      )
+              ? (state?.selected
+                  ? <MdCheckBox />
+                  : <MdCheckBoxOutlineBlank disabled />)
+              : (state?.selected
+                  ? <RiRadioButtonFill />
+                  : <MdRadioButtonUnchecked disabled />
                 )}
           </IconControl>
           {suboption.image && suboption.image !== '-' && (
@@ -195,24 +177,18 @@ const ProductOptionSubOptionUI = React.memo((props) => {
               )
             }
           </PositionControl>
-          {option?.with_half_option && state?.selected && isAlsea && (
+          {option?.with_half_option && state?.selected && state.quantity > 0 && (
             <ExtraControl>
               {(state.quantity >= 2)
-                ? (
-                <ExtraItem
-                  onClick={(e) => handleChangeQuantity(e, 1)}
-                >
-                  <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBox />
-                </ExtraItem>
-                  )
-                : (
-                <ExtraItem
-                  onClick={(e) => handleChangeQuantity(e, 2)}
-                  className={(pizzaState?.[`option:${option?.id}`]?.value >= option?.max) && !(option?.max === 1 && option?.min === 1) ? 'disabled' : ''}
-                >
-                  <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBoxOutlineBlank disabled />
-                </ExtraItem>
-                  )}
+                ? (<ExtraItem onClick={(e) => handleChangeQuantity(e, 1)}>
+                    <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBox />
+                  </ExtraItem>)
+                : (<ExtraItem
+                    onClick={(e) => handleChangeQuantity(e, 2)}
+                    className={(pizzaState?.[`option:${option?.id}`]?.value >= option?.max) && !(option?.max === 1 && option?.min === 1) ? 'disabled' : ''}
+                  >
+                    <Text><div>{t('EXTRA', 'Extra')}</div></Text> <MdCheckBoxOutlineBlank disabled />
+                  </ExtraItem>)}
             </ExtraControl>
           )}
         </RightOptionContainer>
@@ -236,12 +212,6 @@ const ProductOptionSubOptionUI = React.memo((props) => {
         onAccept={() => setShowAlert(false)}
         closeOnBackdrop={false}
       />
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }, ProductOptionSubOptionPropsAreEqual)

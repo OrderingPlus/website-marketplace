@@ -1,5 +1,6 @@
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 
 import {
@@ -31,12 +32,6 @@ export const LastOrdersUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {!orderList?.loading && orderList?.orders?.length > 0 && (
         <>
           <h2>{t('LAST_ORDER', 'Last order')}</h2>
@@ -62,12 +57,6 @@ export const LastOrdersUI = (props) => {
           </LastOrdersContainer>
         </>
       )}
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
     </>
   )
 }

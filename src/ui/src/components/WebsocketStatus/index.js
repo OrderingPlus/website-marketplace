@@ -68,7 +68,7 @@ const SocketStatusUI = (props) => {
             : (
                 t('WEBSOCKET_STATUS_APP_INFO', 'Verify the server connection by date and time using the Connection status button. Press update to refresh your app and update the status as well. Need help? Contact our Customer support team here:')
               )}
-          {!isEnabledBtn && <a href='https://www.ordering.co/contact-ordering' target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>}
+          {!isEnabledBtn && <a href='https://www.orderingplus.com/contact-us' target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>}
         </InfoContent>
       </InfoWrapper>
       <ButtonWrapper>
@@ -78,58 +78,60 @@ const SocketStatusUI = (props) => {
           onClick={() => setOpenModal(true)}
         >
           <StatusContainer>
-            <span>{t('CONNECTION_STATUS', 'Connection status')}</span>
+            <p>{t('CONNECTION_STATUS', 'Connection status')}</p>
             <WebsocketStatusDot
               status={socketStatus}
             />
           </StatusContainer>
         </Button>
       </ButtonWrapper>
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        width='500px'
-        title={t('CONNECTION_STATUS', 'Connection status')}
-      >
-        <DetailContainer>
-          <p>{t('LAST_UPDATE', 'Last update')}: {parseDate(connectedDate)}</p>
-          <StatusItemWrapper>
-            <div>
-              <WebsocketStatusDot status={1} />
-              <span>{t('OK', 'Ok')}</span>
-            </div>
-            <p>{t('WEBSOCKET_OK', 'The websocket works normally.')}</p>
-          </StatusItemWrapper>
-          <StatusItemWrapper>
-            <div>
-              <WebsocketStatusDot status={0} />
-              <span>{t('CONNECTING', 'Connecting')}</span>
-            </div>
-            <p>{t('WEBSOCKET_CONNECTING', 'The websocket is connecting.')}</p>
-          </StatusItemWrapper>
-          <StatusItemWrapper>
-            <div>
-              <WebsocketStatusDot status={2} />
-              <span>{t('DISCONNECTED', 'Disconnected')}</span>
-            </div>
-            <p>{t('WEBSOCKET_DISCONNECTED', 'The server is slow, please reload.')}</p>
-          </StatusItemWrapper>
-          <ButtonsContainer>
-            <Button
-              color='secundary'
-              onClick={() => setOpenModal(false)}
-            >
-              {t('CLOSE', 'Close')}
-            </Button>
-            <Button
-              color='primary'
-              onClick={() => window.location.reload()}
-            >
-              {t('UPDATE', 'Update')}
-            </Button>
-          </ButtonsContainer>
-        </DetailContainer>
-      </Modal>
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          width='500px'
+          title={t('CONNECTION_STATUS', 'Connection status')}
+        >
+          <DetailContainer>
+            <p>{t('LAST_UPDATE', 'Last update')}: {parseDate(connectedDate)}</p>
+            <StatusItemWrapper>
+              <div>
+                <WebsocketStatusDot status={1} />
+                <span>{t('OK', 'Ok')}</span>
+              </div>
+              <p>{t('WEBSOCKET_OK', 'The websocket works normally.')}</p>
+            </StatusItemWrapper>
+            <StatusItemWrapper>
+              <div>
+                <WebsocketStatusDot status={0} />
+                <span>{t('CONNECTING', 'Connecting')}</span>
+              </div>
+              <p>{t('WEBSOCKET_CONNECTING', 'The websocket is connecting.')}</p>
+            </StatusItemWrapper>
+            <StatusItemWrapper>
+              <div>
+                <WebsocketStatusDot status={2} />
+                <span>{t('DISCONNECTED', 'Disconnected')}</span>
+              </div>
+              <p>{t('WEBSOCKET_DISCONNECTED', 'The server is slow, please reload.')}</p>
+            </StatusItemWrapper>
+            <ButtonsContainer>
+              <Button
+                color='secundary'
+                onClick={() => setOpenModal(false)}
+              >
+                {t('CLOSE', 'Close')}
+              </Button>
+              <Button
+                color='primary'
+                onClick={() => window.location.reload()}
+              >
+                {t('UPDATE', 'Update')}
+              </Button>
+            </ButtonsContainer>
+          </DetailContainer>
+        </Modal>
+      )}
 
       <Alert
         title={t('ERROR', 'Error')}

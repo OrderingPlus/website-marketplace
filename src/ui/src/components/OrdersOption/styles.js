@@ -7,7 +7,7 @@ export const OptionTitle = styled.div`
   h1{
     text-transform: capitalize;
     font-size: 18px;
-    margin: 18px 0;
+    margin: 0;
   }
 
   @media (min-width: 768px){
@@ -209,10 +209,9 @@ export const SkeletonReorder = styled.div`
 `
 
 export const ImageNotFound = styled.div`
-
   margin: 0 auto;
   img{
-    width: 100%
+    width: 100%;
   }
 `
 
@@ -237,7 +236,7 @@ export const BusinessInformation = styled.div`
       background: transparent;
       border: none;
       opacity: 1;
-      color: #909BA9;
+      color: ${props => props.theme?.colors.darkGray};
       width: 15px;
       min-width: 15px;
     }

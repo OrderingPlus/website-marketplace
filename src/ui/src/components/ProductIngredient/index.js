@@ -14,38 +14,20 @@ const ProductIngredientUI = (props) => {
   } = props
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))
-      }
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))
-      }
-      <Container isSoldOut={isSoldOut} onClick={() => toggleSelect()}>
-        <span>
-          {state?.selected && !isSoldOut
-            ? (
-            <MdCheckBox />
-              )
-            : (
-            <MdCheckBoxOutlineBlank disabled />
-              )}
-        </span>
-        <span>
-          {ingredient.name}
-        </span>
-      </Container>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))
-      }
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))
-      }
-    </>
+    <Container isSoldOut={isSoldOut} onClick={() => toggleSelect()}>
+      <span>
+        {state?.selected && !isSoldOut
+          ? (
+          <MdCheckBox />
+            )
+          : (
+          <MdCheckBoxOutlineBlank disabled />
+            )}
+      </span>
+      <span>
+        {ingredient.name}
+      </span>
+    </Container>
   )
 }
 

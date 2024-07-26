@@ -39,23 +39,27 @@ export const GiftCardUI = (props) => {
           {t('REDEEM_GIFT_CARD', 'Redeem gift card')}
         </Button>
       </ActionWrapper>
-      <Modal
-        width='700px'
-        padding='0px'
-        open={openModal === 'purchase'}
-        onClose={() => setOpenModal(null)}
-      >
-        <PurchaseGiftCard />
-      </Modal>
-      <Modal
-        width='700px'
-        open={openModal === 'redeem'}
-        onClose={() => setOpenModal(null)}
-      >
-        <RedeemGiftCard
+      {openModal === 'purchase' && (
+        <Modal
+          width='700px'
+          padding='0px'
+          open={openModal === 'purchase'}
           onClose={() => setOpenModal(null)}
-        />
-      </Modal>
+        >
+          <PurchaseGiftCard />
+        </Modal>
+      )}
+      {openModal === 'redeem' && (
+        <Modal
+          width='700px'
+          open={openModal === 'redeem'}
+          onClose={() => setOpenModal(null)}
+        >
+          <RedeemGiftCard
+            onClose={() => setOpenModal(null)}
+          />
+        </Modal>
+      )}
     </Container>
   )
 }

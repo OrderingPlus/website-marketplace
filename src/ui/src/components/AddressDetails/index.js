@@ -9,7 +9,7 @@ import {
   WrappMap
 } from './styles'
 
-import { AddressDetails as AddressDetailsController, useOrder, useLanguage, useCustomer } from '~components'
+import { AddressDetails as AddressDetailsController, useOrder, useLanguage, useCustomer, useConfig } from '~components'
 import { Modal, Alert, AddressList } from '~ui'
 
 const AddressDetailsUI = (props) => {
@@ -24,51 +24,46 @@ const AddressDetailsUI = (props) => {
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
+  const [{ configs }] = useConfig()
   const [openModal, setOpenModal] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isShowMap, setIsShowMap] = useState(false)
   const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
   const [{ user }] = useCustomer()
+  const useAlternativeMap = configs?.use_alternative_to_google_maps?.value === '1'
 
   useEffect(() => {
     return () => setOpenModal(false)
   }, [])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <AddressContainer>
-        <Header>
-          <Text>
-            <h1>{addressToShow || orderState?.options?.address?.address}</h1>
-            {orderState?.options?.type === 1 && !isCartPending &&
-              <span onClick={() => setOpenModal(true)}>{t('CHANGE_ADDRESS', 'Change address')}</span>}
-          </Text>
-        </Header>
-        {apiKey && (
-          <>
-            {!isShowMap && (
-              <ToggleMap>
-                <Text>
-                  <span onClick={() => setIsShowMap(!isShowMap)}>{t('SHOW_MAP', 'Show map')}</span>
-                </Text>
-              </ToggleMap>
-            )}
-            {isShowMap && (
-              <WrappMap>
-                <Map>
-                  <img src={googleMapsUrl} id='google-maps-image' alt='google-maps-location' width='288px' height='162px' loading='lazy' />
-                </Map>
-              </WrappMap>
-            )}
-          </>
-        )}
-
+    <AddressContainer>
+      <Header>
+        <Text>
+          <h1>{addressToShow || orderState?.options?.address?.address}</h1>
+          {orderState?.options?.type === 1 && !isCartPending &&
+            <span onClick={() => setOpenModal(true)}>{t('CHANGE_ADDRESS', 'Change address')}</span>}
+        </Text>
+      </Header>
+      {!useAlternativeMap && apiKey && (
+        <>
+          {!isShowMap && (
+            <ToggleMap>
+              <Text>
+                <span onClick={() => setIsShowMap(!isShowMap)}>{t('SHOW_MAP', 'Show map')}</span>
+              </Text>
+            </ToggleMap>
+          )}
+          {isShowMap && (
+            <WrappMap>
+              <Map>
+                <img src={googleMapsUrl} id='google-maps-image' alt='google-maps-location' width='288px' height='162px' loading='lazy' />
+              </Map>
+            </WrappMap>
+          )}
+        </>
+      )}
+      {openModal && (
         <Modal
           open={openModal}
           width='70%'
@@ -84,24 +79,18 @@ const AddressDetailsUI = (props) => {
             isCustomerMode={isCustomerMode}
           />
         </Modal>
+      )}
 
-        <Alert
-          title={t('SEARCH', 'Search')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => setAlertState({ open: false, content: [] })}
-          onAccept={() => setAlertState({ open: false, content: [] })}
-          closeOnBackdrop={false}
-        />
-      </AddressContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+      <Alert
+        title={t('SEARCH', 'Search')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => setAlertState({ open: false, content: [] })}
+        onAccept={() => setAlertState({ open: false, content: [] })}
+        closeOnBackdrop={false}
+      />
+    </AddressContainer>
   )
 }
 

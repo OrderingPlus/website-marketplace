@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTheme } from 'styled-components'
 import { Check2, XLg as Close, Funnel } from 'react-bootstrap-icons'
 import GoPrimitiveDot from '@meronex/icons/go/GoPrimitiveDot'
@@ -46,7 +47,7 @@ import {
   AutoScroll,
   BusinessTypeFilter,
   MyOrders,
-  convertHoursToMinutes,
+  generalUtilities,
   Button,
   SingleProductCard,
   NotFoundSource,
@@ -86,8 +87,9 @@ export const BusinessListingSearchUI = (props) => {
   const [{ auth }] = useSession()
   const { width } = useWindowSize()
   const [{ configs }] = useConfig()
+  const { convertHoursToMinutes } = generalUtilities()
+
   const maxDeliveryFeeOptions = [15, 25, 35, 'default']
-  // const maxProductPriceOptions = [5, 10, 15, 'default']
   const currency = configs.format_number_currency?.value
   const maxDistanceOptions = configs?.distance_unit?.value === 'km' ? [1000, 2000, 5000, 'default'] : [1609, 3218, 8046, 'default']
   const maxTimeOptions = [5, 15, 30, 'default']
@@ -104,6 +106,8 @@ export const BusinessListingSearchUI = (props) => {
     { level: '4', content: `${Array(4).fill(currency).join('')}` },
     { level: '5', content: `${Array(5).fill(currency).join('')}` }
   ]
+
+  const filterOptionsEnabled = configs?.filter_search_options?.value?.split('|') || []
 
   const noResults = (!businessesSearchList.loading && !businessesSearchList.lengthError && businessesSearchList?.businesses?.length === 0)
   const currentCart = Object.values(orderState?.carts).find(cart => cart?.business?.slug === curProduct?.business?.slug) ?? {}
@@ -149,61 +153,67 @@ export const BusinessListingSearchUI = (props) => {
   const filtersComponent = () => {
     return (
       <Filters>
-        <SortContainer>
-          <FilterAccordion title={t('SORT', 'Sort')}>
-            {sortItems?.filter(item => !(orderState?.options?.type === 1 && item?.value === 'pickup_time') && !(orderState?.options?.type === 2 && item?.value === 'delivery_time'))?.map(item => (
-              <SortItem
-                key={item?.value}
-                onClick={() => handleChangeFilters('orderBy', item?.value)}
-                active={filters?.orderBy?.includes(item?.value)}
-              >
-                {item?.text}  {(filters?.orderBy?.includes(item?.value)) && <>{filters?.orderBy?.includes('-') ? <BisUpArrow /> : <BisDownArrow />}</>}
-              </SortItem>
-            ))}
-          </FilterAccordion>
-        </SortContainer>
-        <BrandContainer>
-          <FilterAccordion title={t('BRANDS', 'Brands')}>
-            <BrandListWrapper>
-              {brandList?.loading && (
-                <>
-                  {[...Array(5).keys()].map(index => (
-                    <BrandItem key={index}>
-                      <Skeleton width={120} height={15} />
-                      <Skeleton width={16} height={16} />
-                    </BrandItem>
-                  ))}
-                </>
-              )}
-              {!brandList?.loading && brandList?.brands.map((brand, i) => brand?.enabled && (
-                <BrandItem key={i} onClick={() => handleChangeBrandFilter(brand?.id)}>
-                  <span>{brand?.name}</span>
-                  {filters?.franchise_ids?.includes(brand?.id) && <Check2 />}
-                </BrandItem>
-              ))}
-              {!brandList?.loading && ((brandList?.brands?.filter(brand => brand?.enabled))?.length === 0) && (
-                <NoResult>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</NoResult>
-              )}
-            </BrandListWrapper>
-          </FilterAccordion>
-        </BrandContainer>
-        <PriceFilterWrapper>
-          <FilterAccordion title={t('PRICE_RANGE', 'Price range')}>
-            <PriceFilterListWrapper>
-              {priceList.map((price, i) => (
-                <Button
-                  key={i}
-                  color={(filters?.price_level === price?.level) ? 'primary' : 'lightGray'}
-                  onClick={() => handleChangePriceRange(price?.level)}
+        {filterOptionsEnabled.includes('sort') && (
+          <SortContainer>
+            <FilterAccordion title={t('SORT', 'Sort')}>
+              {sortItems?.filter(item => !(orderState?.options?.type === 1 && item?.value === 'pickup_time') && !(orderState?.options?.type === 2 && item?.value === 'delivery_time'))?.map(item => (
+                <SortItem
+                  key={item?.value}
+                  onClick={() => handleChangeFilters('orderBy', item?.value)}
+                  active={filters?.orderBy?.includes(item?.value)}
                 >
-                  {price.content}
-                  {(filters?.price_level === price?.level) && <Close />}
-                </Button>
+                  {item?.text}  {(filters?.orderBy?.includes(item?.value)) && <>{filters?.orderBy?.includes('-') ? <BisUpArrow /> : <BisDownArrow />}</>}
+                </SortItem>
               ))}
-            </PriceFilterListWrapper>
-          </FilterAccordion>
-        </PriceFilterWrapper>
-        {orderState?.options?.type === 1 && (
+            </FilterAccordion>
+          </SortContainer>
+        )}
+        {filterOptionsEnabled.includes('brands') && (
+          <BrandContainer>
+            <FilterAccordion title={t('BRANDS', 'Brands')}>
+              <BrandListWrapper>
+                {brandList?.loading && (
+                  <>
+                    {[...Array(5).keys()].map(index => (
+                      <BrandItem key={index}>
+                        <Skeleton width={120} height={15} />
+                        <Skeleton width={16} height={16} />
+                      </BrandItem>
+                    ))}
+                  </>
+                )}
+                {!brandList?.loading && brandList?.brands.map((brand, i) => brand?.enabled && (
+                  <BrandItem key={i} onClick={() => handleChangeBrandFilter(brand?.id)}>
+                    <span>{brand?.name}</span>
+                    {filters?.franchise_ids?.includes(brand?.id) && <Check2 />}
+                  </BrandItem>
+                ))}
+                {!brandList?.loading && ((brandList?.brands?.filter(brand => brand?.enabled))?.length === 0) && (
+                  <NoResult>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</NoResult>
+                )}
+              </BrandListWrapper>
+            </FilterAccordion>
+          </BrandContainer>
+        )}
+        {filterOptionsEnabled.includes('price_range') && (
+          <PriceFilterWrapper>
+            <FilterAccordion title={t('PRICE_RANGE', 'Price range')}>
+              <PriceFilterListWrapper>
+                {priceList.map((price, i) => (
+                  <Button
+                    key={i}
+                    color={(filters?.price_level === price?.level) ? 'primary' : 'lightGray'}
+                    onClick={() => handleChangePriceRange(price?.level)}
+                  >
+                    {price.content}
+                    {(filters?.price_level === price?.level) && <Close />}
+                  </Button>
+                ))}
+              </PriceFilterListWrapper>
+            </FilterAccordion>
+          </PriceFilterWrapper>
+        )}
+        {orderState?.options?.type === 1 && filterOptionsEnabled.includes('max_delivery_fee') && (
           <MaxSectionItem
             title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}
             options={maxDeliveryFeeOptions}
@@ -212,7 +222,7 @@ export const BusinessListingSearchUI = (props) => {
             handleChangeFilters={handleChangeFilters}
           />
         )}
-        {[1, 2].includes(orderState?.options?.type) && (
+        {[1, 2].includes(orderState?.options?.type) && filterOptionsEnabled.includes('max_delivery_time') && (
           <MaxSectionItem
             title={orderState?.options?.type === 1 ? t('MAX_DELIVERY_TIME', 'Max delivery time') : t('MAX_PICKUP_TIME', 'Max pickup time')}
             options={maxTimeOptions}
@@ -221,22 +231,26 @@ export const BusinessListingSearchUI = (props) => {
             handleChangeFilters={handleChangeFilters}
           />
         )}
-        <MaxSectionItem
-          title={t('MAX_DISTANCE', 'Max distance')}
-          options={maxDistanceOptions}
-          filter='max_distance'
-          filters={filters}
-          handleChangeFilters={handleChangeFilters}
-        />
-        <TagsContainer>
-          <FilterAccordion title={t('BUSINESS_CATEGORIES', 'Business categories')}>
-            <BusinessTypeFilter
-              isSearchMode
-              filters={filters}
-              handleChangeFilters={handleChangeFilters}
-            />
-          </FilterAccordion>
-        </TagsContainer>
+        {filterOptionsEnabled.includes('max_distance') && (
+          <MaxSectionItem
+            title={t('MAX_DISTANCE', 'Max distance')}
+            options={maxDistanceOptions}
+            filter='max_distance'
+            filters={filters}
+            handleChangeFilters={handleChangeFilters}
+          />
+        )}
+        {filterOptionsEnabled.includes('business_categories') && (
+          <TagsContainer>
+            <FilterAccordion title={t('BUSINESS_CATEGORIES', 'Business categories')}>
+              <BusinessTypeFilter
+                isSearchMode
+                filters={filters}
+                handleChangeFilters={handleChangeFilters}
+              />
+            </FilterAccordion>
+          </TagsContainer>
+        )}
       </Filters>
     )
   }
@@ -426,30 +440,32 @@ export const BusinessListingSearchUI = (props) => {
           </ProductsList>
         </FiltersResultContainer>
       </FiltersContainer>
-      <Modal
-        width={props?.useKioskApp ? '80%' : '760px'}
-        open={!!curProduct?.product}
-        closeOnBackdrop
-        onClose={() => closeModalProductForm()}
-        padding='0'
-        isProductForm
-        disableOverflowX
-      >
-        {(!!curProduct?.product) && (
-          <ProductForm
-            businessSlug={curProduct?.business?.slug}
-            useKioskApp={props?.useKioskApp}
-            product={curProduct?.product}
-            businessId={curProduct?.business?.id}
-            categoryId={curProduct?.product?.category_id}
-            productId={curProduct?.product?.id}
-            onSave={handleRedirectToCart}
-            handleUpdateProducts={(productId, changes) => handleUpdateProducts(productId, curProduct?.product?.category_id, curProduct?.business?.id, changes)}
-            productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === curProduct?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-          />
-        )}
-      </Modal>
-      {width <= 768 && (
+      {!!curProduct?.product && (
+        <Modal
+          width={props?.useKioskApp ? '80%' : '760px'}
+          open={!!curProduct?.product}
+          closeOnBackdrop
+          onClose={() => closeModalProductForm()}
+          padding='0'
+          isProductForm
+          disableOverflowX
+        >
+          {(!!curProduct?.product) && (
+            <ProductForm
+              businessSlug={curProduct?.business?.slug}
+              useKioskApp={props?.useKioskApp}
+              product={curProduct?.product}
+              businessId={curProduct?.business?.id}
+              categoryId={curProduct?.product?.category_id}
+              productId={curProduct?.product?.id}
+              onSave={handleRedirectToCart}
+              handleUpdateProducts={(productId, changes) => handleUpdateProducts(productId, curProduct?.product?.category_id, curProduct?.business?.id, changes)}
+              productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === curProduct?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+            />
+          )}
+        </Modal>
+      )}
+      {width <= 768 && openFilter && (
         <Modal
           open={openFilter}
           onClose={() => setOpenFilter(false)}

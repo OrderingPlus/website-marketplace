@@ -230,7 +230,7 @@ export const DriverTipContainer = styled.div`
   > p {
     margin: 0;
     font-size: 16px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 `
 
@@ -245,4 +245,10 @@ export const SpinnerCart = styled.div`
   ${({ emptyCart }) => emptyCart && css`
     top: 0;
   `}
+`
+
+export const WarningText = styled.p`
+  margin: 10px auto;
+  text-align: center;
+  color: ${props => props.theme.colors.primary};
 `

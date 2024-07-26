@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLanguage, GiftCardOrdersList as GiftCardOrdersListController } from '~components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { SingleGiftCard } from '../SingleGiftCard'
 
 import {

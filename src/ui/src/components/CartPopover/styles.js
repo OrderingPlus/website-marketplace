@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components'
 export const HeaderItem = styled.div`
   cursor: pointer;
   > span {
-    background: ${props => !props.isChew ? props.theme.colors.primary : props.theme.colors.backgroundPage};
-    color: ${props => !props.isChew ? props.theme.colors.backgroundPage : props.theme.colors.colorPage};
+    background: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.backgroundPage};
     padding: 10px;
     display: flex;
     align-items: center;

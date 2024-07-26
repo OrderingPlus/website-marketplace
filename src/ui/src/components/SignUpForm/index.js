@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import parsePhoneNumber from 'libphonenumber-js'
 import OtpInput from 'react-otp-input'
+import { formatPhoneNumber } from 'react-phone-number-input'
 
 import {
   Person,
@@ -112,9 +114,9 @@ const SignUpFormUI = (props) => {
   const [reCaptchaVersion, setRecaptchaVersion] = useState({ version: '', siteKey: '' })
   const [, { login }] = useSession()
   const isFacebookLogin = configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1'
-  const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
-  const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-  const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+  const googleLoginEnabled = configs?.google_login_enabled?.value === '1'
+  const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1'
+  const appleLoginEnabled = configs?.apple_login_enabled?.value === '1'
 
   const [otpLeftTime, , resetOtpLeftTime] = useCountdownTimer(600, !checkPhoneCodeState?.loading && willVerifyOtpState)
   const [userPhoneNumber, setUserPhoneNumber] = useState('')
@@ -232,16 +234,19 @@ const SignUpFormUI = (props) => {
     }
     if (isValid) {
       phoneNumberParser = parsePhoneNumber(number)
+      if (!parseInt(configs?.validation_phone_number_lib?.value ?? 1, 10)) {
+        if (phoneNumberParser?.nationalNumber) phoneNumberParser.nationalNumber = formatPhoneNumber(number)?.replace?.(/\s/g, '')
+      }
     }
     if (phoneNumberParser) {
       phoneNumber = {
         country_phone_code: {
           name: 'country_phone_code',
-          value: phoneNumberParser.countryCallingCode
+          value: phoneNumberParser?.countryCallingCode
         },
         cellphone: {
           name: 'cellphone',
-          value: phoneNumberParser.nationalNumber
+          value: phoneNumberParser?.nationalNumber
         }
       }
     }
@@ -266,7 +271,7 @@ const SignUpFormUI = (props) => {
         }
         setAlertState({
           open: true,
-          content: [t('CONFIG_DOESNOT_RECAPTCHA_KEY', 'the config doesn\'t have recaptcha site key')]
+          content: [t('CONFIG_DOESNOT_RECAPTCHA_KEY', 'The config doesn\'t have recaptcha site key')]
         })
         return
       }
@@ -338,410 +343,383 @@ const SignUpFormUI = (props) => {
   }
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <SignUpContainer isPopup={isPopup}>
-        <FormSide isPopup={isPopup}>
-          <Title>{t('SIGN_UP', 'Sign up')}</Title>
-          {((Number(useSignUpFullDetails) + Number(useSignUpOtpEmail) + Number(useSignUpOtpCellphone)) > 1 && !willVerifyOtpState) && (
-            <SignupWith isPopup={isPopup}>
-              <Tabs variant='primary'>
-                {useSignUpFullDetails && (
-                  <Tab
-                    onClick={() => handleSignUpTab('default')}
-                    active={signUpTab === 'default'}
-                    borderBottom={signUpTab === 'default'}
-                  >
-                    {t('DEFAULT', 'Default')}
-                  </Tab>
-                )}
-                {useSignUpOtpEmail && (
-                  <Tab
-                    onClick={() => handleSignUpTab('otpEmail')}
-                    active={signUpTab === 'otpEmail'}
-                    borderBottom={signUpTab === 'otpEmail'}
-                  >
-                    {t('BY_OTP_EMAIL', 'by Otp Email')}
-                  </Tab>
-                )}
-                {useSignUpOtpCellphone && (
-                  <Tab
-                    onClick={() => handleSignUpTab('otpCellphone')}
-                    active={signUpTab === 'otpCellphone'}
-                    borderBottom={signUpTab === 'otpCellphone'}
-                  >
-                    {t('BY_OTP_CELLPHONE', 'by Otp Cellphone')}
-                  </Tab>
-                )}
-              </Tabs>
-            </SignupWith>
-          )}
-          {(!willVerifyOtpState) && (
-            <FormInput
-              noValidate
-              isPopup={isPopup}
-              onSubmit={formMethods.handleSubmit(onSubmit)}
-              isSkeleton={useChekoutFileds && validationFields?.loading}
-              autoComplete='on'
-            >
-              {props.beforeMidElements?.map((BeforeMidElements, i) => (
-                <React.Fragment key={i}>
-                  {BeforeMidElements}
-                </React.Fragment>))}
-              {props.beforeMidComponents?.map((BeforeMidComponents, i) => (
-                <BeforeMidComponents key={i} {...props} />))}
-              {
-                !(useChekoutFileds && validationFields?.loading)
-                  ? (
-                  <>
-                    {validationFields?.fields?.checkout &&
-                      sortInputFields({ values: validationFields?.fields?.checkout }).map(field =>
-                        showField && showField(field.code) && (
-                          <React.Fragment key={field.id}>
-                            {field.code === 'email'
-                              ? (
-                              <>
-                                {(signUpTab === 'default' || signUpTab === 'otpEmail') && (
-                                  <InputContainer>
-                                    {formMethods?.errors?.email?.type === 'required' && !notValidationFields.includes(field.code) && (
-                                      <ValidationText>
-                                        {formMethods.errors?.email?.message} *
-                                      </ValidationText>
-                                    )}
-                                    {formMethods.errors?.email?.type === 'pattern' && !notValidationFields.includes(field.code) && (
-                                      <ValidationText>
-                                        {t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))}
-                                      </ValidationText>
-                                    )}
-                                    <InputWrapper>
-                                      <Input
-                                        type={field.type}
-                                        name={field.code}
-                                        aria-label={field.code}
-                                        className='form'
-                                        placeholder={isCustomerMode ? t(field.code.toUpperCase() + '_OPTIONAL', field.name + ' (Optional)') : t(field.code.toUpperCase(), field.name)}
-                                        onChange={handleChangeInputEmail}
-                                        ref={formMethods.register({
-                                          required: !isCustomerMode && isRequiredField(field.code)
-                                            ? t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email'))
-                                            : null,
-                                          pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-                                        })}
-                                        onKeyDown={preventWhiteSpaceOnKeyDown}
-                                        required={!!field.required && !isCustomerMode}
-                                        autoComplete='on'
-                                        isError={formMethods.errors?.email && !notValidationFields.includes(field.code)}
-                                      />
-                                      <InputBeforeIcon>
-                                        <Envelope />
-                                      </InputBeforeIcon>
-                                    </InputWrapper>
-                                  </InputContainer>
-                                )}
-                              </>
-                                )
-                              : (
-                              <>
-                                {(signUpTab === 'default') && (
-                                  <InputContainer isHalf={fieldNumber % 2 === 0}>
-                                    {formMethods.errors?.[`${field.code}`] && !notValidationFields.includes(field.code) && (
-                                      <ValidationText>
-                                        {formMethods.errors?.[`${field.code}`]?.message} *
-                                      </ValidationText>
-                                    )}
-                                    <InputWrapper>
-                                      <Input
-                                        type={field.type}
-                                        name={field.code}
-                                        aria-label={field.code}
-                                        className='form'
-                                        placeholder={t(field.code.toUpperCase(), field.name)}
-                                        onChange={handleChangeInput}
-                                        ref={formMethods.register({
-                                          required: isRequiredField(field.code)
-                                            ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`).replace('_attribute_', t(field.name, field.code))
-                                            : null
-                                        })}
-                                        required={field.required}
-                                        autoComplete='off'
-                                        isError={formMethods.errors?.[`${field.code}`] && !notValidationFields.includes(field.code)}
-                                      />
-                                      <InputBeforeIcon>
-                                        <Person />
-                                      </InputBeforeIcon>
-                                    </InputWrapper>
-                                  </InputContainer>
-                                )}
-                              </>
-                                )}
-                          </React.Fragment>
-                        )
-                      )}
-                    {(!!showInputPhoneNumber && (signUpTab === 'default' || signUpTab === 'otpCellphone')) && (
-                      <>
-                        {formMethods.errors?.cellphone && !userPhoneNumber && (
-                          <ValidationText>
-                            {formMethods.errors?.cellphone?.message} {formMethods?.errors?.cellphone?.type === 'required' && '*'}
-                          </ValidationText>
-                        )}
-                        <InputPhoneNumber
-                          value={userPhoneNumber}
-                          currentCountryCode={signupData?.country_phone_code}
-                          setValue={handleChangePhoneNumber}
-                          handleIsValid={setIsValidPhoneNumber}
-                          setCurrentPhoneNumber={setCurrentPhoneNumber}
-                          isError={formMethods.errors?.cellphone && !userPhoneNumber}
-                        />
-                      </>
-                    )}
-
-                    {(signUpTab === 'default' && (!fieldsNotValid || (fieldsNotValid && !fieldsNotValid.includes('password')))) && (
-                      <>
-                        {formMethods.errors?.password && (
-                          <ValidationText>
-                            {formMethods.errors?.password?.message} {formMethods?.errors?.password?.type === 'required' && '*'}
-                          </ValidationText>
-                        )}
-                        <WrapperPassword>
-                          <Input
-                            type={!passwordSee ? 'password' : 'text'}
-                            name='password'
-                            aria-label='password'
-                            className='form'
-                            placeholder={t('PASSWORD', 'Password')}
-                            onChange={handleChangeInput}
-                            required
-                            ref={formMethods.register({
-                              required: isRequiredField('password') ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'password')) : null,
-                              minLength: {
-                                value: 8,
-                                message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                              }
-                            })}
-                            isError={formMethods.errors?.password}
-                          />
-                          <TogglePassword onClick={togglePasswordView}>
-                            {!passwordSee ? <Eye /> : <EyeSlash />}
-                          </TogglePassword>
-                          <InputBeforeIcon>
-                            <Lock />
-                          </InputBeforeIcon>
-                        </WrapperPassword>
-                      </>
-                    )}
-
-                    {props.afterMidElements?.map((MidElement, i) => (
-                      <React.Fragment key={i}>
-                        {MidElement}
-                      </React.Fragment>))}
-                    {props.afterMidComponents?.map((MidComponent, i) => (
-                      <MidComponent key={i} {...props} />))}
-                  </>
-                    )
-                  : (
-                  <>
-                    {[...Array(5)].map((_, i) => (
-                      <SkeletonWrapper key={i}>
-                        <Skeleton height={43} />
-                      </SkeletonWrapper>
-                    ))}
-                  </>
-                    )
-              }
-              {props.isRecaptchaEnable && enableReCaptcha && (
-                <ReCaptchaWrapper>
-                  <ReCaptcha handleReCaptcha={handleReCaptcha} reCaptchaVersion={reCaptchaVersion} />
-                </ReCaptchaWrapper>
+    <SignUpContainer isPopup={isPopup}>
+      <FormSide isPopup={isPopup}>
+        <Title>{t('SIGN_UP', 'Sign up')}</Title>
+        {((Number(useSignUpFullDetails) + Number(useSignUpOtpEmail) + Number(useSignUpOtpCellphone)) > 1 && !willVerifyOtpState) && (
+          <SignupWith isPopup={isPopup}>
+            <Tabs variant='primary'>
+              {useSignUpFullDetails && (
+                <Tab
+                  onClick={() => handleSignUpTab('default')}
+                  active={signUpTab === 'default'}
+                  borderBottom={signUpTab === 'default'}
+                >
+                  {t('DEFAULT', 'Default')}
+                </Tab>
               )}
-
-              <CheckboxArea>
-                {(signUpTab === 'default') && !isCustomerMode && (
-                  <PromotionsWrapper>
-                    <Checkbox
-                      name='promotions'
-                      id='promotions'
-                      onChange={handleChangePromotions}
-                    />
-                    <label
-                      htmlFor='promotions'
-                    >
-                      <span>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</span>
-                    </label>
-                  </PromotionsWrapper>
-                )}
-
-                {configs?.terms_and_conditions?.value === 'true' && !isCustomerMode && (
-                  <>
-                    {formMethods.errors?.acceptTerms && (
-                      <ValidationText>
-                        {formMethods.errors?.acceptTerms?.message} *
-                      </ValidationText>
-                    )}
-                    <TermsConditionWrapper>
-                      <Checkbox
-                        name='acceptTerms'
-                        ref={formMethods.register({
-                          required: t('ERROR_ACCEPT_TERMS', 'You must accept the Terms & Conditions.')
-                        })}
-                        id='acceptTerms'
-                      />
-                      <label
-                        htmlFor='acceptTerms'
-                      >
-                        <span>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</span>
-                        <a
-                          href={configs?.terms_and_conditions_url?.value}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
-                        </a>
-                      </label>
-                    </TermsConditionWrapper>
-                  </>
-
-                )}
-              </CheckboxArea>
-
-              <Button
-                color='primary'
-                type='submit'
-                disabled={formState.loading || validationFields?.loading}
-              >
-                {formState.loading ? `${t('LOADING', 'Loading')}...` : signUpTab === 'default' ? t('SIGN_UP', 'Sign up') : t('GET_VERIFY_CODE', 'Get verify code')}
-              </Button>
-            </FormInput>
-          )}
-          {(willVerifyOtpState) && (
-            <>
-              <CountdownTimer>
-                <span>{formatSeconds(otpLeftTime)}</span>
-              </CountdownTimer>
-              <OtpWrapper>
-                <OtpInput
-                  value={otpState}
-                  onChange={otp => setOtpState(otp)}
-                  numInputs={numOtpInputs || 6}
-                  containerStyle='otp-container'
-                  inputStyle='otp-input'
-                  isInputNum
-                  shouldAutoFocus
-                />
-              </OtpWrapper>
-              <ResendCode disabled={otpLeftTime > 520} onClick={handleSendOtp}>
-                {t('LANG_SEND_AGAIN', 'Send again')}?
-              </ResendCode>
-              <Button
-                type='button'
-                color='secundary'
-                disabled={formState.loading}
-                onClick={() => { setWillVerifyOtpState(false) }}
-              >
-                {t('CANCEL', 'Cancel')}
-              </Button>
-            </>
-          )}
-
-          {(checkPhoneCodeState?.loading) && (
-            <SpinnerLoader
-              style={{ height: 160 }}
-            />
-          )}
-          {elementLinkToLogin && (
-            <RedirectLink register isPopup={isPopup}>
-              <span>{t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}</span>
-              {elementLinkToLogin}
-            </RedirectLink>
-          )}
-          {Object.keys(configs).length > 0 && !isGuest && (
-            configs?.business_signup_allow?.value === '1' || configs?.driver_signup_allow?.value === '1'
-          ) && !isCustomerMode &&
-            (
-              <BussinessAndDriverSignUp>
-                {configs?.business_signup_allow?.value === '1' && (
-                  <Button
-                    color='primaryContrast'
-                    onClick={() => handleGoToPage({ page: 'signup_business' })}
-                  >
-                    {t('SIGNUP_FOR_BUSINESS', 'Sign up for business')}
-                  </Button>
-                )}
-                {configs?.driver_signup_allow?.value === '1' && (
-                  <Button
-                    color='primaryContrast'
-                    onClick={() => handleGoToPage({ page: 'signup_driver' })}
-                  >
-                    {t('SIGNUP_FOR_DRIVER', 'Sign up for driver')}
-                  </Button>
-                )}
-              </BussinessAndDriverSignUp>
-            )}
-          {hasSocialLogin && hasSocialEnabled && !isCustomerMode && (
-            <LoginDivider>
-              <DividerLine />
-              <p>{t('OR', 'or')}</p>
-              <DividerLine />
-            </LoginDivider>
-          )}
-          {!externalPhoneNumber && !isCustomerMode && (
-            <>
-              {Object.keys(configs).length > 0
+              {useSignUpOtpEmail && (
+                <Tab
+                  onClick={() => handleSignUpTab('otpEmail')}
+                  active={signUpTab === 'otpEmail'}
+                  borderBottom={signUpTab === 'otpEmail'}
+                >
+                  {t('BY_OTP_EMAIL', 'by Otp Email')}
+                </Tab>
+              )}
+              {useSignUpOtpCellphone && (
+                <Tab
+                  onClick={() => handleSignUpTab('otpCellphone')}
+                  active={signUpTab === 'otpCellphone'}
+                  borderBottom={signUpTab === 'otpCellphone'}
+                >
+                  {t('BY_OTP_CELLPHONE', 'by Otp Cellphone')}
+                </Tab>
+              )}
+            </Tabs>
+          </SignupWith>
+        )}
+        {(!willVerifyOtpState) && (
+          <FormInput
+            noValidate
+            isPopup={isPopup}
+            onSubmit={formMethods.handleSubmit(onSubmit)}
+            isSkeleton={useChekoutFileds && validationFields?.loading}
+            autoComplete='on'
+          >
+            {
+              !(useChekoutFileds && validationFields?.loading)
                 ? (
-                <SocialButtons isPopup={isPopup}>
-                  {isFacebookLogin && configs?.facebook_id?.value && facebookLoginEnabled && (
-                    <FacebookLoginButton
-                      appId={configs?.facebook_id?.value}
-                      handleSuccessFacebookLogin={handleSuccessFacebook}
-                    />
+                <>
+                  {validationFields?.fields?.checkout &&
+                    sortInputFields({ values: validationFields?.fields?.checkout }).map(field =>
+                      showField && showField(field.code) && (
+                        <React.Fragment key={field.id}>
+                          {field.code === 'email'
+                            ? (
+                            <>
+                              {(signUpTab === 'default' || signUpTab === 'otpEmail') && (
+                                <InputContainer>
+                                  {formMethods?.errors?.email?.type === 'required' && !notValidationFields.includes(field.code) && (
+                                    <ValidationText>
+                                      {formMethods.errors?.email?.message} *
+                                    </ValidationText>
+                                  )}
+                                  {formMethods.errors?.email?.type === 'pattern' && !notValidationFields.includes(field.code) && (
+                                    <ValidationText>
+                                      {t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))}
+                                    </ValidationText>
+                                  )}
+                                  <InputWrapper>
+                                    <Input
+                                      type={field.type}
+                                      name={field.code}
+                                      aria-label={field.code}
+                                      className='form'
+                                      placeholder={isCustomerMode ? t(field.code.toUpperCase() + '_OPTIONAL', field.name + ' (Optional)') : t(field.code.toUpperCase(), field.name)}
+                                      onChange={handleChangeInputEmail}
+                                      ref={formMethods.register({
+                                        required: !isCustomerMode && isRequiredField(field.code)
+                                          ? t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email'))
+                                          : null,
+                                        pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                                      })}
+                                      onKeyDown={preventWhiteSpaceOnKeyDown}
+                                      required={!!field.required && !isCustomerMode}
+                                      autoComplete='on'
+                                      isError={formMethods.errors?.email && !notValidationFields.includes(field.code)}
+                                    />
+                                    <InputBeforeIcon>
+                                      <Envelope />
+                                    </InputBeforeIcon>
+                                  </InputWrapper>
+                                </InputContainer>
+                              )}
+                            </>
+                              )
+                            : (
+                            <>
+                              {(signUpTab === 'default') && (
+                                <InputContainer isHalf={fieldNumber % 2 === 0}>
+                                  {formMethods.errors?.[`${field.code}`] && !notValidationFields.includes(field.code) && (
+                                    <ValidationText>
+                                      {formMethods.errors?.[`${field.code}`]?.message} *
+                                    </ValidationText>
+                                  )}
+                                  <InputWrapper>
+                                    <Input
+                                      type={field.type}
+                                      name={field.code}
+                                      aria-label={field.code}
+                                      className='form'
+                                      placeholder={t(field.code.toUpperCase(), field.name)}
+                                      onChange={handleChangeInput}
+                                      ref={formMethods.register({
+                                        required: isRequiredField(field.code)
+                                          ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`).replace('_attribute_', t(field.name, field.code))
+                                          : null
+                                      })}
+                                      required={field.required}
+                                      autoComplete='off'
+                                      isError={formMethods.errors?.[`${field.code}`] && !notValidationFields.includes(field.code)}
+                                    />
+                                    <InputBeforeIcon>
+                                      <Person />
+                                    </InputBeforeIcon>
+                                  </InputWrapper>
+                                </InputContainer>
+                              )}
+                            </>
+                              )}
+                        </React.Fragment>
+                      )
+                    )}
+                  {(!!showInputPhoneNumber && (signUpTab === 'default' || signUpTab === 'otpCellphone')) && (
+                    <>
+                      {formMethods.errors?.cellphone && !userPhoneNumber && (
+                        <ValidationText>
+                          {formMethods.errors?.cellphone?.message} {formMethods?.errors?.cellphone?.type === 'required' && '*'}
+                        </ValidationText>
+                      )}
+                      <InputPhoneNumber
+                        showPhoneIcon
+                        value={userPhoneNumber}
+                        currentCountryCode={signupData?.country_phone_code}
+                        setValue={handleChangePhoneNumber}
+                        handleIsValid={setIsValidPhoneNumber}
+                        setCurrentPhoneNumber={setCurrentPhoneNumber}
+                        isError={formMethods.errors?.cellphone && !userPhoneNumber}
+                      />
+                    </>
                   )}
-                  {configs?.apple_login_client_id?.value && appleLoginEnabled && (
-                    <AppleLogin
-                      onSuccess={handleSuccessApple}
-                      onFailure={(data) => setAlertState({
-                        open: true,
-                        content: data
-                      })}
-                    />
+
+                  {(signUpTab === 'default' && (!fieldsNotValid || (fieldsNotValid && !fieldsNotValid.includes('password')))) && (
+                    <>
+                      {formMethods.errors?.password && (
+                        <ValidationText>
+                          {formMethods.errors?.password?.message} {formMethods?.errors?.password?.type === 'required' && '*'}
+                        </ValidationText>
+                      )}
+                      <WrapperPassword>
+                        <Input
+                          type={!passwordSee ? 'password' : 'text'}
+                          name='password'
+                          aria-label='password'
+                          className='form'
+                          placeholder={t('PASSWORD', 'Password')}
+                          onChange={handleChangeInput}
+                          required
+                          ref={formMethods.register({
+                            required: isRequiredField('password') ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'password')) : null,
+                            minLength: {
+                              value: 8,
+                              message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                            }
+                          })}
+                          isError={formMethods.errors?.password}
+                        />
+                        <TogglePassword onClick={togglePasswordView}>
+                          {!passwordSee ? <Eye /> : <EyeSlash />}
+                        </TogglePassword>
+                        <InputBeforeIcon>
+                          <Lock />
+                        </InputBeforeIcon>
+                      </WrapperPassword>
+                    </>
                   )}
-                  {configs?.google_login_client_id?.value && configs?.google_login_auth_domain?.value && configs?.google_login_api_key?.value && googleLoginEnabled && (
-                    <GoogleLoginButton
-                      initParams={initParams}
-                      handleSuccessGoogleLogin={handleSuccessGoogle}
-                      onFailure={(data) => console.log('onFailure', data)}
-                    />
-                  )}
-                </SocialButtons>
+                </>
                   )
                 : (
-                <SkeletonSocialWrapper>
-                  <Skeleton height={43} />
-                </SkeletonSocialWrapper>
+                <>
+                  {[...Array(5)].map((_, i) => (
+                    <SkeletonWrapper key={i}>
+                      <Skeleton height={43} />
+                    </SkeletonWrapper>
+                  ))}
+                </>
+                  )
+            }
+            {props.isRecaptchaEnable && enableReCaptcha && (
+              <ReCaptchaWrapper>
+                <ReCaptcha handleReCaptcha={handleReCaptcha} reCaptchaVersion={reCaptchaVersion} />
+              </ReCaptchaWrapper>
+            )}
+
+            <CheckboxArea>
+              {(signUpTab === 'default') && !isCustomerMode && (
+                <PromotionsWrapper>
+                  <Checkbox
+                    name='promotions'
+                    id='promotions'
+                    onChange={handleChangePromotions}
+                  />
+                  <label
+                    htmlFor='promotions'
+                  >
+                    <span>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</span>
+                  </label>
+                </PromotionsWrapper>
+              )}
+
+              {configs?.terms_and_conditions?.value === 'true' && !isCustomerMode && (
+                <>
+                  {formMethods.errors?.acceptTerms && (
+                    <ValidationText>
+                      {formMethods.errors?.acceptTerms?.message} *
+                    </ValidationText>
                   )}
-            </>
+                  <TermsConditionWrapper>
+                    <Checkbox
+                      name='acceptTerms'
+                      ref={formMethods.register({
+                        required: t('ERROR_ACCEPT_TERMS', 'You must accept the Terms & Conditions.')
+                      })}
+                      id='acceptTerms'
+                    />
+                    <label
+                      htmlFor='acceptTerms'
+                    >
+                      <span>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</span>
+                      <a
+                        href={configs?.terms_and_conditions_url?.value}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+                      </a>
+                    </label>
+                  </TermsConditionWrapper>
+                </>
+
+              )}
+            </CheckboxArea>
+
+            <Button
+              color='primary'
+              type='submit'
+              disabled={formState.loading || validationFields?.loading}
+            >
+              {formState.loading ? `${t('LOADING', 'Loading')}...` : signUpTab === 'default' ? t('SIGN_UP', 'Sign up') : t('GET_VERIFY_CODE', 'Get verify code')}
+            </Button>
+          </FormInput>
+        )}
+        {(willVerifyOtpState) && (
+          <>
+            <CountdownTimer>
+              <span>{formatSeconds(otpLeftTime)}</span>
+            </CountdownTimer>
+            <OtpWrapper>
+              <OtpInput
+                value={otpState}
+                onChange={otp => setOtpState(otp)}
+                numInputs={numOtpInputs || 6}
+                containerStyle='otp-container'
+                inputStyle='otp-input'
+                isInputNum
+                shouldAutoFocus
+              />
+            </OtpWrapper>
+            <ResendCode disabled={otpLeftTime > 520} onClick={handleSendOtp}>
+              {t('LANG_SEND_AGAIN', 'Send again')}?
+            </ResendCode>
+            <Button
+              type='button'
+              color='secundary'
+              disabled={formState.loading}
+              onClick={() => { setWillVerifyOtpState(false) }}
+            >
+              {t('CANCEL', 'Cancel')}
+            </Button>
+          </>
+        )}
+
+        {(checkPhoneCodeState?.loading) && (
+          <SpinnerLoader
+            style={{ height: 160 }}
+          />
+        )}
+        {elementLinkToLogin && (
+          <RedirectLink register isPopup={isPopup}>
+            <span>{t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}</span>
+            {elementLinkToLogin}
+          </RedirectLink>
+        )}
+        {Object.keys(configs).length > 0 && !isGuest && (
+          configs?.business_signup_allow?.value === '1' || configs?.driver_signup_allow?.value === '1'
+        ) && !isCustomerMode &&
+          (
+            <BussinessAndDriverSignUp>
+              {configs?.business_signup_allow?.value === '1' && (
+                <Button
+                  color='primaryContrast'
+                  onClick={() => handleGoToPage({ page: 'signup_business' })}
+                >
+                  {t('SIGNUP_FOR_BUSINESS', 'Sign up for business')}
+                </Button>
+              )}
+              {configs?.driver_signup_allow?.value === '1' && (
+                <Button
+                  color='primaryContrast'
+                  onClick={() => handleGoToPage({ page: 'signup_driver' })}
+                >
+                  {t('SIGNUP_FOR_DRIVER', 'Sign up for driver')}
+                </Button>
+              )}
+            </BussinessAndDriverSignUp>
           )}
-        </FormSide>
-        <Alert
-          title={t('SIGN_UP', 'Sign up')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
-        />
-      </SignUpContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+        {hasSocialLogin && hasSocialEnabled && !isCustomerMode && (
+          <LoginDivider>
+            <DividerLine />
+            <p>{t('OR', 'or')}</p>
+            <DividerLine />
+          </LoginDivider>
+        )}
+        {!externalPhoneNumber && !isCustomerMode && (
+          <>
+            {Object.keys(configs).length > 0
+              ? (
+              <SocialButtons isPopup={isPopup}>
+                {isFacebookLogin && configs?.facebook_id?.value && facebookLoginEnabled && (
+                  <FacebookLoginButton
+                    appId={configs?.facebook_id?.value}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                )}
+                {configs?.apple_login_client_id?.value && appleLoginEnabled && (
+                  <AppleLogin
+                    onSuccess={handleSuccessApple}
+                    onFailure={(data) => setAlertState({
+                      open: true,
+                      content: data
+                    })}
+                  />
+                )}
+                {configs?.google_login_client_id?.value && configs?.google_login_auth_domain?.value && configs?.google_login_api_key?.value && googleLoginEnabled && (
+                  <GoogleLoginButton
+                    initParams={initParams}
+                    handleSuccessGoogleLogin={handleSuccessGoogle}
+                  />
+                )}
+              </SocialButtons>
+                )
+              : (
+              <SkeletonSocialWrapper>
+                <Skeleton height={43} />
+              </SkeletonSocialWrapper>
+                )}
+          </>
+        )}
+      </FormSide>
+      <Alert
+        title={t('SIGN_UP', 'Sign up')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </SignUpContainer>
   )
 }
 

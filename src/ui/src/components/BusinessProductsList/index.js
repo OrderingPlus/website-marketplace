@@ -261,7 +261,7 @@ const BusinessProductsListUI = (props) => {
                         {isSearchMode && category?.subcategories?.length > 0
                           ? (
                           <>
-                            {products?.filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
+                            {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
                               <SingleProductCard
                                 key={i}
                                 isSoldOut={product.inventoried && !product.quantity}
@@ -292,7 +292,7 @@ const BusinessProductsListUI = (props) => {
                           : (
                           <>
                             {
-                              products.filter((_, i) => i < 9 || business?.food).map((product, i) => (
+                              products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
                                 <SingleProductCard
                                   key={i}
                                   isSoldOut={product.inventoried && !product.quantity}
@@ -388,24 +388,26 @@ const BusinessProductsListUI = (props) => {
             <ErrorMessage key={i}>ERROR: [{e}]</ErrorMessage>
           ))
         )}
-        <Modal
-          open={openDescription}
-          title={openDescription?.name}
-          onClose={() => setOpenDescription(null)}
-        >
-          <DescriptionModalContainer>
-            {
-              openDescription?.image && (
-                <img src={openDescription.image} />
-              )
-            }
-            <DescriptionContainer>
-              <div>
-                <p>{openDescription?.description}</p>
-              </div>
-            </DescriptionContainer>
-          </DescriptionModalContainer>
-        </Modal>
+        {openDescription && (
+          <Modal
+            open={openDescription}
+            title={openDescription?.name}
+            onClose={() => setOpenDescription(null)}
+          >
+            <DescriptionModalContainer>
+              {
+                openDescription?.image && (
+                  <img src={openDescription.image} />
+                )
+              }
+              <DescriptionContainer>
+                <div>
+                  <p>{openDescription?.description}</p>
+                </div>
+              </DescriptionContainer>
+            </DescriptionModalContainer>
+          </Modal>
+        )}
       </ProductsContainer>
     </>
   )

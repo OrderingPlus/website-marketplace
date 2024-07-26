@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 import { CategoriesContainer } from './styles'
 
@@ -28,8 +29,6 @@ const BusinessProductsCategoriesUI = (props) => {
   const windowSize = useWindowSize()
   const [selectedCategory, setSelectedCateogry] = useState({ id: null })
   const scrollTopSpan = 60
-
-  const isChew = theme?.header?.components?.layout?.type?.toLowerCase() === 'chew'
 
   const handleChangeCategory = (category) => {
     const isBlockScroll = window.location.search.includes('category') &&
@@ -133,7 +132,7 @@ const BusinessProductsCategoriesUI = (props) => {
     if (Object.values(styleSheet.cssRules)?.length) {
       styleSheet?.deleteRule(0)
     }
-    const disabledCustomWidth = isChew || !useKioskApp
+    const disabledCustomWidth = !useKioskApp
 
     let style0 = '.sticky-prod-cat {'
     style0 += 'position: fixed !important;'
@@ -159,7 +158,7 @@ const BusinessProductsCategoriesUI = (props) => {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [useKioskApp, isChew, windowSize.width])
+  }, [useKioskApp, windowSize.width])
 
   useEffect(() => {
     if (business?.professionals?.length > 0 && !useKioskApp) {
@@ -169,47 +168,29 @@ const BusinessProductsCategoriesUI = (props) => {
   }, [business?.professionals, useKioskApp])
 
   return (
-    <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <CategoriesContainer id='category-lists' className='category-lists' featured={featured} w={props.wContainerStyle} isProfessional={isProfessional}>
-        {!isSkeleton
-          ? (
-          <Tabs variant='primary'>
+    <CategoriesContainer
+      id='category-lists'
+      className='category-lists'
+      featured={featured}
+      w={props.wContainerStyle}
+      isProfessional={isProfessional}
+    >
+      {!isSkeleton
+        ? <Tabs variant='primary'>
             {openBusinessInformation
-              ? (
-              <>
-                <ProductCategories />
-              </>
-                )
-              : (
-              <AutoScroll>
-                <ProductCategories />
-              </AutoScroll>
-                )}
+              ? <ProductCategories />
+              : <AutoScroll>
+                  <ProductCategories />
+                </AutoScroll>}
           </Tabs>
-            )
-          : (
-          <Tabs variant='primary'>
+        : <Tabs variant='primary'>
             {[...Array(4).keys()].map(i => (
               <Tab key={i}>
                 <Skeleton width={100} />
               </Tab>
             ))}
-          </Tabs>
-            )}
-      </CategoriesContainer>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+          </Tabs>}
+    </CategoriesContainer>
   )
 }
 

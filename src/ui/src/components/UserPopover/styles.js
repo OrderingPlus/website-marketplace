@@ -8,12 +8,12 @@ export const HeaderItem = styled.div`
   padding: 7px 13px;
   margin: 0px;
 
-  ${({ isOpen, isChew }) => (isOpen && !isChew) && css`
+  ${({ isOpen }) => isOpen && css`
     background: #F8F9FA;
   `}
 
   svg {
-    color: ${({ isHome }) => isHome ? '#FFF' : '#000'};
+    color: ${({ $isHome }) => $isHome ? '#FFF' : '#000'};
     height: 40px;
     width: 40px;
   }
@@ -27,7 +27,7 @@ export const HeaderItem = styled.div`
       margin-left: 20px;
       margin-right: 0;
     `}
-    color: ${props => props.isChew ? props.theme.colors.backgroundPage : props.theme.colors.darkTextColor};
+    color: ${props => props.theme.colors.darkTextColor};
   }
 
   img {

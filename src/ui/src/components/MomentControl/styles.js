@@ -24,7 +24,7 @@ export const CheckBoxWrapper = styled.div`
 
   span {
     font-size: 14px;
-    color: #909BA9;
+    color: ${props => props.theme?.colors.darkGray};
   }
 
   svg {
@@ -227,6 +227,11 @@ export const TimeItem = styled.div`
   span {
     font-size: 14px;
     white-space: nowrap;
+
+    p#time {
+      margin: auto;
+      padding: 10px;
+    }
   }
   ${({ active }) => active && css`
     background: #F5F9FF;
@@ -316,7 +321,7 @@ export const SelectContainer = styled.div`
     min-height: 44px;
     border: none;
     border-radius: 7.6px;
-    color: #909BA9 !important;
+    color: ${props => props.theme?.colors.darkGray} !important;
 
     > div:first-child {
       padding-top: 5px;

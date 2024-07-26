@@ -24,6 +24,8 @@ export const OrderHistory = (props) => {
   const [{ parseDate }] = useUtils()
   const [{ configs }] = useConfig()
 
+  const excludedMessages = ['manual_driver_assignment_comment', 'driver_group_id', 'manual_driver_assignment_author_id']
+
   const getLogisticTagStatus = (status) => {
     switch (status) {
       case 0:
@@ -50,64 +52,36 @@ export const OrderHistory = (props) => {
 
   const getStatus = (s) => {
     const status = parseInt(s)
-    switch (status) {
-      case 0:
-        return 'ORDER_STATUS_PENDING'
-      case 1:
-        return 'ORDERS_COMPLETED'
-      case 2:
-        return 'ORDER_REJECTED'
-      case 3:
-        return 'ORDER_STATUS_IN_BUSINESS'
-      case 4:
-        return 'ORDER_READY'
-      case 5:
-        return 'ORDER_REJECTED_RESTAURANT'
-      case 6:
-        return 'ORDER_STATUS_CANCELLEDBYDRIVER'
-      case 7:
-        return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT'
-      case 8:
-        return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER'
-      case 9:
-        return 'ORDER_PICKUP_COMPLETED_BY_DRIVER'
-      case 10:
-        return 'ORDER_PICKUP_FAILED_BY_DRIVER'
-      case 11:
-        return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER'
-      case 12:
-        return 'ORDER_DELIVERY_FAILED_BY_DRIVER'
-      case 13:
-        return 'PREORDER'
-      case 14:
-        return 'ORDER_NOT_READY'
-      case 15:
-        return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER'
-      case 16:
-        return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER'
-      case 17:
-        return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER'
-      case 18:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS'
-      case 19:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER'
-      case 20:
-        return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'
-      case 21:
-        return 'ORDER_CUSTOMER_ARRIVED_BUSINESS'
-      case 22:
-        return 'ORDER_LOOKING_FOR_DRIVER'
-      case 23:
-        return 'ORDER_DRIVER_ON_WAY'
-      case 24:
-        return 'ORDER_DRIVER_WAITING_FOR_ORDER'
-      case 25:
-        return 'ORDER_ACCEPTED_BY_DRIVER_COMPANY'
-      case 26:
-        return 'ORDER_DRIVER_ARRIVED_CUSTOMER'
-      default:
-        return getTraduction(status)
+    const statusMap = {
+      0: 'ORDER_STATUS_PENDING',
+      1: 'ORDERS_COMPLETED',
+      2: 'ORDER_REJECTED',
+      3: 'ORDER_STATUS_IN_BUSINESS',
+      4: 'ORDER_READY',
+      5: 'ORDER_REJECTED_RESTAURANT',
+      6: 'ORDER_STATUS_CANCELLEDBYDRIVER',
+      7: 'ORDER_STATUS_ACCEPTEDBYRESTAURANT',
+      8: 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER',
+      9: 'ORDER_PICKUP_COMPLETED_BY_DRIVER',
+      10: 'ORDER_PICKUP_FAILED_BY_DRIVER',
+      11: 'ORDER_DELIVERY_COMPLETED_BY_DRIVER',
+      12: 'ORDER_DELIVERY_FAILED_BY_DRIVER',
+      13: 'PREORDER',
+      14: 'ORDER_NOT_READY',
+      15: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+      16: 'ORDER_STATUS_CANCELLED_BY_CUSTOMER',
+      17: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+      18: 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
+      19: 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
+      20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+      21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+      22: 'ORDER_LOOKING_FOR_DRIVER',
+      23: 'ORDER_DRIVER_ON_WAY',
+      24: 'ORDER_DRIVER_WAITING_FOR_ORDER',
+      25: 'ORDER_ACCEPTED_BY_DRIVER_COMPANY',
+      26: 'ORDER_DRIVER_ARRIVED_CUSTOMER'
     }
+    return statusMap?.[status] ?? getTraduction(status)
   }
 
   return (
@@ -129,47 +103,36 @@ export const OrderHistory = (props) => {
           </DetailWrapper>
         </HistoryItemWrapper>
       )}
-      {messages && messages?.messages.map((message, i) => message.type === 1 && (
+      {messages && messages?.messages.map((message, i) => (message.type === 1 && !excludedMessages.includes(message?.change?.attribute)) && (
         <HistoryItemWrapper
           key={i}
         >
           <CheckCircleFill />
           <DetailWrapper>
             {message.change?.attribute !== 'driver_id'
-              ? (
-              <h3>
-                {message.change?.attribute === 'logistic_status'
-                  ? getLogisticTagStatus(parseInt(message.change.new, 10))
-                  : message.change?.attribute === 'delivered_in'
-                    ? (
-                    <h3>
-                      <strong>{t('TIME_ADDED_BY_DRIVER', 'Time added by driver')}</strong><br />
-                      {formatSeconds(parseInt(message.change.new, 10))}
-                    </h3>
-                      )
-                    : message.change?.attribute === 'prepared_in'
-                      ? (
-                      <h3>
-                        <strong>{t('TIME_ADDED_BY_BUSINESS', 'Time added by business')}</strong><br />
-                        {formatSeconds(parseInt(message.change.new, 10))}
-                      </h3>
-                        )
-                      : t(getStatus(parseInt(message.change.new, 10)))
-                }
-              </h3>
-                )
-              : (
-              <h3>
-                {message.change.new
-                  ? (
-                  <>
-                    <strong>{message.driver?.name} {' '} {message.driver?.lastname && message.driver.lastname} </strong>
-                    {t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')}
-                  </>
-                    )
-                  : <>{t('DRIVER_UNASSIGNED', 'Driver unassigned')}</>}
-              </h3>
-                )}
+              ? <h3>
+                  {message.change?.attribute === 'logistic_status'
+                    ? getLogisticTagStatus(parseInt(message.change.new, 10))
+                    : message.change?.attribute === 'delivered_in'
+                      ? <h3>
+                          <strong>{t('TIME_ADDED_BY_DRIVER', 'Time added by driver')}</strong><br />
+                          {formatSeconds(parseInt(message.change.new, 10))}
+                        </h3>
+                      : message.change?.attribute === 'prepared_in'
+                        ? <h3>
+                            <strong>{t('TIME_ADDED_BY_BUSINESS', 'Time added by business')}</strong><br />
+                            {formatSeconds(parseInt(message.change.new, 10))}
+                          </h3>
+                        : t(getStatus(message.change.new), getStatus(message.change.new).replace(/_/g, ' '))}
+                </h3>
+              : <h3>
+                  {message.change.new
+                    ? <>
+                        <strong>{message.driver?.name} {' '} {message.driver?.lastname && message.driver.lastname} </strong>
+                        {t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')}
+                      </>
+                    : t('DRIVER_UNASSIGNED', 'Driver unassigned')}
+                </h3>}
             <p>{parseDate(message.created_at, { outputFormat: `MMM DD, ${configs?.general_hour_format?.value}` })}</p>
           </DetailWrapper>
         </HistoryItemWrapper>

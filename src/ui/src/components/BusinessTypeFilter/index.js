@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { XLg as Close } from 'react-bootstrap-icons'
 import { useTheme } from 'styled-components'
 
@@ -57,12 +58,6 @@ const BusinessTypeFilterUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       {isSearchMode && (
         <SearchTypeContainer id='container'>
           {types.map((type, i) => type.enabled && (
@@ -98,52 +93,46 @@ const BusinessTypeFilterUI = (props) => {
         </SearchTypeContainer>
       )}
       {(!isSearchMode && !isAppoint) && (
-        <TypeContainer id='container'>
+        <>
           {loading && (
-            <Tabs variant='primary'>
-              <AutoScroll>
-                <Tab className='category' style={styles.wrapperSkeleton}>
-                  {[...Array(4)].map((_, i) => (
-                    <Skeleton id='skeleton' key={i} height={40} width={120} />
-                  ))}
-                </Tab>
-              </AutoScroll>
-            </Tabs>
+            <TypeContainer id='container'>
+              <Tabs variant='primary'>
+                <AutoScroll>
+                  <Tab className='category' style={styles.wrapperSkeleton}>
+                    {[...Array(4)].map((_, i) => (
+                      <Skeleton id='skeleton' key={i} height={40} width={120} />
+                    ))}
+                  </Tab>
+                </AutoScroll>
+              </Tabs>
+            </TypeContainer>
           )}
           {!loading && !error && types && types.length > 0 && (
-            <Tabs variant='primary'>
-              <AutoScroll>
-                {types.map((type, i) => (isCategoriesHidden ? type.enabled && type.name !== 'All' : type.enabled) && (
-                  <Tab
-                    key={type.id}
-                    active={type.id === currentTypeSelected || i === 0}
-                  >
-                    <BusinessCategoryTitle
-                      active={type.id === currentTypeSelected}
-                      load={load}
-                      onLoad={() => setLoad(true)}
-                      onClick={() => handleChangeCategory(type.id)}
+            <TypeContainer id='container'>
+              <Tabs variant='primary'>
+                <AutoScroll>
+                  {types.map((type, i) => (isCategoriesHidden ? type.enabled && type.name !== 'All' : type.enabled) && (
+                    <Tab
+                      key={type.id}
+                      active={type.id === currentTypeSelected || i === 0}
                     >
-                      {t(`BUSINESS_TYPE_${type.name.replace(/\s/g, '_').toUpperCase()}`, type.name)}
-                    </BusinessCategoryTitle>
-                  </Tab>
-                ))}
-              </AutoScroll>
-            </Tabs>
+                      <BusinessCategoryTitle
+                        active={type.id === currentTypeSelected}
+                        load={load}
+                        onLoad={() => setLoad(true)}
+                        onClick={() => handleChangeCategory(type.id)}
+                      >
+                        {t(`BUSINESS_TYPE_${type.name.replace(/\s/g, '_').toUpperCase()}`, type.name)}
+                      </BusinessCategoryTitle>
+                    </Tab>
+                  ))}
+                </AutoScroll>
+              </Tabs>
+              <Divider />
+            </TypeContainer>
           )}
-          <Divider />
-        </TypeContainer>
+        </>
       )}
-      {
-        props.afterComponents?.map((AfterComponent, i) => (
-          <AfterComponent key={i} {...props} />))
-      }
-      {
-        props.afterElements?.map((AfterElement, i) => (
-          <React.Fragment key={i}>
-            {AfterElement}
-          </React.Fragment>))
-      }
     </>
   )
 }

@@ -73,12 +73,6 @@ const HighestRatedUI = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))}
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
       <HighestRatedContainer>
         <Title>{t('HIGHEST_RATED', 'Highest rated')}</Title>
         <Description>{t('TOP_RATINGS_AND_GREAT_SERVICE', 'Top ratings and great service')}</Description>
@@ -139,25 +133,21 @@ const HighestRatedUI = (props) => {
           </BusinessList>
         </BusinessListWrapper>
       </HighestRatedContainer>
-      <Modal
-        open={isPreorder}
-        width='760px'
-        onClose={() => handleClosePreorder()}
-      >
-        <BusinessPreorder
-          business={preorderBusiness}
-          handleClick={handleBusinessClick}
-          showButton
-          cateringPreorder={!!cateringTypeString}
-          {...cateringValues}
-        />
-      </Modal>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
+      {isPreorder && (
+        <Modal
+          open={isPreorder}
+          width='760px'
+          onClose={() => handleClosePreorder()}
+        >
+          <BusinessPreorder
+            business={preorderBusiness}
+            handleClick={handleBusinessClick}
+            showButton
+            cateringPreorder={!!cateringTypeString}
+            {...cateringValues}
+          />
+        </Modal>
+      )}
     </>
   )
 }
@@ -166,7 +156,8 @@ export const HighestRated = (props) => {
   const highestRatedProps = {
     ...props,
     UIComponent: HighestRatedUI,
-    initialOrderByValue: 'rating'
+    initialOrderByValue: 'rating',
+    avoidRefreshUserInfo: true
   }
   return <BusinessListController {...highestRatedProps} />
 }

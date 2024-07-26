@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import parsePhoneNumber from 'libphonenumber-js'
+import { useTheme } from 'styled-components'
 import PhoneInput from 'react-phone-number-input'
 import BsPhone from '@meronex/icons/bs/BsPhone'
-import { useLanguage, useConfig, useSession } from '~components'
 
+import { useLanguage, useConfig, useSession } from '~components'
 import { Container, ErrorMsg, InputBeforeIconWrapper } from './styles'
 
 export const InputPhoneNumber = (props) => {
@@ -13,14 +14,14 @@ export const InputPhoneNumber = (props) => {
     setValue,
     handleIsValid,
     disabled,
-    isError
+    isError,
+    showPhoneIcon
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
   const [{ configs }] = useConfig()
-
-  const phoneRef = useRef(null)
 
   const isValidPhoneNumber = (number) => {
     if (!number) return
@@ -38,17 +39,24 @@ export const InputPhoneNumber = (props) => {
   }, [value])
 
   return (
-    <Container className='phone_number' disabled={disabled} isValid={value ? isValidPhoneNumber(value) : true} isError={isError}>
-      <InputBeforeIconWrapper>
-        <BsPhone />
-      </InputBeforeIconWrapper>
+    <Container
+      className='phone_number'
+      disabled={disabled}
+      isValid={value ? isValidPhoneNumber(value) : true}
+      showPhoneIcon={showPhoneIcon}
+      isError={isError}
+    >
+      {showPhoneIcon && (
+        <InputBeforeIconWrapper>
+          <BsPhone />
+        </InputBeforeIconWrapper>
+      )}
       <PhoneInput
-        ref={phoneRef}
         disabled={disabled}
-        placeholder={t('PHONE_NUMBER', 'Phone number')}
+        placeholder={t('PHONE_NUMBER', theme?.defaultLanguages?.PHONE_NUMBER || 'Phone number')}
         defaultCountry={configs?.default_country_code?.value}
-        value={value}
         name='telefono'
+        value={value}
         displayInitialValueAsLocalNumber
         onChange={(val) => setValue && setValue(val, isValidPhoneNumber(val))}
       />

@@ -74,14 +74,6 @@ export const VerticalOrdersLayout = (props) => {
 
   return (
     <>
-      {props.beforeElements?.map((BeforeElement, i) => (
-        <React.Fragment key={i}>
-          {BeforeElement}
-        </React.Fragment>))
-      }
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))
-      }
       <OrdersContainer id='orders-container'>
         {orders.map(order => (
           <SingleOrderCard
@@ -128,14 +120,6 @@ export const VerticalOrdersLayout = (props) => {
 
         </Modal>
       )}
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))
-      }
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))
-      }
     </>
   )
 }

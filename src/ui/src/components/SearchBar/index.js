@@ -72,47 +72,31 @@ export const SearchBar = (props) => {
   }, [props.forceFocus])
 
   return (
-    <>
-      {
-        props.beforeElements?.map((BeforeElement, i) => (
-          <React.Fragment key={i}>
-            {BeforeElement}
-          </React.Fragment>))
-      }
-      {props.beforeComponents?.map((BeforeComponent, i) => (
-        <BeforeComponent key={i} {...props} />))}
-      <BusinessSearch
-        className={!isCustomLayout && 'search-bar'}
-        isCustomLayout={isCustomLayout}
-        hasValue={el.current?.value}
-        starbucksStyle={starbucksStyle}
-      >
-        <Input
-          ref={(ref) => {
-            el.current = ref
-            if (forwardRef) {
-              forwardRef.current = ref
-            }
-          }}
-          name='search'
-          aria-label='search'
-          placeholder={placeholder}
-          autoComplete='off'
-          maxLength='500'
-          style={{ backgroundImage: `url(${theme?.images?.general?.searchIcon})` }}
-          defaultValue={search}
-          onClick={() => handleCustomEnter && handleCustomEnter()}
-        />
-        <DeleteContent className='clear'>
-          {el.current?.value && <span onClick={handleClear}>{t('CLEAR', 'Clear')}</span>}
-        </DeleteContent>
-      </BusinessSearch>
-      {props.afterComponents?.map((AfterComponent, i) => (
-        <AfterComponent key={i} {...props} />))}
-      {props.afterElements?.map((AfterElement, i) => (
-        <React.Fragment key={i}>
-          {AfterElement}
-        </React.Fragment>))}
-    </>
+    <BusinessSearch
+      className={!isCustomLayout && 'search-bar'}
+      isCustomLayout={isCustomLayout}
+      hasValue={el.current?.value}
+      starbucksStyle={starbucksStyle}
+    >
+      <Input
+        ref={(ref) => {
+          el.current = ref
+          if (forwardRef) {
+            forwardRef.current = ref
+          }
+        }}
+        name='search'
+        aria-label='search'
+        placeholder={placeholder}
+        autoComplete='off'
+        maxLength='500'
+        style={{ backgroundImage: `url(${theme?.images?.general?.searchIcon})` }}
+        defaultValue={search}
+        onClick={() => handleCustomEnter && handleCustomEnter()}
+      />
+      <DeleteContent className='clear'>
+        {el.current?.value && <span onClick={handleClear}>{t('CLEAR', 'Clear')}</span>}
+      </DeleteContent>
+    </BusinessSearch>
   )
 }
