@@ -863,7 +863,7 @@ export const PoweredByOrdering = styled.p`
     margin-left: 5px;
   }
   a:hover{
-    text-decoration: underline;
+    text-decoration: none;
   }
 `
 

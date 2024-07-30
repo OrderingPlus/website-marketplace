@@ -168,5 +168,6 @@ export const PoweredByOrdering = styled.p`
   margin-bottom: 10px;
   a{
     font-weight: 600;
+    text-decoration: none;
   }
 `
