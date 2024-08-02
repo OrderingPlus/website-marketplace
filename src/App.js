@@ -525,9 +525,8 @@ export const App = () => {
         )}
         {!loaded && <SpinnerLoader />}
         <SmartAppBanner
-          storeAndroidId={settings?.store_android_id}
-          storeAppleId={settings?.store_apple_id}
-          storeKindleId={settings?.store_kindle_id}
+          storeAndroidId={themeUpdated?.smart_banner_settings?.android_id ?? settings?.store_android_id}
+          storeAppleId={themeUpdated?.smart_banner_settings?.apple_id ?? settings?.store_apple_id}
         />
         {
           loaded && (
