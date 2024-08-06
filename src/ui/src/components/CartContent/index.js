@@ -100,6 +100,7 @@ export const CartContent = (props) => {
               <React.Fragment key={cart.uuid}>
                 {cart.products.length > 0 && (
                   <Cart
+                    forceHideCheckoutButton
                     cart={cart}
                     hasCartReservation={hasCartReservation}
                     isCartPending={cart?.status === 2}

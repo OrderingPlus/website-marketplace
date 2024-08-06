@@ -326,6 +326,7 @@ export const RenderProductsLayout = (props) => {
                               isStore
                               isCustomMode
                               isForceOpenCart
+                              forceHideCheckoutButton
                               useKioskApp={useKioskApp}
                               cart={currentCart}
                               isCartPending={currentCart?.status === 2}
