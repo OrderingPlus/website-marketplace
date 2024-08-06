@@ -114,7 +114,7 @@ export const HomeHero = (props) => {
       <ContentWrapper>
         {windowSize.width < 576 && (
           <LogoWrapper>
-            <img alt='Logotype' src={theme?.images?.logos?.logotypeInvert} loading='lazy' />
+            <img alt='Logotype' src={theme?.my_products?.components?.images?.components?.logo?.components?.image || theme?.images?.logos?.logotypeInvert} loading='lazy' />
           </LogoWrapper>
         )}
         <HeroContent>
