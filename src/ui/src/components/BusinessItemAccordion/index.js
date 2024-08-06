@@ -44,7 +44,6 @@ export const BusinessItemAccordion = (props) => {
     isMultiCheckout,
     isGiftCart,
     forceHideBusiness,
-    hasCartReservation,
     cartReservation
   } = props
 
@@ -61,17 +60,21 @@ export const BusinessItemAccordion = (props) => {
   const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
   const checkoutMultiBusinessEnabled = configs?.checkout_multi_business_enabled?.value === '1'
   const is12hours = configs?.general_hour_format?.value?.includes('hh:mm')
+  const isValidReservation = !cartReservation || momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD HH:mm:ss') > momentjs().format('YYYY-MM-DD HH:mm:ss')
   const content = useRef(null)
   const businessStore = useRef(null)
   const businessDelete = useRef(null)
   const changeStore = useRef(null)
+
+  const showButton = orderState?.options?.type !== 9
+    ? setActive === 'active' && !!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled
+    : isValidReservation
 
   const { convertHoursToMinutes } = generalUtilities()
 
   const viewString = isStore ? 'business_view' : 'header'
   const hideBusinessLogo = isGiftCart || theme?.[viewString]?.components?.cart?.components?.business?.components?.logo?.hidden
   const hideBusinessTime = theme?.[viewString]?.components?.cart?.components?.business?.components?.time?.hidden
-  const isValidReservation = !cartReservation || momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD HH:mm:ss') > momentjs().format('YYYY-MM-DD HH:mm:ss')
   const toggleAccordion = (e) => {
     const isActionsClick = businessStore.current?.contains(e?.target) || businessDelete.current?.contains(e?.target) || changeStore.current?.contains(e?.target)
     if (isClosed || !isProducts || isActionsClick) return
@@ -266,7 +269,7 @@ export const BusinessItemAccordion = (props) => {
             )}
             {props.children}
           </AccordionContent>
-          {setActive === 'active' && !isClosed && ((!!isProducts && !checkoutButtonDisabled && !isMultiCheckout && !checkoutMultiBusinessEnabled) || (hasCartReservation && isValidReservation)) && (
+          {!isClosed && !isCheckout && showButton && (
             <PriceContainer>
               <h4>{parsePrice(total)}</h4>
               <Button onClick={() => handleClickCheckout(uuid)} color='primary'>{t('CHECKOUT', 'Checkout')}</Button>
