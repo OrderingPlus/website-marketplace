@@ -525,6 +525,7 @@ export const App = () => {
         )}
         {!loaded && <SpinnerLoader />}
         <SmartAppBanner
+          appName={settings?.app_name}
           storeAndroidId={themeUpdated?.smart_banner_settings?.android_id ?? settings?.store_android_id}
           storeAppleId={themeUpdated?.smart_banner_settings?.apple_id ?? settings?.store_apple_id}
         />
