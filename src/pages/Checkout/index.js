@@ -94,6 +94,8 @@ export const CheckoutPage = (props) => {
       }).catch((e) => {
         setErrors([...errors, e?.message || e?.toString()])
       })
+    } else if (paymethod.gateway === 'stripe_checkout') {
+      window.location.replace(cart?.paymethod_data.result?.redirect_url)
     }
   }
 
@@ -108,6 +110,7 @@ export const CheckoutPage = (props) => {
     validationFieldsType: 'checkout',
     useKioskApp: settings?.use_kiosk,
     businessSlug: updatedBusinessSlug,
+    returnUrl: `${window.location.origin}/checkout/${cartUuid}`,
     onPlaceOrderClick: (data, paymethod, cart) => {
       if (cart?.order?.uuid) {
         if (orderState?.options?.moment) {
