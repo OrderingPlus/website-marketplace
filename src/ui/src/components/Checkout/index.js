@@ -105,7 +105,8 @@ const CheckoutUI = (props) => {
     onPlaceOrderClick,
     setPlaceSpotNumber,
     placeSpotNumber,
-    checkoutFieldsState
+    checkoutFieldsState,
+    returnUrl
   } = props
 
   const theme = useTheme()
@@ -583,6 +584,7 @@ const CheckoutUI = (props) => {
                 setPaymethodClicked={setPaymethodClicked}
                 handleOpenGuestSignup={handleOpenGuestSignup}
                 validateDriverTipField={validateDriverTipField}
+                returnUrl={returnUrl}
               />
             </PaymentMethodContainer>
           )}
