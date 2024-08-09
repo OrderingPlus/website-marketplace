@@ -481,7 +481,7 @@ const OrderDetailsUI = (props) => {
                     )}
                     {order?.reservation && order?.delivery_type === 9 && (
                       <>
-                        <p className='date'>{t('RESERVATION_SCHEDULED_TO', 'Reservation scheduled to')}: {parseDate(order?.reserve_date)}</p>
+                        <p className='date'>{t('RESERVATION_SCHEDULED_TO', 'Reservation scheduled to')}: {parseDate(order?.reservation?.reserve_date, { utc: false })}</p>
                         <p>{order?.reservation?.guests_reservation} {t('GUESTS', 'Guests')}</p>
                       </>
                     )}
