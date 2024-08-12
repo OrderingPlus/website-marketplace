@@ -188,7 +188,7 @@ export const BusinessItemAccordion = (props) => {
                         <span
                           className={!isValidReservation ? 'danger' : ''}
                         >
-                          {t('RESERVATION', 'Reservation')} • {is12hours ? momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD hh:ss a') : cartReservation?.reserve_date} • {cartReservation?.guests_reservation} {t('GUESTS', 'Guests')}
+                          {t('RESERVATION', 'Reservation')} • {is12hours ? momentjs(cartReservation?.reserve_date).format('YYYY-MM-DD hh:mm a') : cartReservation?.reserve_date} • {cartReservation?.guests_reservation} {t('GUESTS', 'Guests')}
                         </span>
                       </div>
                     )
