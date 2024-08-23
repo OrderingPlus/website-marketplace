@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Block, EmptyBtnWrapper, EmptyCart, RadioButtonContainer, RevervationContainer, ToleranceText } from './styles'
 import { Button, Cart, UserDetails } from '~ui'
-import { useConfig, useCustomer, useLanguage, useOrder, useSession, BusinessReservation as BusinessReservationController, useUtils, useEvent } from '~components'
+import { useConfig, useCustomer, useLanguage, useOrder, useSession, BusinessReservation as BusinessReservationController, useUtils, useEvent, useToast, ToastType } from '~components'
 import { parsePhoneNumber } from 'libphonenumber-js'
 import RiRadioButtonFill from '@meronex/icons/ri/RiRadioButtonFill'
 import MdRadioButtonUnchecked from '@meronex/icons/md/MdRadioButtonUnchecked'
@@ -28,20 +28,21 @@ export const BusinessReservationUI = (props) => {
     isCheckout
   } = props
 
-  const [{ options }] = useOrder()
+  const [{ options }, { placeCart }] = useOrder()
   const [, t] = useLanguage()
   const [{ user, loading: userLoading }] = useSession()
   const [{ configs }] = useConfig()
   const [{ parsePrice }] = useUtils()
   const [customerState] = useCustomer()
   const [events] = useEvent()
+  const [, { showToast }] = useToast()
   const [requiredFields, setRequiredFields] = useState([])
   const [personsList, setPersonsList] = useState([])
   const [selectDateList, setSelectDateList] = useState([])
   const [selectHourList, setSelectHourList] = useState([])
   const hidePlaceReservationButton =
     !((reservationState?.changes?.guests_reservation !== cart?.reservation?.guests_reservation) ||
-    (reservationState?.changes?.reserve_date !== cart?.reservation?.reserve_date))
+      (reservationState?.changes?.reserve_date !== cart?.reservation?.reserve_date))
 
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
@@ -49,7 +50,15 @@ export const BusinessReservationUI = (props) => {
     const result = await handleAddReservation(cart?.products)
     setOpenReservations?.(false)
     if (result?.uuid && orderingMethod === 1) {
-      events.emit('go_to_page', { page: 'checkout', params: { cartUuid: result?.uuid } })
+      const payload = {
+        amount: result?.balance ?? result?.total
+      }
+      const { result: resultCart, error } = await placeCart(result.uuid, payload)
+      if (!error) {
+        events.emit('go_to_page', { page: 'order_detail', params: { orderId: resultCart.order?.uuid }, replace: true })
+        return
+      }
+      showToast(ToastType.Error, t('FAIELD_TO_PLACE_RESERVATION', 'Failed to place reservation'))
     }
   }
   const checkGuestValidationFields = () => {
