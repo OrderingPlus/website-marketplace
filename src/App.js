@@ -461,12 +461,12 @@ export const App = () => {
       notificationClickHandlerAction: 'navigate'
     }
 
-    OneSignal.push(function () {
+    OneSignal?.push?.(function () {
       OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' }
       OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js'
       OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKWorker.js'
-      if (!OneSignal._initCalled) {
-        OneSignal.init(initConfig)
+      if (!OneSignal?._initCalled) {
+        OneSignal?.init?.(initConfig)
       }
 
       const onNotificationClicked = function (data) {
@@ -484,7 +484,7 @@ export const App = () => {
         OneSignal.addListenerForNotificationOpened(handler)
       }
 
-      OneSignal.on('subscriptionChange', function (isSubscribed) {
+      OneSignal?.on?.('subscriptionChange', function (isSubscribed) {
         if (isSubscribed) {
           OneSignal.getUserId((userId) => {
             const data = {
@@ -496,7 +496,7 @@ export const App = () => {
         }
       })
 
-      OneSignal.getUserId((userId) => {
+      OneSignal?.getUserId?.((userId) => {
         const data = {
           ...oneSignalState,
           notification_token: userId
