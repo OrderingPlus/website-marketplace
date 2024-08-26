@@ -42,7 +42,8 @@ export const BusinessReservationUI = (props) => {
   const [selectHourList, setSelectHourList] = useState([])
   const hidePlaceReservationButton =
     !((reservationState?.changes?.guests_reservation !== cart?.reservation?.guests_reservation) ||
-      (reservationState?.changes?.reserve_date !== cart?.reservation?.reserve_date))
+      (reservationState?.changes?.reserve_date !== cart?.reservation?.reserve_date)) ||
+      (!!cart?.products?.length && !reservationSetting?.allow_preorder_reservation)
 
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
@@ -219,6 +220,9 @@ export const BusinessReservationUI = (props) => {
           <RadioButtonContainer onClick={() => setOrderingMethod(2)}>
             {orderingMethod === 2 ? <RiRadioButtonFill /> : <MdRadioButtonUnchecked disabled />} <p>{t('TABLE_RESERVATION_AND_PREORDER', 'Table reservation & Preorder')}</p>
           </RadioButtonContainer>
+        )}
+        {(!!cart?.products?.length && !reservationSetting?.allow_preorder_reservation) && (
+          <p className='error'>{t('MISSING_ORDERING_METHODS_ERROR', 'No ordering methods available, please remove the products of the cart for continue')}</p>
         )}
       </Block>
       <Block>

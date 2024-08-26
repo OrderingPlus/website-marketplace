@@ -24,6 +24,9 @@ export const Block = styled.div`
   #list {
     width: 100%;
   }
+  .error {
+    color: #E63757;
+  }
 `
 
 export const RadioButtonContainer = styled.div`
