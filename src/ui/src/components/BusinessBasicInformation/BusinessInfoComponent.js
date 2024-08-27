@@ -68,9 +68,7 @@ export const BusinessInfoComponent = (props) => {
   const hideSearch = layoutsWithOldSearch.includes(theme?.business_view?.components?.product_search?.components?.layout?.type)
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
   const singleBusinessRedirect = window.localStorage.getItem('single_business')
-  const businessReservationConfig = business?.configs?.find(config => config?.key === 'reservation_setting')
   const businessReservationEnabledConfig = business?.configs?.find(config => config?.key === 'reservation_enabled')
-  const reservationSetting = businessReservationConfig ? JSON.parse(businessReservationConfig?.value || '{}') : JSON.parse(configs?.reservation_setting?.value || '{}')
   const reservationEnabledValue = businessReservationEnabledConfig ? JSON.parse(businessReservationEnabledConfig?.value || '{}') : JSON.parse(configs?.reservation_enabled?.value || '{}')
 
   const searchComponentProps = {
@@ -273,7 +271,6 @@ export const BusinessInfoComponent = (props) => {
               {(!loading &&
                 orderState?.options?.type === 9 &&
                 categoryState?.products?.length !== 0 &&
-                (reservationSetting?.allow_preorder_reservation || (currentCart?.products?.length === 0)) &&
                 reservationEnabledValue === 1) &&
                 (
                   <Button onClick={() => setOpenReservations(true)}>

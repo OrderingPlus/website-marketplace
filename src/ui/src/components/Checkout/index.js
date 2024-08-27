@@ -177,7 +177,8 @@ const CheckoutUI = (props) => {
     validateDriverTipField ||
     validateCouponField ||
     validateZipcodeCard ||
-    (!cart?.reservation && options?.type === 9)
+    (!cart?.reservation && options?.type === 9) ||
+    (!!cart?.products?.length && !reservationSetting?.allow_preorder_reservation && options?.type === 9)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -236,7 +237,7 @@ const CheckoutUI = (props) => {
     }
     handlerClickPlaceOrder && handlerClickPlaceOrder(null, body)
   }
-
+  console.log(cart)
   const closeAlert = () => {
     setAlertState({
       open: false,
