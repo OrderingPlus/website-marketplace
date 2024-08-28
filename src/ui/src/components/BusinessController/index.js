@@ -43,6 +43,8 @@ import {
   shape
 } from '~ui'
 
+const deliveryTypes = [1, 7]
+
 const BusinessControllerUI = (props) => {
   const {
     isSkeleton,
@@ -80,7 +82,6 @@ const BusinessControllerUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalPageToShow, setModalPageToShow] = useState(null)
-
   const { convertHoursToMinutes } = generalUtilities()
 
   const favoriteRef = useRef(null)
@@ -173,34 +174,34 @@ const BusinessControllerUI = (props) => {
           <BusinessHero>
             {isSkeleton
               ? (
-              <Skeleton height={isCustomerMode ? 100 : 140} />
+                <Skeleton height={isCustomerMode ? 100 : 140} />
                 )
               : (
-              <BusinessHeader bgimage={!hideBusinessHeader ? optimizeImage((businessHeader || business?.header || theme.images?.dummies?.businessHeader), 'h_400,c_limit') : ''} isClosed={!isBusinessOpen}>
-                <BusinessTags>
-                  {(businessFeatured ?? business?.featured) && !hideBusinessFavoriteBadge &&
-                    <span className='crown'>
-                      <FaCrown />
-                    </span>}
-                  {!hideBusinessOffer && !isCustomLayout && (configState?.configs?.preorder_status_enabled?.value === '1') && (
-                    <div>
-                      {!!getBusinessOffer((businessOffers ?? business?.offers)) && <span>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((businessOffers ?? business?.offers))}</span>}
-                      {!isBusinessOpen && <span>{t('PREORDER', 'Preorder')}</span>}
-                    </div>
-                  )}
-                </BusinessTags>
-                <BusinessHeaderClosedContainer>
-                  <div>
-                    {!!businessWillCloseSoonMinutes && orderState?.options?.moment === null && isBusinessOpen && business?.enabled !== false && (
-                      <h1>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</h1>
+                <BusinessHeader bgimage={!hideBusinessHeader ? optimizeImage((businessHeader || business?.header || theme.images?.dummies?.businessHeader), 'h_400,c_limit') : ''} isClosed={!isBusinessOpen}>
+                  <BusinessTags>
+                    {(businessFeatured ?? business?.featured) && !hideBusinessFavoriteBadge &&
+                      <span className='crown'>
+                        <FaCrown />
+                      </span>}
+                    {!hideBusinessOffer && !isCustomLayout && (configState?.configs?.preorder_status_enabled?.value === '1') && (
+                      <div>
+                        {!!getBusinessOffer((businessOffers ?? business?.offers)) && <span>{t('DISCOUNT', 'Discount')}{' '}{getBusinessOffer((businessOffers ?? business?.offers))}</span>}
+                        {!isBusinessOpen && <span>{t('PREORDER', 'Preorder')}</span>}
+                      </div>
                     )}
-                    {!isBusinessOpen && <h1 className='closed'>{t('CLOSED', 'Closed')}{business?.enabled === false && `(${t('DISABLED', 'Disabled')})`}</h1>}
-                  </div>
-                  {business?.disabled_reason && business?.enabled === false && (
-                    <h2 className='disabled'>{business?.disabled_reason}</h2>
-                  )}
-                </BusinessHeaderClosedContainer>
-              </BusinessHeader>
+                  </BusinessTags>
+                  <BusinessHeaderClosedContainer>
+                    <div>
+                      {!!businessWillCloseSoonMinutes && orderState?.options?.moment === null && isBusinessOpen && business?.enabled !== false && (
+                        <h1>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</h1>
+                      )}
+                      {!isBusinessOpen && <h1 className='closed'>{t('CLOSED', 'Closed')}{business?.enabled === false && `(${t('DISABLED', 'Disabled')})`}</h1>}
+                    </div>
+                    {business?.disabled_reason && business?.enabled === false && (
+                      <h2 className='disabled'>{business?.disabled_reason}</h2>
+                    )}
+                  </BusinessHeaderClosedContainer>
+                </BusinessHeader>
                 )}
           </BusinessHero>
           <BusinessContent isCustomerMode={isCustomerMode}>
@@ -209,10 +210,10 @@ const BusinessControllerUI = (props) => {
                 <WrapperBusinessLogo isSkeleton={isSkeleton} isCustomerMode={isCustomerMode}>
                   {!isSkeleton && (businessLogo || business?.logo || theme.images?.dummies?.businessLogo)
                     ? (
-                    <BusinessLogo bgimage={optimizeImage((businessLogo || business?.logo || theme.images?.dummies?.businessLogo), 'h_200,c_limit')} />
+                      <BusinessLogo bgimage={optimizeImage((businessLogo || business?.logo || theme.images?.dummies?.businessLogo), 'h_200,c_limit')} />
                       )
                     : (
-                    <Skeleton height={70} width={70} />
+                      <Skeleton height={70} width={70} />
                       )}
                 </WrapperBusinessLogo>
               )}
@@ -222,14 +223,14 @@ const BusinessControllerUI = (props) => {
                     {!isSkeleton
                       ? (
                           (businessReviews ?? business?.reviews?.total) > 0 && (
-                        <div className='reviews'>
-                          <BisStar />
-                          <span>{(businessReviews ?? business?.reviews?.total)}</span>
-                        </div>
+                          <div className='reviews'>
+                            <BisStar />
+                            <span>{(businessReviews ?? business?.reviews?.total)}</span>
+                          </div>
                           )
                         )
                       : (
-                      <Skeleton width={50} />
+                        <Skeleton width={50} />
                         )}
                   </>
                 )}
@@ -237,12 +238,12 @@ const BusinessControllerUI = (props) => {
                   <FavoriteWrapper ref={favoriteRef} onClick={handleChangeFavorite}>
                     {!isSkeleton
                       ? (
-                      <>
-                        {(businessState?.business?.favorite) ? <Like /> : <DisLike />}
-                      </>
+                        <>
+                          {(businessState?.business?.favorite) ? <Like /> : <DisLike />}
+                        </>
                         )
                       : (
-                      <Skeleton width={16} height={16} />
+                        <Skeleton width={16} height={16} />
                         )}
                   </FavoriteWrapper>
                 )}
@@ -253,24 +254,24 @@ const BusinessControllerUI = (props) => {
                 <div>
                   {business?.name
                     ? (
-                    <BusinessName>{business?.name}</BusinessName>
+                      <BusinessName>{business?.name}</BusinessName>
                       )
                     : (
-                    <Skeleton width={100} />
+                      <Skeleton width={100} />
                       )}
                 </div>
                 <Medadata isCustomerMode={isCustomerMode} isSkeleton={isSkeleton}>
-                  {!hideBusinessFee && orderType === 1 && (
+                  {!hideBusinessFee && deliveryTypes.includes(orderType) && (
                     <>
                       {(businessDeliveryPrice ?? business?.delivery_price) >= 0
                         ? (
-                        <p>
-                          <span>{t('DELIVERY_FEE', 'Delivery fee')}</span>
-                          {business && parsePrice((businessDeliveryPrice ?? business?.delivery_price))}
-                        </p>
+                          <p>
+                            <span>{t('DELIVERY_FEE', 'Delivery fee')}</span>
+                            {business && parsePrice((businessDeliveryPrice ?? business?.delivery_price))}
+                          </p>
                           )
                         : (
-                        <Skeleton width={isCustomerMode ? 70 : 65} />
+                          <Skeleton width={isCustomerMode ? 70 : 65} />
                           )}
                     </>
                   )}
@@ -278,13 +279,13 @@ const BusinessControllerUI = (props) => {
                     <>
                       {Object.keys(business).length > 0
                         ? (
-                        <p className='bullet'>
-                          <GoPrimitiveDot />
-                          {convertHoursToMinutes(orderState?.options?.type === 1 ? (businessDeliveryTime ?? business?.delivery_time) : (businessPickupTime ?? business?.pickup_time)) || <Skeleton width={100} />}
-                        </p>
+                          <p className='bullet'>
+                            <GoPrimitiveDot />
+                            {convertHoursToMinutes(deliveryTypes.includes(orderState?.options?.type) ? (businessDeliveryTime ?? business?.delivery_time) : (businessPickupTime ?? business?.pickup_time)) || <Skeleton width={100} />}
+                          </p>
                           )
                         : (
-                        <Skeleton width={65} />
+                          <Skeleton width={65} />
                           )}
                     </>
                   )}
@@ -292,13 +293,13 @@ const BusinessControllerUI = (props) => {
                     <>
                       {(businessDistance ?? business?.distance) >= 0
                         ? (
-                        <p className='bullet'>
-                          <GoPrimitiveDot />
-                          {parseDistance((businessDistance ?? business?.distance))}
-                        </p>
+                          <p className='bullet'>
+                            <GoPrimitiveDot />
+                            {parseDistance((businessDistance ?? business?.distance))}
+                          </p>
                           )
                         : (
-                        <Skeleton width={65} />
+                          <Skeleton width={65} />
                           )}
                     </>
                   )}
