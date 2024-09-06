@@ -82,6 +82,8 @@ const mapConfigs = {
   }
 }
 
+const deliveryTypes = [1, 7]
+
 const CheckoutUI = (props) => {
   const {
     cart,
@@ -157,7 +159,7 @@ const CheckoutUI = (props) => {
 
   // const [hasBusinessPlaces, setHasBusinessPlaces] = useState(null)
   const validateCommentsCartField = (guestCheckoutComment?.enabled && (user?.guest_id ? guestCheckoutComment?.required_with_guest : guestCheckoutComment?.required)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
-  const validateDriverTipField = options.type === 1 && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
+  const validateDriverTipField = deliveryTypes.includes(options.type) && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
   const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some(offer => offer?.type === 2)
   const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
   const businessConfig = businessDetails?.business?.configs?.find(config => config?.key === 'reservation_setting')
@@ -194,7 +196,7 @@ const CheckoutUI = (props) => {
   const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
   const hideBusinessMap = theme?.checkout?.components?.map?.hidden
   const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
-  const driverTipsField = !cartState.loading && cart && cart?.business_id && options.type === 1 && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0 && !useKioskApp
+  const driverTipsField = !cartState.loading && cart && cart?.business_id && deliveryTypes.includes(options.type) && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0 && !useKioskApp
 
   const creditPointPlan = loyaltyPlansState?.result?.find(loyal => loyal.type === 'credit_point')
   const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find(b => b.business_id === cart?.business_id && b.accumulates)
@@ -535,7 +537,7 @@ const CheckoutUI = (props) => {
 
           {!useKioskApp && cart?.business_id && (
             <>
-              {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+              {!cartState.loading && deliveryOptionSelected !== undefined && deliveryTypes.includes(options?.type) && (
                 <DeliveryOptionsContainer>
                   <h2>{t('DELIVERY_DETAILS', 'Delivery Details')}</h2>
                   <Select
