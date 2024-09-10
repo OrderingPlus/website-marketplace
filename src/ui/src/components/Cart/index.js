@@ -50,6 +50,8 @@ import {
   TaxInformation
 } from '~ui'
 
+const deliveryTypes = [1, 7]
+
 const CartUI = (props) => {
   const {
     currentCartUuid,
@@ -460,7 +462,7 @@ const CartUI = (props) => {
                         </tr>
                       ))
                     }
-                    {orderState?.options?.type === 1 && !hideDeliveryFee && cart?.business_id && (
+                    {deliveryTypes.includes(orderState?.options?.type) && !hideDeliveryFee && cart?.business_id && (
                       <tr>
                         <td>{t('DELIVERY_FEE', 'Delivery Fee')}</td>
                         <td>{parsePrice(cart?.delivery_price_with_discount + getIncludedTaxes(true))}</td>
@@ -547,7 +549,7 @@ const CartUI = (props) => {
                   !isMultiCheckout &&
                   cart &&
                   cart?.business_id &&
-                  orderState?.options?.type === 1 &&
+                  deliveryTypes.includes(orderState?.options?.type) &&
                   cart?.status !== 2 &&
                   validationFields?.fields?.checkout?.driver_tip?.enabled &&
                   driverTipsOptions.length > 0 &&
