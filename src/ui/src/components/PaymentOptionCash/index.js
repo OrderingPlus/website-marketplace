@@ -63,7 +63,7 @@ export const PaymentOptionCash = (props) => {
             ref={el}
             name='cash'
             type='text'
-            placeholder='$0.00'
+            placeholder={t('EXACT_CASH_PLACEHOLDER', '$0.00')}
             onKeyPress={(e) => {
               if (!/^[0-9 .]$/.test(e.key)) {
                 e.preventDefault()
