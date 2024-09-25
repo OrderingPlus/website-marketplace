@@ -261,7 +261,7 @@ const BusinessProductsListUI = (props) => {
                         {isSearchMode && category?.subcategories?.length > 0
                           ? (
                           <>
-                            {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
+                            {products?.sort((a, b) => (a.name || 0) - (b.name || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
                               <SingleProductCard
                                 key={i}
                                 isSoldOut={product.inventoried && !product.quantity}
@@ -292,7 +292,7 @@ const BusinessProductsListUI = (props) => {
                           : (
                           <>
                             {
-                              products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
+                              products?.sort((a, b) => (a.name || 0) - (b.name || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
                                 <SingleProductCard
                                   key={i}
                                   isSoldOut={product.inventoried && !product.quantity}
