@@ -49,7 +49,6 @@ const BusinessProductsListUI = (props) => {
     onClickCategory,
     handleUpdateProducts,
     isSearchMode,
-    business,
     previouslyProducts
   } = props
 
@@ -183,17 +182,13 @@ const BusinessProductsListUI = (props) => {
                           productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                         />
                       ))}
-                      {!business?.food && !categoryState?.loading && categoryState?.products?.filter(product => product.featured)?.length > 9 && (
+                      {!categoryState?.loading && categoryState?.products?.filter(product => product.featured)?.length > 9 && (
                         <SingleProductCard
                           useCustomFunctionality
                           onCustomClick={() => onClickCategory(category)}
                           isCartOnProductsList={isCartOnProductsList}
                           handleUpdateProducts={handleUpdateProducts}
                           customText={t('MORE', 'More')}
-                          customStyle={{
-                            display: 'flex',
-                            justifyContent: 'center'
-                          }}
                         />
                       )}
                     </ProductsListing>
@@ -261,7 +256,7 @@ const BusinessProductsListUI = (props) => {
                         {isSearchMode && category?.subcategories?.length > 0
                           ? (
                           <>
-                            {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 9 && product?.category_id === category?.id) || business?.food)?.map((product, i) => (
+                            {products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((product, i) => (i < 10 && product?.category_id === category?.id))?.map((product, i) => (
                               <SingleProductCard
                                 key={i}
                                 isSoldOut={product.inventoried && !product.quantity}
@@ -274,17 +269,13 @@ const BusinessProductsListUI = (props) => {
                                 productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                               />
                             ))}
-                            {!business?.food && !categoryState?.loading && products?.length > 9 && (
+                            {!categoryState?.loading && products?.length > 9 && (
                               <SingleProductCard
                                 useCustomFunctionality
                                 onCustomClick={() => onClickCategory(category)}
                                 isCartOnProductsList={isCartOnProductsList}
                                 handleUpdateProducts={handleUpdateProducts}
                                 customText={t('MORE', 'More')}
-                                customStyle={{
-                                  display: 'flex',
-                                  justifyContent: 'center'
-                                }}
                               />
                             )}
                           </>
@@ -292,7 +283,7 @@ const BusinessProductsListUI = (props) => {
                           : (
                           <>
                             {
-                              products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 9 || business?.food).map((product, i) => (
+                              products?.sort((a, b) => (a.rank || 0) - (b.rank || 0)).filter((_, i) => i < 10).map((product, i) => (
                                 <SingleProductCard
                                   key={i}
                                   isSoldOut={product.inventoried && !product.quantity}
@@ -306,17 +297,13 @@ const BusinessProductsListUI = (props) => {
                                 />
                               ))
                             }
-                            {!business?.food && !categoryState?.loading && products?.length > 9 && (
+                            {!categoryState?.loading && products?.length > 9 && (
                               <SingleProductCard
                                 useCustomFunctionality
                                 onCustomClick={() => onClickCategory(category)}
                                 isCartOnProductsList={isCartOnProductsList}
                                 handleUpdateProducts={handleUpdateProducts}
                                 customText={t('MORE', 'More')}
-                                customStyle={{
-                                  display: 'flex',
-                                  justifyContent: 'center'
-                                }}
                               />
                             )}
                           </>
