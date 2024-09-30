@@ -16,6 +16,9 @@ export const CardContainer = styled.div`
   flex-direction: column;
   cursor: pointer;
   position: relative;
+  ${({ useCustomFunctionality }) => useCustomFunctionality && css`
+      justify-content: center;
+    `}
 
   > div {
     display: flex;
@@ -30,6 +33,9 @@ export const CardContainer = styled.div`
   }
     align-items: center;
     width: 100%;
+    ${({ useCustomFunctionality }) => useCustomFunctionality && css`
+      justify-content: center;
+    `}
   }
 
   button {
@@ -38,12 +44,12 @@ export const CardContainer = styled.div`
     padding: 4px;
   }
   ${({ productsRows }) => productsRows
-? css`
+    ? css`
     width: ${() => productsRows === 3 ? 'calc(33% - 20px)' : 'calc(50% - 20px)'};
     margin: 10px 0;
 
   `
-: css`
+    : css`
     width: 100%;
     margin: 10px;
     @media (min-width: 576px) {
@@ -52,7 +58,7 @@ export const CardContainer = styled.div`
     }
 
   ${({ isCartOnProductsList }) => isCartOnProductsList
-? css`
+        ? css`
     @media (min-width: 993px) {
       width: calc(50% - 20px);
       margin: 10px 20px 10px 0px;
@@ -61,7 +67,7 @@ export const CardContainer = styled.div`
       `}
     }
   `
-: css`
+        : css`
     @media (min-width: 681px) {
       width: calc(49% - 20px);
     }
