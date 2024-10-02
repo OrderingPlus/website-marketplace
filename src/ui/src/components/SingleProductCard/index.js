@@ -49,7 +49,6 @@ const SingleProductCardUI = React.memo((props) => {
     useCustomFunctionality,
     onCustomClick,
     customText,
-    customStyle,
     useKioskApp,
     productAddedToCartLength,
     handleFavoriteProduct,
@@ -163,9 +162,9 @@ const SingleProductCardUI = React.memo((props) => {
         soldOut={isSoldOut || maxProductQuantity <= 0}
         onClick={handleClickProduct}
         isCartOnProductsList={isCartOnProductsList}
-        style={useCustomFunctionality && customStyle}
         className='product-card'
         isShowAddButt={!useCustomFunctionality && !hideAddButton && !isSkeleton}
+        useCustomFunctionality={useCustomFunctionality}
       >
         {isObservedValidation && (
           <div>
