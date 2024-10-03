@@ -36,7 +36,7 @@ import {
   PaymentOptionStripe
 } from '~ui'
 
-const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
+const stripeOptions = ['stripe', 'stripe_connect']
 
 const getPayIcon = (method) => {
   switch (method) {
@@ -93,7 +93,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props) => {
   const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
   const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
   const methodsPay = ['global_google_pay', 'global_apple_pay']
-  const stripeDirectMethods = ['stripe_direct', ...methodsPay]
+  const stripeDirectMethods = methodsPay
   const walletName = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),

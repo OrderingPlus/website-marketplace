@@ -11,7 +11,7 @@ export const MultiCheckout = (props) => {
   const { cartUuid } = useParams()
   const [, { confirmMultiCarts }] = useOrder()
   const [, t] = useLanguage()
-  const stripePayments = ['stripe', 'stripe_connect', 'stripe_direct', 'google_pay', 'apple_pay']
+  const stripePayments = ['stripe', 'stripe_connect', 'google_pay', 'apple_pay']
   const [errors, setErrors] = useState([])
 
   const actionsBeforePlace = async (paymethod, cart) => {
@@ -39,47 +39,6 @@ export const MultiCheckout = (props) => {
       } catch (error) {
         setErrors([error.message])
       }
-    } else if (paymethod.gateway === 'stripe_redirect') {
-      const stripe = await loadStripe(paymethod.paymethod?.credentials?.publishable)
-      const confirmOption = {
-        bancontact: {
-          name: 'confirmBancontactPayment',
-          type: 1
-        },
-        alipay: {
-          name: 'confirmAlipayPayment',
-          type: 2
-        },
-        giropay: {
-          name: 'confirmGiropayPayment',
-          type: 1
-        },
-        ideal: {
-          name: 'confirmIdealPayment',
-          type: 2
-        }
-      }
-      const params = {
-        1: {
-          payment_method: {
-            billing_details: cart.paymethod_data.data.owner
-          },
-          return_url: `${window.location.origin}/checkout/${cartUuid}`
-        },
-        2: {
-          return_url: `${window.location.origin}/checkout/${cartUuid}`
-        }
-      }
-      stripe[confirmOption[paymethod.data.type]?.name](
-        cart.paymethod_data.result.client_secret,
-        params[confirmOption[paymethod.data.type]?.type]
-      ).then((result) => {
-        if (result?.error) {
-          setErrors([...errors, result?.error?.message])
-        }
-      }).catch((e) => {
-        setErrors([...errors, e?.message || e?.toString()])
-      })
     }
   }
   const multiCheckoutProps = {
