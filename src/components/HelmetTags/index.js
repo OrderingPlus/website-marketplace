@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Helmet } from 'react-helmet'
 import { useTheme } from 'styled-components'
 import parse from 'html-react-parser'
@@ -23,6 +23,16 @@ export const HelmetTags = (props) => {
   const [configs] = useConfig()
   const enabledPoweredByOrdering = configs?.powered_by_ordering_module?.value
   const metaTag = page ? helmetData[page] : helmetData.app
+  const replaceFunction = useCallback((domNode) => {
+    if (domNode?.type === 'script' && !!domNode?.children?.[0]?.data) {
+      const scripts = Array.from(document.getElementsByTagName('script'))
+      const found = scripts.find(script => script.innerHTML === domNode?.children?.[0]?.data)
+      if (found) return
+      const script = document.createElement('script')
+      script.innerHTML = domNode.children[0].data
+      document.head.appendChild(script)
+    }
+  }, [theme?.third_party_code?.head])
 
   return (
     <Helmet titleTemplate={!page ? '' : `${theme?.my_products?.components?.website_settings?.components?.values?.name || settings.app_name} - %s`}>
@@ -43,7 +53,7 @@ export const HelmetTags = (props) => {
         : (
             metaTag.canonicalUrl && <link rel='canonical' href={metaTag.canonicalUrl} />
           )}
-      {theme?.third_party_code?.head && parse(theme?.third_party_code?.head)}
+      {theme?.third_party_code?.head && parse(theme?.third_party_code?.head, { replace: replaceFunction })}
       <meta property="og:locale" content="en_US" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={REACT_APP_OG_TITLE} />
