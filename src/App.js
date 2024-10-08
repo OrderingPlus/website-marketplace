@@ -163,7 +163,7 @@ export const App = () => {
       },
       logos: {
         ...theme.images.logos,
-        logotype: orderingTheme?.theme?.header?.components?.logo?.components?.image || theme.images.logos.logotype
+        logotype: orderingTheme?.theme?.my_products?.components?.images?.components?.logo?.components?.image || theme.images.logos.logotype
       }
     }
   }), [theme, orderingTheme])
