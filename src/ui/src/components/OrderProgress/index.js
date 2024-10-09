@@ -57,9 +57,7 @@ const OrderProgressUI = (props) => {
           <OrderProgressContainer>
             <OrderInfoWrapper>
               <ProgressLogo
-                bgimage={orderList?.orders.length === 1
-                  ? optimizeImage(lastOrder?.business?.logo || theme.images?.dummies?.businessLogo, 'h_91,c_limit')
-                  : theme.images.logos.logotype}
+                bgimage={optimizeImage(lastOrder?.business?.logo || theme.images?.dummies?.businessLogo, 'h_91,c_limit')}
               />
               <ProgressDescriptionWrapper>
                 <h2>{statusToShow.includes(lastOrder?.status) ? t('ORDER_IN_PROGRESS', 'Order in progress') : t('ORDER', 'Order')}</h2>
