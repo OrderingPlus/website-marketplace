@@ -118,7 +118,7 @@ const MultiCheckoutUI = (props) => {
 
   const totalCartsPrice = cartGroup?.result?.balance
   const methodsPay = ['global_google_pay', 'global_apple_pay']
-  const stripePaymethods = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect']
+  const stripePaymethods = ['stripe', 'stripe_connect']
   const creditPointGeneralPlan = loyaltyPlansState?.result?.find((loyal) => loyal.type === 'credit_point')
   const loyalBusinessAvailable = creditPointGeneralPlan?.businesses?.filter((b) => b.accumulates) ?? []
   const isWalletEnabled = (configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' &&
