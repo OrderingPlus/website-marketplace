@@ -97,7 +97,7 @@ export const ProgressDescriptionWrapper = styled.div`
     margin: 0;
   }
 
-  button {
+  a {
     display: flex;
     align-items: center;
     padding: 0px;
@@ -124,7 +124,7 @@ export const ProgressDescriptionWrapper = styled.div`
     p {
       font-size: 16px;
     }
-    button {
+    a {
       font-size: 16px;
       margin-top: 2px;
       line-height: 30px;

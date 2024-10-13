@@ -101,6 +101,7 @@ export const BusinessProductsList = (props) => {
     slug: updatedBusinessSlug || businessSlug,
     categoryId,
     productId,
+    businessUrlTemplate,
     businessProps: [
       'id',
       'name',

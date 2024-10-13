@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -62,7 +62,16 @@ const SingleOrderCardUI = (props) => {
 
   const isGiftCardOrder = !order?.business_id
 
-  const handleClickCard = (e, order) => {
+  const urlToRedirect = useCallback(() => {
+    return customArray
+      ? `/checkout/${order?.uuid}`
+      : order?.cart_group_id
+        ? `/multi-orders/${order?.cart_group_id}`
+        : `/orders/${order?.uuid}`
+  }, [order?.uuid, order?.cart_group_id])
+
+  const handleClickCard = (e) => {
+    e.preventDefault()
     if (e.target.closest('.favorite') || e.target.closest('.review') || e.target.closest('.reorder')) return
 
     if (customArray) {
@@ -149,30 +158,31 @@ const SingleOrderCardUI = (props) => {
         mr={props.mrOrders}
         disabledWidthConfig
         isBusinessesPage={isBusinessesPage}
-        onClick={(e) => handleClickCard(e, order)}
+        onClick={(e) => handleClickCard(e)}
+        href={urlToRedirect()}
       >
         <Content>
           {isSkeleton
             ? <Skeleton width={60} height={60} />
             : !hideBusinessLogo && (
-                <>
-                  {order?.business?.length > 1
-                    ? <MultiLogosContainer>
-                        {order?.business?.map((business, i) => i < 2 && (
-                          <BusinessLogoWrapper
-                            key={business?.id}
-                            bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')}
-                            isMulti
-                          />
-                        ))}
-                        {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
-                          <p>
-                            + {order?.business?.length - 2}
-                          </p>
-                        )}
-                      </MultiLogosContainer>
-                    : <BusinessLogoWrapper bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')} />}
-                </>
+              <>
+                {order?.business?.length > 1
+                  ? <MultiLogosContainer>
+                    {order?.business?.map((business, i) => i < 2 && (
+                      <BusinessLogoWrapper
+                        key={business?.id}
+                        bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')}
+                        isMulti
+                      />
+                    ))}
+                    {order?.business?.length > 1 && (order?.business?.length - 2) > 0 && (
+                      <p>
+                        + {order?.business?.length - 2}
+                      </p>
+                    )}
+                  </MultiLogosContainer>
+                  : <BusinessLogoWrapper bgimage={optimizeImage(order?.business?.logo || theme.images?.dummies?.businessLogo, 'h_400,c_limit')} />}
+              </>
               )}
 
           <BusinessInformation activeOrders isMultiCart={order?.business?.length > 1}>
@@ -186,30 +196,30 @@ const SingleOrderCardUI = (props) => {
             {
               isSkeleton
                 ? <div className='orders-detail'>
-                    <Skeleton width={150} />
-                  </div>
+                  <Skeleton width={150} />
+                </div>
                 : <div className='orders-detail'>
-                    {(order?.id || (changeIdToExternalId && order?.external_id)) && !hideOrderNumber && (
-                      <>
-                        <BsDot />
-                        <p name='order_number'>{order?.business?.length > 1 ? `${order?.business?.length} ${t('ORDERS', 'orders')}` : (changeIdToExternalId && order?.external_id) || (`${t('ORDER_NUM', 'Order No.')} ${order.id}`)}</p>
-                      </>
-                    )}
-                    {!hideDate && screen.width > 512 && (
-                      <>
-                        <BsDot />
-                        <p>
-                          {
-                            pastOrders
-                              ? order?.delivery_datetime_utc
-                                ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
-                                : parseDate(order?.delivery_datetime, { utc: false })
-                              : <OrderEta order={order} />
-                          }
-                        </p>
-                      </>
-                    )}
-                  </div>
+                  {(order?.id || (changeIdToExternalId && order?.external_id)) && !hideOrderNumber && (
+                    <>
+                      <BsDot />
+                      <p name='order_number'>{order?.business?.length > 1 ? `${order?.business?.length} ${t('ORDERS', 'orders')}` : (changeIdToExternalId && order?.external_id) || (`${t('ORDER_NUM', 'Order No.')} ${order.id}`)}</p>
+                    </>
+                  )}
+                  {!hideDate && screen.width > 512 && (
+                    <>
+                      <BsDot />
+                      <p>
+                        {
+                          pastOrders
+                            ? order?.delivery_datetime_utc
+                              ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY hh:mm A' })
+                              : parseDate(order?.delivery_datetime, { utc: false })
+                            : <OrderEta order={order} />
+                        }
+                      </p>
+                    </>
+                  )}
+                </div>
             }
             {!hideDate && screen.width <= 512 && (
               <div className='orders-detail'>

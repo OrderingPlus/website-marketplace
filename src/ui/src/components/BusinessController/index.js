@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -71,7 +71,8 @@ const BusinessControllerUI = (props) => {
     businessPickupTime,
     businessDistance,
     handleFavoriteBusiness,
-    businessState
+    businessState,
+    businessUrlTemplate
   } = props
   const [configState] = useConfig()
   const theme = useTheme()
@@ -96,13 +97,19 @@ const BusinessControllerUI = (props) => {
   const hideBusinessHeader = theme?.business_listing_view?.components?.business?.components?.header?.hidden
   const hideBusinessFavoriteBadge = theme?.business_listing_view?.components?.business?.components?.featured_badge?.hidden
 
+  const isBusinessPreorder = onPreorderBusiness && !isBusinessOpen
+  const businessUrl = useMemo(() => {
+    return businessUrlTemplate?.replace(/:business_slug/g, business?.slug)
+  }, [business?.slug, businessUrlTemplate])
+
   // const handleShowAlert = () => {
   //   setAlertState({ open: true, content: [t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The Business is closed at the moment')] })
   // }
 
   const handleBusinessClick = (e) => {
+    e.preventDefault()
     if (favoriteRef?.current?.contains(e.target)) return
-    if (onPreorderBusiness && !isBusinessOpen) onPreorderBusiness(business)
+    if (isBusinessPreorder) onPreorderBusiness(business)
     else handleClick(business)
   }
 
@@ -159,7 +166,12 @@ const BusinessControllerUI = (props) => {
         disabled={business?.enabled === false}
         m={props.m}
       >
-        <WrapperBusinessCard disabled={business?.enabled === false} isSkeleton={isSkeleton} onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}>
+        <WrapperBusinessCard
+          disabled={business?.enabled === false}
+          isSkeleton={isSkeleton}
+          onClick={(e) => !isSkeleton && handleClick && handleBusinessClick(e)}
+          href={!isBusinessPreorder ? businessUrl : null}
+        >
           {business?.ribbon?.enabled && (
             <RibbonBox
               bgColor={business?.ribbon?.color}
