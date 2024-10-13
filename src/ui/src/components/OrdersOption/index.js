@@ -72,7 +72,8 @@ const OrdersOptionUI = (props) => {
     handleUpdateBusinesses,
     getPage,
     loadOrders,
-    disableSkeletons
+    disableSkeletons,
+    businessUrlTemplate
   } = props
 
   const [, t] = useLanguage()
@@ -212,6 +213,7 @@ const OrdersOptionUI = (props) => {
           onRedirectPage={onRedirectPage}
           isLoadingOrders={loading}
           handleUpdateBusinesses={handleUpdateBusinesses}
+          businessUrlTemplate={businessUrlTemplate}
         />
       )}
 

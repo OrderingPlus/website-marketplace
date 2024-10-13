@@ -54,7 +54,7 @@ export const UserPopover = (props) => {
   const hidePromotions = theme?.bar_menu?.components?.promotions?.hidden
 
   const optionsDefault = [
-    { name: 'search', pathname: '/explore', displayName: 'My home', key: 'my_home', isActive: true },
+    { name: 'search', pathname: '/search', displayName: 'My home', key: 'my_home', isActive: true },
     { name: 'business_search', pathname: '/business_search', displayName: 'Browse & Search', key: 'browse_search', isActive: !hideBrowse },
     { name: 'orders', pathname: '/profile/orders', displayName: 'orders', key: 'orders', isActive: !hideOrders }
   ]
@@ -109,7 +109,8 @@ export const UserPopover = (props) => {
     }
   }
 
-  const handleGoToPage = (page) => {
+  const handleGoToPage = (e, page) => {
+    e.preventDefault()
     if (!orderStatus.options?.address?.location && addressRequiredPageNames.includes(page)) {
       handleOpenAddressModal()
     } else {
@@ -157,7 +158,8 @@ export const UserPopover = (props) => {
               <PopoverListLink
                 key={i}
                 active={window.location.pathname === option.pathname}
-                onClick={() => handleGoToPage(option.name)}
+                onClick={(e) => handleGoToPage(e, option.name)}
+                href={!orderStatus.options?.address?.location && addressRequiredPageNames.includes(option.name) ? null : option.pathname}
               >
                 {t((option.key || option.name).toUpperCase(), capitalize(option.displayName || option.name))}
               </PopoverListLink>
@@ -171,7 +173,8 @@ export const UserPopover = (props) => {
                   <PopoverListLink
                     key={i}
                     active={window.location.pathname === option.pathname}
-                    onClick={() => handleGoToPage(option.name)}
+                    onClick={(e) => handleGoToPage(e, option.name)}
+                    href={option.pathname}
                   >
                     {t((option.key || option.name).toUpperCase(), capitalize(option.displayName || option.name))}
                   </PopoverListLink>

@@ -233,6 +233,7 @@ const FavoriteListUI = (props) => {
                       handleUpdateBusinessList={handleUpdateFavoriteList}
                       firstCard={i === 0 && width > 681}
                       m={'30px 10px'}
+                      businessUrlTemplate={businessUrlTemplate}
                     />
                   ))}
                   {favoriteList?.loading && (

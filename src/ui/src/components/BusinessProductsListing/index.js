@@ -248,9 +248,11 @@ const BusinessProductsListingUI = (props) => {
     setCanOpenUpselling(false)
   }
 
-  const handleGoToBusinessList = () => {
+  const handleGoToBusinessList = (e) => {
+    e.preventDefault()
     events.emit('go_to_page', { page: 'search' })
   }
+
   const adjustBusiness = async (adjustBusinessId) => {
     const _carts = carts?.[adjustBusinessId]
     const products = carts?.[adjustBusinessId]?.products || []
@@ -362,9 +364,9 @@ const BusinessProductsListingUI = (props) => {
             switchFlex={windowSize?.width < 576}
           >
             {!isCustomLayout && !location.pathname.includes('/marketplace') && !singleBusinessRedirect && (
-              <div id='back-arrow'>
-                <ArrowLeft className='back-arrow' onClick={() => handleGoToBusinessList()} />
-              </div>
+              <a id='back-arrow' href='/search' role='link'>
+                <ArrowLeft className='back-arrow' onClick={(e) => handleGoToBusinessList(e)} />
+              </a>
             )}
             {windowSize?.width < 576 && (
               <OrderContextUIWrapper>
