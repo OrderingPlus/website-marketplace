@@ -65,7 +65,7 @@ export const IconButton = styled.button`
   `}
 `
 
-export const Button = styled.button`
+const ButtonBase = styled.button`
   background: #E9ECEF;
   color: #FFF;
   border: 1px solid #E9ECEF;
@@ -382,6 +382,15 @@ export const Button = styled.button`
       }
     `}
   `}
+`
+
+export const Button = styled(ButtonBase).attrs({ as: 'button' })``
+export const ButtonLink = styled(ButtonBase).attrs({ as: 'a' })`
+  text-decoration: none;
+  text-align: center;
+  &:link, &:visited, &:hover {
+    text-decoration: none !important;
+  }
 `
 
 export default Button

@@ -75,7 +75,8 @@ export const BusinessListingSearchUI = (props) => {
     onRedirectPage,
     onProductRedirect,
     handleUpdateBusinessList,
-    handleUpdateProducts
+    handleUpdateProducts,
+    businessUrlTemplate
   } = props
 
   const [orderState] = useOrder()
@@ -289,6 +290,7 @@ export const BusinessListingSearchUI = (props) => {
                 onRedirectPage={onRedirectPage}
                 onProductRedirect={onProductRedirect}
                 onBusinessClick={onBusinessClick}
+                businessUrlTemplate={businessUrlTemplate}
               />
             </PreviouslyOrderedContainer>
           )}
@@ -318,6 +320,7 @@ export const BusinessListingSearchUI = (props) => {
                       orderType={orderState?.options?.type}
                       handleUpdateBusinessList={handleUpdateBusinessList}
                       firstCard={i === 0 && width > 681}
+                      businessUrlTemplate={businessUrlTemplate}
                     />
                   ))}
                   {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (

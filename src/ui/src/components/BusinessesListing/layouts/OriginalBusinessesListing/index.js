@@ -78,7 +78,8 @@ const BusinessesListingUI = (props) => {
     citiesState,
     logosLayout,
     actualSlug,
-    orderTypes
+    orderTypes,
+    businessUrlTemplate
   } = props
   const allOrderTypes = [1, 2, 3, 4, 5]
   const pickupTypes = [2, 3, 4, 5]
@@ -115,7 +116,7 @@ const BusinessesListingUI = (props) => {
       : null
   const configTypes = configs?.order_types_allowed?.value.split('|').filter(value => (allOrderTypes.includes(Number(value)))).map(value => Number(value)) || []
   const cateringValues = preorderBusiness?.configs && getCateringValues(cateringTypeString, preorderBusiness?.configs)
-
+  const advancedSearchDisabled = configs?.advanced_business_search_enabled?.value === '0'
   const handleScroll = useCallback(() => {
     const innerHeightScrolltop = window.innerHeight + document.documentElement?.scrollTop + PIXELS_TO_SCROLL
     const badScrollPosition = innerHeightScrolltop < document.documentElement?.offsetHeight
@@ -196,6 +197,11 @@ const BusinessesListingUI = (props) => {
     setIsPickupSelected(true)
   }
 
+  const handleCustomEnter = (e) => {
+    e.preventDefault()
+    !advancedSearchDisabled && onRedirectPage({ page: 'business_search' })
+  }
+
   useEffect(() => {
     if (preorderBusiness) setIsPreorder(true)
   }, [preorderBusiness])
@@ -256,27 +262,27 @@ const BusinessesListingUI = (props) => {
           <AutoScroll scrollId='businessLogos'>
             {businessesList?.loading
               ? <>
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                  <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
-                </>
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+                <Skeleton height={100} width={100} style={{ marginRight: 15 }} />
+              </>
               : <>
-                  {businessesList.businesses
-                    ?.filter(business => business?.open)
-                    ?.map(business => (
-                      <BusinessLogo
-                        key={business?.id}
-                        isActive={actualSlug === business?.slug}
-                        bgimage={business?.logo || theme.images?.dummies?.businessLogo}
-                        onClick={() => onBusinessClick(business)}
-                      />
-                    ))}
-                </>}
+                {businessesList.businesses
+                  ?.filter(business => business?.open)
+                  ?.map(business => (
+                    <BusinessLogo
+                      key={business?.id}
+                      isActive={actualSlug === business?.slug}
+                      bgimage={business?.logo || theme.images?.dummies?.businessLogo}
+                      onClick={() => onBusinessClick(business)}
+                    />
+                  ))}
+              </>}
           </AutoScroll>
         </BusinessLogosContainer>
       </BusinessLogosWrapper>
@@ -364,16 +370,18 @@ const BusinessesListingUI = (props) => {
         <>
           <WrapperSearch isCustomLayout={isCustomLayout} isCustomerMode={isCustomerMode}>
             {!hideSearch && windowSize.width <= 1200 && (
-              <SearchBar
-                lazyLoad
-                search={searchValue}
-                isCustomLayout={isCustomLayout}
-                placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
-                onSearch={handleChangeSearch}
-                handleCustomEnter={() => configs?.advanced_business_search_enabled?.value === '0'
-                  ? null
-                  : onRedirectPage({ page: 'business_search' })}
-              />
+              <a href={advancedSearchDisabled ? null : '/business_search'}>
+                <SearchBar
+                  lazyLoad
+                  search={searchValue}
+                  isCustomLayout={isCustomLayout}
+                  placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
+                  onSearch={handleChangeSearch}
+                  handleCustomEnter={!advancedSearchDisabled
+                    ? null
+                    : handleCustomEnter}
+                />
+              </a>
             )}
             {!hideCities && citiesState?.cities?.length > 0 && (
               <Button color='primary' onClick={handleOpenCities}>
@@ -405,6 +413,7 @@ const BusinessesListingUI = (props) => {
             favoriteIds={favoriteIds}
             setFavoriteIds={setFavoriteIds}
             disabledCities
+            businessUrlTemplate={businessUrlTemplate}
           />
           <Divider />
         </HightestRatedWrapper>
@@ -501,6 +510,7 @@ const BusinessesListingUI = (props) => {
                 businessDistance={business?.distance}
                 handleUpdateBusinessList={handleUpdateBusinessList}
                 favoriteIds={favoriteIds}
+                businessUrlTemplate={businessUrlTemplate}
                 setFavoriteIds={setFavoriteIds}
               />
             ))
@@ -557,24 +567,24 @@ const BusinessesListingUI = (props) => {
         >
           {modals.listOpen
             ? (
-            <AddressList
-              isModal
-              changeOrderAddressWithDefault
-              userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
-              onCancel={() => setModals({ ...modals, listOpen: false })}
-              isCustomerMode={isCustomerMode}
-            />
-              )
-            : (
-            <AddressFormWrapper>
-              <AddressForm
-                useValidationFileds
-                address={orderState?.options?.address || {}}
-                onCancel={() => setModals({ ...modals, formOpen: false })}
-                onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+              <AddressList
+                isModal
+                changeOrderAddressWithDefault
+                userId={isNaN(userCustomer?.id) ? null : userCustomer?.id}
+                onCancel={() => setModals({ ...modals, listOpen: false })}
                 isCustomerMode={isCustomerMode}
               />
-            </AddressFormWrapper>
+              )
+            : (
+              <AddressFormWrapper>
+                <AddressForm
+                  useValidationFileds
+                  address={orderState?.options?.address || {}}
+                  onCancel={() => setModals({ ...modals, formOpen: false })}
+                  onSaveAddress={() => setModals({ ...modals, formOpen: false })}
+                  isCustomerMode={isCustomerMode}
+                />
+              </AddressFormWrapper>
               )}
         </Modal>
       )}

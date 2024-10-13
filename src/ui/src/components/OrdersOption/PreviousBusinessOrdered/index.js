@@ -11,7 +11,8 @@ export const PreviousBusinessOrdered = (props) => {
     isCustomerMode,
     onRedirectPage,
     handleUpdateBusinesses,
-    businesses
+    businesses,
+    businessUrlTemplate
   } = props
 
   const [orderState] = useOrder()
@@ -47,6 +48,7 @@ export const PreviousBusinessOrdered = (props) => {
                 businessDistance={business?.distance}
                 firstCard={i === 0 && width > 681}
                 handleUpdateBusinessList={handleUpdateBusinesses}
+                businessUrlTemplate={businessUrlTemplate}
               />
             ))
           }

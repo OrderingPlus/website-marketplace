@@ -82,7 +82,8 @@ export const SidebarMenu = (props) => {
     setModalIsOpen(true)
   }
 
-  const handleGoToPage = (data) => {
+  const handleGoToPage = (e, data) => {
+    e.preventDefault()
     events.emit('go_to_page', data)
     actionSidebar(false)
     setIsMenuOpen(false)
@@ -161,7 +162,8 @@ export const SidebarMenu = (props) => {
         )}
 
         <MenuLink
-          onClick={() => handleGoToPage({ page: options?.address?.location ? 'search' : 'home' })}
+          onClick={(e) => handleGoToPage(e, { page: options?.address?.location ? 'search' : 'home' })}
+          href={options?.address?.location ? '/search' : '/home'}
         >
           <WrappContent>
             <MenuLinkIcon
@@ -207,7 +209,8 @@ export const SidebarMenu = (props) => {
           <>
             {!hideBrowse && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'business_search' })}
+                onClick={(e) => handleGoToPage(e, { page: 'business_search' })}
+                href='/business_search'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -237,7 +240,8 @@ export const SidebarMenu = (props) => {
             {
               !isCustomerMode && !hideOrders && (
                 <MenuLink
-                  onClick={() => handleGoToPage({ page: 'orders' })}
+                  onClick={(e) => handleGoToPage(e, { page: 'orders' })}
+                  href='/profile/orders'
                 >
                   <WrappContent>
                     <MenuLinkIcon
@@ -267,7 +271,8 @@ export const SidebarMenu = (props) => {
             }
             {!hideProfile && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'profile' })}
+                onClick={(e) => handleGoToPage(e, { page: 'profile' })}
+                href='/profile'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -296,7 +301,8 @@ export const SidebarMenu = (props) => {
             )}
             {isWalletEnabled && !hideWallet && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'wallets' })}
+                onClick={(e) => handleGoToPage(e, { page: 'wallets' })}
+                href='/wallets'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -325,7 +331,8 @@ export const SidebarMenu = (props) => {
             )}
             {isPromotionsEnabled && !hidePromotions && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'promotions' })}
+                onClick={(e) => handleGoToPage(e, { page: 'promotions' })}
+                href='/promotions'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -354,7 +361,8 @@ export const SidebarMenu = (props) => {
             )}
             {!hideMessages && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'messages' })}
+                onClick={(e) => handleGoToPage(e, { page: 'messages' })}
+                href='/messages'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -383,7 +391,8 @@ export const SidebarMenu = (props) => {
             )}
             {!hideHelp && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'help' })}
+                onClick={(e) => handleGoToPage(e, { page: 'help' })}
+                href='/help'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -412,7 +421,8 @@ export const SidebarMenu = (props) => {
             )}
             {!hideSession && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'sessions' })}
+                onClick={(e) => handleGoToPage(e, { page: 'sessions' })}
+                href='/sessions'
               >
                 <WrappContent>
                   <MenuLinkIcon
@@ -441,7 +451,8 @@ export const SidebarMenu = (props) => {
             )}
             {!hideFavorites && (
               <MenuLink
-                onClick={() => handleGoToPage({ page: 'favorite' })}
+                onClick={(e) => handleGoToPage(e, { page: 'favorite' })}
+                href='/favorite'
               >
                 <WrappContent>
                   <MenuLinkIcon
