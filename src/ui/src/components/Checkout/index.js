@@ -83,6 +83,8 @@ const mapConfigs = {
 }
 
 const deliveryTypes = [1, 7]
+const pickupTypes = [2, 8]
+const driverTipsTypes = [...deliveryTypes, ...pickupTypes]
 
 const CheckoutUI = (props) => {
   const {
@@ -152,14 +154,15 @@ const CheckoutUI = (props) => {
   const placeSpotsEnabled = placeSpotTypes.includes(options?.type) && !useKioskApp
   const isGiftCardCart = !cart?.business_id
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter(field => field.order_type_id === options?.type), [checkoutFieldsState, options])
-  const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find(field => field.order_type_id === 1 && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
+  const guestCheckoutDriveTip = useMemo(() => checkoutFields?.find(field => driverTipsTypes.includes(field.order_type_id) && field?.validation_field?.code === 'driver_tip'), [JSON.stringify(checkoutFields), options])
   const guestCheckoutComment = useMemo(() => checkoutFields?.find(field => field.order_type_id === options?.type && field?.validation_field?.code === 'comments'), [JSON.stringify(checkoutFields), options])
   const guestCheckoutCoupon = useMemo(() => checkoutFields?.find(field => field.order_type_id === options?.type && field?.validation_field?.code === 'coupon'), [JSON.stringify(checkoutFields), options])
   const guestCheckoutZipcode = useMemo(() => checkoutFields?.find(field => field.order_type_id === options?.type && field?.validation_field?.code === 'zipcode'), [JSON.stringify(checkoutFields), options])
 
   // const [hasBusinessPlaces, setHasBusinessPlaces] = useState(null)
+  const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && pickupTypes.includes(options?.type)
   const validateCommentsCartField = (guestCheckoutComment?.enabled && (user?.guest_id ? guestCheckoutComment?.required_with_guest : guestCheckoutComment?.required)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
-  const validateDriverTipField = deliveryTypes.includes(options.type) && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
+  const validateDriverTipField = (deliveryTypes.includes(options.type) || allowDriverTipPickup) && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
   const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some(offer => offer?.type === 2)
   const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
   const businessConfig = businessDetails?.business?.configs?.find(config => config?.key === 'reservation_setting')
@@ -195,7 +198,7 @@ const CheckoutUI = (props) => {
   const hideBusinessDetails = theme?.checkout?.components?.business?.hidden
   const hideBusinessMap = theme?.checkout?.components?.map?.hidden
   const hideCustomerDetails = theme?.checkout?.components?.customer?.hidden
-  const driverTipsField = !cartState.loading && cart && cart?.business_id && deliveryTypes.includes(options.type) && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0 && !useKioskApp
+  const driverTipsField = !cartState.loading && cart && cart?.business_id && (deliveryTypes.includes(options.type) || allowDriverTipPickup) && cart?.status !== 2 && (guestCheckoutDriveTip?.enabled) && driverTipsOptions.length > 0 && !useKioskApp
 
   const creditPointPlan = loyaltyPlansState?.result?.find(loyal => loyal.type === 'credit_point')
   const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find(b => b.business_id === cart?.business_id && b.accumulates)

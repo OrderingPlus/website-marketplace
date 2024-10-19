@@ -59,6 +59,8 @@ const mapConfigs = {
   }
 }
 
+const pickupTypes = [2, 8]
+
 const MultiCheckoutUI = (props) => {
   const {
     placing,
@@ -115,6 +117,7 @@ const MultiCheckoutUI = (props) => {
   const totalFeeEnabled = configs?.multi_business_checkout_show_combined_delivery_fee?.value === '1'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
+  const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && pickupTypes.includes(orderState?.options?.type)
 
   const totalCartsPrice = cartGroup?.result?.balance
   const methodsPay = ['global_google_pay', 'global_apple_pay']
@@ -394,7 +397,7 @@ const MultiCheckoutUI = (props) => {
 
               {
                 isMultiDriverTips &&
-                orderState?.options.type === 1 &&
+                (orderState?.options?.type === 1 || allowDriverTipPickup) &&
                 validationFields?.fields?.checkout?.driver_tip?.enabled &&
                 openCarts.every(cart => cart.business_id && cart.status !== 2) &&
                 driverTipsOptions.length > 0 &&
