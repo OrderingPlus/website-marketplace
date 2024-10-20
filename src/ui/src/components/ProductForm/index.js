@@ -356,8 +356,8 @@ const ProductOptionsUI = (props) => {
 
   useEffect(() => {
     let _urlToShare = null
-    const productSlug = product?.slug
-    const categorySlug = product?.category?.slug
+    const productSlug = product?.slug || product?.id
+    const categorySlug = product?.category?.slug || product?.category_id
     const categoryId = product?.category_id
     const productId = product?.id
     if (productUrlTemplate === '/store/:business_slug/:category_slug/:product_slug') {
