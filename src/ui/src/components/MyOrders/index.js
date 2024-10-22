@@ -19,7 +19,8 @@ export const MyOrders = (props) => {
     isFromBusinessListingSearch,
     businessesSearchList,
     onProductRedirect,
-    onRedirectPage
+    onRedirectPage,
+    businessUrlTemplate
   } = props
 
   const [, t] = useLanguage()
@@ -141,6 +142,7 @@ export const MyOrders = (props) => {
               businessOrderIds={businessOrderIds}
               setBusinessOrderIds={setBusinessOrderIds}
               onProductRedirect={onProductRedirect}
+              businessUrlTemplate={businessUrlTemplate}
             />)
           : selectedOption !== 'giftCards'
             ? <NoOrdersWrapper>

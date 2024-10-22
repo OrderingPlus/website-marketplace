@@ -155,7 +155,7 @@ import { WebsocketStatus } from './src/components/WebsocketStatus'
 import { UpsellingPage } from './src/components/UpsellingPage'
 
 // styles
-import { Button, IconButton } from './src/styles/Buttons'
+import { Button, IconButton, ButtonLink } from './src/styles/Buttons'
 import { Checkbox } from './src/styles/Checkbox'
 import { Input, InputGroup, InputGroupLeft, InputGroupPrimary, InputGroupRight, InputPrimary, InputSecundary, TextArea } from './src/styles/Inputs'
 import { Select } from './src/styles/Select'
@@ -374,6 +374,7 @@ export {
   WebsocketStatus,
   // styles
   Button,
+  ButtonLink,
   IconButton,
   Checkbox,
   Input,

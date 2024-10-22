@@ -106,6 +106,7 @@ export const Header = (props) => {
   const orderTypeList = [t('DELIVERY', 'Delivery'), t('PICKUP', 'Pickup'), t('EAT_IN', 'Eat in'), t('CURBSIDE', 'Curbside'), t('DRIVE_THRU', 'Drive thru'), '', t('CATERING_DELIVERY', 'Catering Delivery'), t('CATERING_PICKUP', 'Catering pickup'), t('RESERVATION', 'Reservation')]
   const configTypes = configState?.configs?.order_types_allowed?.value.split('|').map(value => Number(value)) || []
   const isPreOrderSetting = configState?.configs?.preorder_status_enabled?.value === '1'
+  const advancedSearchDisabled = configState?.configs?.advanced_business_search_enabled?.value === '0'
   const isHideLanguages = theme?.header?.components?.language_selector?.hidden
   const cateringTypeString = orderState?.options?.type === 7
     ? 'catering_delivery'
@@ -199,6 +200,11 @@ export const Header = (props) => {
 
   const handleBusinessClick = (business) => {
     events.emit('go_to_page', { page: 'business', params: { store: business.slug } })
+  }
+
+  const handleCustomEnter = (e) => {
+    e.preventDefault()
+    !advancedSearchDisabled && events.emit('go_to_page', { page: 'business_search' })
   }
 
   useEffect(() => {
@@ -339,16 +345,18 @@ export const Header = (props) => {
         </LeftSide>
         {windowSize.width > 1200 && window.location.pathname === '/search' && (
           <HeaderSearchMode>
-            <SearchBar
-              lazyLoad
-              search={searchValue}
-              placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
-              starbucksStyle
-              onSearch={(value) => setSearchValue(value)}
-              handleCustomEnter={() => configState?.configs?.advanced_business_search_enabled?.value === '0' || businessSlug
-                ? null
-                : events.emit('go_to_page', { page: 'business_search' })}
-            />
+            <a href={advancedSearchDisabled ? null : '/business_search'}>
+              <SearchBar
+                lazyLoad
+                search={searchValue}
+                placeholder={t('SEARCH_BUSINESSES', 'Search Businesses')}
+                starbucksStyle
+                onSearch={(value) => setSearchValue(value)}
+                handleCustomEnter={(e) => advancedSearchDisabled
+                  ? null
+                  : handleCustomEnter(e)}
+              />
+            </a>
           </HeaderSearchMode>
         )}
         {onlineStatus && (

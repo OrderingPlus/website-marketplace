@@ -59,9 +59,10 @@ export const ContainerCard = styled.div`
 
 `
 
-export const WrapperBusinessCard = styled.div`
+export const WrapperBusinessCard = styled.a`
   height: 100%;
   position: relative;
+  text-decoration: none;
   cursor: ${({ isSkeleton }) => isSkeleton ? 'default' : 'pointer'};
   ${({ disabled }) => disabled && css`
     pointer-events: none;

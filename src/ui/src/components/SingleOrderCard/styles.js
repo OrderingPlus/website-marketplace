@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import React from 'react'
 
-export const Container = styled.div`
+export const Container = styled.a`
   cursor: pointer;
   margin: 10px 0;
   position: relative;
@@ -11,7 +11,7 @@ export const Container = styled.div`
   transition: all 0.3s ease;
   padding: 10px;
   border-radius: 8px;
-
+  text-decoration: none;
   ${props => props.theme.rtl
     ? css`margin-left: 15px;`
     : css`margin-right: ${({ mr }) => mr ?? 15}px;`}
@@ -20,6 +20,9 @@ export const Container = styled.div`
     display: flex;
   }
 
+  h2 {
+    color: #344050;
+  }
   ${(props) => !props.disabledWidthConfig && css`
     min-width: ${({ w }) => w ?? 380}px;
     width: ${({ w }) => w ?? 380}px;
@@ -108,6 +111,7 @@ export const Price = styled.div`
     margin-block-end: ${({ isBusinessesPage }) => isBusinessesPage ? '0.1em' : '1em'};
     margin-block-start: 0.1em;
     font-weight: normal;
+    color: #344050;
   }
   p {
     margin-block-end: 0.1em;

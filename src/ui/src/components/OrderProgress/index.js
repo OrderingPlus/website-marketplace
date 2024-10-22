@@ -26,7 +26,7 @@ import {
 } from '~components'
 
 import { OrderEta } from '../OrderDetails/OrderEta'
-import { Button, generalUtilities } from '~ui'
+import { ButtonLink, generalUtilities } from '~ui'
 
 const OrderProgressUI = (props) => {
   const { orderList } = props
@@ -43,7 +43,10 @@ const OrderProgressUI = (props) => {
   const lastOrder = orderList.orders?.length ? orderList.orders?.find(order => !!order.business_id) : null
   const isPickup = lastOrder?.delivery_type && lastOrder?.delivery_type === 2
 
-  const handleGoToPage = (index) => events.emit('go_to_page', { page: index })
+  const handleGoToPage = (e, index) => {
+    e.preventDefault()
+    events.emit('go_to_page', { page: index })
+  }
 
   return (
     <>
@@ -64,14 +67,15 @@ const OrderProgressUI = (props) => {
                 {statusToShow.includes(lastOrder?.status) && (
                   <p>{t('RESTAURANT_PREPARING_YOUR_ORDER', 'The restaurant is preparing your order')}</p>
                 )}
-                <Button
+                <ButtonLink
                   color='primaryContrast'
                   naked
-                  onClick={() => handleGoToPage('orders')}
+                  onClick={(e) => handleGoToPage(e, 'orders')}
+                  href='/profile/orders'
                 >
                   {t('GO_TO_MY_ORDERS', 'Go to my orders')}
                   <BsArrowRight />
-                </Button>
+                </ButtonLink>
               </ProgressDescriptionWrapper>
             </OrderInfoWrapper>
             <ProgressBarWrapper>
