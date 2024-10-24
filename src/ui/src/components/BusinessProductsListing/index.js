@@ -167,12 +167,14 @@ const BusinessProductsListingUI = (props) => {
       }
       setProductLoading(false)
     } else {
+      const productSlug = product?.slug || product?.id
+      const categorySlug = product?.category?.slug || product?.category_id
       if (!((product?.type === 'service') && business?.professionals?.length > 0)) {
         if (site?.product_url_template) {
           onProductRedirect({
             slug: business?.slug,
-            product: site.product_url_template.includes('product_slug') ? product?.slug : product.id,
-            category: site.product_url_template.includes('category_slug') ? product?.category?.slug : product.category_id
+            product: site.product_url_template.includes('product_slug') ? productSlug : product.id,
+            category: site.product_url_template.includes('category_slug') ? categorySlug : product.category_id
           })
         } else {
           onProductRedirect({
@@ -189,12 +191,14 @@ const BusinessProductsListingUI = (props) => {
   }
 
   const handleCustomProductBannerClick = (product) => {
+    const productSlug = product?.slug || product?.id
+    const categorySlug = product?.category?.slug || product?.category_id
     if (!((product?.type === 'service') && business?.professionals?.length > 0)) {
       if (site?.product_url_template) {
         onProductRedirect({
           slug: business?.slug,
-          product: site.product_url_template.includes('product_slug') ? product?.slug : product.id,
-          category: site.product_url_template.includes('category_slug') ? product?.category?.slug : product.category_id
+          product: site.product_url_template.includes('product_slug') ? productSlug : product.id,
+          category: site.product_url_template.includes('category_slug') ? categorySlug : product.category_id
         })
       } else {
         onProductRedirect({
@@ -461,11 +465,11 @@ const BusinessProductsListingUI = (props) => {
           btnText={
             !currentCart?.valid_maximum
               ? (
-              `${t('MAXIMUM_SUBTOTAL_ORDER', theme?.defaultLanguages?.MAXIMUM_SUBTOTAL_ORDER || 'Maximum subtotal order')}: ${parsePrice(currentCart?.maximum)}`
+                `${t('MAXIMUM_SUBTOTAL_ORDER', theme?.defaultLanguages?.MAXIMUM_SUBTOTAL_ORDER || 'Maximum subtotal order')}: ${parsePrice(currentCart?.maximum)}`
                 )
               : (subtotalWithTaxes < currentCart?.minimum)
                   ? (
-              `${t('MINIMUN_SUBTOTAL_ORDER', theme?.defaultLanguages?.MINIMUN_SUBTOTAL_ORDER || 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+                  `${t('MINIMUN_SUBTOTAL_ORDER', theme?.defaultLanguages?.MINIMUN_SUBTOTAL_ORDER || 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
                     )
                   : !openUpselling !== canOpenUpselling ? t('VIEW_ORDER', theme?.defaultLanguages?.VIEW_ORDER || 'View Order') : t('LOADING', theme?.defaultLanguages?.LOADING || 'Loading')
           }
@@ -492,33 +496,33 @@ const BusinessProductsListingUI = (props) => {
             <Title style={{ textAlign: 'center', marginTop: '5px' }}>{t('YOUR_CART', 'Your cart')}</Title>
             {currentCart?.products?.length > 0
               ? (
-              <>
-                <Cart
-                  isStore
-                  isCustomMode
-                  isForceOpenCart
-                  forceHideCheckoutButton
-                  cart={currentCart}
-                  isCartPending={currentCart?.status === 2}
-                  isProducts={currentCart.products.length}
-                  isCartOnProductsList={isCartOnProductsList}
-                  handleCartOpen={(val) => setIsCartOpen(val)}
-                  businessConfigs={business?.configs}
-                  productLoading={productLoading}
-                />
-              </>
+                <>
+                  <Cart
+                    isStore
+                    isCustomMode
+                    isForceOpenCart
+                    forceHideCheckoutButton
+                    cart={currentCart}
+                    isCartPending={currentCart?.status === 2}
+                    isProducts={currentCart.products.length}
+                    isCartOnProductsList={isCartOnProductsList}
+                    handleCartOpen={(val) => setIsCartOpen(val)}
+                    businessConfigs={business?.configs}
+                    productLoading={productLoading}
+                  />
+                </>
                 )
               : (
-              <EmptyCart>
-                <div className='empty-content'>
-                  <Cart3 />
-                  <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
-                </div>
-                <EmptyBtnWrapper>
-                  <span>{parsePrice(0)}</span>
-                  <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
-                </EmptyBtnWrapper>
-              </EmptyCart>
+                <EmptyCart>
+                  <div className='empty-content'>
+                    <Cart3 />
+                    <p>{t('ADD_PRODUCTS_IN_YOUR_CART', 'Add products in your cart')}</p>
+                  </div>
+                  <EmptyBtnWrapper>
+                    <span>{parsePrice(0)}</span>
+                    <Button>{t('EMPTY_CART', 'Empty cart')}</Button>
+                  </EmptyBtnWrapper>
+                </EmptyCart>
                 )}
           </BusinessCartContent>
         </Modal>
@@ -556,34 +560,34 @@ const BusinessProductsListingUI = (props) => {
             <>
               {(((productModal?.product?.type === 'service') || (curProduct?.type === 'service')) && business?.professionals?.length > 0)
                 ? (
-                <ServiceForm
-                  businessSlug={business?.slug}
-                  useKioskApp={props.useKioskApp}
-                  product={productModal.product || curProduct}
-                  businessId={business?.id}
-                  onSave={handlerProductAction}
-                  professionalList={business?.professionals}
-                  professionalSelected={professionalSelected}
-                  handleChangeProfessional={handleChangeProfessionalSelected}
-                  handleUpdateProfessionals={handleUpdateProfessionals}
-                  productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-                  setProductLoading={setProductLoading}
-                />
+                  <ServiceForm
+                    businessSlug={business?.slug}
+                    useKioskApp={props.useKioskApp}
+                    product={productModal.product || curProduct}
+                    businessId={business?.id}
+                    onSave={handlerProductAction}
+                    professionalList={business?.professionals}
+                    professionalSelected={professionalSelected}
+                    handleChangeProfessional={handleChangeProfessionalSelected}
+                    handleUpdateProfessionals={handleUpdateProfessionals}
+                    productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+                    setProductLoading={setProductLoading}
+                  />
                   )
                 : (
-                <ProductForm
-                  businessSlug={business?.slug}
-                  useKioskApp={props.useKioskApp}
-                  product={productModal.product || curProduct}
-                  businessId={business?.id}
-                  categoryId={curProduct?.category_id}
-                  productId={curProduct?.id}
-                  handleUpdateProducts={handleUpdateProducts}
-                  onSave={handlerProductAction}
-                  isCustomerMode={isCustomerMode}
-                  productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
-                  setProductLoading={setProductLoading}
-                />
+                  <ProductForm
+                    businessSlug={business?.slug}
+                    useKioskApp={props.useKioskApp}
+                    product={productModal.product || curProduct}
+                    businessId={business?.id}
+                    categoryId={curProduct?.category_id}
+                    productId={curProduct?.id}
+                    handleUpdateProducts={handleUpdateProducts}
+                    onSave={handlerProductAction}
+                    isCustomerMode={isCustomerMode}
+                    productAddedToCartLength={currentCart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === (productModal.product || curProduct)?.id ? Cproduct?.quantity : 0) }, 0) || 0}
+                    setProductLoading={setProductLoading}
+                  />
                   )}
             </>
           )}
