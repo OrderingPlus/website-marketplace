@@ -31,19 +31,12 @@ import {
   PaymentOptionStripe,
   PaymentOptionCard,
   StripeElementsForm,
-  StripeRedirectForm,
   NotFoundSource,
   PaymentOptionPaypal,
   PaymentOptionSquare
 } from '~ui'
 
-const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
-const stripeRedirectOptions = [
-  { name: 'Bancontact', value: 'bancontact' },
-  { name: 'Alipay', value: 'alipay' },
-  { name: 'Giropay', value: 'giropay' },
-  { name: 'iDEAL', value: 'ideal' }
-]
+const stripeOptions = ['stripe', 'stripe_connect']
 
 const cardsPaymethods = ['credomatic']
 
@@ -118,7 +111,7 @@ const PaymentOptionsUI = (props) => {
 
   const methodsPay = ['google_pay', 'apple_pay']
 
-  const stripeDirectMethods = ['stripe_direct', ...methodsPay]
+  const stripeDirectMethods = methodsPay
 
   const includeKioskPaymethods = ['cash', 'card_delivery']
 
@@ -126,9 +119,9 @@ const PaymentOptionsUI = (props) => {
 
   const list = paymethodsList ? paymethodsList?.paymethods : paymethods?.map(pay => pay.paymethod)
 
-  const popupMethods = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal', 'square', 'google_pay', 'apple_pay']
+  const popupMethods = ['stripe', 'stripe_connect', 'paypal', 'square', 'google_pay', 'apple_pay']
 
-  const guestNotSupportedMethods = ['stripe', 'stripe_connect', 'stripe_redirect']
+  const guestNotSupportedMethods = ['stripe', 'stripe_connect']
 
   const supportedMethods = list?.filter(p => !multiCheckoutMethods.includes(p.gateway))?.filter(p => useKioskApp ? includeKioskPaymethods.includes(p.gateway) : p)
 
@@ -400,22 +393,6 @@ const PaymentOptionsUI = (props) => {
         </Modal>
       )}
 
-      {/* Stripe Redirect */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type && (
-        <Modal
-          title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-          open={isOpenMethod?.paymethod?.gateway === 'stripe_redirect' && !paymethodData.type}
-          className='modal-info'
-          onClose={() => handlePaymethodClick(null)}
-        >
-          <StripeRedirectForm
-            businessId={props.businessId}
-            currency={props.currency}
-            paymethods={stripeRedirectOptions}
-            handleStripeRedirect={handlePaymethodDataChange}
-          />
-        </Modal>
-      )}
       {isOpenMethod?.paymethod?.gateway === 'square' && !paymethodData.token && (
         <Modal
           title={t('SQUARE', 'Square')}
